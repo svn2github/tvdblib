@@ -8,3 +8,8 @@ C:\Documents and Settings\DieBagger\Desktop\tvdb\TvdbConnector\TvdbConnector\Tvd
 C:\Documents and Settings\DieBagger\Desktop\tvdb\TvdbConnector\TvdbConnector\TvdbConnector\obj\Debug\ResolveAssemblyReference.cache
 C:\Documents and Settings\DieBagger\Desktop\tvdb\TvdbConnector\TvdbConnector\TvdbConnector\obj\Debug\TvdbConnector.dll
 C:\Documents and Settings\DieBagger\Desktop\tvdb\TvdbConnector\TvdbConnector\TvdbConnector\obj\Debug\TvdbConnector.pdb
+C:\Documents and Settings\DieBagger\Desktop\tvdblib\TvdbConnector\bin\Debug\TvdbConnector.dll
+C:\Documents and Settings\DieBagger\Desktop\tvdblib\TvdbConnector\bin\Debug\TvdbConnector.pdb
+C:\Documents and Settings\DieBagger\Desktop\tvdblib\TvdbConnector\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\DieBagger\Desktop\tvdblib\TvdbConnector\obj\Debug\TvdbConnector.dll
+C:\Documents and Settings\DieBagger\Desktop\tvdblib\TvdbConnector\obj\Debug\TvdbConnector.pdb

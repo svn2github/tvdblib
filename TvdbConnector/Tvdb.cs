@@ -493,7 +493,7 @@ namespace TvdbConnector
     {
       get
       {
-        return TvdbCache.LanguageList != null;
+        return (TvdbCache.LanguageList != null && TvdbCache.LanguageList.Count > 0);
       }
     }
 
