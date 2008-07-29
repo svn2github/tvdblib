@@ -173,12 +173,6 @@
     <None Include="Resources\dvdbox_front1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\bsp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bsp1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\loading2.gif" />
   </ItemGroup>
   <ItemGroup>

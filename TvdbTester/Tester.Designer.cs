@@ -41,12 +41,15 @@
       this.tabEpisodes = new System.Windows.Forms.TabPage();
       this.lbGuestStars = new System.Windows.Forms.ListBox();
       this.panel4 = new System.Windows.Forms.Panel();
+      this.pbEpisodeBanner = new System.Windows.Forms.PictureBox();
       this.pnlSeasonBanner = new System.Windows.Forms.Panel();
       this.cmdPreviousSeasonBanner = new System.Windows.Forms.Button();
       this.cmdNextSeasonBanner = new System.Windows.Forms.Button();
+      this.pbEpisodeSeasonImage = new System.Windows.Forms.PictureBox();
       this.pnlSeasonBannerWide = new System.Windows.Forms.Panel();
       this.cmdPreviousWideSeasonBanner = new System.Windows.Forms.Button();
       this.cmdNextWideSeasonBanner = new System.Windows.Forms.Button();
+      this.pbEpisodeSeasonBannerWide = new System.Windows.Forms.PictureBox();
       this.txtEpisodeImdbID = new System.Windows.Forms.TextBox();
       this.txtEpisodeAbsoluteNumber = new System.Windows.Forms.TextBox();
       this.label33 = new System.Windows.Forms.Label();
@@ -79,6 +82,7 @@
       this.cmdLoadBanners = new System.Windows.Forms.Button();
       this.cmdLoadFullSeriesInfo = new System.Windows.Forms.Button();
       this.panel3 = new System.Windows.Forms.Panel();
+      this.pbSeries = new System.Windows.Forms.PictureBox();
       this.txtOverview = new System.Windows.Forms.RichTextBox();
       this.txtActors = new System.Windows.Forms.TextBox();
       this.txtRuntime = new System.Windows.Forms.TextBox();
@@ -114,7 +118,7 @@
       this.tabFanart = new System.Windows.Forms.TabPage();
       this.cbCachedSeries = new System.Windows.Forms.ComboBox();
       this.label38 = new System.Windows.Forms.Label();
-      this.panel1 = new System.Windows.Forms.Panel();
+      this.panelSeriesOverview = new System.Windows.Forms.Panel();
       this.cbLoadBanner = new System.Windows.Forms.CheckBox();
       this.cbLoadFull = new System.Windows.Forms.CheckBox();
       this.cbUserFavourites = new System.Windows.Forms.ComboBox();
@@ -125,27 +129,23 @@
       this.lblTabEpisodes = new System.Windows.Forms.Label();
       this.pnlFanartEnabled = new System.Windows.Forms.Panel();
       this.label40 = new System.Windows.Forms.Label();
-      this.pbSeries = new System.Windows.Forms.PictureBox();
-      this.pbEpisodeBanner = new System.Windows.Forms.PictureBox();
-      this.pbEpisodeSeasonImage = new System.Windows.Forms.PictureBox();
-      this.pbEpisodeSeasonBannerWide = new System.Windows.Forms.PictureBox();
       this.posterControlSeries = new TvdbTester.PosterControl();
       this.coverFlowFanart = new TvdbTester.CoverFlow();
       this.tabEpisodes.SuspendLayout();
       this.panel4.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeBanner)).BeginInit();
       this.pnlSeasonBanner.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonImage)).BeginInit();
       this.pnlSeasonBannerWide.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonBannerWide)).BeginInit();
       this.tabSeries.SuspendLayout();
       this.panel3.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbSeries)).BeginInit();
       this.tabControlTvdb.SuspendLayout();
       this.tabFanart.SuspendLayout();
-      this.panel1.SuspendLayout();
+      this.panelSeriesOverview.SuspendLayout();
       this.pnlEpisodeEnabled.SuspendLayout();
       this.pnlFanartEnabled.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.pbSeries)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeBanner)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonImage)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonBannerWide)).BeginInit();
       this.SuspendLayout();
       // 
       // label5
@@ -158,14 +158,14 @@
       // 
       // txtGetSeries
       // 
-      this.txtGetSeries.Location = new System.Drawing.Point(101, 64);
+      this.txtGetSeries.Location = new System.Drawing.Point(101, 57);
       this.txtGetSeries.Name = "txtGetSeries";
       this.txtGetSeries.Size = new System.Drawing.Size(116, 20);
       this.txtGetSeries.TabIndex = 6;
       // 
       // cmdGetSeries
       // 
-      this.cmdGetSeries.Location = new System.Drawing.Point(231, 61);
+      this.cmdGetSeries.Location = new System.Drawing.Point(227, 54);
       this.cmdGetSeries.Name = "cmdGetSeries";
       this.cmdGetSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdGetSeries.TabIndex = 7;
@@ -175,14 +175,14 @@
       // 
       // txtSeriesToFind
       // 
-      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 35);
+      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 28);
       this.txtSeriesToFind.Name = "txtSeriesToFind";
       this.txtSeriesToFind.Size = new System.Drawing.Size(116, 20);
       this.txtSeriesToFind.TabIndex = 6;
       // 
       // cmdFindSeries
       // 
-      this.cmdFindSeries.Location = new System.Drawing.Point(232, 32);
+      this.cmdFindSeries.Location = new System.Drawing.Point(227, 26);
       this.cmdFindSeries.Name = "cmdFindSeries";
       this.cmdFindSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdFindSeries.TabIndex = 7;
@@ -298,6 +298,18 @@
       this.panel4.Size = new System.Drawing.Size(307, 201);
       this.panel4.TabIndex = 85;
       // 
+      // pbEpisodeBanner
+      // 
+      this.pbEpisodeBanner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.pbEpisodeBanner.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeBanner.Image = global::TvdbTester.Properties.Resources.episode_notfound;
+      this.pbEpisodeBanner.Location = new System.Drawing.Point(3, 4);
+      this.pbEpisodeBanner.Name = "pbEpisodeBanner";
+      this.pbEpisodeBanner.Size = new System.Drawing.Size(300, 192);
+      this.pbEpisodeBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.pbEpisodeBanner.TabIndex = 77;
+      this.pbEpisodeBanner.TabStop = false;
+      // 
       // pnlSeasonBanner
       // 
       this.pnlSeasonBanner.BackColor = System.Drawing.Color.Black;
@@ -333,6 +345,18 @@
       this.cmdNextSeasonBanner.Visible = false;
       this.cmdNextSeasonBanner.Click += new System.EventHandler(this.cmdNextSeasonBanner_Click);
       // 
+      // pbEpisodeSeasonImage
+      // 
+      this.pbEpisodeSeasonImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.pbEpisodeSeasonImage.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeSeasonImage.Image = global::TvdbTester.Properties.Resources.season_notfound;
+      this.pbEpisodeSeasonImage.Location = new System.Drawing.Point(3, 3);
+      this.pbEpisodeSeasonImage.Name = "pbEpisodeSeasonImage";
+      this.pbEpisodeSeasonImage.Size = new System.Drawing.Size(200, 289);
+      this.pbEpisodeSeasonImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.pbEpisodeSeasonImage.TabIndex = 76;
+      this.pbEpisodeSeasonImage.TabStop = false;
+      // 
       // pnlSeasonBannerWide
       // 
       this.pnlSeasonBannerWide.BackColor = System.Drawing.Color.Black;
@@ -367,6 +391,18 @@
       this.cmdNextWideSeasonBanner.UseVisualStyleBackColor = true;
       this.cmdNextWideSeasonBanner.Visible = false;
       this.cmdNextWideSeasonBanner.Click += new System.EventHandler(this.cmdNextWideSeasonBanner_Click);
+      // 
+      // pbEpisodeSeasonBannerWide
+      // 
+      this.pbEpisodeSeasonBannerWide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.pbEpisodeSeasonBannerWide.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeSeasonBannerWide.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
+      this.pbEpisodeSeasonBannerWide.Location = new System.Drawing.Point(3, 3);
+      this.pbEpisodeSeasonBannerWide.Name = "pbEpisodeSeasonBannerWide";
+      this.pbEpisodeSeasonBannerWide.Size = new System.Drawing.Size(758, 140);
+      this.pbEpisodeSeasonBannerWide.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.pbEpisodeSeasonBannerWide.TabIndex = 78;
+      this.pbEpisodeSeasonBannerWide.TabStop = false;
       // 
       // txtEpisodeImdbID
       // 
@@ -707,6 +743,18 @@
       this.panel3.Size = new System.Drawing.Size(761, 146);
       this.panel3.TabIndex = 45;
       // 
+      // pbSeries
+      // 
+      this.pbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.pbSeries.BackColor = System.Drawing.Color.LightSkyBlue;
+      this.pbSeries.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
+      this.pbSeries.Location = new System.Drawing.Point(2, 3);
+      this.pbSeries.Name = "pbSeries";
+      this.pbSeries.Size = new System.Drawing.Size(758, 140);
+      this.pbSeries.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.pbSeries.TabIndex = 40;
+      this.pbSeries.TabStop = false;
+      // 
       // txtOverview
       // 
       this.txtOverview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -1016,28 +1064,32 @@
       this.label38.TabIndex = 48;
       this.label38.Text = "Cached Series:";
       // 
-      // panel1
+      // panelSeriesOverview
       // 
-      this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      this.panelSeriesOverview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this.panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-      this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-      this.panel1.Controls.Add(this.cbLoadBanner);
-      this.panel1.Controls.Add(this.cbLoadFull);
-      this.panel1.Controls.Add(this.cbCachedSeries);
-      this.panel1.Controls.Add(this.cbLanguage);
-      this.panel1.Controls.Add(this.cbUserFavourites);
-      this.panel1.Controls.Add(this.label39);
-      this.panel1.Controls.Add(this.label38);
-      this.panel1.Controls.Add(this.lblCurrentLanguage);
-      this.panel1.Controls.Add(this.label35);
-      this.panel1.Controls.Add(this.label36);
-      this.panel1.Controls.Add(this.label41);
-      this.panel1.Controls.Add(this.label37);
-      this.panel1.Location = new System.Drawing.Point(16, 6);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(762, 111);
-      this.panel1.TabIndex = 49;
+      this.panelSeriesOverview.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+      this.panelSeriesOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.panelSeriesOverview.Controls.Add(this.cmdGetSeries);
+      this.panelSeriesOverview.Controls.Add(this.txtSeriesToFind);
+      this.panelSeriesOverview.Controls.Add(this.txtGetSeries);
+      this.panelSeriesOverview.Controls.Add(this.cmdFindSeries);
+      this.panelSeriesOverview.Controls.Add(this.cbLoadBanner);
+      this.panelSeriesOverview.Controls.Add(this.cbLoadFull);
+      this.panelSeriesOverview.Controls.Add(this.cbCachedSeries);
+      this.panelSeriesOverview.Controls.Add(this.cbLanguage);
+      this.panelSeriesOverview.Controls.Add(this.cbUserFavourites);
+      this.panelSeriesOverview.Controls.Add(this.label39);
+      this.panelSeriesOverview.Controls.Add(this.label38);
+      this.panelSeriesOverview.Controls.Add(this.lblCurrentLanguage);
+      this.panelSeriesOverview.Controls.Add(this.label35);
+      this.panelSeriesOverview.Controls.Add(this.label36);
+      this.panelSeriesOverview.Controls.Add(this.label41);
+      this.panelSeriesOverview.Controls.Add(this.label37);
+      this.panelSeriesOverview.Location = new System.Drawing.Point(16, 6);
+      this.panelSeriesOverview.Name = "panelSeriesOverview";
+      this.panelSeriesOverview.Size = new System.Drawing.Size(762, 111);
+      this.panelSeriesOverview.TabIndex = 49;
       // 
       // cbLoadBanner
       // 
@@ -1140,54 +1192,6 @@
       this.label40.TabIndex = 0;
       this.label40.Text = "Fanart";
       // 
-      // pbSeries
-      // 
-      this.pbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.pbSeries.BackColor = System.Drawing.Color.LightSkyBlue;
-      this.pbSeries.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
-      this.pbSeries.Location = new System.Drawing.Point(2, 3);
-      this.pbSeries.Name = "pbSeries";
-      this.pbSeries.Size = new System.Drawing.Size(758, 140);
-      this.pbSeries.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.pbSeries.TabIndex = 40;
-      this.pbSeries.TabStop = false;
-      // 
-      // pbEpisodeBanner
-      // 
-      this.pbEpisodeBanner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.pbEpisodeBanner.BackColor = System.Drawing.Color.Black;
-      this.pbEpisodeBanner.Image = global::TvdbTester.Properties.Resources.episode_notfound;
-      this.pbEpisodeBanner.Location = new System.Drawing.Point(3, 4);
-      this.pbEpisodeBanner.Name = "pbEpisodeBanner";
-      this.pbEpisodeBanner.Size = new System.Drawing.Size(300, 192);
-      this.pbEpisodeBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.pbEpisodeBanner.TabIndex = 77;
-      this.pbEpisodeBanner.TabStop = false;
-      // 
-      // pbEpisodeSeasonImage
-      // 
-      this.pbEpisodeSeasonImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.pbEpisodeSeasonImage.BackColor = System.Drawing.Color.Black;
-      this.pbEpisodeSeasonImage.Image = global::TvdbTester.Properties.Resources.season_notfound;
-      this.pbEpisodeSeasonImage.Location = new System.Drawing.Point(3, 3);
-      this.pbEpisodeSeasonImage.Name = "pbEpisodeSeasonImage";
-      this.pbEpisodeSeasonImage.Size = new System.Drawing.Size(200, 289);
-      this.pbEpisodeSeasonImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.pbEpisodeSeasonImage.TabIndex = 76;
-      this.pbEpisodeSeasonImage.TabStop = false;
-      // 
-      // pbEpisodeSeasonBannerWide
-      // 
-      this.pbEpisodeSeasonBannerWide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.pbEpisodeSeasonBannerWide.BackColor = System.Drawing.Color.Black;
-      this.pbEpisodeSeasonBannerWide.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
-      this.pbEpisodeSeasonBannerWide.Location = new System.Drawing.Point(3, 3);
-      this.pbEpisodeSeasonBannerWide.Name = "pbEpisodeSeasonBannerWide";
-      this.pbEpisodeSeasonBannerWide.Size = new System.Drawing.Size(758, 140);
-      this.pbEpisodeSeasonBannerWide.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.pbEpisodeSeasonBannerWide.TabIndex = 78;
-      this.pbEpisodeSeasonBannerWide.TabStop = false;
-      // 
       // posterControlSeries
       // 
       this.posterControlSeries.Location = new System.Drawing.Point(451, 178);
@@ -1215,16 +1219,12 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScroll = true;
       this.BackColor = System.Drawing.SystemColors.Control;
-      this.ClientSize = new System.Drawing.Size(792, 905);
+      this.ClientSize = new System.Drawing.Size(792, 781);
       this.Controls.Add(this.pnlFanartEnabled);
       this.Controls.Add(this.pnlEpisodeEnabled);
       this.Controls.Add(this.tabControlTvdb);
-      this.Controls.Add(this.cmdFindSeries);
-      this.Controls.Add(this.cmdGetSeries);
-      this.Controls.Add(this.txtSeriesToFind);
-      this.Controls.Add(this.txtGetSeries);
       this.Controls.Add(this.label5);
-      this.Controls.Add(this.panel1);
+      this.Controls.Add(this.panelSeriesOverview);
       this.Controls.Add(this.panel2);
       this.MinimumSize = new System.Drawing.Size(800, 600);
       this.Name = "Tester";
@@ -1235,23 +1235,23 @@
       this.tabEpisodes.ResumeLayout(false);
       this.tabEpisodes.PerformLayout();
       this.panel4.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeBanner)).EndInit();
       this.pnlSeasonBanner.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonImage)).EndInit();
       this.pnlSeasonBannerWide.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonBannerWide)).EndInit();
       this.tabSeries.ResumeLayout(false);
       this.tabSeries.PerformLayout();
       this.panel3.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pbSeries)).EndInit();
       this.tabControlTvdb.ResumeLayout(false);
       this.tabFanart.ResumeLayout(false);
-      this.panel1.ResumeLayout(false);
-      this.panel1.PerformLayout();
+      this.panelSeriesOverview.ResumeLayout(false);
+      this.panelSeriesOverview.PerformLayout();
       this.pnlEpisodeEnabled.ResumeLayout(false);
       this.pnlEpisodeEnabled.PerformLayout();
       this.pnlFanartEnabled.ResumeLayout(false);
       this.pnlFanartEnabled.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.pbSeries)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeBanner)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonImage)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.pbEpisodeSeasonBannerWide)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1333,7 +1333,7 @@
     private CoverFlow coverFlowFanart;
     private System.Windows.Forms.ComboBox cbCachedSeries;
     private System.Windows.Forms.Label label38;
-    private System.Windows.Forms.Panel panel1;
+    private System.Windows.Forms.Panel panelSeriesOverview;
     private System.Windows.Forms.Button cmdForceUpdate;
     private System.Windows.Forms.ComboBox cbUserFavourites;
     private System.Windows.Forms.Label label39;

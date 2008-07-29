@@ -42,54 +42,17 @@ namespace TvdbTester
     /// <param name="e"></param>
     private void Tester_Shown(object sender, EventArgs e)
     {
-      StartScreen screen = new StartScreen();
-      screen.StartPosition = FormStartPosition.Manual;
-      screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
-      screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
-      DialogResult res = screen.ShowDialog();
-
-      InitialiseForm(screen.UserIdentifier);
-
-      TvdbUser user = new TvdbUser("DieBagger", screen.UserIdentifier);
-      m_tvdbHandler.UserInfo = user;
-      user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
-      List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
-      foreach (TvdbSeries s in favList)
+      if (Resources.API_KEY != null && !Resources.API_KEY.Equals(""))
       {
-        cbUserFavourites.Items.Add(s);
-      }
-    }
+        StartScreen screen = new StartScreen();
+        screen.StartPosition = FormStartPosition.Manual;
+        screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
+        screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
+        DialogResult res = screen.ShowDialog();
 
-    /// <summary>
-    /// Initialise the form
-    /// </summary>
-    /// <param name="_userId"></param>
-    public void InitialiseForm(String _userId)
-    {
-      if (Resources.API_KEY != null)
-      {
-        m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
-        m_tvdbHandler.LoadCache();
+        InitialiseForm(screen.UserIdentifier);
 
-        List<TvdbSeries> cachedSeries = m_tvdbHandler.GetCachedSeries();
-        if (cachedSeries != null && cachedSeries.Count > 0)
-        {
-          foreach (TvdbSeries s in cachedSeries)
-          {
-            cbCachedSeries.Items.Add(s);
-          }
-        }
-
-        List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
-
-        foreach (TvdbLanguage l in m_languages)
-        {
-          if (l.Abbriviation.Equals("en")) m_defaultLang = l;
-          cbLanguage.Items.Add(l);
-        }
-        lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
-
-        TvdbUser user = new TvdbUser("DieBagger", _userId);
+        TvdbUser user = new TvdbUser("DieBagger", screen.UserIdentifier);
         m_tvdbHandler.UserInfo = user;
         user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
         List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
@@ -101,6 +64,45 @@ namespace TvdbTester
       else
       {
         MessageBox.Show("Please insert your api key into the project's Resources");
+        panelSeriesOverview.Enabled = false;
+        tabControlTvdb.Enabled = false;
+      }
+    }
+
+    /// <summary>
+    /// Initialise the form
+    /// </summary>
+    /// <param name="_userId"></param>
+    public void InitialiseForm(String _userId)
+    {
+      m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
+      m_tvdbHandler.LoadCache();
+
+      List<TvdbSeries> cachedSeries = m_tvdbHandler.GetCachedSeries();
+      if (cachedSeries != null && cachedSeries.Count > 0)
+      {
+        foreach (TvdbSeries s in cachedSeries)
+        {
+          cbCachedSeries.Items.Add(s);
+        }
+      }
+
+      List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
+
+      foreach (TvdbLanguage l in m_languages)
+      {
+        if (l.Abbriviation.Equals("en")) m_defaultLang = l;
+        cbLanguage.Items.Add(l);
+      }
+      lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
+
+      TvdbUser user = new TvdbUser("DieBagger", _userId);
+      m_tvdbHandler.UserInfo = user;
+      user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
+      List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
+      foreach (TvdbSeries s in favList)
+      {
+        cbUserFavourites.Items.Add(s);
       }
     }
 
@@ -344,7 +346,7 @@ namespace TvdbTester
           return;
         }
 
-        if(pbEpisodeSeasonImage.Tag == null || selectedSeason != ((SeasonImageList)pbEpisodeSeasonImage.Tag).Season)
+        if (pbEpisodeSeasonImage.Tag == null || selectedSeason != ((SeasonImageList)pbEpisodeSeasonImage.Tag).Season)
         {
           List<TvdbSeasonBanner> seasonList = new List<TvdbSeasonBanner>();
           List<TvdbSeasonBanner> seasonWideList = new List<TvdbSeasonBanner>();
@@ -612,6 +614,6 @@ namespace TvdbTester
     }
 
     #endregion
-  
+
   }
 }
