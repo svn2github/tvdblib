@@ -152,22 +152,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Blue hills.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Water lilies.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="fanart_background.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tvdb_logo.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\zoom-_24x24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\zoom+_24x24.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\play back.png" />

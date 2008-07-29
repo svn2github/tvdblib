@@ -53,7 +53,6 @@
       this.txtUserIdentifier.Name = "txtUserIdentifier";
       this.txtUserIdentifier.Size = new System.Drawing.Size(187, 20);
       this.txtUserIdentifier.TabIndex = 1;
-      this.txtUserIdentifier.Text = "2EF20123489774E9";
       this.txtUserIdentifier.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
       // 
       // label1
@@ -101,7 +100,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(383, 330);
+      this.ClientSize = new System.Drawing.Size(379, 328);
       this.Controls.Add(this.richTextBox1);
       this.Controls.Add(this.pictureBox1);
       this.Controls.Add(this.label2);

@@ -35,6 +35,11 @@ namespace TvdbTester
 
     }
 
+    /// <summary>
+    /// Form is shown (after it's loaded)
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void Tester_Shown(object sender, EventArgs e)
     {
       StartScreen screen = new StartScreen();
@@ -55,36 +60,47 @@ namespace TvdbTester
       }
     }
 
+    /// <summary>
+    /// Initialise the form
+    /// </summary>
+    /// <param name="_userId"></param>
     public void InitialiseForm(String _userId)
     {
-      m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile3.bin"), "E8D8A47528D5B5AD");
-      m_tvdbHandler.LoadCache();
-
-      List<TvdbSeries> cachedSeries = m_tvdbHandler.GetCachedSeries();
-      if (cachedSeries != null && cachedSeries.Count > 0)
+      if (Resources.API_KEY != null)
       {
-        foreach (TvdbSeries s in cachedSeries)
+        m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
+        m_tvdbHandler.LoadCache();
+
+        List<TvdbSeries> cachedSeries = m_tvdbHandler.GetCachedSeries();
+        if (cachedSeries != null && cachedSeries.Count > 0)
         {
-          cbCachedSeries.Items.Add(s);
+          foreach (TvdbSeries s in cachedSeries)
+          {
+            cbCachedSeries.Items.Add(s);
+          }
+        }
+
+        List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
+
+        foreach (TvdbLanguage l in m_languages)
+        {
+          if (l.Abbriviation.Equals("en")) m_defaultLang = l;
+          cbLanguage.Items.Add(l);
+        }
+        lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
+
+        TvdbUser user = new TvdbUser("DieBagger", _userId);
+        m_tvdbHandler.UserInfo = user;
+        user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
+        List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
+        foreach (TvdbSeries s in favList)
+        {
+          cbUserFavourites.Items.Add(s);
         }
       }
-
-      List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
-
-      foreach (TvdbLanguage l in m_languages)
+      else
       {
-        if (l.Abbriviation.Equals("en")) m_defaultLang = l;
-        cbLanguage.Items.Add(l);
-      }
-      lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
-
-      TvdbUser user = new TvdbUser("DieBagger", _userId);
-      m_tvdbHandler.UserInfo = user;
-      user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
-      List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
-      foreach (TvdbSeries s in favList)
-      {
-        cbUserFavourites.Items.Add(s);
+        MessageBox.Show("Please insert your api key into the project's Resources");
       }
     }
 

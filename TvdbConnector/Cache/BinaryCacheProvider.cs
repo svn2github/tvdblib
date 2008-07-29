@@ -20,6 +20,10 @@ namespace TvdbConnector.Cache
 
     #region ICacheProvider Members
 
+    /// <summary>
+    /// Load the cached data
+    /// </summary>
+    /// <returns></returns>
     public CachableContent LoadFromCache()
     {
       if (File.Exists(m_filename))
@@ -43,6 +47,10 @@ namespace TvdbConnector.Cache
       }
     }
 
+    /// <summary>
+    /// Save the cache to filesystem
+    /// </summary>
+    /// <param name="_content"></param>
     public void SaveToCache(CachableContent _content)
     {
       FileStream fs = new FileStream(m_filename, FileMode.Create);

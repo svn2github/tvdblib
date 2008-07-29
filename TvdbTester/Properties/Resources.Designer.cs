@@ -60,24 +60,12 @@ namespace TvdbTester.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Blue_hills {
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string API_KEY {
             get {
-                object obj = ResourceManager.GetObject("Blue hills", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap bsp {
-            get {
-                object obj = ResourceManager.GetObject("bsp", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap bsp1 {
-            get {
-                object obj = ResourceManager.GetObject("bsp1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("API_KEY", resourceCulture);
             }
         }
         
@@ -154,27 +142,6 @@ namespace TvdbTester.Properties {
         internal static System.Drawing.Bitmap tvdb_logo1 {
             get {
                 object obj = ResourceManager.GetObject("tvdb_logo1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Water_lilies {
-            get {
-                object obj = ResourceManager.GetObject("Water lilies", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap zoom__24x24 {
-            get {
-                object obj = ResourceManager.GetObject("zoom__24x24", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap zoom__24x241 {
-            get {
-                object obj = ResourceManager.GetObject("zoom__24x241", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

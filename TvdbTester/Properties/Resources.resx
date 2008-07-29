@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="zoom__24x241" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom+_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="tvdb_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tvdb_logo.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,29 +133,14 @@
   <data name="dvdbox_front1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dvdbox_front1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Blue hills" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Blue hills.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bsp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bsp.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="tvdb_logo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tvdb_logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bsp1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bsp1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dvdbox_front" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dvdbox_front.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\loading.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="zoom__24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\zoom-_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Water lilies" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Water lilies.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="play" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\play.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -168,5 +150,9 @@
   </data>
   <data name="season_notfound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\season_notfound.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="API_KEY" xml:space="preserve">
+    <value />
+    <comment>insert your api key here</comment>
   </data>
 </root>
