@@ -499,10 +499,14 @@ namespace TvdbTester
 
     private void cbUserFavourites_SelectedIndexChanged(object sender, EventArgs e)
     {
+      TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id, 
+                                                      m_defaultLang, cbLoadFull.Checked, 
+                                                      cbLoadBanner.Checked);
+
       tabControlTvdb.SelectedTab = tabSeries;
       pnlEpisodeEnabled.Visible = true;
       pnlFanartEnabled.Visible = true;
-      UpdateSeries((TvdbSeries)cbUserFavourites.SelectedItem);
+      UpdateSeries(series);
     }
 
     private void tabControlTvdb_SelectedIndexChanged(object sender, EventArgs e)
@@ -614,6 +618,37 @@ namespace TvdbTester
     }
 
     #endregion
+
+    private void saveImageToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      Image saveImage = null;
+      if (saveImageContext.SourceControl.GetType() == typeof(PictureBox))
+      {
+        saveImage = ((PictureBox)saveImageContext.SourceControl).Image;
+      }
+      else if (saveImageContext.SourceControl.GetType() == typeof(PosterControl))
+      {
+        saveImage = ((PosterControl)saveImageContext.SourceControl).ActiveImage;
+      }
+      else if (saveImageContext.SourceControl.GetType() == typeof(CoverFlow))
+      {
+        saveImage = ((CoverFlow)saveImageContext.SourceControl).ActiveImage;
+      }
+
+      if (saveImage != null)
+      {
+        DialogResult res = saveImageDialog.ShowDialog();
+        if (res == DialogResult.OK)
+        {
+          String fileName = saveImageDialog.FileName;
+          if(!File.Exists(fileName) || 
+             MessageBox.Show("Overwrite File?", "File Exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
+          {
+            saveImage.Save(fileName);
+          }
+        }
+      }
+    }
 
   }
 }

@@ -43,7 +43,7 @@ namespace TvdbTester
           }
           else
           {
-            panelLeft.Visible = true;
+            panelLeft.Visible = false;
             panelRight.Visible = true;
           }
         }
@@ -54,6 +54,21 @@ namespace TvdbTester
           panelRight.Visible = false;
         }
 
+      }
+    }
+
+    /// <summary>
+    /// The currently show fullscreen image
+    /// </summary>
+    public Image ActiveImage
+    {
+      get
+      {
+        if (m_imageList == null || m_imageList.Count == 0 || !m_imageList[m_index].IsLoaded)
+        {
+          return null;
+        }
+        return panelImage.BackgroundImage;
       }
     }
 
@@ -85,8 +100,6 @@ namespace TvdbTester
         try
         {
           pbLoadingScreen.Visible = _visible;
-          //ReloadBitmaps();
-          //pbList[_index].Image = _img;
         }
         catch (Exception ex)
         {
@@ -139,36 +152,41 @@ namespace TvdbTester
       return bm;
     }
 
+    /// <summary>
+    /// Select the next image
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void panelRight_MouseClick(object sender, MouseEventArgs e)
     {
       if (m_imageList != null && m_imageList.Count != 0)
       {
-        if (m_index < m_imageList.Count - 1)
+        panelLeft.Visible = true;
+        m_index++;
+        SetPosterImage(m_imageList[m_index]);
+        if (m_index >= m_imageList.Count - 1)
         {
-          m_index++;
-          SetPosterImage(m_imageList[m_index]);
-        }
-        else
-        {
-          m_index = 0;
-          SetPosterImage(m_imageList[m_index]);
+          panelRight.Visible = false;
         }
       }
     }
 
+    /// <summary>
+    /// Select the previous image
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void panelLeft_MouseClick(object sender, MouseEventArgs e)
     {
       if (m_imageList != null && m_imageList.Count != 0)
       {
-        if (m_index > 0)
+
+        panelRight.Visible = true;
+        m_index--;
+        SetPosterImage(m_imageList[m_index]);
+        if (m_index <= 0)
         {
-          m_index--;
-          SetPosterImage(m_imageList[m_index]);
-        }
-        else
-        {
-          m_index = m_imageList.Count - 1;
-          SetPosterImage(m_imageList[m_index]);
+          panelLeft.Visible = false;
         }
       }
     }

@@ -113,7 +113,7 @@ namespace TvdbConnector.Data
     protected Image LoadImage(String _path)
     {
       WebClient client = new WebClient();
-      byte[] imgData = client.DownloadData(TvdbLinks.CreateBannerLink(m_bannerPath));
+      byte[] imgData = client.DownloadData(_path);
       MemoryStream ms = new MemoryStream(imgData);
       Image img = Image.FromStream(ms, true, true);
 

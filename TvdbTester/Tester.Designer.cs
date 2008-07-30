@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this.label5 = new System.Windows.Forms.Label();
       this.txtGetSeries = new System.Windows.Forms.TextBox();
       this.cmdGetSeries = new System.Windows.Forms.Button();
@@ -129,6 +130,9 @@
       this.lblTabEpisodes = new System.Windows.Forms.Label();
       this.pnlFanartEnabled = new System.Windows.Forms.Panel();
       this.label40 = new System.Windows.Forms.Label();
+      this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
+      this.saveImageContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.saveImageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.posterControlSeries = new TvdbTester.PosterControl();
       this.coverFlowFanart = new TvdbTester.CoverFlow();
       this.tabEpisodes.SuspendLayout();
@@ -146,6 +150,7 @@
       this.panelSeriesOverview.SuspendLayout();
       this.pnlEpisodeEnabled.SuspendLayout();
       this.pnlFanartEnabled.SuspendLayout();
+      this.saveImageContext.SuspendLayout();
       this.SuspendLayout();
       // 
       // label5
@@ -302,6 +307,7 @@
       // 
       this.pbEpisodeBanner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.pbEpisodeBanner.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeBanner.ContextMenuStrip = this.saveImageContext;
       this.pbEpisodeBanner.Image = global::TvdbTester.Properties.Resources.episode_notfound;
       this.pbEpisodeBanner.Location = new System.Drawing.Point(3, 4);
       this.pbEpisodeBanner.Name = "pbEpisodeBanner";
@@ -349,6 +355,7 @@
       // 
       this.pbEpisodeSeasonImage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.pbEpisodeSeasonImage.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeSeasonImage.ContextMenuStrip = this.saveImageContext;
       this.pbEpisodeSeasonImage.Image = global::TvdbTester.Properties.Resources.season_notfound;
       this.pbEpisodeSeasonImage.Location = new System.Drawing.Point(3, 3);
       this.pbEpisodeSeasonImage.Name = "pbEpisodeSeasonImage";
@@ -396,6 +403,7 @@
       // 
       this.pbEpisodeSeasonBannerWide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.pbEpisodeSeasonBannerWide.BackColor = System.Drawing.Color.Black;
+      this.pbEpisodeSeasonBannerWide.ContextMenuStrip = this.saveImageContext;
       this.pbEpisodeSeasonBannerWide.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
       this.pbEpisodeSeasonBannerWide.Location = new System.Drawing.Point(3, 3);
       this.pbEpisodeSeasonBannerWide.Name = "pbEpisodeSeasonBannerWide";
@@ -747,6 +755,7 @@
       // 
       this.pbSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.pbSeries.BackColor = System.Drawing.Color.LightSkyBlue;
+      this.pbSeries.ContextMenuStrip = this.saveImageContext;
       this.pbSeries.Image = global::TvdbTester.Properties.Resources.tvdb_logo1;
       this.pbSeries.Location = new System.Drawing.Point(2, 3);
       this.pbSeries.Name = "pbSeries";
@@ -761,7 +770,7 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.txtOverview.Location = new System.Drawing.Point(128, 549);
       this.txtOverview.Name = "txtOverview";
-      this.txtOverview.Size = new System.Drawing.Size(607, 170);
+      this.txtOverview.Size = new System.Drawing.Size(607, 79);
       this.txtOverview.TabIndex = 39;
       this.txtOverview.Text = "";
       // 
@@ -1192,8 +1201,23 @@
       this.label40.TabIndex = 0;
       this.label40.Text = "Fanart";
       // 
+      // saveImageContext
+      // 
+      this.saveImageContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageToolStripMenuItem1});
+      this.saveImageContext.Name = "saveImageContext";
+      this.saveImageContext.Size = new System.Drawing.Size(139, 26);
+      // 
+      // saveImageToolStripMenuItem1
+      // 
+      this.saveImageToolStripMenuItem1.Name = "saveImageToolStripMenuItem1";
+      this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+      this.saveImageToolStripMenuItem1.Text = "Save Image";
+      this.saveImageToolStripMenuItem1.Click += new System.EventHandler(this.saveImageToolStripMenuItem1_Click);
+      // 
       // posterControlSeries
       // 
+      this.posterControlSeries.ContextMenuStrip = this.saveImageContext;
       this.posterControlSeries.Location = new System.Drawing.Point(451, 178);
       this.posterControlSeries.Name = "posterControlSeries";
       this.posterControlSeries.Size = new System.Drawing.Size(280, 365);
@@ -1206,6 +1230,7 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.coverFlowFanart.BackColor = System.Drawing.SystemColors.Control;
       this.coverFlowFanart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+      this.coverFlowFanart.ContextMenuStrip = this.saveImageContext;
       this.coverFlowFanart.CurrentIndex = 0;
       this.coverFlowFanart.Items = null;
       this.coverFlowFanart.Location = new System.Drawing.Point(3, 6);
@@ -1219,7 +1244,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScroll = true;
       this.BackColor = System.Drawing.SystemColors.Control;
-      this.ClientSize = new System.Drawing.Size(792, 781);
+      this.ClientSize = new System.Drawing.Size(792, 779);
       this.Controls.Add(this.pnlFanartEnabled);
       this.Controls.Add(this.pnlEpisodeEnabled);
       this.Controls.Add(this.tabControlTvdb);
@@ -1252,6 +1277,7 @@
       this.pnlEpisodeEnabled.PerformLayout();
       this.pnlFanartEnabled.ResumeLayout(false);
       this.pnlFanartEnabled.PerformLayout();
+      this.saveImageContext.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1362,6 +1388,9 @@
     private System.Windows.Forms.Button cmdNextSeasonBanner;
     private System.Windows.Forms.Button cmdPreviousWideSeasonBanner;
     private System.Windows.Forms.Button cmdNextWideSeasonBanner;
+    private System.Windows.Forms.SaveFileDialog saveImageDialog;
+    private System.Windows.Forms.ContextMenuStrip saveImageContext;
+    private System.Windows.Forms.ToolStripMenuItem saveImageToolStripMenuItem1;
   }
 }
 

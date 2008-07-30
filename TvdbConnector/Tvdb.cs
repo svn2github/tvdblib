@@ -586,9 +586,6 @@ namespace TvdbConnector
             else
             {
               TvdbSeries series = m_downloader.DownloadSeries(sId, _lang, false, false);
-
-              AddSeriesToCache(series);
-
               if (series != null)
               {
                 retList.Add(series);

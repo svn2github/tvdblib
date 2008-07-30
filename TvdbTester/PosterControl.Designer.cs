@@ -101,8 +101,8 @@
       // 
       this.panelLeft.BackColor = System.Drawing.Color.Transparent;
       this.panelLeft.BackgroundImage = global::TvdbTester.Properties.Resources.play_back;
-      this.panelLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-      this.panelLeft.Location = new System.Drawing.Point(14, 0);
+      this.panelLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.panelLeft.Location = new System.Drawing.Point(0, 0);
       this.panelLeft.Name = "panelLeft";
       this.panelLeft.Size = new System.Drawing.Size(43, 41);
       this.panelLeft.TabIndex = 0;
@@ -115,7 +115,7 @@
       this.panelRight.BackColor = System.Drawing.Color.Transparent;
       this.panelRight.BackgroundImage = global::TvdbTester.Properties.Resources.play;
       this.panelRight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-      this.panelRight.Location = new System.Drawing.Point(254, 1);
+      this.panelRight.Location = new System.Drawing.Point(259, 1);
       this.panelRight.Name = "panelRight";
       this.panelRight.Size = new System.Drawing.Size(44, 40);
       this.panelRight.TabIndex = 1;

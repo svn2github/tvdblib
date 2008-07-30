@@ -46,6 +46,21 @@ namespace TvdbTester
     }
 
     /// <summary>
+    /// The currently show fullscreen image
+    /// </summary>
+    public Image ActiveImage
+    {
+      get
+      {
+        if (m_items == null || m_items.Count == 0)
+        {
+          return null;
+        }
+        return pbFull.Image;
+      }
+    }
+
+    /// <summary>
     /// Clear all items
     /// </summary>
     public void Clear()
@@ -126,15 +141,21 @@ namespace TvdbTester
     public void SetNext()
     {
       if (m_items == null) return;
-      m_currentIndex = m_currentIndex + 1 < m_items.Count ? m_currentIndex + 1 : m_currentIndex;
-      ReloadBitmaps();
+      if (m_currentIndex < m_items.Count - 4)
+      {
+        m_currentIndex += 1;
+        ReloadBitmaps();
+      }
     }
 
     public void SetPrevious()
     {
       if (m_items == null) return;
-      m_currentIndex = m_currentIndex > 0 ? m_currentIndex - 1 : 0;
-      ReloadBitmaps();
+      if (m_currentIndex >= -2)
+      {
+        m_currentIndex--;
+        ReloadBitmaps();
+      }
     }
 
     void pnlThumbOverview_MouseWheel(object sender, MouseEventArgs e)
