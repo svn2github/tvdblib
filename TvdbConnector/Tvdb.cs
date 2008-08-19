@@ -574,7 +574,7 @@ namespace TvdbConnector
       }
     }
 
-    public List<int> GetUserFavouritesList(TvdbLanguage _lang)
+    public List<int> GetUserFavouritesList()
     {
       if (m_userInfo != null)
       {
@@ -627,7 +627,7 @@ namespace TvdbConnector
       {
         if (_lang != null)
         {
-          List<int> idList = GetUserFavouritesList(_lang);
+          List<int> idList = GetUserFavouritesList();
           List<TvdbSeries> retList = new List<TvdbSeries>();
 
           foreach (int sId in idList)
