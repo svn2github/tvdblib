@@ -12,6 +12,7 @@
     <AssemblyName>TvdbTester</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ApplicationIcon>plasma-tv.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -231,6 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loader4.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plasma-tv.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
