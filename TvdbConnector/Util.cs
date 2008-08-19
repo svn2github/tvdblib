@@ -5,12 +5,26 @@ using System.Text;
 using TvdbConnector.Data;
 using TvdbConnector.Cache;
 using System.Drawing;
+using System.Globalization;
 
 namespace TvdbConnector
 {
   internal class Util
   {
     internal enum UpdateInterval { day = 0, week = 1, month = 1 };
+
+    /// <summary>
+    /// Type when handling user favorites
+    /// </summary>
+    internal enum UserFavouriteAction { none, add, remove }
+
+    private static List<TvdbLanguage> m_languageList;
+
+    public static List<TvdbLanguage> LanguageList
+    {
+      get { return m_languageList; }
+      set { m_languageList = value; }
+    }
 
     internal static int Int32Parse(String _number)
     {
@@ -28,7 +42,10 @@ namespace TvdbConnector
     {
       try
       {
-        return Double.Parse(_number);
+        _number = _number.Replace(',', '.');
+        NumberFormatInfo nfi = new NumberFormatInfo();
+        nfi.NumberGroupSeparator = ".";
+        return Double.Parse(_number, nfi);
       }
       catch (FormatException)
       {
@@ -42,7 +59,7 @@ namespace TvdbConnector
       String[] values = _text.Split('|');
       foreach (String v in values)
       {
-        if(!v.Equals(""))list.Add(v);
+        if (!v.Equals("")) list.Add(v);
       }
 
       return list;
@@ -50,21 +67,37 @@ namespace TvdbConnector
 
     internal static TvdbLanguage ParseLanguage(String _shortLanguageDesc)
     {
-      if (TvdbCache.LanguageList == null) return null;
-      foreach (TvdbLanguage l in TvdbCache.LanguageList)
+      if (m_languageList != null)
       {
-        if (l.Abbriviation == _shortLanguageDesc)
+        foreach (TvdbLanguage l in m_languageList)
         {
-          return l;
+          if (l.Abbriviation == _shortLanguageDesc)
+          {
+            return l;
+          }
         }
       }
-      return null;
+      else
+      {
+        m_languageList = new List<TvdbLanguage>();
+      }
+
+      //the language doesn't exist yet -> create placeholder
+      TvdbLanguage lang = new TvdbLanguage(-99, "unknown", _shortLanguageDesc);
+      m_languageList.Add(lang);
+      return lang;
     }
 
     internal static DateTime UnixToDotNet(String _unixTimestamp)
     {
       System.DateTime date = System.DateTime.Parse("1/1/1970");
       return date.AddSeconds(Int32.Parse(_unixTimestamp));
+    }
+
+    internal static String DotNetToUnix(DateTime _date)
+    {
+      TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+      return span.TotalSeconds.ToString();
     }
 
     internal static DayOfWeek? GetDayOfWeek(string _dayOfWeek)
@@ -122,7 +155,7 @@ namespace TvdbConnector
     internal static System.Drawing.Point ParseResolution(String _text)
     {
       String[] res = _text.Split('x');
-      return new Point(Int32.Parse(res[0]), Int32.Parse(res[0]));
+      return new Point(Int32.Parse(res[0]), Int32.Parse(res[1]));
       //throw new NotImplementedException();
     }
 
@@ -165,5 +198,7 @@ namespace TvdbConnector
         if (!_series.EpisodesLoaded) _series.EpisodesLoaded = true;
       }
     }
+
+
   }
 }

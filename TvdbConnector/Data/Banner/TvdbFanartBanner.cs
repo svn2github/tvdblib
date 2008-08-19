@@ -22,7 +22,7 @@ namespace TvdbConnector.Data.Banner
     private String m_vignettePath;
 
     private Image m_bannerThumb;
-    private Image m_vignette;
+    private Image m_vignette; //Todo: add vignette support (don't forget xml cacheprovider)
     private Point m_resolution;
     private List<Color> m_colors;
 

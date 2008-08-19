@@ -113,6 +113,10 @@ namespace TvdbTester
     public void ClearPoster()
     {
       panelImage.BackgroundImage = null;
+      m_imageList = null;
+      m_index = 0;
+      panelLeft.Visible = false;
+      panelRight.Visible = false;
     }
 
     private void DoPosterLoad(object _param)

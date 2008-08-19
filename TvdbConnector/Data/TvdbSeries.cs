@@ -49,6 +49,17 @@ namespace TvdbConnector.Data
       m_bannersLoaded = false;
     }
 
+    #region user properties
+    private bool m_isFavorite;
+
+    public bool IsFavorite
+    {
+      get { return m_isFavorite; }
+      set { m_isFavorite = value; }
+    }
+
+    #endregion
+
     #region basic properties
     public int Id
     {
@@ -149,10 +160,13 @@ namespace TvdbConnector.Data
     {
       get
       {
+        if (Genre == null || Genre.Count == 0) return "";
         StringBuilder retString = new StringBuilder();
+        retString.Append("|");
         foreach (String s in Genre)
         {
           retString.Append(s);
+          retString.Append("|");
         }
         return retString.ToString();
       }
@@ -185,10 +199,13 @@ namespace TvdbConnector.Data
     {
       get
       {
+        if (Actors == null || Actors.Count == 0) return "";
         StringBuilder retString = new StringBuilder();
+        retString.Append("|");
         foreach (String s in Actors)
         {
           retString.Append(s);
+          retString.Append("|");
         }
         return retString.ToString();
       }
@@ -204,7 +221,8 @@ namespace TvdbConnector.Data
     public List<TvdbBanner> Banners
     {
       get { return m_banners; }
-      set { 
+      set
+      {
         m_banners = value;
         m_bannersLoaded = true;
       }

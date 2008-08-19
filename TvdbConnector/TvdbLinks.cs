@@ -71,6 +71,8 @@ namespace TvdbConnector
     /// </summary>
     internal static TvdbMirror ActiveMirror = null;
 
+    
+
     internal static String CreateSeriesLink(String _apiKey, int _seriesId, TvdbLanguage _lang, bool _full, bool _zipped)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + 
@@ -123,9 +125,56 @@ namespace TvdbConnector
       return TvdbLinks.BASE_SERVER + "/api/User_PreferredLanguage.php?accountid=" + _identifier;
     }
 
+    /// <summary>
+    /// Creates link which (depending on params) gets user favorites, adds a series to user
+    /// favorites or removes a series from the favorite lis
+    /// </summary>
+    /// <param name="_identifier"></param>
+    /// <param name="_type"></param>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
+    internal static String CreateUserFavouriteLink(String _identifier, Util.UserFavouriteAction _type, int _seriesId)
+    {
+      return TvdbLinks.BASE_SERVER + "/api/User_Favorites.php?accountid=" + _identifier
+        + ((_type == Util.UserFavouriteAction.none) ? "" : ("&type=" + _type.ToString() + "&seriesid=" + _seriesId));
+    }
+    /// <summary>
+    /// Creates link which only retrieves the user favourites
+    /// </summary>
+    /// <param name="_identifier"></param>
+    /// <returns></returns>
     internal static String CreateUserFavouriteLink(String _identifier)
     {
-      return TvdbLinks.BASE_SERVER + "/api/User_Favorites.php?accountid=" + _identifier;
+      return CreateUserFavouriteLink(_identifier, Util.UserFavouriteAction.none, 0);
     }
+
+    #region Rating
+
+    private static String CreateBasicRating(String _identifier)
+    {
+      return TvdbLinks.BASE_SERVER + "/api/User_Rating.php?accountid=" + _identifier;
+    }
+
+    internal static String CreateUserSeriesRating(String _identifier, int _seriesId)
+    {
+      return CreateBasicRating(_identifier) + "&itemtype=series&itemid=" + _seriesId;
+    }
+
+    internal static String CreateUserSeriesRating(String _identifier, int _seriesId, int _rating)
+    {
+      return CreateUserSeriesRating(_identifier, _seriesId) + "&rating=" + _rating;
+    }
+
+    internal static String CreateUserEpisodeRating(String _identifier, int _episodeId)
+    {
+      return CreateBasicRating(_identifier) + "&itemtype=episode&itemid=" + _episodeId;
+    }
+
+    internal static String CreateUserEpisodeRating(String _identifier, int _episodeId, int _rating)
+    {
+      return CreateUserEpisodeRating(_identifier, _episodeId) + "&rating=" + _rating;
+    }
+
+    #endregion
   }
 }

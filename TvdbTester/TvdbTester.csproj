@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BannerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BannerControl.Designer.cs">
+      <DependentUpon>BannerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CoverFlow.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -80,20 +86,27 @@
     </Compile>
     <Compile Include="SeasonImageList.cs" />
     <Compile Include="SeasonTag.cs" />
+    <Compile Include="ShapeRater.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="StartScreen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="StartScreen.Designer.cs">
       <DependentUpon>StartScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tester.cs">
+    <Compile Include="SeriesBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tester.Designer.cs">
-      <DependentUpon>Tester.cs</DependentUpon>
+    <Compile Include="SeriesBrowser.Designer.cs">
+      <DependentUpon>SeriesBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BannerControl.resx">
+      <DependentUpon>BannerControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="CoverFlow.resx">
       <DependentUpon>CoverFlow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -119,12 +132,21 @@
       <DependentUpon>SearchResultForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ShapeRater.resx">
+      <DependentUpon>ShapeRater.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="StartScreen.resx">
       <DependentUpon>StartScreen.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tester.resx">
-      <DependentUpon>Tester.cs</DependentUpon>
+    <EmbeddedResource Include="SeriesBrowser.resx">
+      <DependentUpon>SeriesBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -139,6 +161,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +213,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\season_notfound.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\last.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\first.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loader.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loader2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loader3.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loader4.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

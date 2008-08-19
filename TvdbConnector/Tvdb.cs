@@ -6,19 +6,20 @@ using TvdbConnector.Data;
 using System.Net;
 using TvdbConnector.Cache;
 using TvdbConnector.Data.Banner;
+using TvdbConnector.Xml;
 
 namespace TvdbConnector
 {
   public class Tvdb
   {
     private List<TvdbMirror> m_mirrorInfo;
-    private TvdbSettings m_settings;
     private ICacheProvider m_cacheProvider;
     private String m_apiKey;
     private TvdbUser m_userInfo;
     private TvdbDownloader m_downloader;
+    private TvdbData m_loadedData;
 
-
+    private List<int> m_favorites;//temporary store user favorites to check if a retrieved series is a favorite
 
     public TvdbUser UserInfo
     {
@@ -35,41 +36,47 @@ namespace TvdbConnector
     {
       m_apiKey = _apiKey; //store api key
       m_cacheProvider = _cacheProvider; //store given cache provider
-
-
-      TvdbCache.SeriesList = new List<TvdbSeries>();
-      TvdbCache.LanguageList = new List<TvdbLanguage>();
-      m_mirrorInfo = new List<TvdbMirror>();
+      m_loadedData = new TvdbData();
+      m_loadedData.Mirrors = new List<TvdbMirror>();
+      m_loadedData.SeriesList = new List<TvdbSeries>();
+      m_loadedData.LanguageList = new List<TvdbLanguage>();
       TvdbLinks.ActiveMirror = new TvdbMirror(0, new Uri(TvdbLinks.BASE_SERVER), 7);
-      m_settings = new TvdbSettings(new DateTime(1, 1, 1));
-
       m_downloader = new TvdbDownloader(m_apiKey);
     }
 
     /// <summary>
-    /// Load previously stored information on series, episodes,... from cache
+    /// Load previously stored information on (except series information) from cache
     /// </summary>
     /// <returns>true if cache could be loaded successfully, false otherwise</returns>
-    public bool LoadCache()
+    public bool InitCache()
     {
       if (m_cacheProvider != null)
       {
         //TODO: merge existing settings with loaded settings
-        CachableContent cache = m_cacheProvider.LoadFromCache(); //try to load cache
+        TvdbData cache = m_cacheProvider.LoadUserDataFromCache(); //try to load cache
         if (cache != null)
         {
-          TvdbCache.SeriesList = cache.SeriesInfo != null ? cache.SeriesInfo : new List<TvdbSeries>();
-          TvdbCache.LanguageList = cache.Language != null ? cache.Language : new List<TvdbLanguage>();
+          m_loadedData.SeriesList = cache.SeriesList != null ? cache.SeriesList : new List<TvdbSeries>();
+
+          if (cache.LanguageList != null)
+          {
+            m_loadedData.LanguageList = cache.LanguageList;
+          }
+          else if(m_loadedData.LanguageList == null)
+          {
+            m_loadedData.LanguageList = new List<TvdbLanguage>();
+          }
+          
           if (cache.Mirrors != null && cache.Mirrors.Count > 0)
           {
-            m_mirrorInfo = cache.Mirrors;
+             m_loadedData.Mirrors = cache.Mirrors;
           }
           else
           {
-            m_mirrorInfo = new List<TvdbMirror>();
+            m_loadedData.Mirrors = new List<TvdbMirror>();
             TvdbLinks.ActiveMirror = new TvdbMirror(0, new Uri(TvdbLinks.BASE_SERVER), 7);
           }
-          m_settings = cache.Settings != null ? cache.Settings : new TvdbSettings(new DateTime(1, 1, 1));
+          m_loadedData.LastUpdated = cache.LastUpdated;
           return true;
         }
       }
@@ -92,7 +99,7 @@ namespace TvdbConnector
     /// Gets the series with the given id either from cache (if it has already been loaded) or from 
     /// the selected tvdb mirror.
     /// 
-    /// To check if this series has already been cached, pleas use the Method IsCached(TvdbSeries _series)
+    /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
     /// </summary>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
@@ -110,6 +117,7 @@ namespace TvdbConnector
         {
           return null;
         }
+        series.IsFavorite = CheckIfSeriesFavorite(_seriesId, m_favorites);
         AddSeriesToCache(series);
         return series;
       }
@@ -125,7 +133,6 @@ namespace TvdbConnector
       }
 
       return series;
-      
     }
 
 
@@ -170,10 +177,10 @@ namespace TvdbConnector
     /// <returns></returns>
     public bool IsCached(int _seriesId, TvdbLanguage _language, bool _full)
     {
-      foreach (TvdbSeries s in TvdbCache.SeriesList)
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
         if (s.Id == _seriesId
-            && s.Language.Id == _language.Id
+            && s.Language.Abbriviation.Equals(_language.Abbriviation)
             && ((s.GetType() == typeof(TvdbSeries) && _full) || !_full))
         {
           return true;
@@ -224,19 +231,19 @@ namespace TvdbConnector
     private void AddSeriesToCache(TvdbSeries _series)
     {
       bool found = false;
-      for (int i = 0; i < TvdbCache.SeriesList.Count; i++)
+      for (int i = 0; i < m_loadedData.SeriesList.Count; i++)
       {
-        if (((TvdbSeries)TvdbCache.SeriesList[i]).Id == _series.Id)
+        if (((TvdbSeries)m_loadedData.SeriesList[i]).Id == _series.Id)
         {
           found = true;
 
-          _series.UpdateSeriesInfo(TvdbCache.SeriesList[i]); //so we're not losing banners, etc.
-          TvdbCache.SeriesList[i] = _series;
+          _series.UpdateSeriesInfo(m_loadedData.SeriesList[i]); //so we're not losing banners, etc.
+          m_loadedData.SeriesList[i] = _series;
         }
       }
       if (!found)
       {
-        TvdbCache.SeriesList.Add(_series);
+        m_loadedData.SeriesList.Add(_series);
       }
     }
 
@@ -247,7 +254,7 @@ namespace TvdbConnector
     private void AddEpisodeToCache(TvdbEpisode e)
     {
         bool seriesFound = false;
-        foreach (TvdbSeries s in TvdbCache.SeriesList)
+        foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (s.Id == e.SeriesId)
           {//series for ep found
@@ -262,7 +269,7 @@ namespace TvdbConnector
           TvdbSeries newSeries = new TvdbSeries();
           newSeries.LastUpdated = new DateTime(1, 1, 1);
           newSeries.Episodes.Add(e);
-          TvdbCache.SeriesList.Add(newSeries);
+          m_loadedData.SeriesList.Add(newSeries);
         }
     }
 
@@ -275,14 +282,26 @@ namespace TvdbConnector
     /// <returns></returns>
     private TvdbSeries GetSeriesFromCache(int _seriesId, TvdbLanguage _language)
     {
-      foreach (TvdbSeries s in TvdbCache.SeriesList)
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
         if (s.Id == _seriesId)
         {
           return s;
         }
       }
-      return null;
+
+      //try to retrieve the series from the cache provider
+      try
+      {
+        TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(_seriesId);
+        series.IsFavorite = CheckIfSeriesFavorite(series.Id, m_favorites);
+        AddSeriesToCache(series);
+        return series;
+      }
+      catch (Exception)
+      {
+        return null;
+      }
     }
 
     /// <summary>
@@ -293,7 +312,7 @@ namespace TvdbConnector
     /// <returns></returns>
     private TvdbEpisode GetEpisodeFromCache(int _episodeId, TvdbLanguage _language)
     {
-      foreach (TvdbSeries s in TvdbCache.SeriesList)
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
         foreach (TvdbEpisode e in s.Episodes)
         {
@@ -317,7 +336,7 @@ namespace TvdbConnector
       String xml = client.DownloadString(TvdbLinks.BASE_SERVER + "api/" +
                                          "E8D8A47528D5B5AD" +
                                          TvdbLinks.MIRROR_PATH);
-      XmlHandler hand = new XmlHandler();
+      TvdbXmlReader hand = new TvdbXmlReader();
       List<TvdbMirror> list = hand.ExtractMirrors(xml);
       if (list != null && list.Count > 0)
       {
@@ -352,7 +371,7 @@ namespace TvdbConnector
 
     public bool UpdateAllSeries()
     {
-      TimeSpan timespanLastUpdate = (DateTime.Now - m_settings.LastUpdated);
+      TimeSpan timespanLastUpdate = (DateTime.Now - m_loadedData.LastUpdated);
       //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
       if (timespanLastUpdate < new TimeSpan(1, 0, 0, 0))
       {//last update is less than a day ago -> make a daily update
@@ -371,7 +390,7 @@ namespace TvdbConnector
 
       }
       else
-      {//TODO: Make a full update -> full update deosn't make sen
+      {//TODO: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
       }
 
@@ -387,7 +406,7 @@ namespace TvdbConnector
       DateTime updateTime = m_downloader.DownloadUpdate(out updateSeries, out updateEpisodes, _interval);
       foreach (TvdbSeries us in updateSeries)
       {
-        foreach (TvdbSeries s in TvdbCache.SeriesList)
+        foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (us.Id == s.Id && s.LastUpdated < us.LastUpdated)
           {//changes occured in series
@@ -407,7 +426,7 @@ namespace TvdbConnector
       
       foreach (TvdbEpisode ue in updateEpisodes)
       {
-        foreach (TvdbSeries s in TvdbCache.SeriesList)
+        foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (ue.SeriesId == s.Id)
           {
@@ -434,7 +453,7 @@ namespace TvdbConnector
       }
 
       //set the last updated time to time of this update
-      m_settings.LastUpdated = updateTime;
+      m_loadedData.LastUpdated = updateTime;
 
       return true;
 
@@ -451,14 +470,14 @@ namespace TvdbConnector
       {
         if (IsLanguagesCached)
         {
-          return TvdbCache.LanguageList;
+          return m_loadedData.LanguageList;
         }
         else
         {
           List<TvdbLanguage> list = m_downloader.DownloadLanguages();
           if (list != null && list.Count > 0)
           {
-            TvdbCache.LanguageList = list;
+            m_loadedData.LanguageList = list;
             return list;
           }
           else
@@ -477,7 +496,7 @@ namespace TvdbConnector
       List<TvdbLanguage> list = m_downloader.DownloadLanguages();
       if (list != null && list.Count > 0)
       {
-        TvdbCache.LanguageList = list;
+        m_loadedData.LanguageList = list;
         return true;
       }
       else
@@ -493,7 +512,7 @@ namespace TvdbConnector
     {
       get
       {
-        return (TvdbCache.LanguageList != null && TvdbCache.LanguageList.Count > 0);
+        return (m_loadedData.LanguageList != null && m_loadedData.LanguageList.Count > 0);
       }
     }
 
@@ -502,7 +521,7 @@ namespace TvdbConnector
     /// </summary>
     public void SaveCache()
     {
-      m_cacheProvider.SaveToCache(new CachableContent(TvdbCache.SeriesList, TvdbCache.LanguageList, m_mirrorInfo, m_settings));
+      m_cacheProvider.SaveAllToCache(new TvdbData(m_loadedData.SeriesList, m_loadedData.LanguageList, m_mirrorInfo));
     }
 
 
@@ -512,7 +531,8 @@ namespace TvdbConnector
     /// <returns>List of loaded series</returns>
     public List<TvdbSeries> GetCachedSeries()
     {
-      return TvdbCache.SeriesList;
+      //TODO: should be removed at some point since we're not holding all cached information in memory
+      return m_loadedData.SeriesList;
     }
 
 
@@ -537,9 +557,9 @@ namespace TvdbConnector
         if (userLang != null)
         {
           //only one language is contained in the userlang file
-          foreach (TvdbLanguage l in TvdbCache.LanguageList)
+          foreach (TvdbLanguage l in m_loadedData.LanguageList)
           {
-            if (l.Id == userLang.Id) return l;
+            if (l.Abbriviation.Equals(userLang.Abbriviation)) return l;
           }
           return userLang;//couldn't find language -> return new instance
         }
@@ -558,8 +578,9 @@ namespace TvdbConnector
     {
       if (m_userInfo != null)
       {
-        List<int> userLang = m_downloader.DownloadUserFavouriteList(m_userInfo.UserIdentifier);
-        return userLang;
+        List<int> userFavs = m_downloader.DownloadUserFavouriteList(m_userInfo.UserIdentifier);
+        HandleUserFavoriteRetrieved(userFavs);
+        return userFavs;
       }
       else
       {
@@ -567,8 +588,40 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// If the list of user favorites is retrieved, go through all loaded series and look if the series is a favorite
+    /// </summary>
+    /// <param name="_favs"></param>
+    private void HandleUserFavoriteRetrieved(List<int> _favs)
+    {
+      m_favorites = _favs;
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
+      {
+        s.IsFavorite = CheckIfSeriesFavorite(s.Id, _favs);
+      }
+    }
 
-    public List<TvdbSeries> GetUserFavourites(TvdbLanguage _lang)
+    /// <summary>
+    /// Check if series is in the list of favorites
+    /// </summary>
+    /// <param name="_series"></param>
+    /// <param name="_favs"></param>
+    /// <returns></returns>
+    private bool CheckIfSeriesFavorite(int _series, List<int> _favs)
+    {
+      if (_favs == null) return false;
+      foreach (int f in _favs)
+      {
+        if (_series == f)
+        {//series is a favorite
+          return true;
+        }
+      }
+      return false;
+    }
+
+
+    public List<TvdbSeries> GetUserFavorites(TvdbLanguage _lang)
     {
       if (m_userInfo != null)
       {
@@ -592,6 +645,7 @@ namespace TvdbConnector
               }
             }
           }
+          HandleUserFavoriteRetrieved(idList);
           return retList;
         }
         else
@@ -601,7 +655,97 @@ namespace TvdbConnector
       }
       else
       {
-        throw new Exception("You can't get the favourites when no user is defined");
+        throw new TvdbUserNotFoundException("You can't get the favourites when no user is defined");
+      }
+    }
+
+    public List<int> AddSeriesToFavorites(int _seriesId)
+    {
+      if (m_userInfo != null)
+      {
+        List<int> list = m_downloader.DownloadUserFavoriteList(m_userInfo.UserIdentifier,
+                                                      Util.UserFavouriteAction.add, 
+                                                      _seriesId);
+
+        HandleUserFavoriteRetrieved(list);
+        return list;
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
+      }
+    }
+
+    public List<int> AddSeriesToFavorites(TvdbSeries _series)
+    {
+      if (_series == null) return null;
+      return AddSeriesToFavorites(_series.Id);
+    }
+
+    public List<int> RemoveSeriesFromFavorites(int _seriesId)
+    {
+      if (m_userInfo != null)
+      {
+
+        List<int> list = m_downloader.DownloadUserFavoriteList(m_userInfo.UserIdentifier,
+                                                      Util.UserFavouriteAction.remove,
+                                                      _seriesId);
+        HandleUserFavoriteRetrieved(list);
+        return list;
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
+      }
+    }
+
+    public List<int> RemoveSeriesFromFavorites(TvdbSeries _series)
+    {
+      return RemoveSeriesFromFavorites(_series.Id) ;
+    }
+
+
+    /// <summary>
+    /// Rate the given series
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <param name="_rating"></param>
+    /// <returns></returns>
+    public double RateSeries(int _seriesId, int _rating)
+    {
+      if (m_userInfo != null)
+      {
+        if (_rating < 0 || _rating > 10)
+        {
+          throw new ArgumentOutOfRangeException("rating must be an integer between 0 and 10");
+        }
+        return m_downloader.RateSeries(m_userInfo.UserIdentifier, _seriesId, _rating);
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
+      }
+    }
+
+    /// <summary>
+    /// Rate the given episode
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <param name="_rating"></param>
+    /// <returns></returns>
+    public double RateEpisode(int _seriesId, int _rating)
+    {
+      if (m_userInfo != null)
+      {
+        if (_rating < 0 || _rating > 10)
+        {
+          throw new ArgumentOutOfRangeException("rating must be an integer between 0 and 10");
+        }
+        return m_downloader.RateEpisode(m_userInfo.UserIdentifier, _seriesId, _rating);
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
       }
     }
   }

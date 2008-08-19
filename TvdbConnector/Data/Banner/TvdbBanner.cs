@@ -68,6 +68,7 @@ namespace TvdbConnector.Data
     public bool IsLoaded
     {
       get { return m_isLoaded; }
+      set { m_isLoaded = value; }
     }
 
     /// <summary>

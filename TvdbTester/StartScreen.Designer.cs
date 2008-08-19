@@ -28,13 +28,17 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StartScreen));
       this.cmdStart = new System.Windows.Forms.Button();
       this.txtUserIdentifier = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+      this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+      this.tsStatus = new System.Windows.Forms.ToolStripStatusLabel();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+      this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
       // cmdStart
@@ -91,25 +95,46 @@
       this.richTextBox1.ReadOnly = true;
       this.richTextBox1.Size = new System.Drawing.Size(356, 94);
       this.richTextBox1.TabIndex = 5;
-      this.richTextBox1.Text = "To get your personal user id, go to http://thetvdb.com and register an account. A" +
-          "fter logging in at the page you can access your \"Account Identifier\"  on the \"Ac" +
-          "count\" page. ";
+      this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
       this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+      // 
+      // statusStrip1
+      // 
+      this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsStatus});
+      this.statusStrip1.Location = new System.Drawing.Point(0, 328);
+      this.statusStrip1.Name = "statusStrip1";
+      this.statusStrip1.Size = new System.Drawing.Size(379, 22);
+      this.statusStrip1.TabIndex = 6;
+      this.statusStrip1.Text = "statusStrip1";
+      // 
+      // tsStatus
+      // 
+      this.tsStatus.Name = "tsStatus";
+      this.tsStatus.Size = new System.Drawing.Size(0, 17);
       // 
       // StartScreen
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(379, 328);
+      this.ClientSize = new System.Drawing.Size(379, 350);
+      this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.richTextBox1);
       this.Controls.Add(this.pictureBox1);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.txtUserIdentifier);
       this.Controls.Add(this.cmdStart);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+      this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "StartScreen";
+      this.ShowInTaskbar = false;
+      this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
       this.Text = "StartScreen";
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+      this.statusStrip1.ResumeLayout(false);
+      this.statusStrip1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -123,5 +148,7 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.PictureBox pictureBox1;
     private System.Windows.Forms.RichTextBox richTextBox1;
+    private System.Windows.Forms.StatusStrip statusStrip1;
+    private System.Windows.Forms.ToolStripStatusLabel tsStatus;
   }
 }

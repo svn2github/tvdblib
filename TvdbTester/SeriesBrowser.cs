@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
-using ICSharpCode.SharpZipLib.Zip;
 using System.Net;
 using TvdbConnector;
 using TvdbConnector.Cache;
@@ -18,18 +17,19 @@ using TvdbTester.Properties;
 
 namespace TvdbTester
 {
-  public partial class Tester : Form
+  public partial class SeriesBrowser : Form
   {
     Tvdb m_tvdbHandler;
     TvdbLanguage m_defaultLang;
     TvdbSeries m_currentSeries;
-    public Tester()
+    public SeriesBrowser()
     {
       InitializeComponent();
       this.MouseWheel += new MouseEventHandler(Tester_MouseWheel);
 
     }
 
+    #region Form events
     private void Tester_Load(object sender, EventArgs e)
     {
 
@@ -49,16 +49,13 @@ namespace TvdbTester
         screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
         screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
         DialogResult res = screen.ShowDialog();
-
-        InitialiseForm(screen.UserIdentifier);
-
-        TvdbUser user = new TvdbUser("DieBagger", screen.UserIdentifier);
-        m_tvdbHandler.UserInfo = user;
-        user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
-        List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
-        foreach (TvdbSeries s in favList)
+        if (res == DialogResult.Cancel)
         {
-          cbUserFavourites.Items.Add(s);
+          InitialiseForm(null);
+        }
+        else
+        {
+          InitialiseForm(screen.UserIdentifier);
         }
       }
       else
@@ -75,17 +72,10 @@ namespace TvdbTester
     /// <param name="_userId"></param>
     public void InitialiseForm(String _userId)
     {
-      m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
-      m_tvdbHandler.LoadCache();
+      //m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
+      m_tvdbHandler = new Tvdb(new XmlCacheProvider("Cache"), Resources.API_KEY);
+      m_tvdbHandler.InitCache();
 
-      List<TvdbSeries> cachedSeries = m_tvdbHandler.GetCachedSeries();
-      if (cachedSeries != null && cachedSeries.Count > 0)
-      {
-        foreach (TvdbSeries s in cachedSeries)
-        {
-          cbCachedSeries.Items.Add(s);
-        }
-      }
 
       List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
 
@@ -96,14 +86,31 @@ namespace TvdbTester
       }
       lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
 
-      TvdbUser user = new TvdbUser("DieBagger", _userId);
-      m_tvdbHandler.UserInfo = user;
-      user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
-      List<TvdbSeries> favList = m_tvdbHandler.GetUserFavourites(user.UserPreferredLanguage);
-      foreach (TvdbSeries s in favList)
+      //enable/disable community features
+      if (_userId != null)
       {
-        cbUserFavourites.Items.Add(s);
+        TvdbUser user = new TvdbUser("user", _userId);
+        m_tvdbHandler.UserInfo = user;
+        user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
+        List<TvdbSeries> favList = m_tvdbHandler.GetUserFavorites(user.UserPreferredLanguage);
+        foreach (TvdbSeries s in favList)
+        {
+          cbUserFavourites.Items.Add(s);
+        }
       }
+      else
+      {
+        cbUserFavourites.Text = "No userinfo set";
+        cbUserFavourites.Enabled = false;
+      }
+      cmdAddRemoveFavorites.Enabled = false;
+      cmdSendSeriesRating.Enabled = false;
+      raterSeriesYourRating.Enabled = false;
+    }
+
+    private void Tester_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      if (m_tvdbHandler != null) m_tvdbHandler.SaveCache();
     }
 
     void Tester_MouseWheel(object sender, MouseEventArgs e)
@@ -121,17 +128,8 @@ namespace TvdbTester
           coverFlowFanart.SetPrevious();
         }
       }
-      //throw new NotImplementedException();
     }
-
-    private void cmdTest_Click(object sender, EventArgs e)
-    {
-
-      //FastZip fz = new FastZip();
-      //fz.ExtractZip(@"C:\en.zip", @"C:\test2","");
-
-
-    }
+    #endregion
 
     private void cmdGetSeries_Click(object sender, EventArgs args)
     {
@@ -167,7 +165,14 @@ namespace TvdbTester
         cmdLoadBanners.Enabled = false;
         pnlFanartEnabled.Visible = false;
 
-        posterControlSeries.PosterImages = _series.PosterBanners;
+        if (_series.PosterBanners.Count > 0)
+        {
+          posterControlSeries.PosterImages = _series.PosterBanners;
+        }
+        else
+        {
+          posterControlSeries.ClearPoster();
+        }
       }
       else
       {
@@ -195,10 +200,10 @@ namespace TvdbTester
     {
       posterControlSeries.ClearPoster();
       coverFlowFanart.Clear();
+      bcSeriesBanner.ClearBanner();
+      bcSeasonBanner.ClearBanner();
+      bcSeasonBannerWide.ClearBanner();
 
-      pbEpisodeBanner.Image = Resources.episode_notfound;
-      pbEpisodeSeasonBannerWide.Image = Resources.tvdb_logo1;
-      pbEpisodeSeasonImage.Image = Resources.season_notfound;
       txtEpisodeAbsoluteNumber.Text = "";
       txtEpisodeDirector.Text = "";
       txtEpisodeDVDChapter.Text = "";
@@ -218,19 +223,38 @@ namespace TvdbTester
 
     private void FillSeriesDetails(TvdbSeries series)
     {
+      if (m_tvdbHandler.UserInfo != null)
+      {
+        cmdAddRemoveFavorites.Enabled = true;
+        cmdAddRemoveFavorites.Text = series.IsFavorite ? "Remove from favorites" : "Add to favorites";
+        cmdSendSeriesRating.Enabled = true;
+        raterSeriesYourRating.Enabled = true;
+      }
+      else
+      {
+        cmdAddRemoveFavorites.Enabled = false;
+        cmdSendSeriesRating.Enabled = false;
+        raterSeriesYourRating.Enabled = false;
+      }
+
+      List<TvdbBanner> bannerlist = new List<TvdbBanner>();
       foreach (TvdbBanner b in series.Banners)
       {
         if (b.GetType() == typeof(TvdbSeriesBanner))
         {
           //if (b.Language.Id == m_defaultLang.Id)
           {
-            if (b.IsLoaded || b.LoadBanner())
-            {
-              pbSeries.Image = b.Banner;
-            }
-            break;
+            bannerlist.Add(b);
           }
         }
+      }
+      if (bannerlist.Count > 0)
+      {
+        bcSeriesBanner.BannerImages = bannerlist;
+      }
+      else
+      {
+        bcSeriesBanner.ClearBanner();
       }
 
       txtSeriesId.Text = series.Id.ToString();
@@ -248,6 +272,7 @@ namespace TvdbTester
       txtTvComId.Text = series.TvDotComId.ToString(); //series.
       txtImdbId.Text = series.ImdbId;
       txtZap2itId.Text = series.Zap2itId;
+      raterSeriesSiteRating.CurrentRating = (int)(series.Rating / 10);
     }
 
     private void FillFullSeriesDetails(TvdbSeries _series)
@@ -326,13 +351,13 @@ namespace TvdbTester
           FillEpisodeDetail(ep);
 
           //load episode image
-          if (ep.Banner.IsLoaded || ep.Banner.LoadBanner())
+          if (ep.Banner != null)
           {
-            pbEpisodeBanner.Image = ep.Banner.Banner;
+            bcEpisodeBanner.BannerImage = ep.Banner;
           }
           else
           {
-            pbEpisodeBanner.Image = null;
+            bcEpisodeBanner.ClearBanner();
           }
           selectedSeason = ep.SeasonNumber;
         }
@@ -346,10 +371,10 @@ namespace TvdbTester
           return;
         }
 
-        if (pbEpisodeSeasonImage.Tag == null || selectedSeason != ((SeasonImageList)pbEpisodeSeasonImage.Tag).Season)
+        if (bcSeasonBanner.Tag == null || selectedSeason != (int)bcSeasonBanner.Tag)
         {
-          List<TvdbSeasonBanner> seasonList = new List<TvdbSeasonBanner>();
-          List<TvdbSeasonBanner> seasonWideList = new List<TvdbSeasonBanner>();
+          List<TvdbBanner> seasonList = new List<TvdbBanner>();
+          List<TvdbBanner> seasonWideList = new List<TvdbBanner>();
 
           if (m_currentSeries.SeasonBanners != null && m_currentSeries.SeasonBanners.Count > 0)
           {
@@ -359,7 +384,7 @@ namespace TvdbTester
               {
                 if (b.BannerType == TvdbSeasonBanner.Type.season)
                 {
-                  if (b.Language == null || b.Language.Id == m_defaultLang.Id)
+                  if (b.Language == null || b.Language.Abbriviation.Equals(m_defaultLang.Abbriviation))
                   {
                     seasonList.Add(b);
                   }
@@ -367,7 +392,7 @@ namespace TvdbTester
 
                 if (b.BannerType == TvdbSeasonBanner.Type.seasonwide)
                 {
-                  if (b.Language == null || b.Language.Id == m_defaultLang.Id)
+                  if (b.Language == null || b.Language.Abbriviation.Equals(m_defaultLang.Abbriviation))
                   {
                     seasonWideList.Add(b);
                   }
@@ -375,48 +400,26 @@ namespace TvdbTester
               }
             }
           }
-
-          pbEpisodeSeasonImage.Tag = new SeasonImageList(seasonList, 0, selectedSeason);
-          cmdPreviousSeasonBanner.Visible = false;
-          if (seasonList.Count <= 1)
+          if (seasonList.Count > 0)
           {
-            cmdNextSeasonBanner.Visible = false;
+            bcSeasonBanner.BannerImages = seasonList;
           }
           else
           {
-            cmdNextSeasonBanner.Visible = true;
+            bcSeasonBanner.ClearBanner();
           }
+          bcSeasonBanner.Tag = selectedSeason;
 
-          if (seasonList.Count > 0 && (seasonList[0].IsLoaded || seasonList[0].LoadBanner()))
+          if (seasonWideList.Count > 0)
           {
-            pbEpisodeSeasonImage.Image = seasonList[0].Banner;
+            bcSeasonBannerWide.BannerImages = seasonWideList;
           }
           else
           {
-            pbEpisodeSeasonImage.Image = Resources.episode_notfound;
+            bcSeasonBannerWide.ClearBanner();
           }
 
-          pbEpisodeSeasonBannerWide.Tag = new SeasonImageList(seasonWideList, 0, selectedSeason);
-          cmdPreviousWideSeasonBanner.Visible = false;
-          if (seasonWideList.Count <= 1)
-          {
-            cmdNextWideSeasonBanner.Visible = false;
-          }
-          else
-          {
-            cmdNextWideSeasonBanner.Visible = true;
-          }
-
-          if (seasonWideList.Count > 0 && (seasonWideList[0].IsLoaded || seasonWideList[0].LoadBanner()))
-          {
-            pbEpisodeSeasonBannerWide.Image = seasonWideList[0].Banner;
-          }
-          else
-          {
-            pbEpisodeSeasonBannerWide.Image = Resources.tvdb_logo1;
-          }
-
-
+          bcSeasonBannerWide.Tag = selectedSeason;
         }
       }
     }
@@ -426,10 +429,7 @@ namespace TvdbTester
 
     }
 
-    private void Tester_FormClosing(object sender, FormClosingEventArgs e)
-    {
-      if (m_tvdbHandler != null) m_tvdbHandler.SaveCache();
-    }
+
 
     private void cmdFindSeries_Click(object sender, EventArgs e)
     {
@@ -452,11 +452,6 @@ namespace TvdbTester
         lblCurrentLanguage.Text = "[" + ((TvdbLanguage)cbLanguage.SelectedItem).ToString() + "]";
         m_defaultLang = (TvdbLanguage)cbLanguage.SelectedItem;
       }
-    }
-
-    private void cbCachedSeries_SelectedIndexChanged(object sender, EventArgs e)
-    {
-      LoadSeries(((TvdbSeries)cbCachedSeries.SelectedItem).Id);
     }
 
     private void updateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -499,19 +494,19 @@ namespace TvdbTester
 
     private void cbUserFavourites_SelectedIndexChanged(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id, 
-                                                      m_defaultLang, cbLoadFull.Checked, 
+      TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
+                                                      m_defaultLang, cbLoadFull.Checked,
                                                       cbLoadBanner.Checked);
 
       tabControlTvdb.SelectedTab = tabSeries;
-      pnlEpisodeEnabled.Visible = true;
-      pnlFanartEnabled.Visible = true;
+      pnlEpisodeEnabled.Visible = series.EpisodesLoaded;
+      pnlFanartEnabled.Visible = series.BannersLoaded;
       UpdateSeries(series);
     }
 
     private void tabControlTvdb_SelectedIndexChanged(object sender, EventArgs e)
     {
-      if (tabControlTvdb.SelectedTab == tabFanart)
+      if (tabControlTvdb.SelectedTab == tabFanart && m_currentSeries != null && m_currentSeries.FanartBanners != null)
       {
         List<TvdbFanartBanner> fanartList = m_currentSeries.FanartBanners;
 
@@ -522,103 +517,12 @@ namespace TvdbTester
       }
     }
 
-    #region Banner and WideBanner Changing
-    private void cmdPreviousWideSeasonBanner_Click(object sender, EventArgs e)
-    {
-      SeasonImageList list = ((SeasonImageList)(pbEpisodeSeasonBannerWide.Tag));
-      if (list != null)
-      {
-        list.CurrentIndex--;
-        ChangeSeasonWideBannerButtonEnabled(list);
-      }
-    }
 
-    private void cmdNextWideSeasonBanner_Click(object sender, EventArgs e)
-    {
-      SeasonImageList list = ((SeasonImageList)(pbEpisodeSeasonBannerWide.Tag));
-      if (list != null)
-      {
-        list.CurrentIndex++;
-        ChangeSeasonWideBannerButtonEnabled(list);
-      }
-    }
-
-    private void ChangeSeasonWideBannerButtonEnabled(SeasonImageList list)
-    {
-      if (list.Banners[list.CurrentIndex].IsLoaded || list.Banners[list.CurrentIndex].LoadBanner())
-      {
-        pbEpisodeSeasonBannerWide.Image = list.Banners[list.CurrentIndex].Banner;
-      }
-
-      if (list.CurrentIndex + 1 == list.Banners.Count)
-      {
-        cmdNextWideSeasonBanner.Visible = false;
-      }
-      else
-      {
-        cmdNextWideSeasonBanner.Visible = true;
-      }
-
-      if (list.CurrentIndex == 0)
-      {
-        cmdPreviousWideSeasonBanner.Visible = false;
-      }
-      else
-      {
-        cmdPreviousWideSeasonBanner.Visible = true;
-      }
-    }
-
-
-
-    private void cmdPreviousSeasonBanner_Click(object sender, EventArgs e)
-    {
-      SeasonImageList list = ((SeasonImageList)(pbEpisodeSeasonImage.Tag));
-      if (list != null)
-      {
-        list.CurrentIndex--;
-        ChangeSeasonBannerButtonEnabled(list);
-      }
-    }
-
-    private void cmdNextSeasonBanner_Click(object sender, EventArgs e)
-    {
-      SeasonImageList list = ((SeasonImageList)(pbEpisodeSeasonImage.Tag));
-      if (list != null)
-      {
-        list.CurrentIndex++;
-        ChangeSeasonBannerButtonEnabled(list);
-      }
-    }
-
-    private void ChangeSeasonBannerButtonEnabled(SeasonImageList list)
-    {
-      if (list.Banners[list.CurrentIndex].IsLoaded || list.Banners[list.CurrentIndex].LoadBanner())
-      {
-        pbEpisodeSeasonImage.Image = list.Banners[list.CurrentIndex].Banner;
-      }
-
-      if (list.CurrentIndex + 1 == list.Banners.Count)
-      {
-        cmdNextSeasonBanner.Visible = false;
-      }
-      else
-      {
-        cmdNextSeasonBanner.Visible = true;
-      }
-
-      if (list.CurrentIndex == 0)
-      {
-        cmdPreviousSeasonBanner.Visible = false;
-      }
-      else
-      {
-        cmdPreviousSeasonBanner.Visible = true;
-      }
-    }
-
-    #endregion
-
+    /// <summary>
+    /// Context to save a loaded image
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void saveImageToolStripMenuItem1_Click(object sender, EventArgs e)
     {
       Image saveImage = null;
@@ -634,6 +538,10 @@ namespace TvdbTester
       {
         saveImage = ((CoverFlow)saveImageContext.SourceControl).ActiveImage;
       }
+      else if (saveImageContext.SourceControl.GetType() == typeof(BannerControl))
+      {
+        saveImage = ((BannerControl)saveImageContext.SourceControl).ActiveImage;
+      }
 
       if (saveImage != null)
       {
@@ -641,13 +549,28 @@ namespace TvdbTester
         if (res == DialogResult.OK)
         {
           String fileName = saveImageDialog.FileName;
-          if(!File.Exists(fileName) || 
-             MessageBox.Show("Overwrite File?", "File Exists", MessageBoxButtons.YesNo) == DialogResult.Yes)
-          {
-            saveImage.Save(fileName);
-          }
+          saveImage.Save(fileName);
         }
       }
+    }
+
+    private void cmdSendSeriesRating_Click(object sender, EventArgs e)
+    {
+      raterSeriesSiteRating.CurrentRating = (int)m_tvdbHandler.RateSeries(m_currentSeries.Id,
+                                                 raterSeriesYourRating.CurrentRating);
+    }
+
+    private void cmdAddRemoveFavorites_Click(object sender, EventArgs e)
+    {
+      if (m_currentSeries != null && !m_currentSeries.IsFavorite)
+      {
+        m_tvdbHandler.AddSeriesToFavorites(m_currentSeries.Id);
+      }
+      else
+      {
+        m_tvdbHandler.RemoveSeriesFromFavorites(m_currentSeries.Id);
+      }
+      cmdAddRemoveFavorites.Text = m_currentSeries.IsFavorite ? "Remove from favorites" : "Add to favorites";
     }
 
   }

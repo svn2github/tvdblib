@@ -164,7 +164,7 @@ namespace TvdbTester
       //throw new NotImplementedException();
     }
 
-    private void ReloadBitmaps()
+    private void  ReloadBitmaps()
     {
       if (m_items == null) return;
       for (int i = 0; i < pbList.Count; i++)
@@ -172,7 +172,10 @@ namespace TvdbTester
         if (i + m_currentIndex >= 0 && i + m_currentIndex < m_items.Count)
         {//panel has a image on it
           int imageIndex = m_currentIndex + i;
-
+          if (i == 3)
+          {//the middle image -> set rating here -> not supported by tvdb :(
+            //int rating = m_items[imageIndex].rat
+          }
           if (m_items[imageIndex].IsThumbLoaded)
           {
             pbList[i].SizeMode = PictureBoxSizeMode.Zoom;
@@ -189,6 +192,7 @@ namespace TvdbTester
           pbList[i].Image = null;
         }
       }
+
     }
 
     private void pb0_Click(object sender, EventArgs e)

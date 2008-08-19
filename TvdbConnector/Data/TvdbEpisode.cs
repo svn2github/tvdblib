@@ -33,6 +33,34 @@ namespace TvdbConnector.Data
     private DateTime m_lastUpdated;
     private int m_seasonId;
     private int m_seriesId;
+    private bool m_isSpecial;
+    private int m_airsAfterSeason;
+    private int m_airsBeforeEpisode;
+    private int m_airsBeforeSeason;
+
+    public int AirsBeforeSeason
+    {
+      get { return m_airsBeforeSeason; }
+      set { m_airsBeforeSeason = value; }
+    }
+
+    public int AirsBeforeEpisode
+    {
+      get { return m_airsBeforeEpisode; }
+      set { m_airsBeforeEpisode = value; }
+    }
+
+    public int AirsAfterSeason
+    {
+      get { return m_airsAfterSeason; }
+      set { m_airsAfterSeason = value; }
+    }
+
+    public bool IsSpecial
+    {
+      get { return m_isSpecial; }
+      set { m_isSpecial = value; }
+    }
 
 
     public int DvdSeason
@@ -81,10 +109,13 @@ namespace TvdbConnector.Data
     {
       get
       {
+        if (Writer == null || Writer.Count == 0) return "";
         StringBuilder retString = new StringBuilder();
+        retString.Append("|");
         foreach (String s in Writer)
         {
           retString.Append(s);
+          retString.Append("|");
         }
         return retString.ToString();
       }
@@ -136,10 +167,13 @@ namespace TvdbConnector.Data
     {
       get
       {
+        if (GuestStars == null || GuestStars.Count == 0) return "";
         StringBuilder retString = new StringBuilder();
+        retString.Append("|");
         foreach (String s in GuestStars)
         {
           retString.Append(s);
+          retString.Append("|");
         }
         return retString.ToString();
       }
@@ -175,9 +209,11 @@ namespace TvdbConnector.Data
       {
         if (Directors == null || Directors.Count == 0) return "";
         StringBuilder retString = new StringBuilder();
+        retString.Append("|");
         foreach (String s in Directors)
         {
           retString.Append(s);
+          retString.Append("|");
         }
         return retString.ToString();
       }

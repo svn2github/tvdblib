@@ -25,9 +25,9 @@ namespace TvdbTester
 
     private void cmdStart_Click(object sender, EventArgs e)
     {
-      if(txtUserIdentifier.Text.Equals(""))
+      if(txtUserIdentifier.Text.Equals("") || txtUserIdentifier.Text.Length != 16)
       {
-        MessageBox.Show("Please specify user id");
+        tsStatus.Text = "Please specify a valid user id";
       }
       else
       {

@@ -6,11 +6,11 @@ using System.Xml.Linq;
 using TvdbConnector.Data;
 using TvdbConnector.Data.Banner;
 
-namespace TvdbConnector
+namespace TvdbConnector.Xml
 {
-  internal class XmlHandler
+  internal class TvdbXmlReader
   {
-    internal XmlHandler()
+    internal TvdbXmlReader()
     {
 
     }
@@ -160,7 +160,13 @@ namespace TvdbConnector
                           filename = episode.Element("filename").Value,
                           lastupdated = episode.Element("lastupdated").Value,
                           seasonid = episode.Element("seasonid").Value,
-                          seriesid = episode.Element("seriesid").Value
+                          seriesid = episode.Element("seriesid").Value,
+                          airsafter_season = episode.Elements("airsafter_season").Count() == 1 
+                                           ? episode.Element("airsafter_season").Value : "-99",
+                          airsbefore_episode = episode.Elements("airsbefore_episode").Count() == 1
+                                             ? episode.Element("airsbefore_episode").Value : "-99",
+                          airsbefore_season = episode.Elements("airsbefore_season").Count() == 1
+                                            ? episode.Element("airsbefore_season").Value : "-99"
                         };
 
       List<TvdbEpisode> retList = new List<TvdbEpisode>();
@@ -177,6 +183,9 @@ namespace TvdbConnector
         ep.Directors = Util.SplitTvdbString(e.Director);
         ep.EpisodeName = e.EpisodeName;
         ep.EpisodeNumber = Util.Int32Parse(e.EpisodeNumber);
+        ep.AirsAfterSeason = Util.Int32Parse(e.airsafter_season);
+        ep.AirsBeforeEpisode = Util.Int32Parse(e.airsbefore_episode);
+        ep.AirsBeforeSeason = Util.Int32Parse(e.airsbefore_season);
         try
         {
           ep.FirstAired = e.FirstAired.Equals("") ? new DateTime(1, 1, 1) : DateTime.Parse(e.FirstAired);
@@ -264,7 +273,7 @@ namespace TvdbConnector
       return retList;
     }
 
-    internal List<int> ExtractSeriesFavourites(String _data)
+    internal List<int> ExtractSeriesFavorites(String _data)
     {
 
       XDocument xml = XDocument.Parse(_data);
@@ -282,6 +291,25 @@ namespace TvdbConnector
       }
 
       return retList;
+    }
+
+    internal double ExtractRating(String _data)
+    {
+      XDocument xml = XDocument.Parse(_data);
+
+      var ratings = from series in xml.Descendants("Rating")
+                      select new
+                      {
+                        rating = series.Value
+                      };
+      if (ratings.Count() == 1 && ratings.ElementAt(0).rating != null)
+      {
+        return Util.DoubleParse(ratings.ElementAt(0).rating);
+      }
+      else
+      {
+        return -99;
+      }
     }
 
     internal List<TvdbEpisode> ExtractEpisodeUpdates(String _data)

@@ -8,8 +8,59 @@ namespace TvdbConnector.Cache
 {
   public interface ICacheProvider
   {
-    CachableContent LoadFromCache();
-    void SaveToCache(CachableContent _content);
+    /// <summary>
+    /// Loads all cached series from cache -> can take a while
+    /// </summary>
+    /// <returns></returns>
+    TvdbData LoadUserDataFromCache();
 
+    /// <summary>
+    /// Loads the available languages from cache
+    /// </summary>
+    /// <returns></returns>
+    List<TvdbLanguage> LoadLanguageListFromCache();
+
+    /// <summary>
+    /// Load the available mirrors from cache
+    /// </summary>
+    /// <returns></returns>
+    List<TvdbMirror> LoadMirrorListFromCache();
+
+    /// <summary>
+    /// Loads all series from cache
+    /// </summary>
+    /// <returns></returns>
+    List<TvdbSeries> LoadAllSeriesFromCache();
+
+    /// <summary>
+    /// Load the give series from cache
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
+    TvdbSeries LoadSeriesFromCache(int _seriesId);
+
+    /// <summary>
+    /// Saves all available data to cache
+    /// </summary>
+    /// <param name="_content"></param>
+    void SaveAllToCache(TvdbData _content);
+
+    /// <summary>
+    /// Save the language to cache
+    /// </summary>
+    /// <param name="_languageList"></param>
+    void SaveToCache(List<TvdbLanguage> _languageList);
+
+    /// <summary>
+    /// Save the mirror info to cache
+    /// </summary>
+    /// <param name="_mirrorInfo"></param>
+    void SaveToCache(List<TvdbMirror> _mirrorInfo);
+
+    /// <summary>
+    /// Saves the series to cache
+    /// </summary>
+    /// <param name="_series"></param>
+    void SaveToCache(TvdbSeries _series);
   }
 }

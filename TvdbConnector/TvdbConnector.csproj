@@ -50,17 +50,17 @@
     <Compile Include="Data\TvdbLanguage.cs" />
     <Compile Include="Data\TvdbSeries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Xml\XmlHandler.cs" />
+    <Compile Include="Xml\TvdbXmlReader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\TvdbCache.cs" />
     <Compile Include="Cache\ICacheProvider.cs" />
     <Compile Include="Tvdb.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\BinaryCacheProvider.cs" />
-    <Compile Include="Cache\CachableContent.cs" />
+    <Compile Include="Cache\XmlCacheProvider.cs" />
+    <Compile Include="Data\TvdbData.cs" />
     <Compile Include="Data\Banner\TvdbBanner.cs" />
     <Compile Include="Data\Banner\TvdbEpisodeBanner.cs" />
     <Compile Include="Data\Banner\TvdbFanartBanner.cs" />
@@ -69,11 +69,13 @@
     <Compile Include="Data\Banner\TvdbSeriesBanner.cs" />
     <Compile Include="Data\TvdbDownloader.cs" />
     <Compile Include="Data\TvdbSearchResult.cs" />
-    <Compile Include="Data\TvdbSettings.cs" />
     <Compile Include="Data\TvdbUser.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="TvdbLinks.cs" />
     <Compile Include="Data\TvdbMirror.cs" />
+    <Compile Include="TvdbUserNotFoundException.cs" />
+    <Compile Include="Xml\TvdbXmlWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,6 +10,8 @@ namespace TvdbConnector.Data
   [Serializable]
   public class TvdbLanguage
   {
+    public static TvdbLanguage DefaultLanguage = new TvdbLanguage(7, "English", "en");
+
     private String m_name;
     private String m_abbriviation;
     private int m_id;

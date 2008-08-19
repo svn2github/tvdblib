@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using TvdbConnector.Xml;
 
 namespace TvdbConnector.Data
 {
@@ -10,13 +11,14 @@ namespace TvdbConnector.Data
   {
     private String m_apiKey;
     private WebClient m_webClient;
-    XmlHandler m_xmlHandler;
+    TvdbXmlReader m_xmlHandler;
 
     internal TvdbDownloader(String _apiKey)
     {
       m_apiKey = _apiKey;
       m_webClient = new WebClient();//initialise webclient for downloading xml files
-      m_xmlHandler = new XmlHandler();//xml handler (extract xml information into objects)
+      m_webClient.Encoding = Encoding.UTF8;
+      m_xmlHandler = new TvdbXmlReader();//xml handler (extract xml information into objects)
     }
 
     internal List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
@@ -131,11 +133,18 @@ namespace TvdbConnector.Data
       return null;
     }
 
+
+
     internal List<int> DownloadUserFavouriteList(String _userId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserFavouriteLink(_userId));
-      List<int> userLang = m_xmlHandler.ExtractSeriesFavourites(xml);
-      return userLang;
+      return DownloadUserFavoriteList(_userId, Util.UserFavouriteAction.none, 0);
+    }
+
+    internal List<int> DownloadUserFavoriteList(String _userId, Util.UserFavouriteAction _type, int _seriesId)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserFavouriteLink(_userId, _type, _seriesId));
+      List<int> favList = m_xmlHandler.ExtractSeriesFavorites(xml);
+      return favList;
     }
 
     internal DateTime DownloadUpdate(out List<TvdbSeries> updateSeries, out List<TvdbEpisode> updateEpisodes, Util.UpdateInterval _interval)
@@ -150,7 +159,7 @@ namespace TvdbConnector.Data
 
     internal List<TvdbLanguage> DownloadLanguages()
     {
-      XmlHandler hand = new XmlHandler();
+      TvdbXmlReader hand = new TvdbXmlReader();
       String xml = m_webClient.DownloadString(TvdbLinks.CreateLanguageLink(m_apiKey));
       return hand.ExtractLanguages(xml);
     }
@@ -159,6 +168,30 @@ namespace TvdbConnector.Data
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateSearchLink(_name));
       return m_xmlHandler.ExtractSeriesSearchResults(xml);
+    }
+
+    internal double RateSeries(String _userId, int _seriesId, int _rating)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId, _rating));
+      return m_xmlHandler.ExtractRating(xml);
+    }
+
+    internal double RateEpisode(String _userId, int _episodeId, int _rating)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId, _rating));
+      return m_xmlHandler.ExtractRating(xml);
+    }
+
+    internal double DownloadSeriesRating(String _userId, int _seriesId)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId));
+      return m_xmlHandler.ExtractRating(xml);
+    }
+
+    internal double DownloadEpisodeRating(String _userId, int _seriesId)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _seriesId));
+      return m_xmlHandler.ExtractRating(xml);
     }
   }
 }
