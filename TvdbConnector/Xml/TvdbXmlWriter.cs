@@ -47,7 +47,9 @@ namespace TvdbConnector.Xml
       String fileContent = CreateLanguageFile(_languages);
       try
       {
-        File.WriteAllText(_path, fileContent);
+        FileInfo info = new FileInfo(_path);
+        if (!info.Directory.Exists) info.Directory.Create();
+        File.WriteAllText(info.FullName, fileContent);
         return true;
       }
       catch (Exception)
@@ -86,7 +88,9 @@ namespace TvdbConnector.Xml
       String fileContent = CreateMirrorList(_mirrors);
       try
       {
-        File.WriteAllText(_path, fileContent);
+        FileInfo info = new FileInfo(_path);
+        if (!info.Directory.Exists) info.Directory.Create();
+        File.WriteAllText(info.FullName, fileContent);
         return true;
       }
       catch (Exception)
@@ -259,7 +263,9 @@ namespace TvdbConnector.Xml
       String fileContent = CreateSeriesBannerContent(_bannerList);
       try
       {
-        File.WriteAllText(_path, fileContent);
+        FileInfo info = new FileInfo(_path);
+        if (!info.Directory.Exists) info.Directory.Create();
+        File.WriteAllText(info.FullName, fileContent);
         return true;
       }
       catch (Exception)

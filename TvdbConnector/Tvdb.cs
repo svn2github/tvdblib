@@ -548,6 +548,12 @@ namespace TvdbConnector
 
     }
 
+    /// <summary>
+    /// Gets the preferred language of the user
+    /// 
+    /// user information has to be set, otherwise TvdbUserNotFoundException is thrown
+    /// </summary>
+    /// <returns>preferred language of user</returns>
     public TvdbLanguage GetPreferredLanguage()
     {
       if (m_userInfo != null)
@@ -570,23 +576,11 @@ namespace TvdbConnector
       }
       else
       {
-        throw new Exception("You can't get the preferred language when no user is specified");
+        throw new TvdbUserNotFoundException("You can't get the preferred language when no user is specified");
       }
     }
 
-    public List<int> GetUserFavouritesList()
-    {
-      if (m_userInfo != null)
-      {
-        List<int> userFavs = m_downloader.DownloadUserFavouriteList(m_userInfo.UserIdentifier);
-        HandleUserFavoriteRetrieved(userFavs);
-        return userFavs;
-      }
-      else
-      {
-        throw new Exception("You can't get the preferred language when no user is specified");
-      }
-    }
+
 
     /// <summary>
     /// If the list of user favorites is retrieved, go through all loaded series and look if the series is a favorite
@@ -620,7 +614,29 @@ namespace TvdbConnector
       return false;
     }
 
+    /// <summary>
+    /// Gets a list of IDs of the favorite series of the user
+    /// </summary>
+    /// <returns>id list of favorite series</returns>
+    public List<int> GetUserFavouritesList()
+    {
+      if (m_userInfo != null)
+      {
+        List<int> userFavs = m_downloader.DownloadUserFavouriteList(m_userInfo.UserIdentifier);
+        HandleUserFavoriteRetrieved(userFavs);
+        return userFavs;
+      }
+      else
+      {
+        throw new Exception("You can't get the preferred language when no user is specified");
+      }
+    }
 
+    /// <summary>
+    /// Get the favorite series of the user (only basic series information will be loaded)
+    /// </summary>
+    /// <param name="_lang">Which language should be used</param>
+    /// <returns>List of favorite series</returns>
     public List<TvdbSeries> GetUserFavorites(TvdbLanguage _lang)
     {
       if (m_userInfo != null)
@@ -659,6 +675,12 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Adds the series id to the users list of favorites and returns the new list of
+    /// favorites
+    /// </summary>
+    /// <param name="_seriesId">series to add to the favorites</param>
+    /// <returns>new list with all favorites</returns>
     public List<int> AddSeriesToFavorites(int _seriesId)
     {
       if (m_userInfo != null)
@@ -676,12 +698,24 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Adds the series to the users list of favorites and returns the new list of
+    /// favorites
+    /// </summary>
+    /// <param name="_series">series to add to the favorites</param>
+    /// <returns>new list with all favorites</returns>
     public List<int> AddSeriesToFavorites(TvdbSeries _series)
     {
       if (_series == null) return null;
       return AddSeriesToFavorites(_series.Id);
     }
 
+    /// <summary>
+    /// Removes the series id from the users list of favorites and returns the new list of
+    /// favorites
+    /// </summary>
+    /// <param name="_seriesId">series to remove from the favorites</param>
+    /// <returns>new list with all favorites</returns>
     public List<int> RemoveSeriesFromFavorites(int _seriesId)
     {
       if (m_userInfo != null)
@@ -699,6 +733,12 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Removes the series from the users list of favorites and returns the new list of
+    /// favorites
+    /// </summary>
+    /// <param name="_series">series to remove from the favorites</param>
+    /// <returns>new list with all favorites</returns>
     public List<int> RemoveSeriesFromFavorites(TvdbSeries _series)
     {
       return RemoveSeriesFromFavorites(_series.Id) ;
