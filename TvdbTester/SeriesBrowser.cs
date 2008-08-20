@@ -147,7 +147,8 @@ namespace TvdbTester
     {
       CleanUpForm();
 
-      TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_defaultLang, cbLoadFull.Checked, cbLoadBanner.Checked);
+      TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_defaultLang, cbLoadFull.Checked, 
+                                                  cbLoadActors.Checked, cbLoadBanner.Checked);
 
       if (series != null)
       {
@@ -192,6 +193,28 @@ namespace TvdbTester
         pnlEpisodeEnabled.Visible = true;
       }
 
+      if (_series.TvdbActorsLoaded)
+      {
+        cmdLoadActorInfo.Enabled = false;
+        pnlActorsEnabled.Visible = false;
+        if (_series.TvdbActors.Count > 0)
+        {
+          List<TvdbBanner> bannerList = new List<TvdbBanner>();
+          foreach (TvdbActor a in _series.TvdbActors)
+          {
+            bannerList.Add(a.ActorImage);
+          }
+
+          bcActors.BannerImages = bannerList;
+          SetActorInfo(_series.TvdbActors[0]);
+        }
+      }
+      else
+      {
+        cmdLoadActorInfo.Enabled = true;
+        pnlActorsEnabled.Visible = true;
+      }
+
     }
 
 
@@ -203,6 +226,7 @@ namespace TvdbTester
       bcSeriesBanner.ClearBanner();
       bcSeasonBanner.ClearBanner();
       bcSeasonBannerWide.ClearBanner();
+      bcEpisodeBanner.ClearBanner();
 
       txtEpisodeAbsoluteNumber.Text = "";
       txtEpisodeDirector.Text = "";
@@ -467,7 +491,8 @@ namespace TvdbTester
 
     private void cmdLoadFullSeriesInfo_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true, false);
+      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true, 
+                                                  m_currentSeries.TvdbActorsLoaded, m_currentSeries.BannersLoaded);
       if (series != null && series.Episodes != null && series.Episodes.Count != 0)
       {
         UpdateSeries(series);
@@ -478,13 +503,30 @@ namespace TvdbTester
       }
     }
 
-    private void cmdLoadBanners_Click(object sender, EventArgs e)
+    private void cmdLoadActorInfo_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, false, true);
-      if (series != null && m_currentSeries.BannersLoaded)
+      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, m_currentSeries.EpisodesLoaded,
+                                                  true, m_currentSeries.BannersLoaded);
+      
+      if (series != null && series.TvdbActorsLoaded)
       {
         UpdateSeries(series);
+      }
+      else
+      {
+        MessageBox.Show("Couldn't load extended actor info");
+      }
+    }
 
+    private void cmdLoadBanners_Click(object sender, EventArgs e)
+    {
+      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, 
+                                                  m_currentSeries.EpisodesLoaded, m_currentSeries.TvdbActorsLoaded, 
+                                                  true);
+      
+      if (series != null && series.BannersLoaded)
+      {
+        UpdateSeries(series);
       }
       else
       {
@@ -495,13 +537,21 @@ namespace TvdbTester
     private void cbUserFavourites_SelectedIndexChanged(object sender, EventArgs e)
     {
       TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
-                                                      m_defaultLang, cbLoadFull.Checked,
+                                                      m_defaultLang, cbLoadFull.Checked, cbLoadActors.Checked,
                                                       cbLoadBanner.Checked);
 
-      tabControlTvdb.SelectedTab = tabSeries;
-      pnlEpisodeEnabled.Visible = series.EpisodesLoaded;
-      pnlFanartEnabled.Visible = series.BannersLoaded;
-      UpdateSeries(series);
+      if (series != null)
+      {
+        CleanUpForm();
+        tabControlTvdb.SelectedTab = tabSeries;
+        pnlEpisodeEnabled.Visible = series.EpisodesLoaded;
+        pnlFanartEnabled.Visible = series.BannersLoaded;
+        UpdateSeries(series);
+      }
+      else
+      {
+        MessageBox.Show("Couldn't retrieve series");
+      }
     }
 
     private void tabControlTvdb_SelectedIndexChanged(object sender, EventArgs e)
@@ -573,5 +623,16 @@ namespace TvdbTester
       cmdAddRemoveFavorites.Text = m_currentSeries.IsFavorite ? "Remove from favorites" : "Add to favorites";
     }
 
+    private void bcActors_IndexChanged(EventArgs _event)
+    {
+      SetActorInfo(m_currentSeries.TvdbActors[bcActors.Index]);
+    }
+    private void SetActorInfo(TvdbActor _actor)
+    {
+      txtActorId.Text = _actor.Id.ToString();
+      txtActorName.Text = _actor.Name.ToString();
+      txtActorRole.Text = _actor.Role.ToString();
+      txtActorSortOrder.Text = _actor.SortOrder.ToString();
+    }
   }
 }

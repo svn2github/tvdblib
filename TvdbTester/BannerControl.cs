@@ -24,6 +24,9 @@ namespace TvdbTester
 
     private Color m_loadingBackgroundColor = Color.Transparent;
 
+    public delegate void IndexChangedHandler(EventArgs _event);
+    public event IndexChangedHandler IndexChanged;
+
     [Description("Background color when loading an image")]
     public Color LoadingBackgroundColor
     {
@@ -72,6 +75,20 @@ namespace TvdbTester
         }
       }
       get { return m_imageList; }
+    }
+
+    public int Index
+    {
+      get { return m_index; }
+      set
+      {
+        if (m_index > 0 && m_index < m_imageList.Count)
+        {
+          m_index = value;
+          SetPosterImage(m_imageList[value]);
+          if (IndexChanged != null) IndexChanged(new EventArgs());
+        }
+      }
     }
 
     public TvdbBanner BannerImage
@@ -215,9 +232,9 @@ namespace TvdbTester
     {
       if (m_imageList != null && m_imageList.Count != 0)
       {
-
         cmdRight.Visible = true;
         m_index--;
+        if (IndexChanged != null) IndexChanged(new EventArgs());
         SetPosterImage(m_imageList[m_index]);
         if (m_index <= 0)
         {
@@ -237,6 +254,7 @@ namespace TvdbTester
       {
         cmdLeft.Visible = true;
         m_index++;
+        if (IndexChanged != null) IndexChanged(new EventArgs());
         SetPosterImage(m_imageList[m_index]);
         if (m_index >= m_imageList.Count - 1)
         {

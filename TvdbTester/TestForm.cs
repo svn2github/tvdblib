@@ -10,6 +10,7 @@ using TvdbConnector;
 using TvdbConnector.Cache;
 using TvdbTester.Properties;
 using TvdbConnector.Data;
+using TvdbConnector.Data.Banner;
 
 namespace TvdbTester
 {
@@ -24,8 +25,18 @@ namespace TvdbTester
     {
       Tvdb tvdb = new Tvdb(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
       List<TvdbLanguage> lang = tvdb.Languages;
-      TvdbSeries s = tvdb.GetSeries(73255, TvdbLanguage.DefaultLanguage, true, true);
-      bannerControl1.BannerImages = s.Banners;
+      TvdbSeries s = tvdb.GetSeries(73255, TvdbLanguage.DefaultLanguage, true, true, true);
+
+      if (s.TvdbActorsLoaded)
+      {
+        List<TvdbBanner> bannerList = new List<TvdbBanner>();
+        foreach (TvdbActor a in s.TvdbActors)
+        {
+          bannerList.Add(a.ActorImage);
+        }
+
+        bcActors.BannerImages = bannerList;
+      }
       tvdb.SaveCache();
     }
   }

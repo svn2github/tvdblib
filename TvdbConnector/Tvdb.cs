@@ -106,13 +106,14 @@ namespace TvdbConnector
     /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
-    public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _full, bool _loadBanners)
+    public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, 
+                                bool _loadActors, bool _loadBanners)
     {
       TvdbSeries series = GetSeriesFromCache(_seriesId, _language);
 
       if (series == null)
       {
-        series = m_downloader.DownloadSeries(_seriesId, _language, _full, _loadBanners);
+        series = m_downloader.DownloadSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners);
         if (series == null)
         {
           return null;
@@ -121,8 +122,13 @@ namespace TvdbConnector
         AddSeriesToCache(series);
         return series;
       }
+
+      if (_loadActors && !series.TvdbActorsLoaded)
+      {//user wants actors loaded
+        series.TvdbActors = m_downloader.DownloadActors(_seriesId);
+      }
       
-      if (_full && !series.EpisodesLoaded)
+      if (_loadEpisodes && !series.EpisodesLoaded)
       {//user wants the full version but only the basic has been loaded (without episodes
         series.Episodes = m_downloader.DownloadEpisodes(_seriesId, _language);
       }
@@ -137,7 +143,7 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// Gets the full series (including episode information) with the given id either from cache 
+    /// Gets the full series (including episode information and actors) with the given id either from cache 
     /// (if it has already been loaded) or from the selected tvdb mirror.
     /// 
     /// To check if this series has already been cached, pleas use the Method IsCached(TvdbSeries _series)
@@ -149,11 +155,11 @@ namespace TvdbConnector
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetFullSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
     {
-      return GetSeries(_seriesId, _language, false, _loadBanners);
+      return GetSeries(_seriesId, _language, true, true, _loadBanners);
     }
 
     /// <summary>
-    /// Gets the basic series (without episode information) with the given id either from cache 
+    /// Gets the basic series (without episode information and actors) with the given id either from cache 
     /// (if it has already been loaded) or from the selected tvdb mirror.
     /// 
     /// To check if this series has already been cached, please use the Method IsCached(TvdbSeries _series)
@@ -165,7 +171,7 @@ namespace TvdbConnector
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetBasicSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
     {
-      return GetSeries(_seriesId, _language, false, _loadBanners);
+      return GetSeries(_seriesId, _language, false, false, _loadBanners);
     }
 
     /// <summary>
@@ -175,15 +181,19 @@ namespace TvdbConnector
     /// <param name="_language"></param>
     /// <param name="_full"></param>
     /// <returns></returns>
-    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _full)
+    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
+                         bool _loadActors, bool _loadBanners)
     {
       foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
-        if (s.Id == _seriesId
-            && s.Language.Abbriviation.Equals(_language.Abbriviation)
-            && ((s.GetType() == typeof(TvdbSeries) && _full) || !_full))
+        if (s.Id == _seriesId && s.Language.Abbriviation.Equals(_language.Abbriviation))
         {
-          return true;
+          if((s.BannersLoaded || !_loadActors) &&
+             (s.TvdbActorsLoaded || !_loadActors) &&
+             (s.EpisodesLoaded || !_loadEpisodes))
+          {
+            return true;
+          }          
         }
       }
       return false;
@@ -411,7 +421,7 @@ namespace TvdbConnector
           if (us.Id == s.Id && s.LastUpdated < us.LastUpdated)
           {//changes occured in series
             //get series info
-            TvdbSeries newSeries = GetSeries(s.Id, s.Language, false, false);
+            TvdbSeries newSeries = GetSeries(s.Id, s.Language, false, false, false);
             newSeries.LastUpdated = us.LastUpdated;
             if (newSeries != null)
             {
@@ -543,7 +553,8 @@ namespace TvdbConnector
     public TvdbSeries ForceUpdate(TvdbSeries _series)
     {
 
-      _series = m_downloader.DownloadSeries(_series.Id, _series.Language, true, true);
+      _series = m_downloader.DownloadSeries(_series.Id, _series.Language, _series.EpisodesLoaded, 
+                                            _series.TvdbActorsLoaded, _series.BannersLoaded);
       return _series;
 
     }
@@ -648,13 +659,13 @@ namespace TvdbConnector
 
           foreach (int sId in idList)
           {
-            if (IsCached(sId, _lang, false))
+            if (IsCached(sId, _lang, false, false, false))
             {
               retList.Add(GetSeriesFromCache(sId, _lang));
             }
             else
             {
-              TvdbSeries series = m_downloader.DownloadSeries(sId, _lang, false, false);
+              TvdbSeries series = m_downloader.DownloadSeries(sId, _lang, false, false, false);
               if (series != null)
               {
                 retList.Add(series);

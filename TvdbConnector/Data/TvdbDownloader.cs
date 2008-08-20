@@ -41,13 +41,13 @@ namespace TvdbConnector.Data
     /// </summary>
     /// <param name="series"></param>
     /// <returns></returns>
-    internal TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _full, bool _loadBanners)
+    internal TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, bool _loadActors, bool _loadBanners)
     {
       //download the xml data from this request
       String data;
       try
       {
-        data = m_webClient.DownloadString(TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, _full, false));
+        data = m_webClient.DownloadString(TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, _loadEpisodes, false));
       }
       catch (Exception ex)
       {
@@ -62,7 +62,7 @@ namespace TvdbConnector.Data
       if (seriesList != null && seriesList.Count == 1)
       {
         TvdbSeries series = seriesList[0];
-        if (_full)
+        if (_loadEpisodes)
         {
           //add episode info to series
           List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(data);
@@ -71,6 +71,17 @@ namespace TvdbConnector.Data
             Util.AddEpisodeToSeries(e, series);
           }
         }
+
+        //also load actors
+        if (_loadActors)
+        {
+          List<TvdbActor> list = DownloadActors(_seriesId);
+          if (list != null)
+          {
+            series.TvdbActors = list;
+          }
+        }
+
         //also load banner paths
         if (_loadBanners)
         {
@@ -192,6 +203,12 @@ namespace TvdbConnector.Data
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _seriesId));
       return m_xmlHandler.ExtractRating(xml);
+    }
+
+    internal List<TvdbActor> DownloadActors(int _seriesId)
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateActorLink(_seriesId, m_apiKey));
+      return m_xmlHandler.ExtractActors(xml);
     }
   }
 }

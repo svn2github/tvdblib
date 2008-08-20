@@ -222,15 +222,6 @@
     <None Include="Resources\first.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loader.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\loader2.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\loader3.gif" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\loader4.gif" />
   </ItemGroup>
   <ItemGroup>

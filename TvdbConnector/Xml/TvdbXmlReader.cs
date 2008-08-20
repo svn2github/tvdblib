@@ -431,5 +431,40 @@ namespace TvdbConnector.Xml
       return retList;
 
     }
+
+    internal List<TvdbActor> ExtractActors(String _data)
+    {
+      XDocument xml = XDocument.Parse(_data);
+      List<TvdbBanner> retList = new List<TvdbBanner>();
+      var allActors = from episode in xml.Descendants("Actor")
+                        select new
+                        {
+
+                          Id = episode.Element("id").Value,
+                          Image = episode.Element("Image").Value,
+                          Name = episode.Element("Name").Value,
+                          Role = episode.Element("Role").Value,
+                          SortOrder = episode.Element("SortOrder").Value
+                        };
+      List<TvdbActor> actorList = new List<TvdbActor>();
+      foreach (var a in allActors)
+      {
+        TvdbActor actor = new TvdbActor();
+        actor.Id = Util.Int32Parse(a.Id);
+        actor.Name = a.Name;
+        actor.Role = a.Role;
+        actor.SortOrder = Util.Int32Parse(a.SortOrder);
+
+        TvdbActorBanner banner = new TvdbActorBanner();
+        banner.Id = actor.Id;
+        banner.BannerPath = a.Image;
+        actor.ActorImage = banner;
+        if (actor.Id != -99)
+        {
+          actorList.Add(actor);
+        }
+      }
+      return actorList;
+    }
   }
 }

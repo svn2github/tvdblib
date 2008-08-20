@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.cmdTest1 = new System.Windows.Forms.Button();
-      this.bannerControl1 = new TvdbTester.BannerControl();
+      this.bcActors = new TvdbTester.BannerControl();
       this.SuspendLayout();
       // 
       // cmdTest1
@@ -42,19 +42,25 @@
       this.cmdTest1.UseVisualStyleBackColor = true;
       this.cmdTest1.Click += new System.EventHandler(this.cmdTest1_Click);
       // 
-      // bannerControl1
+      // bcActors
       // 
-      this.bannerControl1.Location = new System.Drawing.Point(12, 82);
-      this.bannerControl1.Name = "bannerControl1";
-      this.bannerControl1.Size = new System.Drawing.Size(765, 145);
-      this.bannerControl1.TabIndex = 1;
+      this.bcActors.BannerImage = null;
+      this.bcActors.BannerImages = null;
+      this.bcActors.DefaultImage = null;
+      this.bcActors.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcActors.Location = new System.Drawing.Point(22, 67);
+      this.bcActors.Name = "bcActors";
+      this.bcActors.Size = new System.Drawing.Size(300, 450);
+      this.bcActors.TabIndex = 1;
       // 
       // TestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(779, 362);
-      this.Controls.Add(this.bannerControl1);
+      this.ClientSize = new System.Drawing.Size(352, 557);
+      this.Controls.Add(this.bcActors);
       this.Controls.Add(this.cmdTest1);
       this.Name = "TestForm";
       this.Text = "TestForm";
@@ -65,6 +71,6 @@
     #endregion
 
     private System.Windows.Forms.Button cmdTest1;
-    private BannerControl bannerControl1;
+    private BannerControl bcActors;
   }
 }

@@ -32,14 +32,6 @@ namespace TvdbConnector.Data
     private String m_zap2itId;
     #endregion
 
-    //Episode information
-    private List<TvdbEpisode> m_episodes;
-    private bool m_episodesLoaded;
-
-    //all banners
-    private List<TvdbBanner> m_banners;
-    private bool m_bannersLoaded;
-
     public TvdbSeries()
     {
       m_episodes = new List<TvdbEpisode>();
@@ -47,6 +39,7 @@ namespace TvdbConnector.Data
 
       m_banners = new List<TvdbBanner>();
       m_bannersLoaded = false;
+      m_tvdbActorsLoaded = false;
     }
 
     #region user properties
@@ -215,6 +208,10 @@ namespace TvdbConnector.Data
 
     #region banners
 
+    //all banners
+    private List<TvdbBanner> m_banners;
+    private bool m_bannersLoaded;
+
     /// <summary>
     /// returns a list of all banners for this series
     /// </summary>
@@ -313,6 +310,10 @@ namespace TvdbConnector.Data
     #endregion
 
     #region episodes
+    //Episode information
+    private List<TvdbEpisode> m_episodes;
+    private bool m_episodesLoaded;
+
     public bool EpisodesLoaded
     {
       get { return m_episodesLoaded; }
@@ -327,6 +328,27 @@ namespace TvdbConnector.Data
         m_episodes = value;
         m_episodesLoaded = true;
       }
+    }
+    #endregion
+
+    #region Actors
+    //Actor Information
+    private List<TvdbActor> m_tvdbActors;
+    private bool m_tvdbActorsLoaded;
+
+    public List<TvdbActor> TvdbActors
+    {
+      get { return m_tvdbActors; }
+      set {
+        m_tvdbActorsLoaded = true;
+        m_tvdbActors = value; 
+      }
+    }
+    
+    public bool TvdbActorsLoaded
+    {
+      get { return m_tvdbActorsLoaded; }
+      set { m_tvdbActorsLoaded = value; }
     }
     #endregion
 
@@ -364,8 +386,5 @@ namespace TvdbConnector.Data
         this.Episodes = _series.Episodes;
       }
     }
-
-
-
   }
 }

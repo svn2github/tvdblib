@@ -60,6 +60,8 @@
   <ItemGroup>
     <Compile Include="Cache\BinaryCacheProvider.cs" />
     <Compile Include="Cache\XmlCacheProvider.cs" />
+    <Compile Include="Data\Banner\TvdbActorBanner.cs" />
+    <Compile Include="Data\TvdbActor.cs" />
     <Compile Include="Data\TvdbData.cs" />
     <Compile Include="Data\Banner\TvdbBanner.cs" />
     <Compile Include="Data\Banner\TvdbEpisodeBanner.cs" />

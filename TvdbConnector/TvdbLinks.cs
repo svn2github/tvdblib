@@ -176,5 +176,16 @@ namespace TvdbConnector
     }
 
     #endregion
+
+    /// <summary>
+    /// Create link to get actor info
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <param name="_apiKey"></param>
+    /// <returns></returns>
+    internal static String CreateActorLink(int _seriesId, String _apiKey)
+    {
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/actors.xml";
+    }
   }
 }

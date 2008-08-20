@@ -99,6 +99,49 @@ namespace TvdbConnector.Xml
       }
     }
 
+    /// <summary>
+    /// Create the file content for a list of actors
+    /// </summary>
+    /// <param name="_mirrors"></param>
+    /// <returns></returns>
+    internal String CreateActorList(List<TvdbActor> _actors)
+    {
+      XElement xml = new XElement("Actors");
+      foreach (TvdbActor m in _actors)
+      {
+        xml.Add(new XElement("Actor",
+                   new XElement("id", m.Id),
+                   new XElement("Image", m.ActorImage.BannerPath),
+                   new XElement("Role", m.Role),
+                   new XElement("SortOrder", m.SortOrder),
+                   new XElement("Name", m.Name))
+               );
+      }
+      return xml.ToString();
+    }
+
+    /// <summary>
+    /// Write the xml file for the actors to file
+    /// </summary>
+    /// <param name="_mirrors"></param>
+    /// <param name="_path"></param>
+    /// <returns></returns>
+    internal bool WriteActorFile(List<TvdbActor> _actors, String _path)
+    {
+      String fileContent = CreateActorList(_actors);
+      try
+      {
+        FileInfo info = new FileInfo(_path);
+        if (!info.Directory.Exists) info.Directory.Create();
+        File.WriteAllText(info.FullName, fileContent);
+        return true;
+      }
+      catch (Exception)
+      {
+        return false;
+      }
+    }
+
     internal String CreateSeriesContent(TvdbSeries m)
     {
       XElement xml = new XElement("Data");
