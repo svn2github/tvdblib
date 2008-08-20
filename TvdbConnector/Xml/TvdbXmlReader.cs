@@ -15,6 +15,21 @@ namespace TvdbConnector.Xml
 
     }
 
+    /// <summary>
+    /// Extract a list of languages when the data has the format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Languages>
+    ///  <Language>
+    ///    <name>Español</name>
+    ///    <abbreviation>es</abbreviation>
+    ///    <id>16</id>
+    ///  </Language>
+    /// </Languages>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbLanguage> ExtractLanguages(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -40,6 +55,21 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+    /// <summary>
+    /// Extract a list of mirrors if the data has the format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Mirrors>
+    ///  <Mirror>
+    ///    <id>1</id>
+    ///    <mirrorpath>http://thetvdb.com</mirrorpath>
+    ///    <typemask>7</typemask>
+    ///  </Mirror>
+    /// </Mirrors>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbMirror> ExtractMirrors(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -65,6 +95,39 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+
+    /// <summary>
+    /// Extract a list of series in the format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data>
+    ///    <Series>
+    ///       <id>73739</id>
+    ///       <Actors>|Malcolm David Kelley|Jorge Garcia|Maggie Grace|...|</Actors>
+    ///       <Airs_DayOfWeek>Thursday</Airs_DayOfWeek>
+    ///       <Airs_Time>9:00 PM</Airs_Time>
+    ///       <ContentRating>TV-14</ContentRating>
+    ///       <FirstAired>2004-09-22</FirstAired>
+    ///       <Genre>|Action and Adventure|Drama|Science-Fiction|</Genre>
+    ///       <IMDB_ID>tt0411008</IMDB_ID>
+    ///       <Language>en</Language>
+    ///       <Network>ABC</Network>
+    ///       <Overview>After Oceanic Air flight 815...</Overview>
+    ///       <Rating>8.9</Rating>
+    ///       <Runtime>60</Runtime>
+    ///       <SeriesID>24313</SeriesID>
+    ///       <SeriesName>Lost</SeriesName>
+    ///       <Status>Continuing</Status>
+    ///       <banner>graphical/24313-g2.jpg</banner>
+    ///       <fanart>fanart/original/73739-1.jpg</fanart>
+    ///       <lastupdated>1205694666</lastupdated>
+    ///       <zap2it_id>SH672362</zap2it_id>
+    ///    </Series>
+    /// </Data>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbSeries> ExtractSeries(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -131,6 +194,41 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+
+    /// <summary>
+    /// Extract a list of episodes from the given data when the data has the following format:
+    /// 
+    ///  <?xml version="1.0" encoding="UTF-8" ?>
+    ///  <Episode>
+    ///      <id>332179</id>
+    ///      <DVD_chapter></DVD_chapter>
+    ///      <DVD_discid></DVD_discid>
+    ///      <DVD_episodenumber></DVD_episodenumber>
+    ///      <DVD_season></DVD_season>
+    ///      <Director>|Joseph McGinty Nichol|</Director>
+    ///      <EpisodeName>Chuck Versus the World</EpisodeName>
+    ///      <EpisodeNumber>1</EpisodeNumber>
+    ///      <FirstAired>2007-09-24</FirstAired>
+    ///      <GuestStars>|Julia Ling|Vik Sahay|Mieko Hillman|</GuestStars>
+    ///      <IMDB_ID></IMDB_ID>
+    ///      <Language>English</Language>
+    ///      <Overview>Chuck Bartowski is an average computer geek...</Overview>
+    ///      <ProductionCode></ProductionCode>
+    ///      <Rating>9.0</Rating>
+    ///      <SeasonNumber>1</SeasonNumber>
+    ///      <Writer>|Josh Schwartz|Chris Fedak|</Writer>
+    ///      <absolute_number></absolute_number>
+    ///      <airsafter_season></airsafter_season>
+    ///      <airsbefore_episode></airsbefore_episode>
+    ///      <airsbefore_season></airsbefore_season>
+    ///      <filename>episodes/80348-332179.jpg</filename>
+    ///      <lastupdated>1201292806</lastupdated>
+    ///      <seasonid>27985</seasonid>
+    ///      <seriesid>80348</seriesid>
+    ///  </Episode>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbEpisode> ExtractEpisodes(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -161,7 +259,7 @@ namespace TvdbConnector.Xml
                           lastupdated = episode.Element("lastupdated").Value,
                           seasonid = episode.Element("seasonid").Value,
                           seriesid = episode.Element("seriesid").Value,
-                          airsafter_season = episode.Elements("airsafter_season").Count() == 1 
+                          airsafter_season = episode.Elements("airsafter_season").Count() == 1
                                            ? episode.Element("airsafter_season").Value : "-99",
                           airsbefore_episode = episode.Elements("airsbefore_episode").Count() == 1
                                              ? episode.Element("airsbefore_episode").Value : "-99",
@@ -215,7 +313,18 @@ namespace TvdbConnector.Xml
 
     }
 
-
+    /// <summary>
+    /// Extract list of updated series
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data time="1203923101">
+    ///    <Series>
+    ///      <id>71969</id>
+    ///      <time>1203848965</time>
+    ///    </Series>
+    ///  </Data>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbSeries> ExtractSeriesUpdates(String _data)
     {
 
@@ -238,6 +347,26 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+    /// <summary>
+    /// Extract the results of a series search with format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data>
+    ///   <Series>
+    ///      <seriesid>73739</seriesid>
+    ///      <language>en</language>
+    ///      <SeriesName>Lost</SeriesName>
+    ///      <banner>graphical/24313-g2.jpg</banner>
+    ///      <Overview>After Oceanic Air flight 815...</Overview>
+    ///      <FirstAired>2004-09-22</FirstAired>
+    ///      <IMDB_ID>tt0411008</IMDB_ID>
+    ///      <zap2it_id>SH672362</zap2it_id>
+    ///      <id>73739</id>
+    ///   </Series>
+    /// </Data>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbSearchResult> ExtractSeriesSearchResults(String _data)
     {
 
@@ -273,6 +402,22 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+    /// <summary>
+    /// Exctract the series favorites
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Favorites>
+    ///   <Series>73067</Series>
+    ///   <Series>78957</Series>
+    ///   <Series>75340</Series>
+    ///   <Series>72218</Series>
+    ///   <Series>73244</Series>
+    ///   <Series>75397</Series>
+    /// </Favorites>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<int> ExtractSeriesFavorites(String _data)
     {
 
@@ -293,15 +438,27 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
+    /// <summary>
+    /// Extract a rating from the data in the format
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data>
+    ///  <Series>
+    ///    <Rating>7.5</Rating>
+    ///  </Series>
+    /// </Data>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal double ExtractRating(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
 
       var ratings = from series in xml.Descendants("Rating")
-                      select new
-                      {
-                        rating = series.Value
-                      };
+                    select new
+                    {
+                      rating = series.Value
+                    };
       if (ratings.Count() == 1 && ratings.ElementAt(0).rating != null)
       {
         return Util.DoubleParse(ratings.ElementAt(0).rating);
@@ -312,6 +469,18 @@ namespace TvdbConnector.Xml
       }
     }
 
+    /// <summary>
+    /// Extract the updated episodes from the data in the format:
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data time="1203923101">
+    ///    <Episode>
+    ///      <id>326268</id>
+    ///      <time>1203848662</time>
+    ///    </Episode>
+    ///  </Data>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbEpisode> ExtractEpisodeUpdates(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -333,7 +502,35 @@ namespace TvdbConnector.Xml
 
     }
 
+    /// <summary>
+    /// Extract the data of updated banners
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data time="1203923101">
+    ///    <Banner>
+    ///      <SeasonNum>1</SeasonNum>
+    ///      <Series>79302</Series>
+    ///      <format>standard</format>
+    ///      <language>en</language>
+    ///      <path>seasons/79302-1.jpg</path>
+    ///      <type>season</type>
+    ///    </Banner>
+    ///  </Data>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
+    internal List<TvdbBanner> ExtractBannerUpdates(String _data)
+    {
+      //todo: banner update -> problem is update.xml doesn't contain all information for fanart
+      return null;
+    }
 
+    /// <summary>
+    /// Extract the update time from data
+    /// 
+    /// <Data time="1203923101
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal DateTime ExtractUpdateTime(string _data)
     {
       XDocument xml = XDocument.Parse(_data);
@@ -353,15 +550,50 @@ namespace TvdbConnector.Xml
     }
 
 
+    /// <summary>
+    /// Extract a list of banners from the data when the data has the format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Banners>
+    ///    <Banner>
+    ///       <id>20106</id>
+    ///       <BannerPath>fanart/original/73739-1.jpg</BannerPath>
+    ///       <VignettePath>fanart/vignette/73739-1.jpg</VignettePath>
+    ///       <ThumbnailPath>_cache/fanart/original/73739-1.jpg</ThumbnailPath>
+    ///       <BannerType>fanart</BannerType>
+    ///       <BannerType2>1920x1080</BannerType2>
+    ///       <Colors>|68,69,59|69,70,58|78,78,68|</Colors>
+    ///       <Language>en</Language>
+    ///    </Banner>
+    ///    <Banner>
+    ///       <id>18953</id>
+    ///       <BannerPath>seasons/73739-2-2.jpg</BannerPath>
+    ///       <BannerType>season</BannerType>
+    ///       <BannerType2>season</BannerType2>
+    ///       <Language>es</Language>
+    ///       <Season>2</Season>
+    ///    </Banner>
+    ///    <Banner>
+    ///       <id>9529</id>
+    ///       <BannerPath>graphical/73739-g.jpg</BannerPath>
+    ///       <BannerType>series</BannerType>
+    ///       <BannerType2>graphical</BannerType2>
+    ///       <Language>en</Language>
+    ///    </Banner>
+    /// </Banners>
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbBanner> ExtractBanners(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
+
+      //Extract the fanart banners
       var allEpisodes = from episode in xml.Descendants("Banner")
                         where episode.Element("BannerType").Value.Equals("fanart")
                         select new TvdbFanartBanner
                         {
-
                           Id = Util.Int32Parse(episode.Element("id").Value),
                           BannerPath = episode.Element("BannerPath").Value,
                           VignettePath = episode.Element("VignettePath").Value,
@@ -369,9 +601,6 @@ namespace TvdbConnector.Xml
                           Resolution = Util.ParseResolution(episode.Element("BannerType2").Value),
                           Colors = Util.ParseColors(episode.Element("Colors").Value),
                           Language = Util.ParseLanguage(episode.Element("Language").Value)
-
-                          //LastUpdated = Util.UnixToDotNet(episode.Element("time").Value),
-                          // SeriesId = Util.Int32Parse(episode.Element("Series").Value)
                         };
 
       foreach (TvdbBanner e in allEpisodes)
@@ -379,11 +608,11 @@ namespace TvdbConnector.Xml
         if (e.Id != -99) retList.Add(e);
       }
 
+      //Extract the season banners
       var allBanners = from banner in xml.Descendants("Banner")
                        where banner.Element("BannerType").Value.Equals("season")
                        select new TvdbSeasonBanner
                        {
-
                          Id = Util.Int32Parse(banner.Element("id").Value),
                          BannerPath = banner.Element("BannerPath").Value,
                          Season = Util.Int32Parse(banner.Element("Season").Value),
@@ -396,11 +625,11 @@ namespace TvdbConnector.Xml
         if (e.Id != -99) retList.Add(e);
       }
 
+      //Extract the series banners
       var allBanners2 = from banner in xml.Descendants("Banner")
                         where banner.Element("BannerType").Value.Equals("series")
                         select new TvdbSeriesBanner
                         {
-
                           Id = Util.Int32Parse(banner.Element("id").Value),
                           BannerPath = banner.Element("BannerPath").Value,
                           BannerType = Util.ParseSeriesBannerType(banner.Element("BannerType2").Value),
@@ -412,6 +641,7 @@ namespace TvdbConnector.Xml
         if (e.Id != -99) retList.Add(e);
       }
 
+      //Extract the poster banners
       var allPosters = from banner in xml.Descendants("Banner")
                        where banner.Element("BannerType").Value.Equals("poster")
                        select new TvdbPosterBanner
@@ -429,23 +659,39 @@ namespace TvdbConnector.Xml
       }
 
       return retList;
-
     }
 
+    /// <summary>
+    /// Extract a list of actors when the data has the format:
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Actors>
+    ///   <Actor>
+    ///     <id>22017</id>
+    ///     <Image>actors/22017.jpg</Image>
+    ///     <Name>Zachary Levi</Name>
+    ///     <Role>Chuck Bartowski</Role>
+    ///     <SortOrder>0</SortOrder>
+    ///   </Actor>
+    /// </Actors>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
     internal List<TvdbActor> ExtractActors(String _data)
     {
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
       var allActors = from episode in xml.Descendants("Actor")
-                        select new
-                        {
+                      select new
+                      {
 
-                          Id = episode.Element("id").Value,
-                          Image = episode.Element("Image").Value,
-                          Name = episode.Element("Name").Value,
-                          Role = episode.Element("Role").Value,
-                          SortOrder = episode.Element("SortOrder").Value
-                        };
+                        Id = episode.Element("id").Value,
+                        Image = episode.Element("Image").Value,
+                        Name = episode.Element("Name").Value,
+                        Role = episode.Element("Role").Value,
+                        SortOrder = episode.Element("SortOrder").Value
+                      };
       List<TvdbActor> actorList = new List<TvdbActor>();
       foreach (var a in allActors)
       {

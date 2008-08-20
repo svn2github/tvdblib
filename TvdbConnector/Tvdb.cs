@@ -56,8 +56,6 @@ namespace TvdbConnector
         TvdbData cache = m_cacheProvider.LoadUserDataFromCache(); //try to load cache
         if (cache != null)
         {
-          m_loadedData.SeriesList = cache.SeriesList != null ? cache.SeriesList : new List<TvdbSeries>();
-
           if (cache.LanguageList != null)
           {
             m_loadedData.LanguageList = cache.LanguageList;
@@ -433,7 +431,6 @@ namespace TvdbConnector
       }
 
       //update all flagged episodes
-      
       foreach (TvdbEpisode ue in updateEpisodes)
       {
         foreach (TvdbSeries s in m_loadedData.SeriesList)
@@ -461,6 +458,8 @@ namespace TvdbConnector
           }
         }
       }
+
+      //todo: update banner information here -> ask in forum if fanart doesn't contain all fields on purpose...
 
       //set the last updated time to time of this update
       m_loadedData.LastUpdated = updateTime;
@@ -536,7 +535,7 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// Returns all series that are already cached locally
+    /// Returns all series that are already cached in memory -> won't return information that has been cached locally but not yet loaded into memory
     /// </summary>
     /// <returns>List of loaded series</returns>
     public List<TvdbSeries> GetCachedSeries()
@@ -547,7 +546,7 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// Forces a complete update of the series
+    /// Forces a complete update of the series. All information that has already been loade will be deleted and reloaded from tvdb
     /// </summary>
     /// <param name="_seriesId"></param>
     public TvdbSeries ForceUpdate(TvdbSeries _series)
@@ -591,7 +590,7 @@ namespace TvdbConnector
       }
     }
 
-
+    #region user favorites and rating
 
     /// <summary>
     /// If the list of user favorites is retrieved, go through all loaded series and look if the series is a favorite
@@ -633,13 +632,13 @@ namespace TvdbConnector
     {
       if (m_userInfo != null)
       {
-        List<int> userFavs = m_downloader.DownloadUserFavouriteList(m_userInfo.UserIdentifier);
+        List<int> userFavs = m_downloader.DownloadUserFavoriteList(m_userInfo.UserIdentifier);
         HandleUserFavoriteRetrieved(userFavs);
         return userFavs;
       }
       else
       {
-        throw new Exception("You can't get the preferred language when no user is specified");
+        throw new Exception("You can't get the list of user favorites when no user is specified");
       }
     }
 
@@ -799,5 +798,7 @@ namespace TvdbConnector
         throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
       }
     }
+
+    #endregion
   }
 }

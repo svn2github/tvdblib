@@ -68,7 +68,6 @@ namespace TvdbConnector.Data
     public bool IsLoaded
     {
       get { return m_isLoaded; }
-      set { m_isLoaded = value; }
     }
 
     /// <summary>
@@ -111,6 +110,31 @@ namespace TvdbConnector.Data
       }
     }
 
+    /// <summary>
+    /// Loads the banner with the given image
+    /// </summary>
+    /// <param name="_img"></param>
+    /// <returns></returns>
+    public bool LoadBanner(Image _img)
+    {
+      if (_img != null)
+      {
+        m_banner = _img;
+        m_isLoaded = true;
+        return true;
+      }
+      else
+      {
+        m_isLoaded = false;
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Loads the image from the given path
+    /// </summary>
+    /// <param name="_path"></param>
+    /// <returns></returns>
     protected Image LoadImage(String _path)
     {
       WebClient client = new WebClient();

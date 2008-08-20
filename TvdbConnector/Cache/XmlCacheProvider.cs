@@ -99,7 +99,14 @@ namespace TvdbConnector.Cache
             if (!file.Directory.Exists) file.Directory.Create();
             ((TvdbFanartBanner)b).BannerThumb.Save(file.FullName);
           }
-          //todo: vignette!!!
+
+          file = new FileInfo(root + "\\bannervignette_" + b.Id + ".jpg");
+          if (((TvdbFanartBanner)b).IsVignetteLoaded && !file.Exists)
+          {
+            if (!file.Directory.Exists) file.Directory.Create();
+            ((TvdbFanartBanner)b).VignetteImage.Save(file.FullName);
+          }
+
         }
       }
 
@@ -214,15 +221,8 @@ namespace TvdbConnector.Cache
         series.Episodes = epList;
         String bannerFile = seriesRoot + "\\banners.xml";
         String actorFile = seriesRoot + "\\actors.xml";
-        Regex rex = null;
-        try
-        {
-          rex = new Regex("S(\\d+)E(\\d+)");
-        }
-        catch (Exception ex)
-        {
+        Regex rex = new Regex("S(\\d+)E(\\d+)");
 
-        }
 
         if (Directory.Exists(seriesRoot + "\\EpisodeImages"))
         {
@@ -238,22 +238,10 @@ namespace TvdbConnector.Cache
               {
                 if (e.SeasonNumber == season && e.EpisodeNumber == episode)
                 {
-                  e.Banner.Banner = Image.FromFile(epImageFile);
-                  e.Banner.IsLoaded = true;
+                  e.Banner.LoadBanner(Image.FromFile(epImageFile));
                   break;
                 }
               }
-              //int season = Int32.Parse(epImageFile.Remove(1).Remove(epImageFile.IndexOf('E')));
-              /*int bannerId = Int32.Parse(b.Remove(b.IndexOf(".")).Remove(0, b.LastIndexOf("_") + 1));
-              foreach (TvdbBanner banner in bannerList)
-              {
-                if (banner.Id == bannerId)
-                {
-                  banner.Banner = Image.FromFile(b);
-                  banner.IsLoaded = true;
-                }
-              }*/
-
             }
             catch (Exception ex)
             {
@@ -266,7 +254,7 @@ namespace TvdbConnector.Cache
         {//banners have been already loaded
           List<TvdbBanner> bannerList = m_xmlReader.ExtractBanners(File.ReadAllText(bannerFile));
 
-          String[] banners = Directory.GetFiles(seriesRoot, "banner_*.jpg");
+          String[] banners = Directory.GetFiles(seriesRoot, "banner*.jpg");
           foreach (String b in banners)
           {
             try
@@ -276,8 +264,18 @@ namespace TvdbConnector.Cache
               {
                 if (banner.Id == bannerId)
                 {
-                  banner.Banner = Image.FromFile(b);
-                  banner.IsLoaded = true;
+                  if (b.Contains("thumb") && banner.GetType() == typeof(TvdbFanartBanner))
+                  {
+                    ((TvdbFanartBanner)banner).LoadThumb(Image.FromFile(b));
+                  }
+                  else if (b.Contains("vignette") && banner.GetType() == typeof(TvdbFanartBanner))
+                  {
+                    ((TvdbFanartBanner)banner).LoadVignette(Image.FromFile(b));
+                  }
+                  else
+                  {
+                    banner.LoadBanner(Image.FromFile(b));
+                  }
                 }
               }
 
@@ -305,8 +303,7 @@ namespace TvdbConnector.Cache
               {
                 if (actor.Id == actorId)
                 {
-                  actor.ActorImage.Banner = Image.FromFile(b);
-                  actor.ActorImage.IsLoaded = true;
+                  actor.ActorImage.LoadBanner(Image.FromFile(b));
                 }
               }
 

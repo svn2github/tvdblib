@@ -21,6 +21,12 @@ namespace TvdbConnector.Data
       m_xmlHandler = new TvdbXmlReader();//xml handler (extract xml information into objects)
     }
 
+    /// <summary>
+    /// Download the episodes
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <param name="_language"></param>
+    /// <returns></returns>
     internal List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesEpisodesLink(m_apiKey, _seriesId, _language));
@@ -29,6 +35,11 @@ namespace TvdbConnector.Data
       return epList;
     }
 
+    /// <summary>
+    /// Download the banners
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
     internal List<TvdbBanner> DownloadBanners(int _seriesId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesBannersLink(m_apiKey, _seriesId));
@@ -133,6 +144,11 @@ namespace TvdbConnector.Data
       }
     }
 
+    /// <summary>
+    /// Download the preferred language of the user
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <returns></returns>
     internal TvdbLanguage DownloadUserPreferredLanguage(String _userId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserLanguageLink(_userId));
@@ -145,12 +161,23 @@ namespace TvdbConnector.Data
     }
 
 
-
-    internal List<int> DownloadUserFavouriteList(String _userId)
+    /// <summary>
+    /// Download the user favorite list
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <returns></returns>
+    internal List<int> DownloadUserFavoriteList(String _userId)
     {
       return DownloadUserFavoriteList(_userId, Util.UserFavouriteAction.none, 0);
     }
 
+    /// <summary>
+    /// Download the user favorite list
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <param name="_type"></param>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
     internal List<int> DownloadUserFavoriteList(String _userId, Util.UserFavouriteAction _type, int _seriesId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserFavouriteLink(_userId, _type, _seriesId));
@@ -168,6 +195,10 @@ namespace TvdbConnector.Data
       return m_xmlHandler.ExtractUpdateTime(xml);
     }
 
+    /// <summary>
+    /// Download available languages
+    /// </summary>
+    /// <returns></returns>
     internal List<TvdbLanguage> DownloadLanguages()
     {
       TvdbXmlReader hand = new TvdbXmlReader();
@@ -175,36 +206,72 @@ namespace TvdbConnector.Data
       return hand.ExtractLanguages(xml);
     }
 
+    /// <summary>
+    /// Download search results
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <returns></returns>
     internal List<TvdbSearchResult> DownloadSearchResults(String _name)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateSearchLink(_name));
       return m_xmlHandler.ExtractSeriesSearchResults(xml);
     }
 
+    /// <summary>
+    /// Make the request for rating a series
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <param name="_seriesId"></param>
+    /// <param name="_rating"></param>
+    /// <returns></returns>
     internal double RateSeries(String _userId, int _seriesId, int _rating)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId, _rating));
       return m_xmlHandler.ExtractRating(xml);
     }
 
+    /// <summary>
+    /// Make the request for rating an episode
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <param name="_episodeId"></param>
+    /// <param name="_rating"></param>
+    /// <returns></returns>
     internal double RateEpisode(String _userId, int _episodeId, int _rating)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId, _rating));
       return m_xmlHandler.ExtractRating(xml);
     }
 
+    /// <summary>
+    /// Download the series rating without doing a rating
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
     internal double DownloadSeriesRating(String _userId, int _seriesId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId));
       return m_xmlHandler.ExtractRating(xml);
     }
 
+    /// <summary>
+    /// Download the episode rating without rating 
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
     internal double DownloadEpisodeRating(String _userId, int _seriesId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _seriesId));
       return m_xmlHandler.ExtractRating(xml);
     }
 
+    /// <summary>
+    /// Download the list of actors
+    /// </summary>
+    /// <param name="_seriesId"></param>
+    /// <returns></returns>
     internal List<TvdbActor> DownloadActors(int _seriesId)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateActorLink(_seriesId, m_apiKey));

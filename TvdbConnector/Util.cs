@@ -20,12 +20,21 @@ namespace TvdbConnector
 
     private static List<TvdbLanguage> m_languageList;
 
+    /// <summary>
+    /// List of available languages -> needed for some methods
+    /// </summary>
     public static List<TvdbLanguage> LanguageList
     {
       get { return m_languageList; }
       set { m_languageList = value; }
     }
 
+    /// <summary>
+    /// Parses an integer string and returns the number or -99 if the format
+    /// is invalid
+    /// </summary>
+    /// <param name="_number"></param>
+    /// <returns></returns>
     internal static int Int32Parse(String _number)
     {
       try
@@ -38,6 +47,12 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Parses an double string and returns the number or -99 if the format
+    /// is invalid
+    /// </summary>
+    /// <param name="_number"></param>
+    /// <returns></returns>
     internal static double DoubleParse(string _number)
     {
       try
@@ -53,6 +68,11 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Splits a tvdb string (having the format | item1 | item2 | item3 |)
+    /// </summary>
+    /// <param name="_text"></param>
+    /// <returns></returns>
     internal static List<String> SplitTvdbString(String _text)
     {
       List<String> list = new List<string>();
@@ -65,6 +85,13 @@ namespace TvdbConnector
       return list;
     }
 
+    /// <summary>
+    /// Parse the short description of a tvdb language and returns the proper
+    /// object. If no such language exists yet (maybe the list of available
+    /// languages hasn't been downloaded yet), a placeholder is created
+    /// </summary>
+    /// <param name="_shortLanguageDesc"></param>
+    /// <returns></returns>
     internal static TvdbLanguage ParseLanguage(String _shortLanguageDesc)
     {
       if (m_languageList != null)
@@ -88,12 +115,22 @@ namespace TvdbConnector
       return lang;
     }
 
+    /// <summary>
+    /// Converts a unix timestamp (used on tvdb) into a .net datetime object
+    /// </summary>
+    /// <param name="_unixTimestamp"></param>
+    /// <returns></returns>
     internal static DateTime UnixToDotNet(String _unixTimestamp)
     {
       System.DateTime date = System.DateTime.Parse("1/1/1970");
       return date.AddSeconds(Int32.Parse(_unixTimestamp));
     }
 
+    /// <summary>
+    /// Converts a .net datetime object into a unix timestamp (used on tvdb)  
+    /// </summary>
+    /// <param name="_unixTimestamp"></param>
+    /// <returns></returns>
     internal static String DotNetToUnix(DateTime _date)
     {
       TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
