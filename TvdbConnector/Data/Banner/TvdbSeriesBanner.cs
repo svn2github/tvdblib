@@ -17,13 +17,30 @@ namespace TvdbConnector.Data.Banner
   [Serializable]
   public class TvdbSeriesBanner: TvdbBanner
   {
+    #region private fields
+    private Type m_bannerType;
+    #endregion
+
+    /// <summary>
+    /// Type of the series banner
+    /// </summary>
     public enum Type { text, graphical, blank, none };
 
+    /// <summary>
+    /// TvdbSeriesBanner constructor
+    /// </summary>
     public TvdbSeriesBanner()
     {
 
     }
 
+    /// <summary>
+    /// TvdbSeriesBanner constructor
+    /// </summary>
+    /// <param name="_id"></param>
+    /// <param name="_path"></param>
+    /// <param name="_lang"></param>
+    /// <param name="_type"></param>
     public TvdbSeriesBanner(int _id, String _path, TvdbLanguage _lang, Type _type)
     {
       this.BannerPath = _path;
@@ -32,7 +49,9 @@ namespace TvdbConnector.Data.Banner
       this.BannerType = _type;
     }
 
-    private Type m_bannerType;
+    /// <summary>
+    /// Banner type of the series banner
+    /// </summary>
     public Type BannerType
     {
       get { return m_bannerType; }

@@ -9,10 +9,16 @@ namespace TvdbConnector.Data
 {
   internal class TvdbDownloader
   {
+    #region private properties
     private String m_apiKey;
     private WebClient m_webClient;
-    TvdbXmlReader m_xmlHandler;
+    private TvdbXmlReader m_xmlHandler;
+    #endregion
 
+    /// <summary>
+    /// TvdbDownloader constructor
+    /// </summary>
+    /// <param name="_apiKey"></param>
     internal TvdbDownloader(String _apiKey)
     {
       m_apiKey = _apiKey;
@@ -111,9 +117,6 @@ namespace TvdbConnector.Data
       }
     }
 
-
-
-
     /// <summary>
     /// Download the given episode from tvdb
     /// </summary>
@@ -160,7 +163,6 @@ namespace TvdbConnector.Data
       return null;
     }
 
-
     /// <summary>
     /// Download the user favorite list
     /// </summary>
@@ -185,6 +187,13 @@ namespace TvdbConnector.Data
       return favList;
     }
 
+    /// <summary>
+    /// Download an Update
+    /// </summary>
+    /// <param name="updateSeries"></param>
+    /// <param name="updateEpisodes"></param>
+    /// <param name="_interval"></param>
+    /// <returns></returns>
     internal DateTime DownloadUpdate(out List<TvdbSeries> updateSeries, out List<TvdbEpisode> updateEpisodes, Util.UpdateInterval _interval)
     {
       String xml = m_webClient.DownloadString(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.day));

@@ -13,17 +13,28 @@ namespace TvdbConnector.Data.Banner
   [Serializable]
   public class TvdbSeasonBanner: TvdbBanner
   {
+    /// <summary>
+    /// Type of the season banner
+    /// </summary>
     public enum Type  { season = 0, seasonwide = 1 , none = 2};
 
+    #region private fields
     private Type m_bannerType;
     private int m_season;
+    #endregion
 
+    /// <summary>
+    /// Season of the banner
+    /// </summary>
     public int Season
     {
       get { return m_season; }
       set { m_season = value; }
     }
 
+    /// <summary>
+    /// Type of the banner
+    /// </summary>
     public Type BannerType
     {
       get { return m_bannerType; }

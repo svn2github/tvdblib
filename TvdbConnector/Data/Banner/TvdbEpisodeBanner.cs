@@ -15,12 +15,18 @@ namespace TvdbConnector.Data.Banner
   [Serializable]
   public class TvdbEpisodeBanner: TvdbBanner
   {
+    /// <summary>
+    /// TvdbEpisodeBanner constructor
+    /// </summary>
     public TvdbEpisodeBanner()
       : base()
     {
       this.Language = new TvdbLanguage(-99, "Universal, valid for all languages", "all");
     }
 
+    /// <summary>
+    /// TvdbEpisodeBanner constructor
+    /// </summary>
     public TvdbEpisodeBanner(int _id, String _bannerPath):this()
     {
       Id = _id;

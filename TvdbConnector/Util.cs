@@ -6,11 +6,15 @@ using TvdbConnector.Data;
 using TvdbConnector.Cache;
 using System.Drawing;
 using System.Globalization;
+using TvdbConnector.Data.Banner;
 
 namespace TvdbConnector
 {
   internal class Util
   {
+    /// <summary>
+    /// Update interval
+    /// </summary>
     internal enum UpdateInterval { day = 0, week = 1, month = 1 };
 
     /// <summary>
@@ -18,7 +22,9 @@ namespace TvdbConnector
     /// </summary>
     internal enum UserFavouriteAction { none, add, remove }
 
+    #region private fields
     private static List<TvdbLanguage> m_languageList;
+    #endregion
 
     /// <summary>
     /// List of available languages -> needed for some methods
@@ -137,6 +143,11 @@ namespace TvdbConnector
       return span.TotalSeconds.ToString();
     }
 
+    /// <summary>
+    /// returns a day of the week object parsed from the string
+    /// </summary>
+    /// <param name="_dayOfWeek"></param>
+    /// <returns></returns>
     internal static DayOfWeek? GetDayOfWeek(string _dayOfWeek)
     {
       switch (_dayOfWeek.ToLower())
@@ -174,8 +185,11 @@ namespace TvdbConnector
       }
     }
 
-
-
+    /// <summary>
+    /// Returns a List of colors parsed from the _text
+    /// </summary>
+    /// <param name="_text"></param>
+    /// <returns></returns>
     internal static List<Color> ParseColors(String _text)
     {
       List<Color> retList = new List<Color>();
@@ -189,21 +203,36 @@ namespace TvdbConnector
       //throw new NotImplementedException();
     }
 
-    internal static System.Drawing.Point ParseResolution(String _text)
+    /// <summary>
+    /// Returns a point objects parsed from _text
+    /// </summary>
+    /// <param name="_text"></param>
+    /// <returns></returns>
+    internal static Point ParseResolution(String _text)
     {
       String[] res = _text.Split('x');
       return new Point(Int32.Parse(res[0]), Int32.Parse(res[1]));
       //throw new NotImplementedException();
     }
 
-    internal static TvdbConnector.Data.Banner.TvdbSeasonBanner.Type ParseSeasonBannerType(String _type)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
+    internal static TvdbSeasonBanner.Type ParseSeasonBannerType(String _type)
     {
       if (_type.Equals("season")) return TvdbConnector.Data.Banner.TvdbSeasonBanner.Type.season;
       else if (_type.Equals("seasonwide")) return TvdbConnector.Data.Banner.TvdbSeasonBanner.Type.seasonwide;
       else return TvdbConnector.Data.Banner.TvdbSeasonBanner.Type.none;
     }
 
-    internal static TvdbConnector.Data.Banner.TvdbSeriesBanner.Type ParseSeriesBannerType(String _type)
+    /// <summary>
+    /// Returns the fitting SeriesBanner type from parameter
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
+    internal static TvdbSeriesBanner.Type ParseSeriesBannerType(String _type)
     {
       if (_type.Equals("season")) return TvdbConnector.Data.Banner.TvdbSeriesBanner.Type.blank;
       else if (_type.Equals("graphical")) return TvdbConnector.Data.Banner.TvdbSeriesBanner.Type.graphical;
@@ -213,7 +242,7 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// 
+    /// Add the episode to the series
     /// </summary>
     /// <param name="_episode"></param>
     /// <param name="_series"></param>
@@ -235,7 +264,5 @@ namespace TvdbConnector
         if (!_series.EpisodesLoaded) _series.EpisodesLoaded = true;
       }
     }
-
-
   }
 }

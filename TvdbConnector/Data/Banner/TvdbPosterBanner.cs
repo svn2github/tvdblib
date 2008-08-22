@@ -15,8 +15,13 @@ namespace TvdbConnector.Data.Banner
   [Serializable]
   public class TvdbPosterBanner: TvdbBanner
   {
-    private Point m_resolution;
+    #region private fields
+        private Point m_resolution;
+    #endregion
 
+    /// <summary>
+    /// Resolution of the Poster banner
+    /// </summary>
     public Point Resolution
     {
       get { return m_resolution; }

@@ -8,6 +8,9 @@ using TvdbConnector.Data.Banner;
 
 namespace TvdbConnector.Xml
 {
+  /// <summary>
+  /// Class for parsing the xml info from thetvdb
+  /// </summary>
   internal class TvdbXmlReader
   {
     internal TvdbXmlReader()

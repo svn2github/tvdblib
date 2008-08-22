@@ -45,6 +45,9 @@ namespace TvdbConnector.Data
     #region user properties
     private bool m_isFavorite;
 
+    /// <summary>
+    /// Is the series a favorite
+    /// </summary>
     public bool IsFavorite
     {
       get { return m_isFavorite; }
@@ -54,101 +57,153 @@ namespace TvdbConnector.Data
     #endregion
 
     #region basic properties
+    /// <summary>
+    /// Series Id
+    /// </summary>
     public int Id
     {
       get { return m_id; }
       set { m_id = value; }
     }
 
+    /// <summary>
+    /// Series Name
+    /// </summary>
     public String SeriesName
     {
       get { return m_seriesName; }
       set { m_seriesName = value; }
     }
 
+    /// <summary>
+    /// Series network
+    /// </summary>
     public String Network
     {
       get { return m_network; }
       set { m_network = value; }
     }
 
+    /// <summary>
+    /// The language of the series
+    /// </summary>
     public TvdbLanguage Language
     {
       get { return m_language; }
       set { m_language = value; }
     }
+
+    /// <summary>
+    /// Content-Rating of the series
+    /// </summary>
     public string ContentRating
     {
       get { return m_contentRating; }
       set { m_contentRating = value; }
     }
 
+    /// <summary>
+    /// Zap2it Id of the series
+    /// </summary>
     public String Zap2itId
     {
       get { return m_zap2itId; }
       set { m_zap2itId = value; }
     }
 
+    /// <summary>
+    /// When was the series updated the last time
+    /// </summary>
     public DateTime LastUpdated
     {
       get { return m_lastUpdated; }
       set { m_lastUpdated = value; }
     }
 
+    /// <summary>
+    /// Path to the primary fanart banner
+    /// </summary>
     public String FanartPath
     {
       get { return m_fanartPath; }
       set { m_fanartPath = value; }
     }
 
+    /// <summary>
+    /// Path to primary banner
+    /// </summary>
     public String BannerPath
     {
       get { return m_bannerPath; }
       set { m_bannerPath = value; }
     }
 
+    /// <summary>
+    /// Status of the show
+    /// </summary>
     public String Status
     {
       get { return m_status; }
       set { m_status = value; }
     }
 
+    /// <summary>
+    /// Tv.com id of the series
+    /// </summary>
     public int TvDotComId
     {
       get { return m_tvDotComId; }
       set { m_tvDotComId = value; }
     }
 
+    /// <summary>
+    /// Runtime of the show
+    /// </summary>
     public double Runtime
     {
       get { return m_runtime; }
       set { m_runtime = value; }
     }
 
+    /// <summary>
+    /// Rating of the series
+    /// </summary>
     public double Rating
     {
       get { return m_rating; }
       set { m_rating = value; }
     }
 
+    /// <summary>
+    /// Overview of the series
+    /// </summary>
     public String Overview
     {
       get { return m_overview; }
       set { m_overview = value; }
     }
 
+    /// <summary>
+    /// Imdb Id of the series
+    /// </summary>
     public String ImdbId
     {
       get { return m_imdbId; }
       set { m_imdbId = value; }
     }
 
+    /// <summary>
+    /// List of the series' genres
+    /// </summary>
     public List<String> Genre
     {
       get { return m_genre; }
       set { m_genre = value; }
     }
 
+    /// <summary>
+    /// Returns the genre string in the format | genre1 | genre2 | genre3 |
+    /// </summary>
     public String GenreString
     {
       get
@@ -165,29 +220,46 @@ namespace TvdbConnector.Data
       }
     }
 
+    /// <summary>
+    /// The Date the series was first aired
+    /// </summary>
     public DateTime FirstAired
     {
       get { return m_firstAired; }
       set { m_firstAired = value; }
     }
 
+    /// <summary>
+    /// At which time does the series air
+    /// </summary>
     public DateTime AirsTime
     {
       get { return m_airsTime; }
       set { m_airsTime = value; }
     }
 
+    /// <summary>
+    /// At which day of the week does the series air
+    /// </summary>
     public DayOfWeek? AirsDayOfWeek
     {
       get { return m_airsDayOfWeek; }
       set { m_airsDayOfWeek = value; }
     }
 
+    /// <summary>
+    /// List of actors that appear in this series
+    /// </summary>
     public List<String> Actors
     {
       get { return m_actors; }
       set { m_actors = value; }
     }
+
+    /// <summary>
+    /// Formatted String of actors that appear during this episode in the 
+    /// format | actor1 | actor2 | actor3 |
+    /// </summary>
     public String ActorsString
     {
       get
@@ -225,6 +297,9 @@ namespace TvdbConnector.Data
       }
     }
 
+    /// <summary>
+    /// Is the banner info loaded
+    /// </summary>
     public bool BannersLoaded
     {
       get { return m_bannersLoaded; }
@@ -314,12 +389,18 @@ namespace TvdbConnector.Data
     private List<TvdbEpisode> m_episodes;
     private bool m_episodesLoaded;
 
+    /// <summary>
+    /// Is the episode info loaded
+    /// </summary>
     public bool EpisodesLoaded
     {
       get { return m_episodesLoaded; }
       set { m_episodesLoaded = value; }
     }
 
+    /// <summary>
+    /// List of Loaded episodes
+    /// </summary>
     public List<TvdbEpisode> Episodes
     {
       get { return m_episodes; }
@@ -336,6 +417,9 @@ namespace TvdbConnector.Data
     private List<TvdbActor> m_tvdbActors;
     private bool m_tvdbActorsLoaded;
 
+    /// <summary>
+    /// List of loaded tvdb actors
+    /// </summary>
     public List<TvdbActor> TvdbActors
     {
       get { return m_tvdbActors; }
@@ -345,6 +429,9 @@ namespace TvdbConnector.Data
       }
     }
     
+    /// <summary>
+    /// Is the actor info loaded
+    /// </summary>
     public bool TvdbActorsLoaded
     {
       get { return m_tvdbActorsLoaded; }
@@ -352,11 +439,20 @@ namespace TvdbConnector.Data
     }
     #endregion
 
+    /// <summary>
+    /// returns SeriesName (SeriesId)
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
       return SeriesName + "(" + Id + ")";
     }
 
+
+    /// <summary>
+    /// Uptdate the info of the current series with the updated one
+    /// </summary>
+    /// <param name="_series"></param>
     public void UpdateSeriesInfo(TvdbSeries _series)
     {
       this.Actors = _series.Actors;

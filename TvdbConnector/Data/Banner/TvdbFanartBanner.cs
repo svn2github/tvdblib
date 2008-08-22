@@ -32,20 +32,23 @@ namespace TvdbConnector.Data.Banner
     private Color m_color3;
     #endregion
 
+    /// <summary>
+    /// TvdbFanartBanner constructor
+    /// </summary>
     public TvdbFanartBanner()
     {
 
     }
 
+    /// <summary>
+    /// TvdbFanartBanner constructor
+    /// </summary>
     public TvdbFanartBanner(int _id, String _path, TvdbLanguage _lang)
     {
       this.Id = _id;
       this.BannerPath = _path;
       this.Language = _lang;
     }
-
-
-
 
     /// <summary>
     /// Is the vignette image already loaded

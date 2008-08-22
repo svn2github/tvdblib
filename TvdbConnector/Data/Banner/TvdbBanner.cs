@@ -29,11 +29,13 @@ namespace TvdbConnector.Data
   [Serializable]
   public class TvdbBanner
   {
+    #region private fields
     private String m_bannerPath;
     private Image m_banner;
     private bool m_isLoaded;
     private int m_id;
     private TvdbLanguage m_language;
+    #endregion
 
     /// <summary>
     /// Language of the banner

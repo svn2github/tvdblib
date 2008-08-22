@@ -9,16 +9,24 @@ namespace TvdbConnector.Cache
   [Serializable]
   public class TvdbData
   {
+    #region private properties
     private List<TvdbSeries> m_seriesInfo;
     private List<TvdbLanguage> m_langInfo;
     private List<TvdbMirror> m_mirrorInfo;
     private DateTime m_lastUpdated;
+    #endregion
 
+    /// <summary>
+    /// TvdbData constructor
+    /// </summary>
     public TvdbData()
     {
       m_lastUpdated = new DateTime(1, 1, 1);
     }
 
+    /// <summary>
+    /// TvdbData constructor
+    /// </summary>
     public TvdbData(List<TvdbSeries> _seriesInfo, List<TvdbLanguage> _language, List<TvdbMirror> _mirrors)
       : this()
     {

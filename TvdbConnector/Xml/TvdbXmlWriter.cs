@@ -10,8 +10,14 @@ using System.Drawing;
 
 namespace TvdbConnector.Xml
 {
+  /// <summary>
+  /// Writes tvdb data to xml files
+  /// </summary>
   internal class TvdbXmlWriter
   {
+    /// <summary>
+    /// TvdbXmlWriter constructor
+    /// </summary>
     internal TvdbXmlWriter()
     {
 
@@ -142,6 +148,11 @@ namespace TvdbConnector.Xml
       }
     }
 
+    /// <summary>
+    /// Create the series content
+    /// </summary>
+    /// <param name="m"></param>
+    /// <returns></returns>
     internal String CreateSeriesContent(TvdbSeries m)
     {
       XElement xml = new XElement("Data");
@@ -209,6 +220,12 @@ namespace TvdbConnector.Xml
       return xml.ToString();
     }
 
+    /// <summary>
+    /// Write the series content to file
+    /// </summary>
+    /// <param name="_series"></param>
+    /// <param name="_path"></param>
+    /// <returns></returns>
     internal bool WriteSeriesContent(TvdbSeries _series, String _path)
     {
       String fileContent = CreateSeriesContent(_series);
@@ -225,6 +242,11 @@ namespace TvdbConnector.Xml
       }
     }
 
+    /// <summary>
+    /// Create the series banner content
+    /// </summary>
+    /// <param name="_bannerList"></param>
+    /// <returns></returns>
     internal String CreateSeriesBannerContent(List<TvdbBanner> _bannerList)
     {
       XElement xml = new XElement("Banners");
@@ -301,6 +323,12 @@ namespace TvdbConnector.Xml
       return xml.ToString();
     }
 
+    /// <summary>
+    /// Write the series banner contents to xml file
+    /// </summary>
+    /// <param name="_bannerList"></param>
+    /// <param name="_path"></param>
+    /// <returns></returns>
     internal bool WriteSeriesBannerContent(List<TvdbBanner> _bannerList, String _path)
     {
       String fileContent = CreateSeriesBannerContent(_bannerList);
