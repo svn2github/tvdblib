@@ -13,9 +13,12 @@ namespace TvdbConnector.Cache
 {
   public class XmlCacheProvider : ICacheProvider
   {
+    #region private fields
     TvdbXmlWriter m_xmlWriter;
     TvdbXmlReader m_xmlReader;
     String m_rootFolder;
+    #endregion
+
     public XmlCacheProvider(String _rootFolder)
     {
       m_xmlWriter = new TvdbXmlWriter();
@@ -323,6 +326,21 @@ namespace TvdbConnector.Cache
         return null;
       }
     }
+    #endregion
+
+    #region ICacheProvider Members
+
+
+    public TvdbUser LoadUserInfoToCache(string _userId)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void SaveToCache(TvdbUser _user)
+    {
+      throw new NotImplementedException();
+    }
+
     #endregion
   }
 }

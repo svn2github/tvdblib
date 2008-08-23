@@ -73,7 +73,7 @@ namespace TvdbTester
     public void InitialiseForm(String _userId)
     {
       //m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
-      m_tvdbHandler = new Tvdb(new XmlCacheProvider("Cache"), Resources.API_KEY);
+      m_tvdbHandler = new Tvdb(new BinaryCacheProvider("BinCache"), Resources.API_KEY);
       m_tvdbHandler.InitCache();
 
 
@@ -193,7 +193,7 @@ namespace TvdbTester
         pnlEpisodeEnabled.Visible = true;
       }
 
-      if (_series.TvdbActorsLoaded)
+      if (_series.TvdbActorsLoaded && _series.Actors.Count > 0)
       {
         cmdLoadActorInfo.Enabled = false;
         pnlActorsEnabled.Visible = false;
@@ -211,6 +211,8 @@ namespace TvdbTester
       }
       else
       {
+        bcActors.ClearBanner();
+        
         cmdLoadActorInfo.Enabled = true;
         pnlActorsEnabled.Visible = true;
       }
@@ -227,7 +229,34 @@ namespace TvdbTester
       bcSeasonBanner.ClearBanner();
       bcSeasonBannerWide.ClearBanner();
       bcEpisodeBanner.ClearBanner();
+      ClearSeriesDetails();
 
+      ClearEpisodeDetail();
+      tvEpisodes.Nodes.Clear();
+    }
+
+    private void ClearSeriesDetails()
+    {
+      txtSeriesId.Text = "";
+      txtSeriesName.Text = "";
+      txtStatus.Text = "";
+      txtGenre.Text = "";
+      txtFirstAired.Text = "";
+      txtAirsWeekday.Text ="";
+      txtAirstime.Text = "";
+      txtNetwork.Text = "";
+      txtRuntime.Text = "";
+      txtRating.Text = "";
+      txtActors.Text = "";
+      txtOverview.Text = "";
+      txtTvComId.Text = ""; //series.
+      txtImdbId.Text = "";
+      txtZap2itId.Text = "";
+      raterSeriesSiteRating.CurrentRating = 0;
+    }
+
+    private void ClearEpisodeDetail()
+    {
       txtEpisodeAbsoluteNumber.Text = "";
       txtEpisodeDirector.Text = "";
       txtEpisodeDVDChapter.Text = "";
@@ -242,7 +271,7 @@ namespace TvdbTester
       txtEpisodeOverview.Text = "";
       txtEpisodeProductionCode.Text = "";
       txtEpisodeWriter.Text = "";
-      tvEpisodes.Nodes.Clear();
+      bcEpisodeBanner.ClearBanner();
     }
 
     private void FillSeriesDetails(TvdbSeries series)
@@ -285,18 +314,18 @@ namespace TvdbTester
       txtSeriesName.Text = series.SeriesName;
       txtStatus.Text = series.Status;
       txtGenre.Text = series.GenreString;
-      txtFirstAired.Text = series.FirstAired.ToShortDateString();
-      txtAirsWeekday.Text = series.AirsDayOfWeek.ToString();
+      txtFirstAired.Text = series.FirstAired != null ? series.FirstAired.ToShortDateString() : "";
+      txtAirsWeekday.Text = series.AirsDayOfWeek != null ? series.AirsDayOfWeek.ToString() : "";
       txtAirstime.Text = series.AirsTime.ToShortTimeString();
       txtNetwork.Text = series.Network;
-      txtRuntime.Text = series.Runtime.ToString();
-      txtRating.Text = series.Rating.ToString();
+      txtRuntime.Text = series.Runtime != -99 ? series.Runtime.ToString() : "";
+      txtRating.Text = series.Rating != -99 ? series.Rating.ToString() : "";
       txtActors.Text = series.ActorsString;
       txtOverview.Text = series.Overview;
-      txtTvComId.Text = series.TvDotComId.ToString(); //series.
+      txtTvComId.Text = series.TvDotComId != -99 ? series.TvDotComId.ToString() : ""; //series.
       txtImdbId.Text = series.ImdbId;
       txtZap2itId.Text = series.Zap2itId;
-      raterSeriesSiteRating.CurrentRating = (int)(series.Rating / 10);
+      raterSeriesSiteRating.CurrentRating = series.Rating != -99 ? (int)(series.Rating / 10) : 0;
     }
 
     private void FillFullSeriesDetails(TvdbSeries _series)
@@ -344,17 +373,17 @@ namespace TvdbTester
       txtEpisodeFirstAired.Text = _episode.FirstAired.ToShortDateString();
       foreach (String s in _episode.GuestStars)
       {
-        lbGuestStars.Items.Add(s);
+        lbGuestStars.Items.Add(s.Trim());
       }
       txtEpisodeDirector.Text = _episode.DirectorsString;
       txtEpisodeWriter.Text = _episode.WriterString;
       txtEpisodeProductionCode.Text = _episode.ProductionCode;
       txtEpisodeOverview.Text = _episode.Overview;
-      txtEpisodeDVDId.Text = _episode.DvdDiscId.ToString();
-      txtEpisodeDVDSeason.Text = _episode.DvdSeason.ToString();
-      txtEpisodeDVDNumber.Text = _episode.DvdEpisodeNumber.ToString();
-      txtEpisodeDVDChapter.Text = _episode.DvdChapter.ToString();
-      txtEpisodeAbsoluteNumber.Text = _episode.AbsoluteNumber.ToString();
+      txtEpisodeDVDId.Text = _episode.DvdDiscId != -99 ? _episode.DvdDiscId.ToString() : "";
+      txtEpisodeDVDSeason.Text = _episode.DvdSeason != -99 ? _episode.DvdSeason.ToString() : "";
+      txtEpisodeDVDNumber.Text = _episode.DvdEpisodeNumber != -99 ? _episode.DvdEpisodeNumber.ToString() : "";
+      txtEpisodeDVDChapter.Text = _episode.DvdChapter != -99 ? _episode.DvdChapter.ToString() : "";
+      txtEpisodeAbsoluteNumber.Text = _episode.AbsoluteNumber != -99 ? _episode.AbsoluteNumber.ToString() : "";
       txtImdbId.Text = _episode.ImdbId;
 
     }
@@ -389,6 +418,8 @@ namespace TvdbTester
         {//season node
           SeasonTag tag = (SeasonTag)tvEpisodes.SelectedNode.Tag;
           selectedSeason = tag.SeasonNumber;
+          ClearEpisodeDetail();
+          lbEpisodeInformation.Text = "Season " + tag.SeasonNumber;
         }
         else
         {//shouldn't happen at all

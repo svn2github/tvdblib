@@ -19,12 +19,23 @@ namespace TvdbConnector
     private TvdbDownloader m_downloader;
     private TvdbData m_loadedData;
 
-    private List<int> m_favorites;//temporary store user favorites to check if a retrieved series is a favorite
-
     public TvdbUser UserInfo
     {
       get { return m_userInfo; }
-      set { m_userInfo = value; }
+      set {
+        m_userInfo = value;
+        if (m_cacheProvider != null)
+        {
+          //try to load the userinfo from cache
+          TvdbUser user = m_cacheProvider.LoadUserInfoToCache(value.UserIdentifier);
+          if (user != null)
+          {
+            m_userInfo.UserFavorites = user.UserFavorites;
+            m_userInfo.UserPreferredLanguage = user.UserPreferredLanguage;
+            m_userInfo.UserName = user.UserName;
+          }
+        }
+      }
     }
 
     public String ApiKey
@@ -51,7 +62,7 @@ namespace TvdbConnector
     public bool InitCache()
     {
       if (m_cacheProvider != null)
-      {
+      {      
         //TODO: merge existing settings with loaded settings
         TvdbData cache = m_cacheProvider.LoadUserDataFromCache(); //try to load cache
         if (cache != null)
@@ -116,7 +127,7 @@ namespace TvdbConnector
         {
           return null;
         }
-        series.IsFavorite = CheckIfSeriesFavorite(_seriesId, m_favorites);
+        series.IsFavorite = CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
         AddSeriesToCache(series);
         return series;
       }
@@ -302,7 +313,7 @@ namespace TvdbConnector
       try
       {
         TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(_seriesId);
-        series.IsFavorite = CheckIfSeriesFavorite(series.Id, m_favorites);
+        series.IsFavorite = CheckIfSeriesFavorite(series.Id, m_userInfo.UserFavorites);
         AddSeriesToCache(series);
         return series;
       }
@@ -531,6 +542,7 @@ namespace TvdbConnector
     public void SaveCache()
     {
       m_cacheProvider.SaveAllToCache(new TvdbData(m_loadedData.SeriesList, m_loadedData.LanguageList, m_mirrorInfo));
+      if(m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
     }
 
 
@@ -598,7 +610,7 @@ namespace TvdbConnector
     /// <param name="_favs"></param>
     private void HandleUserFavoriteRetrieved(List<int> _favs)
     {
-      m_favorites = _favs;
+      m_userInfo.UserFavorites = _favs;
       foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
         s.IsFavorite = CheckIfSeriesFavorite(s.Id, _favs);

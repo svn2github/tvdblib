@@ -31,9 +31,9 @@ namespace TvdbTester
     public Color LoadingBackgroundColor
     {
       get { return m_loadingBackgroundColor; }
-      set 
+      set
       {
-        m_loadingBackgroundColor = value; 
+        m_loadingBackgroundColor = value;
       }
     }
 
@@ -208,13 +208,19 @@ namespace TvdbTester
         SetLoadingVisibleThreadSafe(true);
         banner.LoadBanner();
       }
-
-      if (banner.IsLoaded && index == m_index)
+      if (index == m_index)
       {//the current index is still (event after downloading the image) the images' index
-        SetLoadingVisibleThreadSafe(false);
-        SetImageThreadSafe(banner.Banner);
+        //todo: check if another image has been loaded while the image has been downloaded
+        if (banner.IsLoaded)
+        {//banner was successfully loaded
+          SetLoadingVisibleThreadSafe(false);
+          SetImageThreadSafe(banner.Banner);
+        }
+        else
+        {//couldn't load the banner
+          SetLoadingVisibleThreadSafe(false);
+        }
       }
-
     }
 
     private void SetPosterImage(TvdbBanner _value)

@@ -5,12 +5,15 @@ using System.Text;
 
 namespace TvdbConnector.Data
 {
+
+  [Serializable]
   public class TvdbUser
   {
     #region private properties
     private String m_userName;
     private String m_userIdentifier;
     private TvdbLanguage m_userPreferredLanguage;
+    private List<int> m_userFavorites;
     #endregion
 
     /// <summary>
@@ -49,6 +52,15 @@ namespace TvdbConnector.Data
     {
       get { return m_userName; }
       set { m_userName = value; }
+    }
+
+    /// <summary>
+    /// List of user favorites
+    /// </summary>
+    public List<int> UserFavorites
+    {
+      get { return m_userFavorites; }
+      set { m_userFavorites = value; }
     }
   }
 }

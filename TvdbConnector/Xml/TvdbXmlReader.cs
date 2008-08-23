@@ -304,7 +304,7 @@ namespace TvdbConnector.Xml
         ep.SeasonNumber = Util.Int32Parse(e.SeasonNumber);
         ep.Writer = Util.SplitTvdbString(e.Writer);
         ep.AbsoluteNumber = Util.Int32Parse(e.absolute_number);
-        ep.Banner = new TvdbEpisodeBanner(Util.Int32Parse(e.Id), e.filename);
+        ep.Banner = e.filename.Equals("") ? null : new TvdbEpisodeBanner(Util.Int32Parse(e.Id), e.filename);
         ep.LastUpdated = Util.UnixToDotNet(e.lastupdated);
         ep.SeasonId = Util.Int32Parse(e.seasonid);
         ep.SeriesId = Util.Int32Parse(e.seriesid);

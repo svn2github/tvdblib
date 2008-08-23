@@ -40,6 +40,13 @@ namespace TvdbConnector.Cache
     TvdbSeries LoadSeriesFromCache(int _seriesId);
 
     /// <summary>
+    /// Load user info from cache
+    /// </summary>
+    /// <param name="_userId"></param>
+    /// <returns></returns>
+    TvdbUser LoadUserInfoToCache(String _userId);
+
+    /// <summary>
     /// Saves all available data to cache
     /// </summary>
     /// <param name="_content"></param>
@@ -62,5 +69,11 @@ namespace TvdbConnector.Cache
     /// </summary>
     /// <param name="_series"></param>
     void SaveToCache(TvdbSeries _series);
+
+    /// <summary>
+    /// Saves the user data to cache
+    /// </summary>
+    /// <param name="_user"></param>
+    void SaveToCache(TvdbUser _user);
   }
 }

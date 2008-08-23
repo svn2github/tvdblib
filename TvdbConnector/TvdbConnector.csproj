@@ -72,7 +72,6 @@
     <Compile Include="Data\TvdbDownloader.cs" />
     <Compile Include="Data\TvdbSearchResult.cs" />
     <Compile Include="Data\TvdbUser.cs" />
-    <Compile Include="Global.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="TvdbLinks.cs" />
     <Compile Include="Data\TvdbMirror.cs" />
