@@ -16,8 +16,8 @@ namespace TvdbTester
   {
     private List<TvdbPosterBanner> m_imageList;
     int m_index = 0;
-
-
+    private Size m_buttonSizeLeft;
+    private Size m_buttonSizeRight;
     public PosterControl()
     {
       InitializeComponent();
@@ -193,6 +193,33 @@ namespace TvdbTester
           panelLeft.Visible = false;
         }
       }
+    }
+
+    private void panelLeft_MouseDown(object sender, MouseEventArgs e)
+    {
+      panelLeft.Size = new Size(m_buttonSizeLeft.Width - 1, m_buttonSizeLeft.Height - 1);
+    }
+
+    private void panelLeft_MouseUp(object sender, MouseEventArgs e)
+    {
+      panelLeft.Size = m_buttonSizeLeft;
+    }
+
+    private void PosterControl_SizeChanged(object sender, EventArgs e)
+    {
+      m_buttonSizeLeft = panelLeft.Size;
+      m_buttonSizeRight = panelRight.Size;
+    }
+
+    private void panelRight_MouseDown(object sender, MouseEventArgs e)
+    {
+      panelRight.Size = new Size(m_buttonSizeRight.Width - 1, m_buttonSizeRight.Height - 1);
+    }
+
+    private void panelRight_MouseUp(object sender, MouseEventArgs e)
+    {
+      panelRight.Size = m_buttonSizeRight;
+
     }
   }
 }

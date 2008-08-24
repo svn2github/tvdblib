@@ -21,6 +21,7 @@ namespace TvdbTester
     private List<TvdbBanner> m_imageList;
     private int m_index = 0;
     private Image m_defaultImage;
+    private Size m_buttonSize;
 
     private Color m_loadingBackgroundColor = Color.Transparent;
 
@@ -282,6 +283,44 @@ namespace TvdbTester
       cmdLeft.Left = 0;
       cmdRight.Top = 0;
       cmdRight.Left = this.Width - cmdRight.Width;
+    }
+
+    private void panelImage_SizeChanged(object sender, EventArgs e)
+    {
+      m_buttonSize = cmdRight.Size;
+    }
+
+    private void panelImage_MouseDown(object sender, MouseEventArgs e)
+    {
+      
+    }
+
+    private void cmdRight_MouseDown(object sender, MouseEventArgs e)
+    {
+      //cmdRight.Left = cmdRight.Left + 1;
+      //cmdRight.Top = cmdRight.Top + 1;
+      cmdRight.Size = new Size(m_buttonSize.Width - 1, m_buttonSize.Height - 1);
+    }
+
+    private void cmdRight_MouseUp(object sender, MouseEventArgs e)
+    {
+      //cmdRight.Left = cmdRight.Left - 1;
+      //cmdRight.Top = cmdRight.Top - 1;
+      cmdRight.Size = m_buttonSize;
+    }
+
+    private void cmdLeft_MouseDown(object sender, MouseEventArgs e)
+    {
+      //cmdLeft.Left = cmdLeft.Left + 1;
+      //cmdLeft.Top = cmdLeft.Top + 1;
+      cmdLeft.Size = new Size(m_buttonSize.Width - 1, m_buttonSize.Height - 1);
+    }
+
+    private void cmdLeft_MouseUp(object sender, MouseEventArgs e)
+    {
+      //cmdLeft.Left = cmdLeft.Left - 1;
+      //cmdLeft.Top = cmdLeft.Top - 1;
+      cmdLeft.Size = m_buttonSize;
     }
   }
 }

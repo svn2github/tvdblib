@@ -587,10 +587,13 @@ namespace TvdbTester
 
     private void tabControlTvdb_SelectedIndexChanged(object sender, EventArgs e)
     {
-      if (tabControlTvdb.SelectedTab == tabFanart && m_currentSeries != null && m_currentSeries.FanartBanners != null)
+      if (tabControlTvdb.SelectedTab == tabFanart && 
+          m_currentSeries != null && 
+          m_currentSeries.FanartBanners != null &&
+          coverFlowFanart.Tag != m_currentSeries)
       {
         List<TvdbFanartBanner> fanartList = m_currentSeries.FanartBanners;
-
+        coverFlowFanart.Tag = m_currentSeries;
         if (fanartList != null && fanartList.Count > 0)
         {
           coverFlowFanart.Items = fanartList;

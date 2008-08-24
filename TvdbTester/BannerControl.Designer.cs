@@ -43,10 +43,12 @@
       this.cmdLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
       this.cmdLeft.Location = new System.Drawing.Point(0, 0);
       this.cmdLeft.Name = "cmdLeft";
-      this.cmdLeft.Size = new System.Drawing.Size(22, 21);
+      this.cmdLeft.Size = new System.Drawing.Size(22, 22);
       this.cmdLeft.TabIndex = 0;
       this.cmdLeft.Visible = false;
       this.cmdLeft.Click += new System.EventHandler(this.cmdLeft_Click);
+      this.cmdLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.cmdLeft_MouseDown);
+      this.cmdLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.cmdLeft_MouseUp);
       // 
       // cmdRight
       // 
@@ -54,12 +56,14 @@
       this.cmdRight.BackColor = System.Drawing.Color.Transparent;
       this.cmdRight.BackgroundImage = global::TvdbTester.Properties.Resources.last;
       this.cmdRight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-      this.cmdRight.Location = new System.Drawing.Point(692, -1);
+      this.cmdRight.Location = new System.Drawing.Point(693, 0);
       this.cmdRight.Name = "cmdRight";
-      this.cmdRight.Size = new System.Drawing.Size(23, 21);
+      this.cmdRight.Size = new System.Drawing.Size(22, 22);
       this.cmdRight.TabIndex = 0;
       this.cmdRight.Visible = false;
       this.cmdRight.Click += new System.EventHandler(this.cmdRight_Click);
+      this.cmdRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.cmdRight_MouseDown);
+      this.cmdRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.cmdRight_MouseUp);
       // 
       // panelImage
       // 
@@ -72,6 +76,8 @@
       this.panelImage.Name = "panelImage";
       this.panelImage.Size = new System.Drawing.Size(715, 145);
       this.panelImage.TabIndex = 1;
+      this.panelImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelImage_MouseDown);
+      this.panelImage.SizeChanged += new System.EventHandler(this.panelImage_SizeChanged);
       // 
       // pbLoading
       // 

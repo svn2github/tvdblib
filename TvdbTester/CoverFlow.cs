@@ -32,7 +32,7 @@ namespace TvdbTester
         if (m_items == null) return;
         m_currentIndex = -3;
 
-        for (int i = 3; i < m_items.Count; i++)
+        for (int i = 3; i < 3 + m_items.Count; i++)
         {
           if (i < pbList.Count)
           {
@@ -70,6 +70,8 @@ namespace TvdbTester
         pbList[i].Image = null;
       }
       if (m_items != null) m_items.Clear();
+      pbFull.Image = null;
+      this.Tag = null;
     }
 
 
@@ -82,9 +84,9 @@ namespace TvdbTester
       {
         if (m_items[i].IsThumbLoaded || m_items[i].LoadThumb())
         {
-          if (i + m_currentIndex >= 0 && i + m_currentIndex < 6 && i < pbList.Count)
+          if (3 + i + m_currentIndex >= 0 && i + m_currentIndex <= 0 && i < pbList.Count)
           {//current index is visible
-            SetImageThreadSafe(i, m_items[i + m_currentIndex].BannerThumb);
+            SetImageThreadSafe(3 + i, m_items[3 + i + m_currentIndex].BannerThumb);
           }
         }
       }
@@ -102,7 +104,10 @@ namespace TvdbTester
       {
         try
         {
-          pbList[_index].Image = _img;
+          if (_index > 0 && _index <= 6)
+          {
+            pbList[_index].Image = _img;
+          }
         }
         catch (Exception ex)
         {

@@ -22,7 +22,8 @@ namespace TvdbConnector
     public TvdbUser UserInfo
     {
       get { return m_userInfo; }
-      set {
+      set
+      {
         m_userInfo = value;
         if (m_cacheProvider != null)
         {
@@ -62,7 +63,7 @@ namespace TvdbConnector
     public bool InitCache()
     {
       if (m_cacheProvider != null)
-      {      
+      {
         //TODO: merge existing settings with loaded settings
         TvdbData cache = m_cacheProvider.LoadUserDataFromCache(); //try to load cache
         if (cache != null)
@@ -71,14 +72,14 @@ namespace TvdbConnector
           {
             m_loadedData.LanguageList = cache.LanguageList;
           }
-          else if(m_loadedData.LanguageList == null)
+          else if (m_loadedData.LanguageList == null)
           {
             m_loadedData.LanguageList = new List<TvdbLanguage>();
           }
-          
+
           if (cache.Mirrors != null && cache.Mirrors.Count > 0)
           {
-             m_loadedData.Mirrors = cache.Mirrors;
+            m_loadedData.Mirrors = cache.Mirrors;
           }
           else
           {
@@ -115,7 +116,7 @@ namespace TvdbConnector
     /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
-    public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, 
+    public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
       TvdbSeries series = GetSeriesFromCache(_seriesId, _language);
@@ -136,7 +137,7 @@ namespace TvdbConnector
       {//user wants actors loaded
         series.TvdbActors = m_downloader.DownloadActors(_seriesId);
       }
-      
+
       if (_loadEpisodes && !series.EpisodesLoaded)
       {//user wants the full version but only the basic has been loaded (without episodes
         series.Episodes = m_downloader.DownloadEpisodes(_seriesId, _language);
@@ -197,18 +198,18 @@ namespace TvdbConnector
       {
         if (s.Id == _seriesId && s.Language.Abbriviation.Equals(_language.Abbriviation))
         {
-          if((s.BannersLoaded || !_loadActors) &&
+          if ((s.BannersLoaded || !_loadActors) &&
              (s.TvdbActorsLoaded || !_loadActors) &&
              (s.EpisodesLoaded || !_loadEpisodes))
           {
             return true;
-          }          
+          }
         }
       }
       return false;
     }
 
-    
+
 
     /// <summary>
     /// 
@@ -226,7 +227,7 @@ namespace TvdbConnector
       }
       else
       {
-        episode =  m_downloader.DownloadEpisode(_episodeId, _language);
+        episode = m_downloader.DownloadEpisode(_episodeId, _language);
         AddEpisodeToCache(episode);
         return episode;
 
@@ -272,24 +273,24 @@ namespace TvdbConnector
     /// <param name="_epList"></param>
     private void AddEpisodeToCache(TvdbEpisode e)
     {
-        bool seriesFound = false;
-        foreach (TvdbSeries s in m_loadedData.SeriesList)
-        {
-          if (s.Id == e.SeriesId)
-          {//series for ep found
-            seriesFound = true;
-            Util.AddEpisodeToSeries(e, s);
-            break;
-          }
+      bool seriesFound = false;
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
+      {
+        if (s.Id == e.SeriesId)
+        {//series for ep found
+          seriesFound = true;
+          Util.AddEpisodeToSeries(e, s);
+          break;
+        }
 
-        }
-        if (!seriesFound)
-        {//the series doesn't exist yet -> add episode to dummy series
-          TvdbSeries newSeries = new TvdbSeries();
-          newSeries.LastUpdated = new DateTime(1, 1, 1);
-          newSeries.Episodes.Add(e);
-          m_loadedData.SeriesList.Add(newSeries);
-        }
+      }
+      if (!seriesFound)
+      {//the series doesn't exist yet -> add episode to dummy series
+        TvdbSeries newSeries = new TvdbSeries();
+        newSeries.LastUpdated = new DateTime(1, 1, 1);
+        newSeries.Episodes.Add(e);
+        m_loadedData.SeriesList.Add(newSeries);
+      }
     }
 
 
@@ -542,7 +543,7 @@ namespace TvdbConnector
     public void SaveCache()
     {
       m_cacheProvider.SaveAllToCache(new TvdbData(m_loadedData.SeriesList, m_loadedData.LanguageList, m_mirrorInfo));
-      if(m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
+      if (m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
     }
 
 
@@ -566,6 +567,17 @@ namespace TvdbConnector
 
       _series = m_downloader.DownloadSeries(_series.Id, _series.Language, _series.EpisodesLoaded, 
                                             _series.TvdbActorsLoaded, _series.BannersLoaded);
+      for (int i = 0; i < m_loadedData.SeriesList.Count; i++)
+      {
+        if (((TvdbSeries)m_loadedData.SeriesList[i]).Id == _series.Id)
+        {
+            m_loadedData.SeriesList.Remove((TvdbSeries)m_loadedData.SeriesList[i])
+        }
+      }
+
+      m_loadedData.SeriesList.Add(_series);
+
+
       return _series;
 
     }
@@ -708,7 +720,7 @@ namespace TvdbConnector
       if (m_userInfo != null)
       {
         List<int> list = m_downloader.DownloadUserFavoriteList(m_userInfo.UserIdentifier,
-                                                      Util.UserFavouriteAction.add, 
+                                                      Util.UserFavouriteAction.add,
                                                       _seriesId);
 
         HandleUserFavoriteRetrieved(list);
@@ -763,7 +775,7 @@ namespace TvdbConnector
     /// <returns>new list with all favorites</returns>
     public List<int> RemoveSeriesFromFavorites(TvdbSeries _series)
     {
-      return RemoveSeriesFromFavorites(_series.Id) ;
+      return RemoveSeriesFromFavorites(_series.Id);
     }
 
 
