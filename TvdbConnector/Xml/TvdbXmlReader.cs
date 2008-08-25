@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Linq;
 using TvdbConnector.Data;
 using TvdbConnector.Data.Banner;
+using System.Diagnostics;
 
 namespace TvdbConnector.Xml
 {
@@ -133,6 +134,8 @@ namespace TvdbConnector.Xml
     /// <returns></returns>
     internal List<TvdbSeries> ExtractSeries(String _data)
     {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
       XDocument xml = XDocument.Parse(_data);
 
       var allSeries = from series in xml.Descendants("Series")
@@ -194,6 +197,9 @@ namespace TvdbConnector.Xml
         series.Zap2itId = s.zap2it_id;
         if (series.Id != -99) retList.Add(series);
       }
+
+      watch.Stop();
+      Log.Debug("Extracted " + retList.Count + " series in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
 
@@ -234,6 +240,8 @@ namespace TvdbConnector.Xml
     /// <returns></returns>
     internal List<TvdbEpisode> ExtractEpisodes(String _data)
     {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
       XDocument xml = XDocument.Parse(_data);
       var allEpisodes = from episode in xml.Descendants("Episode")
                         select new
@@ -269,7 +277,7 @@ namespace TvdbConnector.Xml
                           airsbefore_season = episode.Elements("airsbefore_season").Count() == 1
                                             ? episode.Element("airsbefore_season").Value : "-99"
                         };
-
+      Log.Debug("Parsed xml file in  " + watch.ElapsedMilliseconds + " milliseconds");
       List<TvdbEpisode> retList = new List<TvdbEpisode>();
       foreach (var e in allEpisodes)
       {
@@ -312,6 +320,8 @@ namespace TvdbConnector.Xml
         if (ep.Id != -99) retList.Add(ep);
       }
 
+      watch.Stop();
+      Log.Debug("Extracted " + retList.Count + " Episodes in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
 
     }
@@ -589,6 +599,9 @@ namespace TvdbConnector.Xml
     /// <returns></returns>
     internal List<TvdbBanner> ExtractBanners(String _data)
     {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
+
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
 
@@ -660,7 +673,8 @@ namespace TvdbConnector.Xml
       {
         if (e.Id != -99) retList.Add(e);
       }
-
+      watch.Stop();
+      Log.Debug("Extracted " + retList.Count + " banners in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
 
@@ -683,6 +697,9 @@ namespace TvdbConnector.Xml
     /// <returns></returns>
     internal List<TvdbActor> ExtractActors(String _data)
     {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
+
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
       var allActors = from episode in xml.Descendants("Actor")
@@ -713,6 +730,8 @@ namespace TvdbConnector.Xml
           actorList.Add(actor);
         }
       }
+      watch.Stop();
+      Log.Debug("Extracted " + actorList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
       return actorList;
     }
   }

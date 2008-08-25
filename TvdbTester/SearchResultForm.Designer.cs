@@ -33,19 +33,18 @@
       this.chName = new System.Windows.Forms.ColumnHeader();
       this.chLang = new System.Windows.Forms.ColumnHeader();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.bannerControl1 = new TvdbTester.BannerControl();
+      this.linkImdb = new System.Windows.Forms.LinkLabel();
       this.txtOverview = new System.Windows.Forms.RichTextBox();
       this.txtFirstAired = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
-      this.pbSeriesBanner = new System.Windows.Forms.PictureBox();
       this.cmdChoose = new System.Windows.Forms.Button();
       this.cmdCancel = new System.Windows.Forms.Button();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-      this.linkImdb = new System.Windows.Forms.LinkLabel();
       this.groupBox1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.pbSeriesBanner)).BeginInit();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -83,18 +82,41 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.bannerControl1);
       this.groupBox1.Controls.Add(this.linkImdb);
       this.groupBox1.Controls.Add(this.txtOverview);
       this.groupBox1.Controls.Add(this.txtFirstAired);
       this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Location = new System.Drawing.Point(12, 229);
+      this.groupBox1.Location = new System.Drawing.Point(12, 153);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(328, 188);
+      this.groupBox1.Size = new System.Drawing.Size(328, 264);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Details";
+      // 
+      // bannerControl1
+      // 
+      this.bannerControl1.BannerImage = null;
+      this.bannerControl1.BannerImages = null;
+      this.bannerControl1.DefaultImage = null;
+      this.bannerControl1.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bannerControl1.Index = 0;
+      this.bannerControl1.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bannerControl1.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bannerControl1.Location = new System.Drawing.Point(9, 188);
+      this.bannerControl1.Name = "bannerControl1";
+      this.bannerControl1.Size = new System.Drawing.Size(311, 58);
+      this.bannerControl1.TabIndex = 6;
+      // 
+      // linkImdb
+      // 
+      this.linkImdb.AutoSize = true;
+      this.linkImdb.Location = new System.Drawing.Point(64, 63);
+      this.linkImdb.Name = "linkImdb";
+      this.linkImdb.Size = new System.Drawing.Size(0, 13);
+      this.linkImdb.TabIndex = 3;
       // 
       // txtOverview
       // 
@@ -140,15 +162,6 @@
       this.label1.TabIndex = 0;
       this.label1.Text = "FirstAired";
       // 
-      // pbSeriesBanner
-      // 
-      this.pbSeriesBanner.Location = new System.Drawing.Point(12, 153);
-      this.pbSeriesBanner.Name = "pbSeriesBanner";
-      this.pbSeriesBanner.Size = new System.Drawing.Size(329, 70);
-      this.pbSeriesBanner.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.pbSeriesBanner.TabIndex = 2;
-      this.pbSeriesBanner.TabStop = false;
-      // 
       // cmdChoose
       // 
       this.cmdChoose.Location = new System.Drawing.Point(12, 419);
@@ -187,14 +200,6 @@
       this.lblStatus.Text = "Search Results";
       this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
-      // linkImdb
-      // 
-      this.linkImdb.AutoSize = true;
-      this.linkImdb.Location = new System.Drawing.Point(64, 63);
-      this.linkImdb.Name = "linkImdb";
-      this.linkImdb.Size = new System.Drawing.Size(0, 13);
-      this.linkImdb.TabIndex = 3;
-      // 
       // SearchResultForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -204,7 +209,6 @@
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.cmdCancel);
       this.Controls.Add(this.cmdChoose);
-      this.Controls.Add(this.pbSeriesBanner);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.lvSearchResult);
       this.Name = "SearchResultForm";
@@ -212,7 +216,6 @@
       this.Text = "Search Results";
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.pbSeriesBanner)).EndInit();
       this.statusStrip1.ResumeLayout(false);
       this.statusStrip1.PerformLayout();
       this.ResumeLayout(false);
@@ -231,12 +234,12 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.PictureBox pbSeriesBanner;
     private System.Windows.Forms.Button cmdChoose;
     private System.Windows.Forms.Button cmdCancel;
     private System.Windows.Forms.ColumnHeader chLang;
     private System.Windows.Forms.StatusStrip statusStrip1;
     private System.Windows.Forms.ToolStripStatusLabel lblStatus;
     private System.Windows.Forms.LinkLabel linkImdb;
+    private BannerControl bannerControl1;
   }
 }

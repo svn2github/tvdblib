@@ -67,13 +67,10 @@ namespace TvdbTester
       if (lvSearchResult.SelectedItems.Count == 1)
       {
         m_selection = (TvdbSearchResult)lvSearchResult.SelectedItems[0].Tag;
-        pbSeriesBanner.Image = null;
+        bannerControl1.ClearControl();
         if (m_selection.Banner != null)
         {
-          if (m_selection.Banner.IsLoaded || m_selection.Banner.LoadBanner())
-          {
-            pbSeriesBanner.Image = m_selection.Banner.Banner;
-          }
+          bannerControl1.BannerImage = m_selection.Banner;
         }
 
         txtOverview.Text = m_selection.Overview;
@@ -81,5 +78,6 @@ namespace TvdbTester
         txtFirstAired.Text = m_selection.FirstAired.ToShortDateString();
       }
     }
+
   }
 }

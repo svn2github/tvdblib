@@ -211,7 +211,7 @@ namespace TvdbTester
       }
       else
       {
-        bcActors.ClearBanner();
+        bcActors.ClearControl();
         
         cmdLoadActorInfo.Enabled = true;
         pnlActorsEnabled.Visible = true;
@@ -225,10 +225,10 @@ namespace TvdbTester
     {
       posterControlSeries.ClearPoster();
       coverFlowFanart.Clear();
-      bcSeriesBanner.ClearBanner();
-      bcSeasonBanner.ClearBanner();
-      bcSeasonBannerWide.ClearBanner();
-      bcEpisodeBanner.ClearBanner();
+      bcSeriesBanner.ClearControl();
+      bcSeasonBanner.ClearControl();
+      bcSeasonBannerWide.ClearControl();
+      bcEpisodeBanner.ClearControl();
       ClearSeriesDetails();
 
       ClearEpisodeDetail();
@@ -271,7 +271,7 @@ namespace TvdbTester
       txtEpisodeOverview.Text = "";
       txtEpisodeProductionCode.Text = "";
       txtEpisodeWriter.Text = "";
-      bcEpisodeBanner.ClearBanner();
+      bcEpisodeBanner.ClearControl();
     }
 
     private void FillSeriesDetails(TvdbSeries series)
@@ -307,7 +307,7 @@ namespace TvdbTester
       }
       else
       {
-        bcSeriesBanner.ClearBanner();
+        bcSeriesBanner.ClearControl();
       }
 
       txtSeriesId.Text = series.Id.ToString();
@@ -410,7 +410,7 @@ namespace TvdbTester
           }
           else
           {
-            bcEpisodeBanner.ClearBanner();
+            bcEpisodeBanner.ClearControl();
           }
           selectedSeason = ep.SeasonNumber;
         }
@@ -461,7 +461,7 @@ namespace TvdbTester
           }
           else
           {
-            bcSeasonBanner.ClearBanner();
+            bcSeasonBanner.ClearControl();
           }
           bcSeasonBanner.Tag = selectedSeason;
 
@@ -471,7 +471,7 @@ namespace TvdbTester
           }
           else
           {
-            bcSeasonBannerWide.ClearBanner();
+            bcSeasonBannerWide.ClearControl();
           }
 
           bcSeasonBannerWide.Tag = selectedSeason;
@@ -516,7 +516,8 @@ namespace TvdbTester
 
     private void cmdForceUpdate_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler.ForceUpdate(m_currentSeries);
+      m_currentSeries = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked, 
+                                                  cbLoadActors.Checked, cbLoadBanner.Checked);
       UpdateSeries(m_currentSeries);
     }
 

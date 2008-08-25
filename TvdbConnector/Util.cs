@@ -24,6 +24,8 @@ namespace TvdbConnector
 
     #region private fields
     private static List<TvdbLanguage> m_languageList;
+    private static NumberFormatInfo m_formatProvider; 
+       
     #endregion
 
     /// <summary>
@@ -45,6 +47,9 @@ namespace TvdbConnector
     {
       try
       {
+        //check this or we have a badass performance problem because everytime we have
+        //an empty field an exception would be thrown
+        if (_number.Equals("")) return -99;
         return Int32.Parse(_number);
       }
       catch (FormatException)
@@ -63,10 +68,17 @@ namespace TvdbConnector
     {
       try
       {
+        if (m_formatProvider == null)
+        {//format provider, so we can parse 23.23 as well as 23,23
+          m_formatProvider = new NumberFormatInfo();
+          m_formatProvider.NumberGroupSeparator = ".";
+        }
+        //check this or we have a badass performance problem because everytime we have
+        //an empty field an exception would be thrown
+        if (_number.Equals("")) return -99;
         _number = _number.Replace(',', '.');
-        NumberFormatInfo nfi = new NumberFormatInfo();
-        nfi.NumberGroupSeparator = ".";
-        return Double.Parse(_number, nfi);
+
+        return Double.Parse(_number, m_formatProvider);
       }
       catch (FormatException)
       {

@@ -7,6 +7,7 @@ using System.Net;
 using TvdbConnector.Cache;
 using TvdbConnector.Data.Banner;
 using TvdbConnector.Xml;
+using System.Diagnostics;
 
 namespace TvdbConnector
 {
@@ -119,6 +120,9 @@ namespace TvdbConnector
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
+
       TvdbSeries series = GetSeriesFromCache(_seriesId, _language);
 
       if (series == null)
@@ -128,7 +132,9 @@ namespace TvdbConnector
         {
           return null;
         }
-        series.IsFavorite = CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
+        watch.Stop();
+        Log.Debug("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
+        series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
         AddSeriesToCache(series);
         return series;
       }
@@ -147,6 +153,9 @@ namespace TvdbConnector
       {//user wants banners loaded but current series hasn't -> Do it baby
         series.Banners = m_downloader.DownloadBanners(_seriesId);
       }
+
+      watch.Stop();
+      Log.Debug("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
 
       return series;
     }
@@ -559,27 +568,41 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// Forces a complete update of the series. All information that has already been loade will be deleted and reloaded from tvdb
+    /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
     /// <param name="_seriesId"></param>
     public TvdbSeries ForceUpdate(TvdbSeries _series)
     {
+      return ForceUpdate(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
 
-      _series = m_downloader.DownloadSeries(_series.Id, _series.Language, _series.EpisodesLoaded, 
-                                            _series.TvdbActorsLoaded, _series.BannersLoaded);
+
+    }
+    /// <summary>
+    /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// </summary>
+    /// <param name="m_currentSeries"></param>
+    /// <param name="p"></param>
+    /// <param name="p_3"></param>
+    /// <param name="p_4"></param>
+    /// <returns></returns>
+    public TvdbSeries ForceUpdate(TvdbSeries _series, bool _loadEpisodes,
+                                bool _loadActors, bool _loadBanners)
+    {
       for (int i = 0; i < m_loadedData.SeriesList.Count; i++)
       {
         if (((TvdbSeries)m_loadedData.SeriesList[i]).Id == _series.Id)
         {
-            m_loadedData.SeriesList.Remove((TvdbSeries)m_loadedData.SeriesList[i])
+          m_loadedData.SeriesList.Remove((TvdbSeries)m_loadedData.SeriesList[i]);
         }
       }
+
+      _series = m_downloader.DownloadSeries(_series.Id, _series.Language, _loadEpisodes,
+                                      _loadActors, _loadBanners);
 
       m_loadedData.SeriesList.Add(_series);
 
 
       return _series;
-
     }
 
     /// <summary>
@@ -824,5 +847,7 @@ namespace TvdbConnector
     }
 
     #endregion
+
+
   }
 }

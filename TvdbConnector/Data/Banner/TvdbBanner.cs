@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Net;
 using System.IO;
+using System.Threading;
 
 namespace TvdbConnector.Data
 {
@@ -98,18 +99,13 @@ namespace TvdbConnector.Data
           m_isLoaded = true;
           return true;
         }
-        else
-        {
-          m_isLoaded = false;
-          return false;
-        }
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Error("Couldn't load banner " + m_bannerPath, ex);
-        m_isLoaded = false;
-        return false;
       }
+      m_isLoaded = false;
+      return false;
     }
 
     /// <summary>
@@ -139,6 +135,7 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     protected Image LoadImage(String _path)
     {
+      //todo: will get irresponsive if aborted frequently
       WebClient client = new WebClient();
       byte[] imgData = client.DownloadData(_path);
       MemoryStream ms = new MemoryStream(imgData);

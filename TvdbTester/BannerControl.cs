@@ -14,19 +14,24 @@ namespace TvdbTester
 {
   public partial class BannerControl : UserControl
   {
-    public BannerControl()
-    {
-      InitializeComponent();
-    }
+    #region private fields
     private List<TvdbBanner> m_imageList;
     private int m_index = 0;
     private Image m_defaultImage;
     private Size m_buttonSize;
-
+    private List<Thread> m_loadingThreads;
     private Color m_loadingBackgroundColor = Color.Transparent;
+    #endregion
 
     public delegate void IndexChangedHandler(EventArgs _event);
     public event IndexChangedHandler IndexChanged;
+
+
+    public BannerControl()
+    {
+      InitializeComponent();
+      m_loadingThreads = new List<Thread>();
+    }
 
     [Description("Background color when loading an image")]
     public Color LoadingBackgroundColor
@@ -55,7 +60,7 @@ namespace TvdbTester
           if (m_imageList.Count > 0)
           {
             m_index = 0;
-            SetPosterImage(value[0]);
+            SetBannerImage(value[0]);
           }
           if (m_imageList.Count <= 1)
           {
@@ -86,7 +91,7 @@ namespace TvdbTester
         if (m_index > 0 && m_index < m_imageList.Count)
         {
           m_index = value;
-          SetPosterImage(m_imageList[value]);
+          SetBannerImage(m_imageList[value]);
           if (IndexChanged != null) IndexChanged(new EventArgs());
         }
       }
@@ -189,44 +194,84 @@ namespace TvdbTester
     /// <summary>
     /// Clears the banner images
     /// </summary>
-    public void ClearBanner()
+    public void ClearControl()
     {
       m_imageList = null;
       m_index = 0;
       panelImage.BackgroundImage = m_defaultImage;
       cmdLeft.Visible = false;
       cmdRight.Visible = false;
+
+      lock (m_loadingThreads)
+      {
+        for (int i = m_loadingThreads.Count - 1; i >= 0; i--)
+        {
+          if (m_loadingThreads[i] != null && m_loadingThreads[i].IsAlive)
+          {
+            m_loadingThreads[i].Abort();
+            m_loadingThreads.RemoveAt(i);
+          }
+        }
+      }
+      pbLoading.Visible = false;
     }
 
     private void DoPosterLoad(object _param)
     {
-      TvdbBanner banner = (TvdbBanner)_param;
-
-      int index = m_index;
-      if (!banner.IsLoaded)
+      try
       {
-        SetImageThreadSafe(null);
-        SetLoadingVisibleThreadSafe(true);
-        banner.LoadBanner();
-      }
-      if (index == m_index)
-      {//the current index is still (event after downloading the image) the images' index
-        //todo: check if another image has been loaded while the image has been downloaded
-        if (banner.IsLoaded)
-        {//banner was successfully loaded
-          SetLoadingVisibleThreadSafe(false);
-          SetImageThreadSafe(banner.Banner);
+        TvdbBanner banner = (TvdbBanner)_param;
+
+        int index = m_index;
+        if (!banner.IsLoaded)
+        {
+          SetImageThreadSafe(null);
+          SetLoadingVisibleThreadSafe(true);
+          banner.LoadBanner();
         }
-        else
-        {//couldn't load the banner
-          SetLoadingVisibleThreadSafe(false);
+        if (index == m_index)
+        {//the current index is still (event after downloading the image) the images' index
+          //todo: check if another image has been loaded while the image has been downloaded
+          if (banner.IsLoaded)
+          {//banner was successfully loaded
+            SetLoadingVisibleThreadSafe(false);
+            SetImageThreadSafe(banner.Banner);
+          }
+          else
+          {//couldn't load the banner
+            SetLoadingVisibleThreadSafe(false);
+          }
+        }
+      }
+      catch (ThreadAbortException)
+      {
+        RemoveThreadFromThreadlist(Thread.CurrentThread);
+        Console.WriteLine("Bannercontrol aborted loading");
+      }
+      RemoveThreadFromThreadlist(Thread.CurrentThread);
+    }
+
+    private void RemoveThreadFromThreadlist(Thread _thread)
+    {
+      lock (m_loadingThreads)
+      {
+        if (m_loadingThreads.Contains(_thread))
+        {
+          m_loadingThreads.Remove(_thread);
         }
       }
     }
 
-    private void SetPosterImage(TvdbBanner _value)
+    private void SetBannerImage(TvdbBanner _value)
     {
-      new Thread(new ParameterizedThreadStart(DoPosterLoad)).Start(_value);
+      Thread imageLoader = new Thread(new ParameterizedThreadStart(DoPosterLoad));
+      imageLoader.Priority = ThreadPriority.BelowNormal;
+      imageLoader.Name = "Imageloader_" + _value.BannerPath;
+      lock (m_loadingThreads)
+      {
+        m_loadingThreads.Add(imageLoader);
+      }
+      imageLoader.Start(_value);
     }
 
 
@@ -242,7 +287,7 @@ namespace TvdbTester
         cmdRight.Visible = true;
         m_index--;
         if (IndexChanged != null) IndexChanged(new EventArgs());
-        SetPosterImage(m_imageList[m_index]);
+        SetBannerImage(m_imageList[m_index]);
         if (m_index <= 0)
         {
           cmdLeft.Visible = false;
@@ -262,7 +307,7 @@ namespace TvdbTester
         cmdLeft.Visible = true;
         m_index++;
         if (IndexChanged != null) IndexChanged(new EventArgs());
-        SetPosterImage(m_imageList[m_index]);
+        SetBannerImage(m_imageList[m_index]);
         if (m_index >= m_imageList.Count - 1)
         {
           cmdRight.Visible = false;
@@ -292,7 +337,7 @@ namespace TvdbTester
 
     private void panelImage_MouseDown(object sender, MouseEventArgs e)
     {
-      
+
     }
 
     private void cmdRight_MouseDown(object sender, MouseEventArgs e)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Threading;
+using System.Net;
 
 namespace TvdbConnector.Data.Banner
 {
@@ -155,18 +157,13 @@ namespace TvdbConnector.Data.Banner
           m_vignetteLoaded = true;
           return true;
         }
-        else
-        {
-          m_vignetteLoaded = false;
-          return false;
-        }
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
-        m_vignetteLoaded = false;
-        return false;
       }
+      m_vignetteLoaded = false;
+      return false;
     }
 
     /// <summary>
@@ -206,18 +203,13 @@ namespace TvdbConnector.Data.Banner
           m_thumbLoaded = true;
           return true;
         }
-        else
-        {
-          m_thumbLoaded = false;
-          return false;
-        }
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
-        m_thumbLoaded = false;
-        return false;
       }
+      m_thumbLoaded = false;
+      return false;
     }
 
     /// <summary>
