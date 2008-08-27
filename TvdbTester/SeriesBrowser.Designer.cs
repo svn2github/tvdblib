@@ -153,6 +153,7 @@
       this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
       this.pnlActorsEnabled = new System.Windows.Forms.Panel();
       this.label20 = new System.Windows.Forms.Label();
+      this.cbUseZipped = new System.Windows.Forms.CheckBox();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
@@ -1324,6 +1325,7 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.panelSeriesOverview.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
       this.panelSeriesOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.panelSeriesOverview.Controls.Add(this.cbUseZipped);
       this.panelSeriesOverview.Controls.Add(this.cmdUpdateSeries);
       this.panelSeriesOverview.Controls.Add(this.cbLoadActors);
       this.panelSeriesOverview.Controls.Add(this.cmdGetSeries);
@@ -1347,7 +1349,7 @@
       // 
       // cmdUpdateSeries
       // 
-      this.cmdUpdateSeries.Location = new System.Drawing.Point(432, 80);
+      this.cmdUpdateSeries.Location = new System.Drawing.Point(603, 80);
       this.cmdUpdateSeries.Name = "cmdUpdateSeries";
       this.cmdUpdateSeries.Size = new System.Drawing.Size(151, 23);
       this.cmdUpdateSeries.TabIndex = 52;
@@ -1490,6 +1492,17 @@
       this.label20.Size = new System.Drawing.Size(37, 13);
       this.label20.TabIndex = 0;
       this.label20.Text = "Actors";
+      // 
+      // cbUseZipped
+      // 
+      this.cbUseZipped.AutoSize = true;
+      this.cbUseZipped.Location = new System.Drawing.Point(430, 84);
+      this.cbUseZipped.Name = "cbUseZipped";
+      this.cbUseZipped.Size = new System.Drawing.Size(120, 17);
+      this.cbUseZipped.TabIndex = 53;
+      this.cbUseZipped.Text = "zipped downloading";
+      this.cbUseZipped.UseVisualStyleBackColor = true;
+      this.cbUseZipped.CheckedChanged += new System.EventHandler(this.cbUseZipped_CheckedChanged);
       // 
       // SeriesBrowser
       // 
@@ -1667,6 +1680,7 @@
     private System.Windows.Forms.Label label45;
     private System.Windows.Forms.Panel panel1;
     private System.Windows.Forms.Button cmdUpdateSeries;
+    private System.Windows.Forms.CheckBox cbUseZipped;
   }
 }
 

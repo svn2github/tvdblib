@@ -11,15 +11,26 @@ using System.Diagnostics;
 
 namespace TvdbConnector
 {
+  /// <summary>
+  /// Tvdb Handler for handling all features that are available on http://thetvdb.com/
+  /// 
+  /// http://thetvdb.com/ is an open database that can be modified by anybody. All content and images on the site have been contributed by our users. The database schema and website are open source under the GPL, and are available at Sourceforge.
+  /// The site also has a full XML API that allows other software and websites to use this information. The API is currently being used by the myTV add-in for Windows Media Center, XBMC (formerly XBox Media Center); the meeTVshows and TVNight plugins for Meedio; the MP-TVSeries plugin for MediaPortal; Boxee; and many more.
+  /// </summary>
   public class Tvdb
   {
+    #region private fields
     private List<TvdbMirror> m_mirrorInfo;
     private ICacheProvider m_cacheProvider;
     private String m_apiKey;
     private TvdbUser m_userInfo;
     private TvdbDownloader m_downloader;
     private TvdbData m_loadedData;
+    #endregion
 
+    /// <summary>
+    /// UserInfo for this class
+    /// </summary>
     public TvdbUser UserInfo
     {
       get { return m_userInfo; }
@@ -40,11 +51,21 @@ namespace TvdbConnector
       }
     }
 
+    /// <summary>
+    /// Unique id for every project that is using thetvdb
+    /// 
+    /// More information on: http://thetvdb.com/wiki/index.php/Programmers_API
+    /// </summary>
     public String ApiKey
     {
       get { return m_apiKey; }
     }
 
+    /// <summary>
+    /// Constructor for a tvdb class
+    /// </summary>
+    /// <param name="_cacheProvider">The cache provider used to store the information</param>
+    /// <param name="_apiKey">Api key to use for this project</param>
     public Tvdb(ICacheProvider _cacheProvider, String _apiKey)
     {
       m_apiKey = _apiKey; //store api key
@@ -120,6 +141,39 @@ namespace TvdbConnector
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
+      return GetSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners);
+    }
+
+    /// <summary>
+    /// Gets the series with the given id either from cache (if it has already been loaded) or from 
+    /// the selected tvdb mirror. If this series is not already cached and the series has to be 
+    /// downloaded, the zipped version will be downloaded
+    /// 
+    /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_language">language that should be retrieved</param>
+    /// <returns>Instance of TvdbSeries containing all gained information</returns>
+    internal TvdbSeries GetSeriesZipped(int _seriesId, TvdbLanguage _language)
+    {
+      return GetSeries(_seriesId, _language, true, true, true, true);
+    }
+
+    /// <summary>
+    /// Gets the series with the given id either from cache (if it has already been loaded) or from 
+    /// the selected tvdb mirror. If you use zip the request automatically downloads the episodes, the actors and the banners, so you should also select those features.
+    /// 
+    /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_language">language that should be retrieved</param>
+    /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
+    /// <param name="_loadBanners">if true also loads the paths to the banners</param>
+    /// <param name="_useZip">If this series is not already cached and the series has to be downloaded, the zipped version will be downloaded</param>
+    /// <returns>Instance of TvdbSeries containing all gained information</returns>
+    public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
+                                bool _loadActors, bool _loadBanners, bool _useZip)
+    {
       Stopwatch watch = new Stopwatch();
       watch.Start();
 
@@ -127,7 +181,15 @@ namespace TvdbConnector
 
       if (series == null)
       {//load complete series from tvdb
-        series = m_downloader.DownloadSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners);
+        if (_useZip)
+        {
+          series = m_downloader.DownloadSeriesZipped(_seriesId, _language);   
+        }
+        else
+        {
+          series = m_downloader.DownloadSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners);
+        }
+
         if (series == null)
         {
           return null;

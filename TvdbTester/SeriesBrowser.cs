@@ -148,16 +148,15 @@ namespace TvdbTester
 
     private void LoadSeries(int _seriesId)
     {
-
       TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_currentLanguage, cbLoadFull.Checked,
-                                                  cbLoadActors.Checked, cbLoadBanner.Checked);
+                                                  cbLoadActors.Checked, cbLoadBanner.Checked, cbUseZipped.Checked);
 
       if (series != null)
       {
         CleanUpForm();
         tabControlTvdb.SelectedTab = tabSeries;
         UpdateSeries(series);
-      }
+      } 
     }
 
     private void UpdateSeries(TvdbSeries _series)
@@ -705,6 +704,25 @@ namespace TvdbTester
       if (e.KeyCode == Keys.Enter)
       {
         cmdFindSeries_Click(this, new EventArgs());
+      }
+    }
+
+    private void cbUseZipped_CheckedChanged(object sender, EventArgs e)
+    {
+      if (cbUseZipped.Checked)
+      {
+        cbLoadFull.Checked = true;
+        cbLoadFull.Enabled = false;
+        cbLoadBanner.Checked = true;
+        cbLoadBanner.Enabled = false;
+        cbLoadActors.Checked = true;
+        cbLoadActors.Enabled = false;
+      }
+      else
+      {
+        cbLoadFull.Enabled = true;
+        cbLoadBanner.Enabled = true;
+        cbLoadActors.Enabled = true;
       }
     }
   }

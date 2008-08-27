@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using TvdbConnector.Xml;
+using ICSharpCode.SharpZipLib.Zip;
+using System.IO;
 
 namespace TvdbConnector.Data
 {
@@ -108,6 +110,86 @@ namespace TvdbConnector.Data
             series.Banners = banners;
           }
         }
+        return series;
+      }
+      else
+      {
+        Log.Warn("More than one series returned when trying to retrieve series " + _seriesId);
+        return null;
+      }
+    }
+
+    internal TvdbSeries DownloadSeriesZipped(int _seriesId, TvdbLanguage _language)
+    {
+      //download the xml data from this request
+      byte[] data;
+      try
+      {
+        data = m_webClient.DownloadData(TvdbLinks.CreateSeriesLinkZipped(m_apiKey, _seriesId, _language));
+      }
+      catch (Exception ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        return null;
+      }
+
+      ZipInputStream zip = new ZipInputStream(new MemoryStream(data));
+
+      ZipEntry entry = zip.GetNextEntry();
+      String seriesString = null;
+      String actorsString = null;
+      String bannersString = null;
+      while (entry != null)
+      {
+        Console.WriteLine("Extracting " + entry.Name);
+        byte[] buffer = new byte[zip.Length];
+        int count = zip.Read(buffer, 0, (int)zip.Length);
+        if (entry.Name.Equals(_language.Abbriviation + ".xml"))
+        {
+          seriesString = Encoding.UTF8.GetString(buffer);
+        }
+        else if (entry.Name.Equals("banners.xml"))
+        {
+          bannersString = Encoding.UTF8.GetString(buffer);
+        }
+        else if (entry.Name.Equals("actors.xml"))
+        {
+          actorsString = Encoding.UTF8.GetString(buffer);
+        }
+        entry = zip.GetNextEntry();
+      }
+      zip.Close();
+
+      //extract all series the xml file contains
+      List<TvdbSeries> seriesList = m_xmlHandler.ExtractSeries(seriesString);
+
+      //if a request is made on a series id, one and only one result 
+      //should be returned, otherwise there obviously was an error
+      if (seriesList != null && seriesList.Count == 1)
+      {
+        TvdbSeries series = seriesList[0];
+
+        //add episode info to series
+        List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(seriesString);
+        foreach (TvdbEpisode e in epList)
+        {
+          Util.AddEpisodeToSeries(e, series);
+        }
+
+        //also load actors
+        List<TvdbActor> actors = m_xmlHandler.ExtractActors(actorsString);
+        if (actors != null)
+        {
+          series.TvdbActors = actors;
+        }
+
+        //also load banner paths
+        List<TvdbBanner> banners = m_xmlHandler.ExtractBanners(bannersString);
+        if (banners != null)
+        {
+          series.Banners = banners;
+        }
+
         return series;
       }
       else

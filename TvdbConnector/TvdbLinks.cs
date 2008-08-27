@@ -79,6 +79,12 @@ namespace TvdbConnector
              (_full ? "/all/" : "/") + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
+    internal static String CreateSeriesLinkZipped(String _apiKey, int _seriesId, TvdbLanguage _lang)
+    {
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId +
+                                    "/all/" + (_lang != null ? _lang.Abbriviation : "en") + ".zip";
+    }
+
     internal static String CreateSeriesBannersLink(String _apiKey, int _seriesId)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/banners.xml";
@@ -187,5 +193,7 @@ namespace TvdbConnector
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/actors.xml";
     }
+
+
   }
 }
