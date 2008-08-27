@@ -1,0 +1,5 @@
+C:\[- Work -]\[- Projects -]\tvdblib\Svn\trunk\TvdbConnector\bin\Release\TvdbConnector.dll
+C:\[- Work -]\[- Projects -]\tvdblib\Svn\trunk\TvdbConnector\bin\Release\TvdbConnector.pdb
+C:\[- Work -]\[- Projects -]\tvdblib\Svn\trunk\TvdbConnector\obj\Release\ResolveAssemblyReference.cache
+C:\[- Work -]\[- Projects -]\tvdblib\Svn\trunk\TvdbConnector\obj\Release\TvdbConnector.dll
+C:\[- Work -]\[- Projects -]\tvdblib\Svn\trunk\TvdbConnector\obj\Release\TvdbConnector.pdb
