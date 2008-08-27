@@ -225,6 +225,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="plasma-tv.ico" />
+    <None Include="Resources\actors_default.jpg" />
+    <None Include="Resources\user1_refresh.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -41,8 +41,33 @@ namespace TvdbConnector.Cache
     {
       List<TvdbMirror> mirrors = LoadMirrorListFromCache();
       List<TvdbLanguage> languages = LoadLanguageListFromCache();
+      DateTime lastUpdated = LoadLastUpdatedFromCache();
       TvdbData data = new TvdbData(new List<TvdbSeries>(), languages, mirrors);
+      data.LastUpdated = lastUpdated;
       return data;
+    }
+
+    private DateTime LoadLastUpdatedFromCache()
+    {
+      if (File.Exists(m_rootFolder + "\\lastUpdated.ser"))
+      {
+        try
+        {
+          FileStream fs = new FileStream(m_rootFolder + "\\lastUpdated.ser", FileMode.Open);
+          DateTime retValue = (DateTime)m_formatter.Deserialize(fs);
+          fs.Close();
+          return retValue;
+        }
+        catch (SerializationException)
+        {
+          return DateTime.Now;
+
+        }
+      }
+      else
+      {
+        return DateTime.Now;
+      }
     }
 
     /// <summary>
@@ -53,10 +78,18 @@ namespace TvdbConnector.Cache
     {
       SaveToCache(_content.LanguageList);
       SaveToCache(_content.Mirrors);
+      SaveToCache(_content.LastUpdated);
       foreach (TvdbSeries s in _content.SeriesList)
       {
         SaveToCache(s);
       }
+    }
+
+    private void SaveToCache(DateTime _time)
+    {
+      m_filestream = new FileStream(m_rootFolder + "\\lastUpdated.ser", FileMode.Create);
+      m_formatter.Serialize(m_filestream, _time);
+      m_filestream.Close();
     }
 
 
@@ -230,15 +263,13 @@ namespace TvdbConnector.Cache
       {
         return null;
       }
-
-
     }
     /// <summary>
     /// Load the userinfo from the cache
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
-    public TvdbUser LoadUserInfoToCache(String _userId)
+    public TvdbUser LoadUserInfoFromCache(String _userId)
     {
       if (File.Exists(m_rootFolder + "\\user_" + _userId + ".ser"))
       {
@@ -254,6 +285,37 @@ namespace TvdbConnector.Cache
           return null;
 
         }
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    /// <summary>
+    /// Receives a list of all series that have been cached
+    /// </summary>
+    /// <returns></returns>
+    public List<int> GetCachedSeries()
+    {
+      if (Directory.Exists(m_rootFolder))
+      {
+        String[] files = Directory.GetFiles(m_rootFolder, "series*.ser");
+        List<int> retSeries = new List<int>();
+        foreach (String f in files)
+        {
+          String id = f.Substring(f.LastIndexOf("_") + 1, f.LastIndexOf(".") - f.LastIndexOf("_") - 1);
+          try
+          {
+            int intId = Int32.Parse(id);
+            retSeries.Add(intId);
+          }
+          catch (Exception)
+          {
+
+          }
+        }
+        return retSeries;
       }
       else
       {

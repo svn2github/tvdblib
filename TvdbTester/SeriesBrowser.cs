@@ -19,9 +19,12 @@ namespace TvdbTester
 {
   public partial class SeriesBrowser : Form
   {
-    Tvdb m_tvdbHandler;
-    TvdbLanguage m_defaultLang;
-    TvdbSeries m_currentSeries;
+    #region private fields
+    private Tvdb m_tvdbHandler;
+    private TvdbLanguage m_currentLanguage;//the currently selected language
+    private TvdbSeries m_currentSeries;//the currently loaded series
+    #endregion
+
     public SeriesBrowser()
     {
       InitializeComponent();
@@ -81,10 +84,10 @@ namespace TvdbTester
 
       foreach (TvdbLanguage l in m_languages)
       {
-        if (l.Abbriviation.Equals("en")) m_defaultLang = l;
+        if (l.Abbriviation.Equals("en")) m_currentLanguage = l;
         cbLanguage.Items.Add(l);
       }
-      lblCurrentLanguage.Text = "[" + m_defaultLang.ToString() + "]";
+      lblCurrentLanguage.Text = "[" + m_currentLanguage.ToString() + "]";
 
       //enable/disable community features
       if (_userId != null)
@@ -145,13 +148,14 @@ namespace TvdbTester
 
     private void LoadSeries(int _seriesId)
     {
-      CleanUpForm();
 
-      TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_defaultLang, cbLoadFull.Checked, 
+      TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_currentLanguage, cbLoadFull.Checked,
                                                   cbLoadActors.Checked, cbLoadBanner.Checked);
 
       if (series != null)
       {
+        CleanUpForm();
+        tabControlTvdb.SelectedTab = tabSeries;
         UpdateSeries(series);
       }
     }
@@ -212,7 +216,7 @@ namespace TvdbTester
       else
       {
         bcActors.ClearControl();
-        
+
         cmdLoadActorInfo.Enabled = true;
         pnlActorsEnabled.Visible = true;
       }
@@ -242,7 +246,7 @@ namespace TvdbTester
       txtStatus.Text = "";
       txtGenre.Text = "";
       txtFirstAired.Text = "";
-      txtAirsWeekday.Text ="";
+      txtAirsWeekday.Text = "";
       txtAirstime.Text = "";
       txtNetwork.Text = "";
       txtRuntime.Text = "";
@@ -253,6 +257,8 @@ namespace TvdbTester
       txtImdbId.Text = "";
       txtZap2itId.Text = "";
       raterSeriesSiteRating.CurrentRating = 0;
+
+      bcSeriesBanner.ClearControl();
     }
 
     private void ClearEpisodeDetail()
@@ -301,6 +307,7 @@ namespace TvdbTester
           }
         }
       }
+      
       if (bannerlist.Count > 0)
       {
         bcSeriesBanner.BannerImages = bannerlist;
@@ -439,7 +446,7 @@ namespace TvdbTester
               {
                 if (b.BannerType == TvdbSeasonBanner.Type.season)
                 {
-                  if (b.Language == null || b.Language.Abbriviation.Equals(m_defaultLang.Abbriviation))
+                  if (b.Language == null || b.Language.Abbriviation.Equals(m_currentLanguage.Abbriviation))
                   {
                     seasonList.Add(b);
                   }
@@ -447,7 +454,7 @@ namespace TvdbTester
 
                 if (b.BannerType == TvdbSeasonBanner.Type.seasonwide)
                 {
-                  if (b.Language == null || b.Language.Abbriviation.Equals(m_defaultLang.Abbriviation))
+                  if (b.Language == null || b.Language.Abbriviation.Equals(m_currentLanguage.Abbriviation))
                   {
                     seasonWideList.Add(b);
                   }
@@ -488,15 +495,18 @@ namespace TvdbTester
 
     private void cmdFindSeries_Click(object sender, EventArgs e)
     {
-      List<TvdbSearchResult> list = m_tvdbHandler.SearchSeries(txtSeriesToFind.Text);
-      SearchResultForm form = new SearchResultForm(list);
-      form.StartPosition = FormStartPosition.Manual;
-      form.Left = this.Left + this.Width / 2 - form.Width / 2;
-      form.Top = this.Top + this.Height / 2 - form.Height / 2;
-      DialogResult res = form.ShowDialog();
-      if (res == DialogResult.OK)
+      if (!txtSeriesToFind.Text.Equals(""))
       {
-        LoadSeries(form.Selection.Id);
+        List<TvdbSearchResult> list = m_tvdbHandler.SearchSeries(txtSeriesToFind.Text);
+        SearchResultForm form = new SearchResultForm(list);
+        form.StartPosition = FormStartPosition.Manual;
+        form.Left = this.Left + this.Width / 2 - form.Width / 2;
+        form.Top = this.Top + this.Height / 2 - form.Height / 2;
+        DialogResult res = form.ShowDialog();
+        if (res == DialogResult.OK)
+        {
+          LoadSeries(form.Selection.Id);
+        }
       }
     }
 
@@ -505,7 +515,13 @@ namespace TvdbTester
       if (cbLanguage.SelectedItem != null && cbLanguage.SelectedItem.GetType() == typeof(TvdbLanguage))
       {
         lblCurrentLanguage.Text = "[" + ((TvdbLanguage)cbLanguage.SelectedItem).ToString() + "]";
-        m_defaultLang = (TvdbLanguage)cbLanguage.SelectedItem;
+        m_currentLanguage = (TvdbLanguage)cbLanguage.SelectedItem;
+        if (m_currentSeries != null &&
+            MessageBox.Show("Change language of current series \"" + m_currentSeries.SeriesName + "\" to " +
+                            m_currentLanguage.Name + "?", "Change language", MessageBoxButtons.YesNo) == DialogResult.Yes)
+        {
+          LoadSeries(m_currentSeries.Id);//reload series with new language
+        }
       }
     }
 
@@ -516,14 +532,14 @@ namespace TvdbTester
 
     private void cmdForceUpdate_Click(object sender, EventArgs e)
     {
-      m_currentSeries = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked, 
+      m_currentSeries = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked,
                                                   cbLoadActors.Checked, cbLoadBanner.Checked);
       UpdateSeries(m_currentSeries);
     }
 
     private void cmdLoadFullSeriesInfo_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true, 
+      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true,
                                                   m_currentSeries.TvdbActorsLoaded, m_currentSeries.BannersLoaded);
       if (series != null && series.Episodes != null && series.Episodes.Count != 0)
       {
@@ -539,7 +555,7 @@ namespace TvdbTester
     {
       TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, m_currentSeries.EpisodesLoaded,
                                                   true, m_currentSeries.BannersLoaded);
-      
+
       if (series != null && series.TvdbActorsLoaded)
       {
         UpdateSeries(series);
@@ -552,10 +568,10 @@ namespace TvdbTester
 
     private void cmdLoadBanners_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, 
-                                                  m_currentSeries.EpisodesLoaded, m_currentSeries.TvdbActorsLoaded, 
+      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language,
+                                                  m_currentSeries.EpisodesLoaded, m_currentSeries.TvdbActorsLoaded,
                                                   true);
-      
+
       if (series != null && series.BannersLoaded)
       {
         UpdateSeries(series);
@@ -569,7 +585,7 @@ namespace TvdbTester
     private void cbUserFavourites_SelectedIndexChanged(object sender, EventArgs e)
     {
       TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
-                                                      m_defaultLang, cbLoadFull.Checked, cbLoadActors.Checked,
+                                                      m_currentLanguage, cbLoadFull.Checked, cbLoadActors.Checked,
                                                       cbLoadBanner.Checked);
 
       if (series != null)
@@ -588,8 +604,8 @@ namespace TvdbTester
 
     private void tabControlTvdb_SelectedIndexChanged(object sender, EventArgs e)
     {
-      if (tabControlTvdb.SelectedTab == tabFanart && 
-          m_currentSeries != null && 
+      if (tabControlTvdb.SelectedTab == tabFanart &&
+          m_currentSeries != null &&
           m_currentSeries.FanartBanners != null &&
           coverFlowFanart.Tag != m_currentSeries)
       {
@@ -668,6 +684,28 @@ namespace TvdbTester
       txtActorName.Text = _actor.Name.ToString();
       txtActorRole.Text = _actor.Role.ToString();
       txtActorSortOrder.Text = _actor.SortOrder.ToString();
+    }
+
+    private void cmdRefreshSeries_Click(object sender, EventArgs e)
+    {
+      m_tvdbHandler.UpdateAllSeries();
+    }
+
+    private void txtSeriesToFind_TextChanged(object sender, EventArgs e)
+    {
+    }
+
+    private void txtSeriesToFind_KeyPress(object sender, KeyPressEventArgs e)
+    {
+
+    }
+
+    private void txtSeriesToFind_KeyUp(object sender, KeyEventArgs e)
+    {
+      if (e.KeyCode == Keys.Enter)
+      {
+        cmdFindSeries_Click(this, new EventArgs());
+      }
     }
   }
 }

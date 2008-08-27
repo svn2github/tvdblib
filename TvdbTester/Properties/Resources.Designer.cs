@@ -60,6 +60,13 @@ namespace TvdbTester.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap actors_default {
+            get {
+                object obj = ResourceManager.GetObject("actors_default", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -163,6 +170,13 @@ namespace TvdbTester.Properties {
         internal static System.Drawing.Bitmap tvdb_logo1 {
             get {
                 object obj = ResourceManager.GetObject("tvdb_logo1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap user1_refresh {
+            get {
+                object obj = ResourceManager.GetObject("user1_refresh", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

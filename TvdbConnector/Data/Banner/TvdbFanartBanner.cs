@@ -32,6 +32,10 @@ namespace TvdbConnector.Data.Banner
     private Color m_color1;
     private Color m_color2;
     private Color m_color3;
+    private bool m_thumbLoading;
+    private bool m_vignetteLoading;
+    private System.Object m_thumbLoadingLock = new System.Object();
+    private System.Object m_vignetteLoadingLock = new System.Object();
     #endregion
 
     /// <summary>
@@ -147,23 +151,44 @@ namespace TvdbConnector.Data.Banner
     /// <returns></returns>
     public bool LoadVignette()
     {
-      try
-      {
-        Image img = LoadImage(TvdbLinks.CreateBannerLink(m_vignettePath));
+      return LoadVignette(false);
+    }
 
-        if (img != null)
-        {
-          m_vignette = img;
-          m_vignetteLoaded = true;
-          return true;
+    /// <summary>
+    /// Load the vignette from tvdb
+    /// </summary>
+    /// <returns></returns>
+    public bool LoadVignette(bool _replaceOld)
+    {
+      bool wasLoaded = m_vignetteLoaded;//is the banner already loaded at this point
+      lock (m_vignetteLoadingLock)
+      {//if another thread is already loading THIS banner, the lock will block this thread until the other thread
+        //has finished loading
+        if (!wasLoaded && !_replaceOld && m_vignetteLoaded)
+        {////the banner has already been loaded from a different thread and we don't want to replace it
+          return false;
         }
+        m_vignetteLoading = true;
+        try
+        {
+          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_vignettePath));
+
+          if (img != null)
+          {
+            m_vignette = img;
+            m_vignetteLoaded = true;
+            m_vignetteLoading = false;
+            return true;
+          }
+        }
+        catch (WebException ex)
+        {
+          Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
+        }
+        m_vignetteLoaded = false;
+        m_vignetteLoading = false;
+        return false;
       }
-      catch (WebException ex)
-      {
-        Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
-      }
-      m_vignetteLoaded = false;
-      return false;
     }
 
     /// <summary>
@@ -186,30 +211,51 @@ namespace TvdbConnector.Data.Banner
       }
     }
 
-
     /// <summary>
     /// Load the thumb from tvdb
     /// </summary>
     /// <returns></returns>
     public bool LoadThumb()
     {
-      try
-      {
-        Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
+      return LoadThumb(false);
+    }
 
-        if (img != null)
-        {
-          m_bannerThumb = img;
-          m_thumbLoaded = true;
-          return true;
+
+    /// <summary>
+    /// Load the thumb from tvdb
+    /// </summary>
+    /// <returns></returns>
+    public bool LoadThumb(bool _replaceOld)
+    {
+      bool wasLoaded = m_thumbLoaded;//is the banner already loaded at this point
+      lock (m_thumbLoadingLock)
+      {//if another thread is already loading THIS banner, the lock will block this thread until the other thread
+        //has finished loading
+        if (!wasLoaded && !_replaceOld && m_thumbLoaded)
+        {////the banner has already been loaded from a different thread and we don't want to replace it
+          return false;
         }
+        m_thumbLoading = true;
+        try
+        {
+          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
+
+          if (img != null)
+          {
+            m_bannerThumb = img;
+            m_thumbLoaded = true;
+            m_thumbLoading = false;
+            return true;
+          }
+        }
+        catch (WebException ex)
+        {
+          Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
+        }
+        m_thumbLoaded = false;
+        m_thumbLoading = false;
+        return false;
       }
-      catch (WebException ex)
-      {
-        Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
-      }
-      m_thumbLoaded = false;
-      return false;
     }
 
     /// <summary>

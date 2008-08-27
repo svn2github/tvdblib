@@ -68,7 +68,7 @@ namespace TvdbTester
       {
         m_selection = (TvdbSearchResult)lvSearchResult.SelectedItems[0].Tag;
         bannerControl1.ClearControl();
-        if (m_selection.Banner != null)
+        if (m_selection != null)
         {
           bannerControl1.BannerImage = m_selection.Banner;
         }

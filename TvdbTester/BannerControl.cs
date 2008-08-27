@@ -19,8 +19,9 @@ namespace TvdbTester
     private int m_index = 0;
     private Image m_defaultImage;
     private Size m_buttonSize;
-    private List<Thread> m_loadingThreads;
+    private Thread m_latestLoadingThread; //thread that loads the LATEST image (which should be shown after loading)
     private Color m_loadingBackgroundColor = Color.Transparent;
+    private Image m_unavailableImage;
     #endregion
 
     public delegate void IndexChangedHandler(EventArgs _event);
@@ -30,9 +31,11 @@ namespace TvdbTester
     public BannerControl()
     {
       InitializeComponent();
-      m_loadingThreads = new List<Thread>();
     }
 
+    /// <summary>
+    /// Background color when an image is loading
+    /// </summary>
     [Description("Background color when loading an image")]
     public Color LoadingBackgroundColor
     {
@@ -43,12 +46,28 @@ namespace TvdbTester
       }
     }
 
+    /// <summary>
+    /// Loading image that is shown when the image is currently loading
+    /// </summary>
     public Image LoadingImage
     {
       get { return pbLoading.Image; }
       set { pbLoading.Image = value; }
     }
 
+    /// <summary>
+    /// Image that is shown when the banner has no image available
+    /// </summary>
+    [Description("Image that is shown when the banner has no image available")]
+    public Image UnavailableImage
+    {
+      get { return m_unavailableImage; }
+      set { m_unavailableImage = value; }
+    }
+
+    /// <summary>
+    /// List of images for this control
+    /// </summary>
     [Description("List of banner images")]
     public List<TvdbBanner> BannerImages
     {
@@ -83,6 +102,27 @@ namespace TvdbTester
       get { return m_imageList; }
     }
 
+    /// <summary>
+    /// Set the banner for the control
+    /// </summary>
+    public TvdbBanner BannerImage
+    {
+      set
+      {
+        if (value != null)
+        {
+          //if (value == null) value = new TvdbBanner();
+          List<TvdbBanner> list = new List<TvdbBanner>();
+          list.Add(value);
+          BannerImages = list;
+        }
+      }
+      get { return (m_imageList != null && m_imageList.Count > 0) ? m_imageList[0] : null; }
+    }
+
+    /// <summary>
+    /// Currently active index
+    /// </summary>
     public int Index
     {
       get { return m_index; }
@@ -97,24 +137,11 @@ namespace TvdbTester
       }
     }
 
-    public TvdbBanner BannerImage
-    {
-      set
-      {
-        if (value != null)
-        {
-          List<TvdbBanner> list = new List<TvdbBanner>();
-          list.Add(value);
-          BannerImages = list;
-        }
-        else
-        {
-          SetImageThreadSafe(null);
-        }
-      }
-      get { return (m_imageList != null && m_imageList.Count > 0) ? m_imageList[0] : null; }
-    }
 
+
+    /// <summary>
+    /// The default image which is shown if no banners are set
+    /// </summary>
     [Description("Default Image shown when no control has no banners")]
     public Image DefaultImage
     {
@@ -150,6 +177,7 @@ namespace TvdbTester
       }
     }
 
+    #region threadsafe operations
     delegate void SetImageThreadSafeDelegate(Image _image);
     void SetImageThreadSafe(Image _image)
     {
@@ -190,6 +218,7 @@ namespace TvdbTester
       else
         Invoke(new SetLoadingVisibleThreadSafeDelegate(SetLoadingVisibleThreadSafe), new object[] { _visible });
     }
+    #endregion
 
     /// <summary>
     /// Clears the banner images
@@ -201,77 +230,73 @@ namespace TvdbTester
       panelImage.BackgroundImage = m_defaultImage;
       cmdLeft.Visible = false;
       cmdRight.Visible = false;
-
-      lock (m_loadingThreads)
-      {
-        for (int i = m_loadingThreads.Count - 1; i >= 0; i--)
-        {
-          if (m_loadingThreads[i] != null && m_loadingThreads[i].IsAlive)
-          {
-            m_loadingThreads[i].Abort();
-            m_loadingThreads.RemoveAt(i);
-          }
-        }
-      }
       pbLoading.Visible = false;
     }
 
-    private void DoPosterLoad(object _param)
+    /// <summary>
+    /// Do a banner load within it's own thread
+    /// </summary>
+    /// <param name="_param"></param>
+    private void DoBannerLoad(object _param)
     {
+      TvdbBanner banner = (TvdbBanner)_param;
       try
       {
-        TvdbBanner banner = (TvdbBanner)_param;
-
-        int index = m_index;
-        if (!banner.IsLoaded)
+        if (banner.BannerPath != null && !banner.BannerPath.Equals(""))
         {
-          SetImageThreadSafe(null);
-          SetLoadingVisibleThreadSafe(true);
-          banner.LoadBanner();
+          int index = m_index;
+          if (!banner.IsLoaded)
+          {
+            SetImageThreadSafe(null);
+            SetLoadingVisibleThreadSafe(true);
+            banner.LoadBanner();
+          }
+
+          lock (m_latestLoadingThread)
+          {
+            if (Thread.CurrentThread == m_latestLoadingThread)
+            {
+              //Console.WriteLine("Loading finished of " + banner.Id);
+              if (banner.IsLoaded)
+              {//banner was successfully loaded
+                SetLoadingVisibleThreadSafe(false);
+                SetImageThreadSafe(banner.Banner);
+              }
+              else
+              {//couldn't load the banner
+                SetLoadingVisibleThreadSafe(false);
+              }
+            }
+            else
+            {
+              //Console.WriteLine("Didn't load " + banner.Id + " because it's not the latest image");
+            }
+          }
         }
-        if (index == m_index)
-        {//the current index is still (event after downloading the image) the images' index
-          //todo: check if another image has been loaded while the image has been downloaded
-          if (banner.IsLoaded)
-          {//banner was successfully loaded
-            SetLoadingVisibleThreadSafe(false);
-            SetImageThreadSafe(banner.Banner);
-          }
-          else
-          {//couldn't load the banner
-            SetLoadingVisibleThreadSafe(false);
-          }
+        else
+        {//no banner information available -> use default image if there is one
+          SetLoadingVisibleThreadSafe(false);
+          SetImageThreadSafe(m_unavailableImage);
         }
       }
       catch (ThreadAbortException)
       {
-        RemoveThreadFromThreadlist(Thread.CurrentThread);
-        Console.WriteLine("Bannercontrol aborted loading");
-      }
-      RemoveThreadFromThreadlist(Thread.CurrentThread);
-    }
-
-    private void RemoveThreadFromThreadlist(Thread _thread)
-    {
-      lock (m_loadingThreads)
-      {
-        if (m_loadingThreads.Contains(_thread))
-        {
-          m_loadingThreads.Remove(_thread);
-        }
+        //Console.WriteLine("Bannercontrol aborted loading");
       }
     }
 
+    /// <summary>
+    /// Set the new banner image
+    /// </summary>
+    /// <param name="_value"></param>
     private void SetBannerImage(TvdbBanner _value)
     {
-      Thread imageLoader = new Thread(new ParameterizedThreadStart(DoPosterLoad));
-      imageLoader.Priority = ThreadPriority.BelowNormal;
+      Thread imageLoader = new Thread(new ParameterizedThreadStart(DoBannerLoad));
+      m_latestLoadingThread = imageLoader;
+      imageLoader.Priority = ThreadPriority.Lowest;
       imageLoader.Name = "Imageloader_" + _value.BannerPath;
-      lock (m_loadingThreads)
-      {
-        m_loadingThreads.Add(imageLoader);
-      }
       imageLoader.Start(_value);
+
     }
 
 
@@ -330,41 +355,53 @@ namespace TvdbTester
       cmdRight.Left = this.Width - cmdRight.Width;
     }
 
+    /// <summary>
+    /// panel image size changed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void panelImage_SizeChanged(object sender, EventArgs e)
     {
       m_buttonSize = cmdRight.Size;
     }
 
-    private void panelImage_MouseDown(object sender, MouseEventArgs e)
-    {
-
-    }
-
+    /// <summary>
+    /// The right button was pressed down
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void cmdRight_MouseDown(object sender, MouseEventArgs e)
     {
-      //cmdRight.Left = cmdRight.Left + 1;
-      //cmdRight.Top = cmdRight.Top + 1;
       cmdRight.Size = new Size(m_buttonSize.Width - 1, m_buttonSize.Height - 1);
     }
 
+    /// <summary>
+    /// The right button was released
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void cmdRight_MouseUp(object sender, MouseEventArgs e)
     {
-      //cmdRight.Left = cmdRight.Left - 1;
-      //cmdRight.Top = cmdRight.Top - 1;
       cmdRight.Size = m_buttonSize;
     }
 
+    /// <summary>
+    /// The left button was pressed down
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void cmdLeft_MouseDown(object sender, MouseEventArgs e)
     {
-      //cmdLeft.Left = cmdLeft.Left + 1;
-      //cmdLeft.Top = cmdLeft.Top + 1;
       cmdLeft.Size = new Size(m_buttonSize.Width - 1, m_buttonSize.Height - 1);
     }
 
+    /// <summary>
+    /// The left button was released
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void cmdLeft_MouseUp(object sender, MouseEventArgs e)
     {
-      //cmdLeft.Left = cmdLeft.Left - 1;
-      //cmdLeft.Top = cmdLeft.Top - 1;
       cmdLeft.Size = m_buttonSize;
     }
   }

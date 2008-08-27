@@ -44,7 +44,7 @@ namespace TvdbConnector.Cache
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
-    TvdbUser LoadUserInfoToCache(String _userId);
+    TvdbUser LoadUserInfoFromCache(String _userId);
 
     /// <summary>
     /// Saves all available data to cache
@@ -75,5 +75,11 @@ namespace TvdbConnector.Cache
     /// </summary>
     /// <param name="_user"></param>
     void SaveToCache(TvdbUser _user);
+
+    /// <summary>
+    /// Receives a list of all series that have been cached
+    /// </summary>
+    /// <returns></returns>
+    List<int> GetCachedSeries();
   }
 }

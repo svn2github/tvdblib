@@ -36,6 +36,8 @@ namespace TvdbConnector.Data
     private bool m_isLoaded;
     private int m_id;
     private TvdbLanguage m_language;
+    private bool m_bannerLoading = false;
+    private System.Object m_bannerLoadingLock = new System.Object();
     #endregion
 
     /// <summary>
@@ -88,25 +90,50 @@ namespace TvdbConnector.Data
     /// <returns>true if the banner could be loaded successfully, false otherwise</returns>
     public bool LoadBanner()
     {
-      if (m_bannerPath.Equals("")) return false;
-      try
-      {
-        Image img = LoadImage(TvdbLinks.CreateBannerLink(m_bannerPath));
-
-        if (img != null)
-        {
-          m_banner = img;
-          m_isLoaded = true;
-          return true;
-        }
-      }
-      catch (WebException ex)
-      {
-        Log.Error("Couldn't load banner " + m_bannerPath, ex);
-      }
-      m_isLoaded = false;
-      return false;
+      return LoadBanner(false);
     }
+
+    /// <summary>
+    /// Loads the actual image data of the banner
+    /// </summary>
+    /// <param name="_replaceOld">If true will replace an old image (if one exists already)</param>
+    /// <returns>true if the banner could be loaded successfully, false otherwise</returns>
+    public bool LoadBanner(bool _replaceOld)
+    {
+      bool wasLoaded = m_isLoaded;//is the banner already loaded at this point
+      lock (m_bannerLoadingLock)
+      {//if another thread is already loading THIS banner, the lock will block this thread until the other thread
+        //has finished loading
+        if (!wasLoaded && !_replaceOld && m_isLoaded)
+        {////the banner has already been loaded from a different thread and we don't want to replace it
+          return false;
+        }
+
+        m_bannerLoading = true;
+        if (m_bannerPath.Equals("")) return false;
+        try
+        {
+          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_bannerPath));
+          Thread.Sleep(2000);
+          if (img != null)
+          {
+            m_banner = img;
+            m_isLoaded = true;
+            m_bannerLoading = false;
+            return true;
+          }
+        }
+        catch (WebException ex)
+        {
+          Log.Error("Couldn't load banner " + m_bannerPath, ex);
+        }
+        m_isLoaded = false;
+        m_bannerLoading = false;
+        return false;
+      }
+    }
+
+
 
     /// <summary>
     /// Loads the banner with the given image

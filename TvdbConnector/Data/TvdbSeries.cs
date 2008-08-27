@@ -7,29 +7,10 @@ using TvdbConnector.Data.Banner;
 namespace TvdbConnector.Data
 {
   [Serializable]
-  public class TvdbSeries
+  public class TvdbSeries : TvdbSeriesFields
   {
-    #region tvdb properties
-    private int m_id;
-    private String m_seriesName;
-    private List<String> m_actors;
-    private DayOfWeek? m_airsDayOfWeek;
-    private DateTime m_airsTime;
-    private String m_contentRating;
-    private DateTime m_firstAired;
-    private List<String> m_genre;
-    private String m_imdbId;
-    private TvdbLanguage m_language;
-    private String m_network;
-    private String m_overview;
-    private double m_rating;
-    private double m_runtime;
-    private int m_tvDotComId;
-    private String m_status;
-    private String m_bannerPath;
-    private String m_fanartPath;
-    private DateTime m_lastUpdated;
-    private String m_zap2itId;
+    #region private properties
+    private Dictionary<TvdbLanguage, TvdbSeriesFields> m_seriesTranslations;
     #endregion
 
     public TvdbSeries()
@@ -40,6 +21,156 @@ namespace TvdbConnector.Data
       m_banners = new List<TvdbBanner>();
       m_bannersLoaded = false;
       m_tvdbActorsLoaded = false;
+
+    }
+
+    /// <summary>
+    /// Create a series object with all the information contained in the TvdbSeriesFields object
+    /// </summary>
+    /// <param name="_fields"></param>
+    internal TvdbSeries(TvdbSeriesFields _fields)
+      : this()
+    {
+      AddLanguage(_fields);
+      UpdateTvdbFields(_fields);
+    }
+
+    /// <summary>
+    /// Add a new language to the series
+    /// </summary>
+    /// <param name="_fields"></param>
+    internal void AddLanguage(TvdbSeriesFields _fields)
+    {
+      if (m_seriesTranslations == null)
+      {
+        m_seriesTranslations = new Dictionary<TvdbLanguage, TvdbSeriesFields>();
+      }
+
+      if (m_seriesTranslations.Keys.Contains(_fields.Language))
+      {//delete translation if it already exists and overwrite it with a new one
+        m_seriesTranslations.Remove(_fields.Language);
+      }
+
+      m_seriesTranslations.Add(_fields.Language, _fields);
+    }
+
+    /// <summary>
+    /// Set the language of the series to one of the languages that have
+    /// already been loaded
+    /// </summary>
+    /// <param name="_language"></param>
+    /// <returns></returns>
+    public bool SetLanguage(TvdbLanguage _language)
+    {
+      if (m_seriesTranslations.Keys.Contains(_language))
+      {
+        if (!m_seriesTranslations.Keys.Contains(Language))
+        {
+          TvdbSeriesFields f = new TvdbSeriesFields();
+          f.Id = this.Id;
+          f.Actors = this.Actors;
+          f.AirsDayOfWeek = this.AirsDayOfWeek;
+          f.AirsTime = this.AirsTime;
+          f.ContentRating = this.ContentRating;
+          f.FirstAired = this.FirstAired;
+          f.Genre = this.Genre;
+          f.ImdbId = this.ImdbId;
+          f.Language = this.Language;
+          f.Network = this.Network;
+          f.Overview = this.Overview;
+          f.Rating = this.Rating;
+          f.Runtime = this.Runtime;
+          f.TvDotComId = this.TvDotComId;
+          f.SeriesName = this.SeriesName;
+          f.Status = this.Status;
+          f.BannerPath = this.BannerPath;
+          f.FanartPath = this.FanartPath;
+          f.LastUpdated = this.LastUpdated;
+          f.Zap2itId = this.Zap2itId;
+        }
+        m_seriesTranslations[Language].Episodes = this.Episodes;
+
+        this.UpdateTvdbFields(m_seriesTranslations[_language]);
+        return true;
+      }
+      else
+      {//the translation hasn't been loaded yet
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Get all languages that have already been loaded for this series
+    /// </summary>
+    /// <returns></returns>
+    public List<TvdbLanguage> GetAvailableLanguages()
+    {
+      if (m_seriesTranslations != null)
+      {
+        return m_seriesTranslations.Keys.ToList();
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    /// <summary>
+    /// Get all available Translations
+    /// </summary>
+    internal Dictionary<TvdbLanguage, TvdbSeriesFields> SeriesTranslations
+    {
+      get { return m_seriesTranslations; }
+      set { m_seriesTranslations = value; }
+    }
+
+    private void UpdateTvdbFields(TvdbSeriesFields _fields)
+    {
+      //Update series details
+      this.Id = _fields.Id;
+      this.Actors = _fields.Actors;
+      this.AirsDayOfWeek = _fields.AirsDayOfWeek;
+      this.AirsTime = _fields.AirsTime;
+      this.ContentRating = _fields.ContentRating;
+      this.FirstAired = _fields.FirstAired;
+      this.Genre = _fields.Genre;
+      this.ImdbId = _fields.ImdbId;
+      this.Language = _fields.Language;
+      this.Network = _fields.Network;
+      this.Overview = _fields.Overview;
+      this.Rating = _fields.Rating;
+      this.Runtime = _fields.Runtime;
+      this.TvDotComId = _fields.TvDotComId;
+      this.SeriesName = _fields.SeriesName;
+      this.Status = _fields.Status;
+      this.BannerPath = _fields.BannerPath;
+      this.FanartPath = _fields.FanartPath;
+      this.LastUpdated = _fields.LastUpdated;
+      this.Zap2itId = _fields.Zap2itId;
+
+      if (_fields.Episodes != null)
+      {
+        this.EpisodesLoaded = true;
+        //check for each episode if episode images have been loaded... if yes -> copy image
+        foreach (TvdbEpisode f in _fields.Episodes)
+        {
+          foreach (TvdbEpisode e in m_episodes)
+          {
+            if (e.Id == f.Id && e.Banner != null && e.Banner.IsLoaded)
+            {
+              f.Banner = e.Banner;
+              break;
+            }
+          }
+        }
+        m_episodes = _fields.Episodes;
+      }
+      else
+      {
+        this.EpisodesLoaded = false;
+      }
+
+      
     }
 
     #region user properties
@@ -56,151 +187,7 @@ namespace TvdbConnector.Data
 
     #endregion
 
-    #region basic properties
-    /// <summary>
-    /// Series Id
-    /// </summary>
-    public int Id
-    {
-      get { return m_id; }
-      set { m_id = value; }
-    }
-
-    /// <summary>
-    /// Series Name
-    /// </summary>
-    public String SeriesName
-    {
-      get { return m_seriesName; }
-      set { m_seriesName = value; }
-    }
-
-    /// <summary>
-    /// Series network
-    /// </summary>
-    public String Network
-    {
-      get { return m_network; }
-      set { m_network = value; }
-    }
-
-    /// <summary>
-    /// The language of the series
-    /// </summary>
-    public TvdbLanguage Language
-    {
-      get { return m_language; }
-      set { m_language = value; }
-    }
-
-    /// <summary>
-    /// Content-Rating of the series
-    /// </summary>
-    public string ContentRating
-    {
-      get { return m_contentRating; }
-      set { m_contentRating = value; }
-    }
-
-    /// <summary>
-    /// Zap2it Id of the series
-    /// </summary>
-    public String Zap2itId
-    {
-      get { return m_zap2itId; }
-      set { m_zap2itId = value; }
-    }
-
-    /// <summary>
-    /// When was the series updated the last time
-    /// </summary>
-    public DateTime LastUpdated
-    {
-      get { return m_lastUpdated; }
-      set { m_lastUpdated = value; }
-    }
-
-    /// <summary>
-    /// Path to the primary fanart banner
-    /// </summary>
-    public String FanartPath
-    {
-      get { return m_fanartPath; }
-      set { m_fanartPath = value; }
-    }
-
-    /// <summary>
-    /// Path to primary banner
-    /// </summary>
-    public String BannerPath
-    {
-      get { return m_bannerPath; }
-      set { m_bannerPath = value; }
-    }
-
-    /// <summary>
-    /// Status of the show
-    /// </summary>
-    public String Status
-    {
-      get { return m_status; }
-      set { m_status = value; }
-    }
-
-    /// <summary>
-    /// Tv.com id of the series
-    /// </summary>
-    public int TvDotComId
-    {
-      get { return m_tvDotComId; }
-      set { m_tvDotComId = value; }
-    }
-
-    /// <summary>
-    /// Runtime of the show
-    /// </summary>
-    public double Runtime
-    {
-      get { return m_runtime; }
-      set { m_runtime = value; }
-    }
-
-    /// <summary>
-    /// Rating of the series
-    /// </summary>
-    public double Rating
-    {
-      get { return m_rating; }
-      set { m_rating = value; }
-    }
-
-    /// <summary>
-    /// Overview of the series
-    /// </summary>
-    public String Overview
-    {
-      get { return m_overview; }
-      set { m_overview = value; }
-    }
-
-    /// <summary>
-    /// Imdb Id of the series
-    /// </summary>
-    public String ImdbId
-    {
-      get { return m_imdbId; }
-      set { m_imdbId = value; }
-    }
-
-    /// <summary>
-    /// List of the series' genres
-    /// </summary>
-    public List<String> Genre
-    {
-      get { return m_genre; }
-      set { m_genre = value; }
-    }
-
+    #region tvdb properties
     /// <summary>
     /// Returns the genre string in the format | genre1 | genre2 | genre3 |
     /// </summary>
@@ -218,42 +205,6 @@ namespace TvdbConnector.Data
         }
         return retString.ToString();
       }
-    }
-
-    /// <summary>
-    /// The Date the series was first aired
-    /// </summary>
-    public DateTime FirstAired
-    {
-      get { return m_firstAired; }
-      set { m_firstAired = value; }
-    }
-
-    /// <summary>
-    /// At which time does the series air
-    /// </summary>
-    public DateTime AirsTime
-    {
-      get { return m_airsTime; }
-      set { m_airsTime = value; }
-    }
-
-    /// <summary>
-    /// At which day of the week does the series air
-    /// </summary>
-    public DayOfWeek? AirsDayOfWeek
-    {
-      get { return m_airsDayOfWeek; }
-      set { m_airsDayOfWeek = value; }
-    }
-
-    /// <summary>
-    /// List of actors that appear in this series
-    /// </summary>
-    public List<String> Actors
-    {
-      get { return m_actors; }
-      set { m_actors = value; }
     }
 
     /// <summary>
@@ -423,12 +374,13 @@ namespace TvdbConnector.Data
     public List<TvdbActor> TvdbActors
     {
       get { return m_tvdbActors; }
-      set {
+      set
+      {
         m_tvdbActorsLoaded = true;
-        m_tvdbActors = value; 
+        m_tvdbActors = value;
       }
     }
-    
+
     /// <summary>
     /// Is the actor info loaded
     /// </summary>

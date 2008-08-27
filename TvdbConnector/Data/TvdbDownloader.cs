@@ -117,6 +117,31 @@ namespace TvdbConnector.Data
       }
     }
 
+    internal TvdbSeriesFields DownloadSeriesFields(int _seriesId, TvdbLanguage _language)
+    {
+      String data;
+      try
+      {
+        data = m_webClient.DownloadString(TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, false, false));
+      }
+      catch (Exception ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        return null;
+      }
+      //extract all series the xml file contains
+      List<TvdbSeriesFields> seriesList = m_xmlHandler.ExtractSeriesFields(data);
+
+      if (seriesList != null && seriesList.Count == 1)
+      {
+        return seriesList[0];
+      }
+      else
+      {
+        return null;
+      }
+    }
+
     /// <summary>
     /// Download the given episode from tvdb
     /// </summary>

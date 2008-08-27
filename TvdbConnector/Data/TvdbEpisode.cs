@@ -9,7 +9,10 @@ namespace TvdbConnector.Data
   [Serializable]
   public class TvdbEpisode
   {
+
     #region private fields
+
+    private TvdbEpisodeBanner m_banner;
     private int m_id;
     private int m_combinedEpisodeNumber;
     private int m_combinedSeason;
@@ -30,17 +33,23 @@ namespace TvdbConnector.Data
     private int m_seasonNumber;
     private List<String> m_writer;
     private int m_absoluteNumber;
-    private TvdbEpisodeBanner m_bannerPath;
+    private String m_bannerPath;
     private DateTime m_lastUpdated;
     private int m_seasonId;
     private int m_seriesId;
-    private bool m_isSpecial;
     private int m_airsAfterSeason;
     private int m_airsBeforeEpisode;
     private int m_airsBeforeSeason;
     #endregion
 
+
+    public TvdbEpisode()
+    {
+
+    }
+
     #region specials
+
     /// <summary>
     /// if the episode is a special episode -> Before which season did
     /// it air
@@ -73,11 +82,15 @@ namespace TvdbConnector.Data
 
     /// <summary>
     /// Is the episode a special episode
+    /// 
+    /// The fields airsafter_season, airsbefore_episode, and airsbefore_season will only be included when the episode is listed as a special. Specials are also listed as being in season 0, so they're easy to identify and sort.
     /// </summary>
     public bool IsSpecial
     {
-      get { return m_isSpecial; }
-      set { m_isSpecial = value; }
+      get
+      {
+        return (this.SeasonNumber == 0);
+      }
     }
 
     #endregion
@@ -158,14 +171,12 @@ namespace TvdbConnector.Data
       set { m_lastUpdated = value; }
     }
 
-    /// <summary>
-    /// The episode image banner
-    /// </summary>
-    public TvdbEpisodeBanner Banner
+    public String BannerPath
     {
       get { return m_bannerPath; }
       set { m_bannerPath = value; }
     }
+
 
     /// <summary>
     /// The absolute number of the episode
@@ -183,26 +194,6 @@ namespace TvdbConnector.Data
     {
       get { return m_writer; }
       set { m_writer = value; }
-    }
-
-    /// <summary>
-    /// Formatted String of writers for this episode in the 
-    /// format | writer1 | writer2 | writer3 |
-    /// </summary>
-    public String WriterString
-    {
-      get
-      {
-        if (Writer == null || Writer.Count == 0) return "";
-        StringBuilder retString = new StringBuilder();
-        retString.Append("|");
-        foreach (String s in Writer)
-        {
-          retString.Append(s);
-          retString.Append("|");
-        }
-        return retString.ToString();
-      }
     }
 
     /// <summary>
@@ -269,26 +260,6 @@ namespace TvdbConnector.Data
     }
 
     /// <summary>
-    /// Formatted String of guest stars that appeared during this episode in the 
-    /// format | gueststar1 | gueststar2 | gueststar3 |
-    /// </summary>
-    public String GuestStarsString
-    {
-      get
-      {
-        if (GuestStars == null || GuestStars.Count == 0) return "";
-        StringBuilder retString = new StringBuilder();
-        retString.Append("|");
-        foreach (String s in GuestStars)
-        {
-          retString.Append(s);
-          retString.Append("|");
-        }
-        return retString.ToString();
-      }
-    }
-
-    /// <summary>
     /// When did the episode air first
     /// </summary>
     public DateTime FirstAired
@@ -325,6 +296,67 @@ namespace TvdbConnector.Data
     }
 
     /// <summary>
+    /// n/a
+    /// </summary>
+    public int CombinedSeason
+    {
+      get { return m_combinedSeason; }
+      set { m_combinedSeason = value; }
+    }
+    /// <summary>
+    /// n/a
+    /// </summary>
+    public int CombinedEpisodeNumber
+    {
+      get { return m_combinedEpisodeNumber; }
+      set { m_combinedEpisodeNumber = value; }
+    }
+    #endregion
+   
+
+    /// <summary>
+    /// Formatted String of writers for this episode in the 
+    /// format | writer1 | writer2 | writer3 |
+    /// </summary>
+    public String WriterString
+    {
+      get
+      {
+        if (Writer == null || Writer.Count == 0) return "";
+        StringBuilder retString = new StringBuilder();
+        retString.Append("|");
+        foreach (String s in Writer)
+        {
+          retString.Append(s);
+          retString.Append("|");
+        }
+        return retString.ToString();
+      }
+    }
+
+    /// <summary>
+    /// Formatted String of guest stars that appeared during this episode in the 
+    /// format | gueststar1 | gueststar2 | gueststar3 |
+    /// </summary>
+    public String GuestStarsString
+    {
+      get
+      {
+        if (GuestStars == null || GuestStars.Count == 0) return "";
+        StringBuilder retString = new StringBuilder();
+        retString.Append("|");
+        foreach (String s in GuestStars)
+        {
+          retString.Append(s);
+          retString.Append("|");
+        }
+        return retString.ToString();
+      }
+    }
+
+    
+
+    /// <summary>
     /// Formatted String of directors of this episode in the 
     /// format | director1 | director2 | director3 |
     /// </summary>
@@ -345,22 +377,13 @@ namespace TvdbConnector.Data
     }
 
     /// <summary>
-    /// n/a
+    /// The episode image banner
     /// </summary>
-    public int CombinedSeason
+    public TvdbEpisodeBanner Banner
     {
-      get { return m_combinedSeason; }
-      set { m_combinedSeason = value; }
+      get { return m_banner; }
+      set { m_banner = value; }
     }
-    /// <summary>
-    /// n/a
-    /// </summary>
-    public int CombinedEpisodeNumber
-    {
-      get { return m_combinedEpisodeNumber; }
-      set { m_combinedEpisodeNumber = value; }
-    }
-    #endregion
 
     /// <summary>
     /// Updates all information of this episode from the given

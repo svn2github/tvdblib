@@ -205,6 +205,8 @@ namespace TvdbConnector.Cache
       return retList;
     }
 
+
+
     /// <summary>
     /// Load the give series from cache
     /// </summary>
@@ -331,12 +333,22 @@ namespace TvdbConnector.Cache
     #region ICacheProvider Members
 
 
-    public TvdbUser LoadUserInfoToCache(string _userId)
+    public TvdbUser LoadUserInfoFromCache(string _userId)
     {
       throw new NotImplementedException();
     }
 
     public void SaveToCache(TvdbUser _user)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region ICacheProvider Members
+
+
+    public List<int> GetCachedSeries()
     {
       throw new NotImplementedException();
     }

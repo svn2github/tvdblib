@@ -99,7 +99,6 @@ namespace TvdbConnector.Xml
       return retList;
     }
 
-
     /// <summary>
     /// Extract a list of series in the format:
     /// 
@@ -134,6 +133,61 @@ namespace TvdbConnector.Xml
     /// <returns></returns>
     internal List<TvdbSeries> ExtractSeries(String _data)
     {
+
+      List<TvdbSeriesFields> tvdbInfo = ExtractSeriesFields(_data);
+      List<TvdbSeries> retList = new List<TvdbSeries>();
+      foreach (TvdbSeriesFields s in tvdbInfo)
+      {
+        TvdbSeries series = new TvdbSeries(s);
+        
+        if (!series.BannerPath.Equals(""))
+        {
+          series.Banners.Add(new TvdbSeriesBanner(series.Id, series.BannerPath, series.Language, TvdbSeriesBanner.Type.graphical));
+        }
+
+        if (!series.FanartPath.Equals(""))
+        {
+          series.Banners.Add(new TvdbFanartBanner(series.Id, series.FanartPath, series.Language));
+        }
+        retList.Add(series);
+      }
+      return retList;
+    }
+
+    /// <summary>
+    /// Extract all the series fields that are available on thetvdb
+    /// 
+    /// <?xml version="1.0" encoding="UTF-8" ?>
+    /// <Data>
+    ///    <Series>
+    ///       <id>73739</id>
+    ///       <Actors>|Malcolm David Kelley|Jorge Garcia|Maggie Grace|...|</Actors>
+    ///       <Airs_DayOfWeek>Thursday</Airs_DayOfWeek>
+    ///       <Airs_Time>9:00 PM</Airs_Time>
+    ///       <ContentRating>TV-14</ContentRating>
+    ///       <FirstAired>2004-09-22</FirstAired>
+    ///       <Genre>|Action and Adventure|Drama|Science-Fiction|</Genre>
+    ///       <IMDB_ID>tt0411008</IMDB_ID>
+    ///       <Language>en</Language>
+    ///       <Network>ABC</Network>
+    ///       <Overview>After Oceanic Air flight 815...</Overview>
+    ///       <Rating>8.9</Rating>
+    ///       <Runtime>60</Runtime>
+    ///       <SeriesID>24313</SeriesID>
+    ///       <SeriesName>Lost</SeriesName>
+    ///       <Status>Continuing</Status>
+    ///       <banner>graphical/24313-g2.jpg</banner>
+    ///       <fanart>fanart/original/73739-1.jpg</fanart>
+    ///       <lastupdated>1205694666</lastupdated>
+    ///       <zap2it_id>SH672362</zap2it_id>
+    ///    </Series>
+    /// </Data>
+    /// 
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
+    internal List<TvdbSeriesFields> ExtractSeriesFields(String _data)
+    {
       Stopwatch watch = new Stopwatch();
       watch.Start();
       XDocument xml = XDocument.Parse(_data);
@@ -163,7 +217,7 @@ namespace TvdbConnector.Xml
                         zap2it_id = series.Element("zap2it_id").Value
                       };
 
-      List<TvdbSeries> retList = new List<TvdbSeries>();
+      List<TvdbSeriesFields> retList = new List<TvdbSeriesFields>();
       foreach (var s in allSeries)
       {
         TvdbSeries series = new TvdbSeries();
@@ -183,16 +237,8 @@ namespace TvdbConnector.Xml
         series.TvDotComId = Util.Int32Parse(s.SeriesID);
         series.SeriesName = s.SeriesName;
         series.Status = s.Status;
-        if (!s.banner.Equals(""))
-        {
-          series.Banners.Add(new TvdbSeriesBanner(series.Id, s.banner, series.Language, TvdbSeriesBanner.Type.graphical));
-        }
-
-        if (!s.fanart.Equals(""))
-        {
-          series.Banners.Add(new TvdbFanartBanner(series.Id, s.fanart, series.Language));
-        }
-
+        series.BannerPath = s.banner;
+        series.FanartPath = s.fanart;
         series.LastUpdated = Util.UnixToDotNet(s.lastupdated);
         series.Zap2itId = s.zap2it_id;
         if (series.Id != -99) retList.Add(series);
@@ -202,7 +248,6 @@ namespace TvdbConnector.Xml
       Log.Debug("Extracted " + retList.Count + " series in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
-
 
     /// <summary>
     /// Extract a list of episodes from the given data when the data has the following format:
@@ -312,7 +357,8 @@ namespace TvdbConnector.Xml
         ep.SeasonNumber = Util.Int32Parse(e.SeasonNumber);
         ep.Writer = Util.SplitTvdbString(e.Writer);
         ep.AbsoluteNumber = Util.Int32Parse(e.absolute_number);
-        ep.Banner = e.filename.Equals("") ? null : new TvdbEpisodeBanner(Util.Int32Parse(e.Id), e.filename);
+        ep.BannerPath = e.filename;
+        ep.Banner = ep.BannerPath.Equals("") ? null : new TvdbEpisodeBanner(ep.Id, ep.BannerPath);
         ep.LastUpdated = Util.UnixToDotNet(e.lastupdated);
         ep.SeasonId = Util.Int32Parse(e.seasonid);
         ep.SeriesId = Util.Int32Parse(e.seriesid);
@@ -408,7 +454,14 @@ namespace TvdbConnector.Xml
         if (!s.Language.Equals("")) res.Language = Util.ParseLanguage(s.Language);
         res.SeriesName = s.SeriesName;
         res.Overview = s.Overview;
-        if (!s.BannerPath.Equals("")) res.Banner = new TvdbSeriesBanner(0, s.BannerPath, null, TvdbSeriesBanner.Type.none);
+        if (!s.BannerPath.Equals(""))
+        {
+          res.Banner = new TvdbSeriesBanner(0, s.BannerPath, null, TvdbSeriesBanner.Type.none);
+        }
+        else
+        {
+          res.Banner = new TvdbSeriesBanner(s.Id, null, null, TvdbSeriesBanner.Type.none);
+        }
         retList.Add(res);
       }
 

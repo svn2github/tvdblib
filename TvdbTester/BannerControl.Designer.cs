@@ -76,7 +76,6 @@
       this.panelImage.Name = "panelImage";
       this.panelImage.Size = new System.Drawing.Size(715, 145);
       this.panelImage.TabIndex = 1;
-      this.panelImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelImage_MouseDown);
       this.panelImage.SizeChanged += new System.EventHandler(this.panelImage_SizeChanged);
       // 
       // pbLoading
