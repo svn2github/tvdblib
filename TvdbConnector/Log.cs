@@ -10,7 +10,12 @@ namespace TvdbConnector
     /// <summary>
     /// Loglevel
     /// </summary>
-    internal enum LOGLEVEL { Debug, Info, Warn, Error, Fatal }
+    internal enum LOGLEVEL { Debug = 0, Info = 1, Warn = 2, Error = 3, Fatal = 4 }
+
+    /// <summary>
+    /// The loglevel that is currently used
+    /// </summary>
+    internal const LOGLEVEL CURRENT_LEVEL = LOGLEVEL.Info;
 
     /// <summary>
     /// Logs the message at level Debug
@@ -36,7 +41,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Info(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Debug);
+      Debug(_logMessage, LOGLEVEL.Info);
     }
 
     /// <summary>
@@ -45,7 +50,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Info(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
+      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Info);
     }
 
     /// <summary>
@@ -54,7 +59,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Warn(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Debug);
+      Debug(_logMessage, LOGLEVEL.Warn);
     }
 
     /// <summary>
@@ -63,7 +68,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Warn(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
+      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Warn);
     }
 
     /// <summary>
@@ -72,7 +77,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Error(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Debug);
+      Debug(_logMessage, LOGLEVEL.Error);
     }
 
     /// <summary>
@@ -81,7 +86,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Error(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
+      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Error);
     }
 
     /// <summary>
@@ -90,7 +95,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Fatal(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Debug);
+      Debug(_logMessage, LOGLEVEL.Fatal);
     }
 
     /// <summary>
@@ -99,7 +104,7 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Fatal(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
+      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Fatal);
     }
 
     /// <summary>
@@ -108,28 +113,31 @@ namespace TvdbConnector
     /// <param name="_logMessage"></param>
     internal static void Debug(String _logMessage, LOGLEVEL _level)
     {
-      switch (_level)
+      if (_level >= CURRENT_LEVEL)
       {
-        case LOGLEVEL.Debug:
-          //debug log processing
-          Console.WriteLine(_logMessage);
-          break;
-        case LOGLEVEL.Info:
-          //debug log processing
-          Console.WriteLine(_logMessage);
-          break;
-        case LOGLEVEL.Warn:
-          //debug log processing
-          Console.WriteLine(_logMessage);
-          break;
-        case LOGLEVEL.Error:
-          //debug log processing
-          Console.WriteLine(_logMessage);
-          break;
-        case LOGLEVEL.Fatal:
-          //debug log processing
-          Console.WriteLine(_logMessage);
-          break;
+        switch (_level)
+        {
+          case LOGLEVEL.Debug:
+            //debug log processing
+            Console.WriteLine(_logMessage);
+            break;
+          case LOGLEVEL.Info:
+            //debug log processing
+            Console.WriteLine(_logMessage);
+            break;
+          case LOGLEVEL.Warn:
+            //debug log processing
+            Console.WriteLine(_logMessage);
+            break;
+          case LOGLEVEL.Error:
+            //debug log processing
+            Console.WriteLine(_logMessage);
+            break;
+          case LOGLEVEL.Fatal:
+            //debug log processing
+            Console.WriteLine(_logMessage);
+            break;
+        }
       }
     }
   }

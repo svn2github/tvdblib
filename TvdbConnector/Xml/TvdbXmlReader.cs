@@ -587,7 +587,90 @@ namespace TvdbConnector.Xml
     internal List<TvdbBanner> ExtractBannerUpdates(String _data)
     {
       //todo: banner update -> problem is update.xml doesn't contain all information for fanart
-      return null;
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
+
+      XDocument xml = XDocument.Parse(_data);
+      List<TvdbBanner> retList = new List<TvdbBanner>();
+
+      //Extract the fanart banners
+      var allEpisodes = from episode in xml.Descendants("Banner")
+                        where episode.Element("type").Value.Equals("fanart")
+                        select new TvdbFanartBanner
+                        {
+                          Id = Util.Int32Parse(episode.Element("Series").Value),
+                          BannerPath = episode.Element("path").Value,
+                          VignettePath = episode.Element("path").Value.Replace("/original/", "/vignette/"),
+                          ThumbPath = "_cache/" + episode.Element("path").Value,
+                          Resolution = Util.ParseResolution(episode.Element("format").Value),
+                          //Colors = Util.ParseColors(episode.Element("Colors").Value),
+                          //Language = Util.ParseLanguage(episode.Element("Language").Value)
+                          SeriesId = Util.Int32Parse(episode.Element("Series").Value),
+                          LastUpdated = Util.UnixToDotNet(episode.Element("time").Value)
+                        };
+
+      foreach (TvdbBanner e in allEpisodes)
+      {
+        if (e.Id != -99) retList.Add(e);
+      }
+
+      //Extract the season banners
+      var allBanners = from banner in xml.Descendants("Banner")
+                       where banner.Element("type").Value.Equals("season")
+                       select new TvdbSeasonBanner
+                       {
+                         Id = Util.Int32Parse(banner.Element("Series").Value),
+                         BannerPath = banner.Element("path").Value,
+                         Season = Util.Int32Parse(banner.Element("SeasonNum").Value),
+                         BannerType = Util.ParseSeasonBannerType(banner.Element("format").Value),
+                         Language = Util.ParseLanguage(banner.Element("language").Value),
+                         SeriesId = Util.Int32Parse(banner.Element("Series").Value),
+                         LastUpdated = Util.UnixToDotNet(banner.Element("time").Value)
+                       };
+
+      foreach (TvdbBanner e in allBanners)
+      {
+        if (e.Id != -99) retList.Add(e);
+      }
+
+      //Extract the series banners
+      var allBanners2 = from banner in xml.Descendants("Banner")
+                        where banner.Element("type").Value.Equals("series")
+                        select new TvdbSeriesBanner
+                        {
+                          Id = Util.Int32Parse(banner.Element("Series").Value),
+                          BannerPath = banner.Element("path").Value,
+                          BannerType = Util.ParseSeriesBannerType(banner.Element("format").Value),
+                          Language = Util.ParseLanguage(banner.Element("language").Value),
+                          SeriesId = Util.Int32Parse(banner.Element("Series").Value),
+                          LastUpdated = Util.UnixToDotNet(banner.Element("time").Value)
+                        };
+
+      foreach (TvdbBanner e in allBanners2)
+      {
+        if (e.Id != -99) retList.Add(e);
+      }
+
+      //Extract the poster banners
+      var allPosters = from banner in xml.Descendants("Banner")
+                       where banner.Element("type").Value.Equals("poster")
+                       select new TvdbPosterBanner
+                       {
+                         Id = Util.Int32Parse(banner.Element("Series").Value),
+                         BannerPath = banner.Element("path").Value,
+                         Resolution = Util.ParseResolution(banner.Element("format").Value),
+                         Language = TvdbLanguage.UniversalLanguage,
+                         SeriesId = Util.Int32Parse(banner.Element("Series").Value),
+                         LastUpdated = Util.UnixToDotNet(banner.Element("time").Value)
+                       };
+
+      foreach (TvdbPosterBanner e in allPosters)
+      {
+        if (e.Id != -99) retList.Add(e);
+      }
+      watch.Stop();
+      Log.Debug("Extracted " + retList.Count + " bannerupdates in " + watch.ElapsedMilliseconds + " milliseconds");
+      return retList;
     }
 
     /// <summary>

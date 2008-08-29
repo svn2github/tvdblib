@@ -19,6 +19,15 @@ namespace TvdbConnector.Data
     /// </summary>
     public static TvdbLanguage DefaultLanguage = new TvdbLanguage(7, "English", "en");
 
+    /// <summary>
+    /// language valid for all available languages
+    /// Id:           7
+    /// Abbriviation: en
+    /// Name:         English
+    /// 
+    /// </summary>
+    public static TvdbLanguage UniversalLanguage = new TvdbLanguage(99, "Universal", "all");
+
     #region private properties
     private String m_name;
     private String m_abbriviation;

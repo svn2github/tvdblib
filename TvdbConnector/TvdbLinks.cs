@@ -105,9 +105,10 @@ namespace TvdbConnector
         + _episodeId + "/" + (_lang != null ? _lang.Abbriviation: "en") + ".xml";
     }
 
-    internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval)
+    internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval, bool _zipped)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/updates/updates_" + _interval.ToString() + ".xml";
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/updates/updates_"
+             + _interval.ToString() + (_zipped ? ".zip" : ".xml" );
     }
 
     internal static String CreateSearchLink(String _searchString)

@@ -141,7 +141,7 @@ namespace TvdbConnector
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
-      return GetSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners);
+      return GetSeries(_seriesId, _language, _loadEpisodes, _loadActors, _loadBanners, false);
     }
 
     /// <summary>
@@ -179,7 +179,8 @@ namespace TvdbConnector
 
       TvdbSeries series = GetSeriesFromCache(_seriesId);
 
-      if (series == null)
+      if (series == null || //series not yet cached
+          (_useZip && (!series.EpisodesLoaded && !series.TvdbActorsLoaded && !series.BannersLoaded)))//only the basic series info has been loaded -> zip is still faster than fetching the missing informations without using zip
       {//load complete series from tvdb
         if (_useZip)
         {
@@ -195,7 +196,7 @@ namespace TvdbConnector
           return null;
         }
         watch.Stop();
-        Log.Debug("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
+        Log.Info("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
         series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
         AddSeriesToCache(series);
         return series;
@@ -249,7 +250,7 @@ namespace TvdbConnector
         }
 
         watch.Stop();
-        Log.Debug("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
+        Log.Info("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
 
         return series;
       }
@@ -495,40 +496,49 @@ namespace TvdbConnector
 
     public bool UpdateAllSeries()
     {
+      return UpdateAllSeries(false);
+    }
+
+    public bool UpdateAllSeries(bool _zipped)
+    {
+      //MakeUpdate(Util.UpdateInterval.month);
+      //return true;
       TimeSpan timespanLastUpdate = (DateTime.Now - m_loadedData.LastUpdated);
       //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
       if (timespanLastUpdate < new TimeSpan(1, 0, 0, 0))
       {//last update is less than a day ago -> make a daily update
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.day));
-        MakeUpdate(Util.UpdateInterval.day);
+        MakeUpdate(Util.UpdateInterval.day, _zipped);
       }
       else if (timespanLastUpdate < new TimeSpan(7, 0, 0, 0))
       {//last update is less than a week ago -> make a weekly update
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.week));
-        MakeUpdate(Util.UpdateInterval.week);
+        MakeUpdate(Util.UpdateInterval.week, _zipped);
       }
       else if (timespanLastUpdate < new TimeSpan(31, 0, 0, 0) ||
                 m_loadedData.LastUpdated == new DateTime())//lastUpdated not available -> make longest possible upgrade
       {//last update is less than a month ago -> make a monthly update
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.month));
-        MakeUpdate(Util.UpdateInterval.month);
-
+        MakeUpdate(Util.UpdateInterval.month, _zipped);
       }
       else
       {//TODO: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
       }
 
-
       return true;
     }
 
-    private bool MakeUpdate(Util.UpdateInterval _interval)
+    private bool MakeUpdate(Util.UpdateInterval _interval, bool _zipped)
     {
+      Log.Info("Started update (" + _interval.ToString() + ")");
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
       //update all flagged series
       List<TvdbSeries> updateSeries;
       List<TvdbEpisode> updateEpisodes;
-      DateTime updateTime = m_downloader.DownloadUpdate(out updateSeries, out updateEpisodes, _interval);
+      List<TvdbBanner> updateBanners;
+      DateTime updateTime = m_downloader.DownloadUpdate(out updateSeries, out updateEpisodes, out updateBanners, _interval, _zipped);
       List<int> cachedSeries = m_cacheProvider.GetCachedSeries();
 
       List<TvdbSeries> seriesToSave = new List<TvdbSeries>();
@@ -589,13 +599,96 @@ namespace TvdbConnector
 
       //todo: update banner information here -> ask in forum if fanart doesn't contain all fields on purpose...
 
+      foreach (TvdbBanner b in updateBanners)
+      {
+        foreach (TvdbSeries s in m_loadedData.SeriesList)
+        {
+          if (s.Id == b.SeriesId)
+          {
+            UpdateBanner(s, b);
+            break;
+          }
+        }
+
+        foreach (int s in cachedSeries)
+        {
+          if (b.SeriesId == s)
+          {//changes occured in series
+            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
+            UpdateBanner(series, b);
+            break;
+          }
+        }
+      }
       //set the last updated time to time of this update
       m_loadedData.LastUpdated = updateTime;
-
+      watch.Stop();
+      Log.Info("Finished update (" + _interval.ToString() + ") in " + watch.ElapsedMilliseconds + " milliseconds");
       return true;
 
     }
 
+    /// <summary>
+    /// Update the series with the banner
+    /// </summary>
+    /// <param name="_series"></param>
+    /// <param name="_banner"></param>
+    private void UpdateBanner(TvdbSeries _series, TvdbBanner _banner)
+    {
+      if (!_series.BannersLoaded)
+      {//banners for this series havn't been loaded -> don't update banners
+        return;
+      }
+      bool found = false;
+      foreach (TvdbBanner b in _series.Banners)
+      {
+        if (_banner.GetType() == b.GetType() && _banner.BannerPath.Equals(b.BannerPath))
+        {
+          if (b.LastUpdated < _banner.LastUpdated)
+          {
+            //todo: replace banner here -> reload if it has already been loaded
+            b.LastUpdated = _banner.LastUpdated;
+            if (_banner.GetType() == typeof(TvdbFanartBanner))
+            {
+              TvdbFanartBanner fanart = (TvdbFanartBanner)b;
+
+              fanart.Resolution = ((TvdbFanartBanner)_banner).Resolution;
+              if (fanart.IsThumbLoaded)
+              {
+                fanart.LoadThumb(null);
+              }
+
+              if (fanart.IsVignetteLoaded)
+              {
+                fanart.LoadVignette(null);
+              }
+            }
+            if (b.IsLoaded)
+            {
+              b.LoadBanner(null);
+            }
+
+            Log.Info("Replacing banner " + _banner.Id);
+          }
+          else
+          {
+            Log.Debug("Not replacing banner " + _banner.Id + " because it's not newer than current image");
+          }
+          found = true;
+        }
+      }
+      if (!found)
+      {//banner not found -> add it to bannerlist
+        Log.Info("Adding banner " + _banner.Id);
+        _series.Banners.Add(_banner);
+      }
+    }
+
+  /// <summary>
+  /// Update the series with the episode (Add it to the series if it doesn't already exist or update the episode if the current episode is older than the updated one)
+  /// </summary>
+  /// <param name="s"></param>
+  /// <param name="ue"></param>
     private void UpdateEpisode(TvdbSeries s, TvdbEpisode ue)
     {
       List<TvdbEpisode> allEpList = new List<TvdbEpisode>();
@@ -608,7 +701,7 @@ namespace TvdbConnector
         }
       }
 
-
+      //check all episodes if the updated episode is in it
       foreach (TvdbEpisode e in allEpList)
       {
         if (e.Id == ue.Id)
@@ -624,17 +717,20 @@ namespace TvdbConnector
               newEpisode.LastUpdated = ue.LastUpdated;
 
               e.UpdateEpisodeInfo(newEpisode);
-              Log.Info("Updated Episode " + e.Id);
+              Log.Info("Updated Episode " + e.Id + " for series " + e.SeriesId);
             }
           }
           return;
         }
       }
+
+      //episode hasn't been found
       foreach (TvdbLanguage l in s.GetAvailableLanguages())
       {
         //hasn't been found -> add it
         TvdbEpisode ep = m_downloader.DownloadEpisode(ue.Id, l);
         AddEpisodeToCache(ep);
+        Log.Info("Added Episode " + ep.Id + " for series " + ep.SeriesId);
       }
     }
 
@@ -883,6 +979,7 @@ namespace TvdbConnector
               {
                 retList.Add(series);
               }
+              AddSeriesToCache(series);
             }
           }
           HandleUserFavoriteRetrieved(idList);

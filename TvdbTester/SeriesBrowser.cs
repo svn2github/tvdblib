@@ -585,7 +585,7 @@ namespace TvdbTester
     {
       TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
                                                       m_currentLanguage, cbLoadFull.Checked, cbLoadActors.Checked,
-                                                      cbLoadBanner.Checked);
+                                                      cbLoadBanner.Checked, cbUseZipped.Checked);
 
       if (series != null)
       {
@@ -687,7 +687,7 @@ namespace TvdbTester
 
     private void cmdRefreshSeries_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler.UpdateAllSeries();
+      m_tvdbHandler.UpdateAllSeries(cbUseZipped.Checked);
     }
 
     private void txtSeriesToFind_TextChanged(object sender, EventArgs e)

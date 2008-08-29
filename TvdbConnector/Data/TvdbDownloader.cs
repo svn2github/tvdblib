@@ -141,7 +141,7 @@ namespace TvdbConnector.Data
       String bannersString = null;
       while (entry != null)
       {
-        Console.WriteLine("Extracting " + entry.Name);
+        Log.Debug("Extracting " + entry.Name);
         byte[] buffer = new byte[zip.Length];
         int count = zip.Read(buffer, 0, (int)zip.Length);
         if (entry.Name.Equals(_language.Abbriviation + ".xml"))
@@ -301,12 +301,28 @@ namespace TvdbConnector.Data
     /// <param name="updateEpisodes"></param>
     /// <param name="_interval"></param>
     /// <returns></returns>
-    internal DateTime DownloadUpdate(out List<TvdbSeries> updateSeries, out List<TvdbEpisode> updateEpisodes, Util.UpdateInterval _interval)
+    internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
+                                     out List<TvdbBanner> _updateBanners, Util.UpdateInterval _interval, bool _zipped)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.day));
 
-      updateEpisodes = m_xmlHandler.ExtractEpisodeUpdates(xml);
-      updateSeries = m_xmlHandler.ExtractSeriesUpdates(xml);
+      String xml = null;
+      if (_zipped)
+      {
+        byte[] data = m_webClient.DownloadData(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
+        ZipInputStream zip = new ZipInputStream(new MemoryStream(data));
+        zip.GetNextEntry();
+        byte[] buffer = new byte[zip.Length];
+        int count = zip.Read(buffer, 0, (int)zip.Length);
+        xml = Encoding.UTF8.GetString(buffer);
+      }
+      else
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
+      }
+
+      _updateEpisodes = m_xmlHandler.ExtractEpisodeUpdates(xml);
+      _updateSeries = m_xmlHandler.ExtractSeriesUpdates(xml);
+      _updateBanners = m_xmlHandler.ExtractBannerUpdates(xml);
 
       return m_xmlHandler.ExtractUpdateTime(xml);
     }

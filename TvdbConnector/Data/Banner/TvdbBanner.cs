@@ -38,6 +38,8 @@ namespace TvdbConnector.Data
     private TvdbLanguage m_language;
     private bool m_bannerLoading = false;
     private System.Object m_bannerLoadingLock = new System.Object();
+    private DateTime m_lastUpdated;
+    private int m_seriesId;
     #endregion
 
     /// <summary>
@@ -82,6 +84,24 @@ namespace TvdbConnector.Data
     {
       get { return m_bannerPath; }
       set { m_bannerPath = value; }
+    }
+
+    /// <summary>
+    /// When was the banner updated the last time
+    /// </summary>
+    public DateTime LastUpdated
+    {
+      get { return m_lastUpdated; }
+      set { m_lastUpdated = value; }
+    }
+
+    /// <summary>
+    /// Id of the series this banner belongs to
+    /// </summary>
+    public int SeriesId
+    {
+      get { return m_seriesId; }
+      set { m_seriesId = value; }
     }
 
     /// <summary>
