@@ -236,21 +236,24 @@ namespace TvdbConnector.Data.Banner
           return false;
         }
         m_thumbLoading = true;
-        try
+        if (m_thumbPath != null)
         {
-          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
-
-          if (img != null)
+          try
           {
-            m_bannerThumb = img;
-            m_thumbLoaded = true;
-            m_thumbLoading = false;
-            return true;
+            Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
+
+            if (img != null)
+            {
+              m_bannerThumb = img;
+              m_thumbLoaded = true;
+              m_thumbLoading = false;
+              return true;
+            }
           }
-        }
-        catch (WebException ex)
-        {
-          Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
+          catch (WebException ex)
+          {
+            Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
+          }
         }
         m_thumbLoaded = false;
         m_thumbLoading = false;

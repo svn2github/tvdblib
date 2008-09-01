@@ -37,15 +37,16 @@
       this.richTextBox1 = new System.Windows.Forms.RichTextBox();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.tsStatus = new System.Windows.Forms.ToolStripStatusLabel();
+      this.cmdUseWithoutId = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
       // cmdStart
       // 
-      this.cmdStart.Location = new System.Drawing.Point(48, 295);
+      this.cmdStart.Location = new System.Drawing.Point(12, 295);
       this.cmdStart.Name = "cmdStart";
-      this.cmdStart.Size = new System.Drawing.Size(268, 23);
+      this.cmdStart.Size = new System.Drawing.Size(187, 23);
       this.cmdStart.TabIndex = 0;
       this.cmdStart.Text = "Start";
       this.cmdStart.UseVisualStyleBackColor = true;
@@ -113,11 +114,23 @@
       this.tsStatus.Name = "tsStatus";
       this.tsStatus.Size = new System.Drawing.Size(0, 17);
       // 
+      // cmdUseWithoutId
+      // 
+      this.cmdUseWithoutId.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+      this.cmdUseWithoutId.Location = new System.Drawing.Point(205, 295);
+      this.cmdUseWithoutId.Name = "cmdUseWithoutId";
+      this.cmdUseWithoutId.Size = new System.Drawing.Size(166, 23);
+      this.cmdUseWithoutId.TabIndex = 7;
+      this.cmdUseWithoutId.Text = "Use Without Id";
+      this.cmdUseWithoutId.UseVisualStyleBackColor = true;
+      // 
       // StartScreen
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.CancelButton = this.cmdUseWithoutId;
       this.ClientSize = new System.Drawing.Size(379, 350);
+      this.Controls.Add(this.cmdUseWithoutId);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.richTextBox1);
       this.Controls.Add(this.pictureBox1);
@@ -150,5 +163,6 @@
     private System.Windows.Forms.RichTextBox richTextBox1;
     private System.Windows.Forms.StatusStrip statusStrip1;
     private System.Windows.Forms.ToolStripStatusLabel tsStatus;
+    private System.Windows.Forms.Button cmdUseWithoutId;
   }
 }

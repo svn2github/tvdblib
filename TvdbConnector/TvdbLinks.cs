@@ -71,11 +71,11 @@ namespace TvdbConnector
     /// </summary>
     internal static TvdbMirror ActiveMirror = null;
 
-    
+
 
     internal static String CreateSeriesLink(String _apiKey, int _seriesId, TvdbLanguage _lang, bool _full, bool _zipped)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + 
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId +
              (_full ? "/all/" : "/") + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
@@ -95,20 +95,20 @@ namespace TvdbConnector
       //this in fact returns the "full series page (http://thetvdb.com/wiki/index.php/API:Full_Series_Record)
       //which sucks because to retrieve all episodes I have to also download the series information (which isn't)
       //all that big on the other hand
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/all/" + 
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/all/" +
             (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
     internal static String CreateEpisodeLink(string _apiKey, int _episodeId, TvdbLanguage _lang, bool p)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/episodes/"
-        + _episodeId + "/" + (_lang != null ? _lang.Abbriviation: "en") + ".xml";
+        + _episodeId + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
     internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval, bool _zipped)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/updates/updates_"
-             + _interval.ToString() + (_zipped ? ".zip" : ".xml" );
+             + _interval.ToString() + (_zipped ? ".zip" : ".xml");
     }
 
     internal static String CreateSearchLink(String _searchString)
@@ -196,5 +196,14 @@ namespace TvdbConnector
     }
 
 
+    /// <summary>
+    /// Create link to list of available mirrors
+    /// </summary>
+    /// <param name="m_apiKey"></param>
+    /// <returns></returns>
+    internal static String CreateMirrorsLink(String _apiKey)
+    {
+      return TvdbLinks.BASE_SERVER + "api/" + _apiKey + TvdbLinks.MIRROR_PATH;
+    }
   }
 }

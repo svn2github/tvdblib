@@ -67,10 +67,10 @@ namespace TvdbTester
       if (lvSearchResult.SelectedItems.Count == 1)
       {
         m_selection = (TvdbSearchResult)lvSearchResult.SelectedItems[0].Tag;
-        bannerControl1.ClearControl();
+        bcSeriesBanner.ClearControl();
         if (m_selection != null)
         {
-          bannerControl1.BannerImage = m_selection.Banner;
+          bcSeriesBanner.BannerImage = m_selection.Banner;
         }
 
         txtOverview.Text = m_selection.Overview;

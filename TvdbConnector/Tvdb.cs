@@ -86,7 +86,6 @@ namespace TvdbConnector
     {
       if (m_cacheProvider != null)
       {
-        //TODO: merge existing settings with loaded settings
         TvdbData cache = m_cacheProvider.LoadUserDataFromCache(); //try to load cache
         if (cache != null)
         {
@@ -184,7 +183,7 @@ namespace TvdbConnector
       {//load complete series from tvdb
         if (_useZip)
         {
-          series = m_downloader.DownloadSeriesZipped(_seriesId, _language);   
+          series = m_downloader.DownloadSeriesZipped(_seriesId, _language);
         }
         else
         {
@@ -311,6 +310,25 @@ namespace TvdbConnector
           }
         }
       }
+
+      if (m_cacheProvider != null)
+      {
+        List<int> cachedSeries = m_cacheProvider.GetCachedSeries();
+        foreach (int s in cachedSeries)
+        {
+          if (s == _seriesId)
+          {
+            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
+            if (series.Language.Abbriviation.Equals(_language.Abbriviation) &&
+               (series.BannersLoaded || !_loadActors) &&
+               (series.TvdbActorsLoaded || !_loadActors) &&
+               (series.EpisodesLoaded || !_loadEpisodes))
+            {
+              return true;
+            }
+          }
+        }
+      }
       return false;
     }
 
@@ -361,9 +379,9 @@ namespace TvdbConnector
         if (((TvdbSeries)m_loadedData.SeriesList[i]).Id == _series.Id)
         {
           found = true;
-
-          _series.UpdateSeriesInfo(m_loadedData.SeriesList[i]); //so we're not losing banners, etc.
-          m_loadedData.SeriesList[i] = _series;
+          m_loadedData.SeriesList[i].UpdateSeriesInfo(_series);//so we're not losing banners, etc.
+          //_series.UpdateSeriesInfo(m_loadedData.SeriesList[i]); //so we're not losing banners, etc.
+          //m_loadedData.SeriesList[i] = _series;
         }
       }
       if (!found)
@@ -457,12 +475,7 @@ namespace TvdbConnector
     /// <returns></returns>
     public bool UpdateTvdbMirrors()
     {
-      WebClient client = new WebClient();
-      String xml = client.DownloadString(TvdbLinks.BASE_SERVER + "api/" +
-                                         "E8D8A47528D5B5AD" +
-                                         TvdbLinks.MIRROR_PATH);
-      TvdbXmlReader hand = new TvdbXmlReader();
-      List<TvdbMirror> list = hand.ExtractMirrors(xml);
+      List<TvdbMirror> list = m_downloader.DownloadMirrorList();
       if (list != null && list.Count > 0)
       {
         m_mirrorInfo = list;
@@ -481,18 +494,17 @@ namespace TvdbConnector
     {
       get
       {
-        throw new NotImplementedException("todo");
-        return true;
+        if (m_loadedData.Mirrors != null && m_loadedData.Mirrors.Count > 0)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
       }
     }
 
-    public bool IsUpdateAvailable
-    {
-      get
-      {
-        return true;
-      }
-    }
 
     public bool UpdateAllSeries()
     {
@@ -522,7 +534,7 @@ namespace TvdbConnector
         MakeUpdate(Util.UpdateInterval.month, _zipped);
       }
       else
-      {//TODO: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
+      {//todo: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
         //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
       }
 
@@ -597,8 +609,7 @@ namespace TvdbConnector
         }
       }
 
-      //todo: update banner information here -> ask in forum if fanart doesn't contain all fields on purpose...
-
+      //todo: update banner information here -> wait for forum response regarding missing 
       foreach (TvdbBanner b in updateBanners)
       {
         foreach (TvdbSeries s in m_loadedData.SeriesList)
@@ -646,7 +657,6 @@ namespace TvdbConnector
         {
           if (b.LastUpdated < _banner.LastUpdated)
           {
-            //todo: replace banner here -> reload if it has already been loaded
             b.LastUpdated = _banner.LastUpdated;
             if (_banner.GetType() == typeof(TvdbFanartBanner))
             {
@@ -684,11 +694,11 @@ namespace TvdbConnector
       }
     }
 
-  /// <summary>
-  /// Update the series with the episode (Add it to the series if it doesn't already exist or update the episode if the current episode is older than the updated one)
-  /// </summary>
-  /// <param name="s"></param>
-  /// <param name="ue"></param>
+    /// <summary>
+    /// Update the series with the episode (Add it to the series if it doesn't already exist or update the episode if the current episode is older than the updated one)
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="ue"></param>
     private void UpdateEpisode(TvdbSeries s, TvdbEpisode ue)
     {
       List<TvdbEpisode> allEpList = new List<TvdbEpisode>();
@@ -820,13 +830,29 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// Returns all series that are already cached in memory -> won't return information that has been cached locally but not yet loaded into memory
+    /// Returns all series id's that are already cached in memory or locally via the cacheprovider
     /// </summary>
     /// <returns>List of loaded series</returns>
-    public List<TvdbSeries> GetCachedSeries()
+    public List<int> GetCachedSeries()
     {
-      //TODO: should be removed at some point since we're not holding all cached information in memory
-      return m_loadedData.SeriesList;
+      List<int> retList = new List<int>();
+
+      //add series that are stored with the cacheprovider
+      if (m_cacheProvider != null)
+      {
+        retList.AddRange(m_cacheProvider.GetCachedSeries());
+      }
+
+      //add series that are in memory
+      foreach (TvdbSeries s in m_loadedData.SeriesList)
+      {
+        if (!retList.Contains(s.Id))
+        {
+          retList.Add(s.Id);
+        }
+      }
+
+      return retList;
     }
 
 

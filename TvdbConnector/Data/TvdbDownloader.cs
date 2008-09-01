@@ -409,5 +409,12 @@ namespace TvdbConnector.Data
       String xml = m_webClient.DownloadString(TvdbLinks.CreateActorLink(_seriesId, m_apiKey));
       return m_xmlHandler.ExtractActors(xml);
     }
+
+    internal List<TvdbMirror> DownloadMirrorList()
+    {
+      String xml = m_webClient.DownloadString(TvdbLinks.CreateMirrorsLink(m_apiKey));
+      List<TvdbMirror> list = m_xmlHandler.ExtractMirrors(xml);
+      return list;
+    }
   }
 }

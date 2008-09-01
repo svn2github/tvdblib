@@ -27,8 +27,27 @@ namespace TvdbTester
 
     public SeriesBrowser()
     {
-      InitializeComponent();
-      this.MouseWheel += new MouseEventHandler(Tester_MouseWheel);
+      String[] dirs = Directory.GetDirectories(@"C:\Windows\Microsoft.NET\Framework");
+      bool is35installed = false;//is the .net 3.5 framework installed
+      foreach (String d in dirs)
+      {
+        if (d.Contains("v3.5"))
+        {
+          is35installed = true;
+          break;
+        }
+      }
+      if (!is35installed)
+      {
+        MessageBox.Show("To use this program, you have to install the .net 3.5 runtime");
+        Application.Exit();
+        //this.Close();
+      }
+      else
+      {
+        InitializeComponent();
+        this.MouseWheel += new MouseEventHandler(Tester_MouseWheel);
+      }
 
     }
 
@@ -156,7 +175,7 @@ namespace TvdbTester
         CleanUpForm();
         tabControlTvdb.SelectedTab = tabSeries;
         UpdateSeries(series);
-      } 
+      }
     }
 
     private void UpdateSeries(TvdbSeries _series)
@@ -164,6 +183,7 @@ namespace TvdbTester
       m_currentSeries = _series;
       FillSeriesDetails(_series);
 
+      cmdForceUpdate.Enabled = true;
       if (_series.BannersLoaded)
       {
         cmdLoadBanners.Enabled = false;
@@ -226,6 +246,10 @@ namespace TvdbTester
 
     private void CleanUpForm()
     {
+      cmdForceUpdate.Enabled = false;
+      cmdLoadActorInfo.Enabled = false;
+      cmdLoadFullSeriesInfo.Enabled = false;
+      cmdLoadBanners.Enabled = false;
       posterControlSeries.ClearPoster();
       coverFlowFanart.Clear();
       bcSeriesBanner.ClearControl();
@@ -306,7 +330,7 @@ namespace TvdbTester
           }
         }
       }
-      
+
       if (bannerlist.Count > 0)
       {
         bcSeriesBanner.BannerImages = bannerlist;
@@ -497,14 +521,21 @@ namespace TvdbTester
       if (!txtSeriesToFind.Text.Equals(""))
       {
         List<TvdbSearchResult> list = m_tvdbHandler.SearchSeries(txtSeriesToFind.Text);
-        SearchResultForm form = new SearchResultForm(list);
-        form.StartPosition = FormStartPosition.Manual;
-        form.Left = this.Left + this.Width / 2 - form.Width / 2;
-        form.Top = this.Top + this.Height / 2 - form.Height / 2;
-        DialogResult res = form.ShowDialog();
-        if (res == DialogResult.OK)
+        if (list != null && list.Count > 0)
         {
-          LoadSeries(form.Selection.Id);
+          SearchResultForm form = new SearchResultForm(list);
+          form.StartPosition = FormStartPosition.Manual;
+          form.Left = this.Left + this.Width / 2 - form.Width / 2;
+          form.Top = this.Top + this.Height / 2 - form.Height / 2;
+          DialogResult res = form.ShowDialog();
+          if (res == DialogResult.OK)
+          {
+            LoadSeries(form.Selection.Id);
+          }
+        }
+        else
+        {
+          MessageBox.Show("No results for this series");
         }
       }
     }

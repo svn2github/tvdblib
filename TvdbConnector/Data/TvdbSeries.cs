@@ -430,8 +430,21 @@ namespace TvdbConnector.Data
       this.Zap2itId = _series.Zap2itId;
 
       if (_series.EpisodesLoaded)
+      //todo: check if the old series has any images loaded already -> if yes, save them
       {
         this.Episodes = _series.Episodes;
+      }
+
+      if (_series.TvdbActorsLoaded)
+      {
+        //todo: check if the old series has any images loaded already -> if yes, save them
+        this.TvdbActors = _series.TvdbActors;
+      }
+
+      if (_series.BannersLoaded)
+      {
+        //todo: check if the old series has any images loaded already -> if yes, save them
+        this.Banners = _series.Banners;
       }
     }
   }

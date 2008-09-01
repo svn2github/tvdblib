@@ -328,10 +328,6 @@ namespace TvdbConnector.Cache
         return null;
       }
     }
-    #endregion
-
-    #region ICacheProvider Members
-
 
     public TvdbUser LoadUserInfoFromCache(string _userId)
     {
@@ -343,14 +339,25 @@ namespace TvdbConnector.Cache
       throw new NotImplementedException();
     }
 
-    #endregion
-
-    #region ICacheProvider Members
 
 
     public List<int> GetCachedSeries()
     {
-      throw new NotImplementedException();
+      List<int> retList = new List<int>();
+      string[] dirs = Directory.GetDirectories(m_rootFolder);
+      foreach (String d in dirs)
+      {
+        try
+        {
+          int series = Int32.Parse(d.Remove(0, d.LastIndexOf("\\") + 1));
+          retList.Add(series);
+        }
+        catch (FormatException)
+        {
+          Log.Error("Couldn't parse " + d + " when loading list of cached series");
+        }
+      }
+      return retList;
     }
 
     #endregion

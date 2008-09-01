@@ -182,13 +182,20 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     protected Image LoadImage(String _path)
     {
-      //todo: will get irresponsive if aborted frequently
-      WebClient client = new WebClient();
-      byte[] imgData = client.DownloadData(_path);
-      MemoryStream ms = new MemoryStream(imgData);
-      Image img = Image.FromStream(ms, true, true);
+      try
+      {
+        WebClient client = new WebClient();
+        byte[] imgData = client.DownloadData(_path);
+        MemoryStream ms = new MemoryStream(imgData);
+        Image img = Image.FromStream(ms, true, true);
 
-      return img;
+        return img;
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error while loading image ", ex);
+        return null;
+      }
     }
   }
 }
