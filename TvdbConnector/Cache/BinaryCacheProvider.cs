@@ -279,6 +279,12 @@ namespace TvdbConnector.Cache
         m_filestream = new FileStream(m_rootFolder + "\\series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
         m_filestream.Close();
+
+        SeriesConfiguration cfg = new SeriesConfiguration(_series.Id, _series.EpisodesLoaded,
+                                                  _series.BannersLoaded, _series.TvdbActorsLoaded);
+        m_filestream = new FileStream(m_rootFolder + "\\series_" + _series.Id + ".cfg", FileMode.Create);
+        m_formatter.Serialize(m_filestream, cfg);
+        m_filestream.Close();
       }
     }
 
@@ -395,19 +401,18 @@ namespace TvdbConnector.Cache
     /// <param name="_episodesLoaded">are episodes loaded</param>
     /// <param name="_bannersLoaded">are banners loaded</param>
     /// <param name="_actorsLoaded">are actors loaded</param>
-    /// <param name="_language">language of the series</param>
     /// <returns>true if the series is cached, false otherwise</returns>
-    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _episodesLoaded, 
+    public bool IsCached(int _seriesId, bool _episodesLoaded, 
                          bool _bannersLoaded, bool _actorsLoaded)
     {
-      if (File.Exists(m_rootFolder + "\\series_" + _seriesId + ".ser"))
+      if (File.Exists(m_rootFolder + "\\series_" + _seriesId + ".cfg"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\series_" + _seriesId + ".ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + "\\series_" + _seriesId + ".cfg", FileMode.Open);
           SeriesConfiguration config = (SeriesConfiguration)m_formatter.Deserialize(fs);
           fs.Close();
-          //todo: handle language
+
           if (config.EpisodesLoaded || !_episodesLoaded &&
              config.BannersLoaded || !_bannersLoaded &&
              config.ActorsLoaded || !_actorsLoaded)
@@ -421,6 +426,7 @@ namespace TvdbConnector.Cache
         }
         catch (SerializationException)
         {
+          Log.Warn("Cannot deserialize SeriesConfiguration object");
           return false;
         }
       }

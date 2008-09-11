@@ -38,9 +38,6 @@
       this.pb6 = new System.Windows.Forms.PictureBox();
       this.pbFull = new System.Windows.Forms.PictureBox();
       this.panelImageFrame = new System.Windows.Forms.Panel();
-      this.label20 = new System.Windows.Forms.Label();
-      this.raterFanartSiteRating = new Rater();
-      this.label24 = new System.Windows.Forms.Label();
       this.pnlThumbOverview.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.pb0)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pb1)).BeginInit();
@@ -51,7 +48,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.pb6)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pbFull)).BeginInit();
       this.panelImageFrame.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.raterFanartSiteRating)).BeginInit();
       this.SuspendLayout();
       // 
       // pnlThumbOverview
@@ -158,7 +154,7 @@
       this.pbFull.BackColor = System.Drawing.Color.Black;
       this.pbFull.Location = new System.Drawing.Point(2, 3);
       this.pbFull.Name = "pbFull";
-      this.pbFull.Size = new System.Drawing.Size(875, 470);
+      this.pbFull.Size = new System.Drawing.Size(875, 498);
       this.pbFull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.pbFull.TabIndex = 1;
       this.pbFull.TabStop = false;
@@ -171,58 +167,8 @@
       this.panelImageFrame.Controls.Add(this.pbFull);
       this.panelImageFrame.Location = new System.Drawing.Point(3, 222);
       this.panelImageFrame.Name = "panelImageFrame";
-      this.panelImageFrame.Size = new System.Drawing.Size(880, 476);
+      this.panelImageFrame.Size = new System.Drawing.Size(880, 504);
       this.panelImageFrame.TabIndex = 3;
-      // 
-      // label20
-      // 
-      this.label20.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label20.AutoSize = true;
-      this.label20.Location = new System.Drawing.Point(346, 708);
-      this.label20.Name = "label20";
-      this.label20.Size = new System.Drawing.Size(392, 13);
-      this.label20.TabIndex = 54;
-      this.label20.Text = "(Rating of banners not yet supported via api, you have to visit http://thetvdb.co" +
-          "m)";
-      // 
-      // raterFanartSiteRating
-      // 
-      this.raterFanartSiteRating.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.raterFanartSiteRating.CurrentRating = 0;
-      this.raterFanartSiteRating.Enabled = false;
-      this.raterFanartSiteRating.LabelAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-      this.raterFanartSiteRating.LabelText = "RateLabel";
-      this.raterFanartSiteRating.LabelTextItems = new string[] {
-        "Poor",
-        "Fair",
-        "Good",
-        "Better",
-        "Best"};
-      this.raterFanartSiteRating.LabelTypeHover = Rater.eLabelType.FormatString;
-      this.raterFanartSiteRating.LabelTypeText = Rater.eLabelType.FormatString;
-      this.raterFanartSiteRating.Location = new System.Drawing.Point(78, 706);
-      this.raterFanartSiteRating.MaxRating = 10;
-      this.raterFanartSiteRating.Name = "raterFanartSiteRating";
-      this.raterFanartSiteRating.RadiusInner = 0F;
-      this.raterFanartSiteRating.RadiusOuter = 7F;
-      this.raterFanartSiteRating.ShapeBorderEmptyColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterFanartSiteRating.ShapeBorderFilledColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterFanartSiteRating.ShapeBorderHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterFanartSiteRating.ShapeBorderWidth = 2;
-      this.raterFanartSiteRating.ShapeColorFill = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterFanartSiteRating.ShapeColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterFanartSiteRating.Size = new System.Drawing.Size(250, 15);
-      this.raterFanartSiteRating.TabIndex = 53;
-      // 
-      // label24
-      // 
-      this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.label24.AutoSize = true;
-      this.label24.Location = new System.Drawing.Point(2, 708);
-      this.label24.Name = "label24";
-      this.label24.Size = new System.Drawing.Size(62, 13);
-      this.label24.TabIndex = 52;
-      this.label24.Text = "Site Rating:";
       // 
       // CoverFlow
       // 
@@ -230,9 +176,6 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.SystemColors.Control;
       this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-      this.Controls.Add(this.label20);
-      this.Controls.Add(this.raterFanartSiteRating);
-      this.Controls.Add(this.label24);
       this.Controls.Add(this.panelImageFrame);
       this.Controls.Add(this.pnlThumbOverview);
       this.Name = "CoverFlow";
@@ -248,9 +191,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.pb6)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pbFull)).EndInit();
       this.panelImageFrame.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.raterFanartSiteRating)).EndInit();
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 
@@ -266,9 +207,6 @@
     private System.Windows.Forms.PictureBox pbFull;
     private System.Windows.Forms.Panel pnlThumbOverview;
     private System.Windows.Forms.Panel panelImageFrame;
-    private System.Windows.Forms.Label label20;
-    private Rater raterFanartSiteRating;
-    private System.Windows.Forms.Label label24;
 
   }
 }

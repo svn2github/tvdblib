@@ -214,7 +214,6 @@ namespace TvdbConnector.SharpZipLib.Zip
 		#endregion
 		
 		// Write the local file header
-		// TODO: ZipHelperStream.WriteLocalHeader is not yet used and needs checking for ZipFile and ZipOuptutStream usage
 		void WriteLocalHeader(ZipEntry entry, EntryPatchData patchData) 
 		{
 			CompressionMethod method = entry.CompressionMethod;
@@ -326,7 +325,6 @@ namespace TvdbConnector.SharpZipLib.Zip
 
 			long giveUpMarker = Math.Max(pos - maximumVariableData, 0);
 
-			// TODO: This loop could be optimised for speed.
 			do {
 				if ( pos < giveUpMarker ) {
 					return -1;
@@ -390,7 +388,6 @@ namespace TvdbConnector.SharpZipLib.Zip
 
 			WriteLEInt(ZipConstants.EndOfCentralDirectorySignature);
 
-			// TODO: ZipFile Multi disk handling not done
 			WriteLEShort(0);                    // number of this disk
 			WriteLEShort(0);                    // no of disk with start of central dir
 

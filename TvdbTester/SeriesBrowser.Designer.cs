@@ -40,9 +40,11 @@
       this.label37 = new System.Windows.Forms.Label();
       this.lblCurrentLanguage = new System.Windows.Forms.Label();
       this.tabEpisodes = new System.Windows.Forms.TabPage();
+      this.lbDirectors = new System.Windows.Forms.ListBox();
       this.bcEpisodeBanner = new TvdbTester.BannerControl();
       this.saveImageContext = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.saveImageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.lbWriters = new System.Windows.Forms.ListBox();
       this.lbGuestStars = new System.Windows.Forms.ListBox();
       this.pnlSeasonBanner = new System.Windows.Forms.Panel();
       this.bcSeasonBanner = new TvdbTester.BannerControl();
@@ -152,8 +154,6 @@
       this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
       this.pnlActorsEnabled = new System.Windows.Forms.Panel();
       this.label20 = new System.Windows.Forms.Label();
-      this.lbDirectors = new System.Windows.Forms.ListBox();
-      this.lbWriters = new System.Windows.Forms.ListBox();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
@@ -309,6 +309,14 @@
       this.tabEpisodes.TabIndex = 1;
       this.tabEpisodes.Text = "Episodes";
       // 
+      // lbDirectors
+      // 
+      this.lbDirectors.FormattingEnabled = true;
+      this.lbDirectors.Location = new System.Drawing.Point(418, 307);
+      this.lbDirectors.Name = "lbDirectors";
+      this.lbDirectors.Size = new System.Drawing.Size(134, 69);
+      this.lbDirectors.TabIndex = 87;
+      // 
       // bcEpisodeBanner
       // 
       this.bcEpisodeBanner.BannerImage = null;
@@ -338,6 +346,14 @@
       this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
       this.saveImageToolStripMenuItem1.Text = "Save Image";
       this.saveImageToolStripMenuItem1.Click += new System.EventHandler(this.saveImageToolStripMenuItem1_Click);
+      // 
+      // lbWriters
+      // 
+      this.lbWriters.FormattingEnabled = true;
+      this.lbWriters.Location = new System.Drawing.Point(418, 451);
+      this.lbWriters.Name = "lbWriters";
+      this.lbWriters.Size = new System.Drawing.Size(134, 69);
+      this.lbWriters.TabIndex = 86;
       // 
       // lbGuestStars
       // 
@@ -1180,7 +1196,7 @@
       this.coverFlowFanart.Items = null;
       this.coverFlowFanart.Location = new System.Drawing.Point(3, 6);
       this.coverFlowFanart.Name = "coverFlowFanart";
-      this.coverFlowFanart.Size = new System.Drawing.Size(761, 721);
+      this.coverFlowFanart.Size = new System.Drawing.Size(761, 707);
       this.coverFlowFanart.TabIndex = 1;
       // 
       // tabActors
@@ -1492,22 +1508,6 @@
       this.label20.Size = new System.Drawing.Size(37, 13);
       this.label20.TabIndex = 0;
       this.label20.Text = "Actors";
-      // 
-      // lbDirectors
-      // 
-      this.lbDirectors.FormattingEnabled = true;
-      this.lbDirectors.Location = new System.Drawing.Point(418, 307);
-      this.lbDirectors.Name = "lbDirectors";
-      this.lbDirectors.Size = new System.Drawing.Size(134, 69);
-      this.lbDirectors.TabIndex = 87;
-      // 
-      // lbWriters
-      // 
-      this.lbWriters.FormattingEnabled = true;
-      this.lbWriters.Location = new System.Drawing.Point(418, 451);
-      this.lbWriters.Name = "lbWriters";
-      this.lbWriters.Size = new System.Drawing.Size(134, 69);
-      this.lbWriters.TabIndex = 86;
       // 
       // SeriesBrowser
       // 

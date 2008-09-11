@@ -92,9 +92,8 @@ namespace TvdbConnector.Cache
     /// <param name="_episodesLoaded">are episodes loaded</param>
     /// <param name="_bannersLoaded">are banners loaded</param>
     /// <param name="_actorsLoaded">are actors loaded</param>
-    /// <param name="_language">language of the series</param>
     /// <returns>true if the series is cached, false otherwise</returns>
-    bool IsCached(int _seriesId, TvdbLanguage _language, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded);
+    bool IsCached(int _seriesId, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded);
 
   }
 }

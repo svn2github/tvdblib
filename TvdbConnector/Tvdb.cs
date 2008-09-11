@@ -343,7 +343,7 @@ namespace TvdbConnector
 
       if (m_cacheProvider != null)
       {
-        return m_cacheProvider.IsCached(_seriesId, _language, _loadEpisodes, _loadBanners, _loadActors);
+        return m_cacheProvider.IsCached(_seriesId, _loadEpisodes, _loadBanners, _loadActors);
       }
       return false;
     }

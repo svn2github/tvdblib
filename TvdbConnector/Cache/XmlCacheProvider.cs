@@ -77,11 +77,24 @@ namespace TvdbConnector.Cache
     /// <summary>
     /// Saves the series to cache
     /// </summary>
-    /// <param name="_series"></param>
+    /// <param name="_series">The series to save</param>
     public void SaveToCache(TvdbSeries _series)
     {
       String root = m_rootFolder + "\\" + _series.Id;
+
       m_xmlWriter.WriteSeriesContent(_series, root + "\\all.xml");
+      TvdbLanguage defaultLang = _series.Language;
+
+      foreach(TvdbLanguage l in _series.GetAvailableLanguages())
+      {
+        if (l != defaultLang)
+        {
+          _series.SetLanguage(l);
+          m_xmlWriter.WriteSeriesContent(_series, root + "\\" + l.Abbriviation + ".xml");
+        }
+      }
+
+      
       if (_series.BannersLoaded)
       {
         m_xmlWriter.WriteSeriesBannerContent(_series.Banners, root + "\\banners.xml");
@@ -217,127 +230,154 @@ namespace TvdbConnector.Cache
     /// <summary>
     /// Load the give series from cache
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">Id of the series to load</param>
+    /// <returns>Series that has been loaded</returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
       String seriesRoot = m_rootFolder + "\\" + _seriesId;
-      String xmlFile = seriesRoot + "\\all.xml";
-      if (!File.Exists(xmlFile)) return null;
-      String content = File.ReadAllText(xmlFile);
-      List<TvdbSeries> seriesList = m_xmlReader.ExtractSeries(content);
-      if (seriesList != null && seriesList.Count == 1)
+      //todo: handle languages
+      TvdbSeries series = new TvdbSeries();
+
+      #region load series in all available languages
+      String[] seriesLanguages = Directory.GetFiles(seriesRoot, "*.xml");
+      TvdbLanguage defaultLanguage = null; ;
+
+      foreach (String l in seriesLanguages)
       {
-        TvdbSeries series = seriesList[0];
-        List<TvdbEpisode> epList = m_xmlReader.ExtractEpisodes(content);
-        if (epList != null && epList.Count > 0)
+        if (!l.EndsWith("actors.xml") && !l.EndsWith("banners.xml"))
         {
-          series.EpisodesLoaded = true;
-          series.Episodes = epList;
-        }
-        String bannerFile = seriesRoot + "\\banners.xml";
-        String actorFile = seriesRoot + "\\actors.xml";
-        Regex rex = new Regex("S(\\d+)E(\\d+)");
-
-
-        if (Directory.Exists(seriesRoot + "\\EpisodeImages"))
-        {
-          String[] episodeFiles = Directory.GetFiles(seriesRoot + "\\EpisodeImages", "*.jpg");
-          foreach (String epImageFile in episodeFiles)
+          String content = File.ReadAllText(l);
+          List<TvdbSeriesFields> seriesList = m_xmlReader.ExtractSeriesFields(content);
+          if (seriesList != null && seriesList.Count == 1)
           {
-            try
+            TvdbSeriesFields s = seriesList[0];
+            if (l.EndsWith("all.xml")) defaultLanguage = s.Language;
+
+            //Load episodes
+            List<TvdbEpisode> epList = m_xmlReader.ExtractEpisodes(content);
+            if (epList != null && epList.Count > 0)
             {
-              Match match = rex.Match(epImageFile);
-              int season = Int32.Parse(match.Groups[1].Value);
-              int episode = Int32.Parse(match.Groups[2].Value);
-              foreach (TvdbEpisode e in series.Episodes)
-              {
-                if (e.SeasonNumber == season && e.EpisodeNumber == episode)
-                {
-                  e.Banner.LoadBanner(Image.FromFile(epImageFile));
-                  break;
-                }
-              }
+              s.EpisodesLoaded = true;
+              s.Episodes = epList;
             }
-            catch (Exception)
-            {
-              Log.Warn("Couldn't load episode image file " + epImageFile);
-            }
+            series.AddLanguage(s);
           }
         }
-        //load cached banners
-        if (File.Exists(bannerFile))
-        {//banners have been already loaded
-          List<TvdbBanner> bannerList = m_xmlReader.ExtractBanners(File.ReadAllText(bannerFile));
+      }
 
-          String[] banners = Directory.GetFiles(seriesRoot, "banner*.jpg");
-          foreach (String b in banners)
-          {
-            try
-            {
-              int bannerId = Int32.Parse(b.Remove(b.IndexOf(".")).Remove(0, b.LastIndexOf("_") + 1));
-              foreach (TvdbBanner banner in bannerList)
-              {
-                if (banner.Id == bannerId)
-                {
-                  if (b.Contains("thumb") && banner.GetType() == typeof(TvdbFanartBanner))
-                  {
-                    ((TvdbFanartBanner)banner).LoadThumb(Image.FromFile(b));
-                  }
-                  else if (b.Contains("vignette") && banner.GetType() == typeof(TvdbFanartBanner))
-                  {
-                    ((TvdbFanartBanner)banner).LoadVignette(Image.FromFile(b));
-                  }
-                  else
-                  {
-                    banner.LoadBanner(Image.FromFile(b));
-                  }
-                }
-              }
-
-            }
-            catch (Exception)
-            {
-              Log.Warn("Couldn't load image file " + b);
-            }
-          }
-          series.Banners = bannerList;
-        }
-
-        //load actor info
-        if (File.Exists(actorFile))
-        {
-          List<TvdbActor> actorList = m_xmlReader.ExtractActors(File.ReadAllText(actorFile));
-
-          String[] banners = Directory.GetFiles(seriesRoot, "actor_*.jpg");
-          foreach (String b in banners)
-          {
-            try
-            {
-              int actorId = Int32.Parse(b.Remove(b.IndexOf(".")).Remove(0, b.LastIndexOf("_") + 1));
-              foreach (TvdbActor actor in actorList)
-              {
-                if (actor.Id == actorId)
-                {
-                  actor.ActorImage.LoadBanner(Image.FromFile(b));
-                }
-              }
-
-            }
-            catch (Exception)
-            {
-              Log.Warn("Couldn't load image file " + b);
-            }
-          }
-          series.TvdbActors = actorList;
-        }
-
-        return series;
+      if (defaultLanguage != null)
+      {//change language of the series to the default language
+        series.SetLanguage(defaultLanguage);
       }
       else
-      {
+      {//no series info could be loaded
         return null;
       }
+
+      Regex rex = new Regex("S(\\d+)E(\\d+)");
+      if (Directory.Exists(seriesRoot + "\\EpisodeImages"))
+      {
+        String[] episodeFiles = Directory.GetFiles(seriesRoot + "\\EpisodeImages", "*.jpg");
+        foreach (String epImageFile in episodeFiles)
+        {
+          try
+          {
+            Match match = rex.Match(epImageFile);
+            int season = Int32.Parse(match.Groups[1].Value);
+            int episode = Int32.Parse(match.Groups[2].Value);
+            foreach (TvdbEpisode e in series.Episodes)
+            {
+              if (e.SeasonNumber == season && e.EpisodeNumber == episode)
+              {
+                e.Banner.LoadBanner(Image.FromFile(epImageFile));
+                break;
+              }
+            }
+          }
+          catch (Exception)
+          {
+            Log.Warn("Couldn't load episode image file " + epImageFile);
+          }
+        }
+      }
+
+      #endregion
+
+      #region Banner loading
+      String bannerFile = seriesRoot + "\\banners.xml";
+      //load cached banners
+      if (File.Exists(bannerFile))
+      {//banners have been already loaded
+        List<TvdbBanner> bannerList = m_xmlReader.ExtractBanners(File.ReadAllText(bannerFile));
+
+        String[] banners = Directory.GetFiles(seriesRoot, "banner*.jpg");
+        foreach (String b in banners)
+        {
+          try
+          {
+            int bannerId = Int32.Parse(b.Remove(b.IndexOf(".")).Remove(0, b.LastIndexOf("_") + 1));
+            foreach (TvdbBanner banner in bannerList)
+            {
+              if (banner.Id == bannerId)
+              {
+                if (b.Contains("thumb") && banner.GetType() == typeof(TvdbFanartBanner))
+                {
+                  ((TvdbFanartBanner)banner).LoadThumb(Image.FromFile(b));
+                }
+                else if (b.Contains("vignette") && banner.GetType() == typeof(TvdbFanartBanner))
+                {
+                  ((TvdbFanartBanner)banner).LoadVignette(Image.FromFile(b));
+                }
+                else
+                {
+                  banner.LoadBanner(Image.FromFile(b));
+                }
+              }
+            }
+
+          }
+          catch (Exception)
+          {
+            Log.Warn("Couldn't load image file " + b);
+          }
+        }
+        series.Banners = bannerList;
+      }
+      #endregion
+
+      #region actor loading
+      //load actor info
+      String actorFile = seriesRoot + "\\actors.xml";
+      if (File.Exists(actorFile))
+      {
+        List<TvdbActor> actorList = m_xmlReader.ExtractActors(File.ReadAllText(actorFile));
+
+        String[] banners = Directory.GetFiles(seriesRoot, "actor_*.jpg");
+        foreach (String b in banners)
+        {
+          try
+          {
+            int actorId = Int32.Parse(b.Remove(b.IndexOf(".")).Remove(0, b.LastIndexOf("_") + 1));
+            foreach (TvdbActor actor in actorList)
+            {
+              if (actor.Id == actorId)
+              {
+                actor.ActorImage.LoadBanner(Image.FromFile(b));
+              }
+            }
+
+          }
+          catch (Exception)
+          {
+            Log.Warn("Couldn't load image file " + b);
+          }
+        }
+        series.TvdbActors = actorList;
+      }
+      #endregion
+
+      return series;
+
     }
 
     /// <summary>
@@ -408,16 +448,14 @@ namespace TvdbConnector.Cache
     /// <param name="_episodesLoaded">are episodes loaded</param>
     /// <param name="_bannersLoaded">are banners loaded</param>
     /// <param name="_actorsLoaded">are actors loaded</param>
-    /// <param name="_language">language of the series</param>
     /// <returns>true if the series is cached, false otherwise</returns>
-    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _episodesLoaded, 
+    public bool IsCached(int _seriesId, bool _episodesLoaded,
                          bool _bannersLoaded, bool _actorsLoaded)
     {
       bool actorsLoaded = false;
       bool episodesLoaded = false;
       bool bannersLoaded = false;
 
-      //todo: handle language
       String seriesRoot = m_rootFolder + "\\" + _seriesId;
       String xmlFile = seriesRoot + "\\all.xml";
       if (!File.Exists(xmlFile)) return false;
@@ -430,7 +468,7 @@ namespace TvdbConnector.Cache
       }
       String bannerFile = seriesRoot + "\\banners.xml";
       String actorFile = seriesRoot + "\\actors.xml";
-      
+
       //load cached banners
       if (File.Exists(bannerFile))
       {//banners have been already loaded

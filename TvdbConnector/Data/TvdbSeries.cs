@@ -104,8 +104,14 @@ namespace TvdbConnector.Data
     {
       if (m_seriesTranslations.Keys.Contains(_language))
       {
-        if (!m_seriesTranslations.Keys.Contains(this.Language))
-        {//the current language is not added to the dictionary -> add it
+        if (this.Language != null)
+        {
+          if (m_seriesTranslations.Keys.Contains(this.Language))
+          {//the current language is not added to the dictionary -> add it
+            m_seriesTranslations.Remove(this.Language);
+          }
+
+
           TvdbSeriesFields f = new TvdbSeriesFields();
           f.Id = this.Id;
           f.Actors = this.Actors;
@@ -193,15 +199,18 @@ namespace TvdbConnector.Data
       if (_fields.Episodes != null)
       {
         this.EpisodesLoaded = _fields.EpisodesLoaded;
-        //check for each episode if episode images have been loaded... if yes -> copy image
-        foreach (TvdbEpisode f in _fields.Episodes)
+        if (this.Episodes != null && this.Episodes.Count > 0)
         {
-          foreach (TvdbEpisode e in this.Episodes)
+          //check for each episode if episode images have been loaded... if yes -> copy image
+          foreach (TvdbEpisode f in _fields.Episodes)
           {
-            if (e.Id == f.Id && e.Banner != null && e.Banner.IsLoaded)
+            foreach (TvdbEpisode e in this.Episodes)
             {
-              f.Banner = e.Banner;
-              break;
+              if (e.Id == f.Id && e.Banner != null && e.Banner.IsLoaded)
+              {
+                f.Banner = e.Banner;
+                break;
+              }
             }
           }
         }
@@ -212,7 +221,7 @@ namespace TvdbConnector.Data
         this.EpisodesLoaded = false;
       }
 
-      
+
     }
 
     #region user properties
@@ -451,20 +460,84 @@ namespace TvdbConnector.Data
       this.Zap2itId = _series.Zap2itId;
 
       if (_series.EpisodesLoaded)
-      //todo: check if the old series has any images loaded already -> if yes, save them
-      {
+      {//check if the old series has any images loaded already -> if yes, save them
+        if (this.EpisodesLoaded)
+        {
+          foreach (TvdbEpisode oe in this.Episodes)
+          {
+            foreach (TvdbEpisode ne in _series.Episodes)
+            {
+              if (oe.SeasonNumber == ne.SeasonNumber &&
+                  oe.EpisodeNumber == ne.EpisodeNumber)
+              {
+                if (oe.Banner != null && oe.Banner.IsLoaded)
+                {
+                  ne.Banner = oe.Banner;
+                }
+              }
+            }
+          }
+        }
+
         this.Episodes = _series.Episodes;
       }
 
       if (_series.TvdbActorsLoaded)
-      {
-        //todo: check if the old series has any images loaded already -> if yes, save them
+      {//check if the old series has any images loaded already -> if yes, save them
+        if (this.TvdbActorsLoaded)
+        {
+          foreach (TvdbActor oa in this.TvdbActors)
+          {
+            foreach (TvdbActor na in _series.TvdbActors)
+            {
+              if (oa.Id == na.Id)
+              {
+                if (oa.ActorImage != null && oa.ActorImage.IsLoaded)
+                {
+                  na.ActorImage = oa.ActorImage;
+                }
+              }
+            }
+          }
+        }
         this.TvdbActors = _series.TvdbActors;
       }
 
       if (_series.BannersLoaded)
       {
-        //todo: check if the old series has any images loaded already -> if yes, save them
+        //check if the old series has any images loaded already -> if yes, save them
+        if (this.BannersLoaded)
+        {
+          foreach (TvdbBanner ob in this.Banners)
+          {
+            foreach (TvdbBanner nb in _series.Banners)
+            {
+              if (ob.Id == nb.Id)
+              {
+                if (ob.Banner != null && ob.IsLoaded)
+                {
+                  nb.Banner = ob.Banner;
+                }
+
+                if (ob.GetType() == typeof(TvdbFanartBanner))
+                {
+                  TvdbFanartBanner newFaBanner = (TvdbFanartBanner)nb;
+                  TvdbFanartBanner oldFaBanner = (TvdbFanartBanner)ob;
+
+                  if (oldFaBanner.BannerThumb != null && oldFaBanner.IsThumbLoaded)
+                  {
+                    newFaBanner.BannerThumb = oldFaBanner.BannerThumb;
+                  }
+
+                  if (oldFaBanner.BannerThumb != null && oldFaBanner.IsVignetteLoaded)
+                  {
+                    newFaBanner.VignetteImage = oldFaBanner.VignetteImage;
+                  }
+                }
+              }
+            }
+          }
+        }
         this.Banners = _series.Banners;
       }
     }

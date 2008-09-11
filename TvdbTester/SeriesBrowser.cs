@@ -444,17 +444,20 @@ namespace TvdbTester
       lbEpisodeInformation.Text = _episode.EpisodeName + "(" + _episode.EpisodeNumber + ")";
       txtEpisodeLanguage.Text = _episode.Language != null ? _episode.Language.ToString() : "";
       txtEpisodeFirstAired.Text = _episode.FirstAired.ToShortDateString();
-      
+
+      lbGuestStars.Items.Clear();
       foreach (String s in _episode.GuestStars)
       {
         lbGuestStars.Items.Add(s.Trim());
       }
 
+      lbDirectors.Items.Clear();
       foreach (String s in _episode.Directors)
       {
         lbDirectors.Items.Add(s.Trim());
       }
 
+      lbWriters.Items.Clear();
       foreach (String s in _episode.Writer)
       {
         lbWriters.Items.Add(s.Trim());
