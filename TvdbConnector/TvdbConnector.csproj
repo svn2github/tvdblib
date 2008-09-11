@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\TvdbConnector.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -73,10 +74,12 @@
     <Compile Include="Data\TvdbSearchResult.cs" />
     <Compile Include="Data\TvdbSeriesFields.cs" />
     <Compile Include="Data\TvdbUser.cs" />
+    <Compile Include="Exceptions\TvdbInvalidApiKeyException.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="TvdbLinks.cs" />
     <Compile Include="Data\TvdbMirror.cs" />
-    <Compile Include="TvdbUserNotFoundException.cs" />
+    <Compile Include="Exceptions\TvdbNotAvailableException.cs" />
+    <Compile Include="Exceptions\TvdbUserNotFoundException.cs" />
     <Compile Include="Xml\TvdbXmlWriter.cs" />
     <Compile Include="Zip\Checksums\Adler32.cs" />
     <Compile Include="Zip\Checksums\CRC32.cs" />

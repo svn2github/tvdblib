@@ -12,20 +12,28 @@ namespace TvdbConnector.Data
   /// <summary>
   /// Tvdb Banners are the graphical element of tvdb. There are different types of banners which are
   /// representet by sub-classes in this library. These subclasses are:
-  /// - TvdbEpisodeBanner: Each episode may contain a small image that should be an non-spoiler action 
-  ///                      shot from the episode (http://thetvdb.com/wiki/index.php/Episode_Images)
-  ///                      
-  /// - TvdbFanartBanner: Fan Art is high quality artwork that is displayed in the background of HTPC menus 
-  ///                     (http://thetvdb.com/wiki/index.php/Fan_Art)
-  ///                     
-  /// - TvdbSeasonBanner: Banner for each season of a series, dvd-style (400 x 578) or banner style (758 x 140)
-  ///                     (http://thetvdb.com/wiki/index.php/Wide_Season_Banners)
-  ///                     
-  /// - TvdbSeriesBanner: Wide banner for each series (758 x 140), comes in graphical, text or blank style. For
-  ///                     further information see http://thetvdb.com/wiki/index.php/Series_Banners
-  ///                     
-  /// - TvdbPosterBanner: Newest addition to the tvdb graphical section (680px x 1000px) and not smaller than 500k
-  ///                     (http://thetvdb.com/wiki/index.php/Posters)
+  /// <list type="bullet">
+  /// <item>
+  ///   <term>TvdbEpisodeBanner</term>
+  ///   <description>Each episode may contain a small image that should be an non-spoiler action shot from the episode (http://thetvdb.com/wiki/index.php/Episode_Images)</description>
+  /// </item>                 
+  /// <item>
+  ///   <term>TvdbFanartBanner</term>
+  ///   <description>Fan Art is high quality artwork that is displayed in the background of HTPC menus (http://thetvdb.com/wiki/index.php/Fan_Art)</description>
+  /// </item>                    
+  /// <item>
+  ///   <term>TvdbSeasonBanner</term>
+  ///   <description>Banner for each season of a series, dvd-style (400 x 578) or banner style (758 x 140) (http://thetvdb.com/wiki/index.php/Wide_Season_Banners)</description>
+  /// </item>                    
+  /// <item>
+  ///   <term>TvdbSeriesBanner</term>
+  ///   <description>Wide banner for each series (758 x 140), comes in graphical, text or blank style. For further information see http://thetvdb.com/wiki/index.php/Series_Banners</description>
+  /// </item>                    
+  /// <item>
+  ///   <term>TvdbPosterBanner</term>
+  ///   <description>Newest addition to the tvdb graphical section (680px x 1000px) and not smaller than 500k (http://thetvdb.com/wiki/index.php/Posters)</description>
+  /// </item>                    
+  /// </list>
   /// </summary>
   [Serializable]
   public class TvdbBanner
@@ -75,6 +83,15 @@ namespace TvdbConnector.Data
     public bool IsLoaded
     {
       get { return m_isLoaded; }
+    }
+
+    /// <summary>
+    /// Is the banner currently beeing loaded
+    /// </summary>
+    public bool BannerLoading
+    {
+      get { return m_bannerLoading; }
+      set { m_bannerLoading = value; }
     }
 
     /// <summary>

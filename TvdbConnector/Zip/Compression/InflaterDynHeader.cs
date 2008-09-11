@@ -37,9 +37,9 @@
 
 using System;
 
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TvdbConnector.SharpZipLib.Zip.Compression.Streams;
 
-namespace ICSharpCode.SharpZipLib.Zip.Compression 
+namespace TvdbConnector.SharpZipLib.Zip.Compression 
 {
 	
 	class InflaterDynHeader

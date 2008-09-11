@@ -41,15 +41,16 @@ using System;
 using System.Text;
 using System.IO;
 
-using ICSharpCode.SharpZipLib.Checksums;
-using ICSharpCode.SharpZipLib.Zip.Compression;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TvdbConnector.SharpZipLib.Checksums;
+using TvdbConnector.SharpZipLib.Zip.Compression;
+using TvdbConnector.SharpZipLib.Zip.Compression.Streams;
 
 #if !NETCF_1_0
-using ICSharpCode.SharpZipLib.Encryption;
+using TvdbConnector.SharpZipLib.Encryption;
+using TvdbConnector.ICSharpCode.SharpZipLib.Zip;
 #endif
 
-namespace ICSharpCode.SharpZipLib.Zip
+namespace TvdbConnector.SharpZipLib.Zip
 {
 	/// <summary>
 	/// This is an InflaterInputStream that reads the files baseInputStream an zip archive

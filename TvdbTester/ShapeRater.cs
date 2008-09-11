@@ -485,7 +485,6 @@ public class Rater : UserControl, ISupportInitialize
           default:
             return (LabelTextItems.Length > this.PaintRating && this.PaintRating > 0) ? LabelTextItems[this.PaintRating - 1] : "n/a";
         }
-        break;
       case eLabelType.FormatString:
         return string.Format(LabelFormatString, this.PaintRating, MaxRating);
       default:

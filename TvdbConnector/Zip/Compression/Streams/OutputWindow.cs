@@ -39,7 +39,7 @@
 using System;
 
 
-namespace ICSharpCode.SharpZipLib.Zip.Compression.Streams 
+namespace TvdbConnector.SharpZipLib.Zip.Compression.Streams 
 {
 	
 	/// <summary>

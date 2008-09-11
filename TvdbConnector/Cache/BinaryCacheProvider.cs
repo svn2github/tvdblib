@@ -14,6 +14,71 @@ namespace TvdbConnector.Cache
   /// </summary>
   public class BinaryCacheProvider : ICacheProvider
   {
+    /// <summary>
+    /// Class to store what
+    /// </summary>
+    [Serializable]
+    internal class SeriesConfiguration
+    {
+      #region private fields
+      private int m_seriesId;
+      private bool m_episodesLoaded;
+      private bool m_bannersLoaded;
+      private bool m_actorsLoaded;
+      #endregion
+
+      /// <summary>
+      /// Are actors loaded
+      /// </summary>
+      internal bool ActorsLoaded
+      {
+        get { return m_actorsLoaded; }
+        set { m_actorsLoaded = value; }
+      }
+
+      /// <summary>
+      /// Are banners loaded
+      /// </summary>
+      internal bool BannersLoaded
+      {
+        get { return m_bannersLoaded; }
+        set { m_bannersLoaded = value; }
+      }
+
+      /// <summary>
+      /// Are episodes loaded
+      /// </summary>
+      internal bool EpisodesLoaded
+      {
+        get { return m_episodesLoaded; }
+        set { m_episodesLoaded = value; }
+      }
+
+      /// <summary>
+      /// Id of series
+      /// </summary>
+      internal int SeriesId
+      {
+        get { return m_seriesId; }
+        set { m_seriesId = value; }
+      }
+
+      /// <summary>
+      /// constructor
+      /// </summary>
+      /// <param name="_seriesId">Id of series</param>
+      /// <param name="_episodesLoaded">Are episodes loaded</param>
+      /// <param name="_bannersLoaded">Are banners loaded</param>
+      /// <param name="_actorsLoaded">Are actors loaded</param>
+      internal SeriesConfiguration(int _seriesId, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded)
+      {
+        m_seriesId = _seriesId;
+        m_episodesLoaded = _episodesLoaded;
+        m_bannersLoaded = _bannersLoaded;
+        m_actorsLoaded = _actorsLoaded;
+      }
+    }
+
     #region private fields
     private BinaryFormatter m_formatter;//Formatter to serialize/deserialize messages
     private String m_rootFolder;
@@ -322,6 +387,49 @@ namespace TvdbConnector.Cache
         return null;
       }
     }
+
+    /// <summary>
+    /// Check if the series is cached in the given configuration
+    /// </summary>
+    /// <param name="_seriesId">Id of the series</param>
+    /// <param name="_episodesLoaded">are episodes loaded</param>
+    /// <param name="_bannersLoaded">are banners loaded</param>
+    /// <param name="_actorsLoaded">are actors loaded</param>
+    /// <param name="_language">language of the series</param>
+    /// <returns>true if the series is cached, false otherwise</returns>
+    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _episodesLoaded, 
+                         bool _bannersLoaded, bool _actorsLoaded)
+    {
+      if (File.Exists(m_rootFolder + "\\series_" + _seriesId + ".ser"))
+      {
+        try
+        {
+          FileStream fs = new FileStream(m_rootFolder + "\\series_" + _seriesId + ".ser", FileMode.Open);
+          SeriesConfiguration config = (SeriesConfiguration)m_formatter.Deserialize(fs);
+          fs.Close();
+          //todo: handle language
+          if (config.EpisodesLoaded || !_episodesLoaded &&
+             config.BannersLoaded || !_bannersLoaded &&
+             config.ActorsLoaded || !_actorsLoaded)
+          {
+            return true;
+          }
+          else
+          {
+            return false;
+          }
+        }
+        catch (SerializationException)
+        {
+          return false;
+        }
+      }
+      else
+      {
+        return false;
+      }
+    }
+
     #endregion
   }
 }

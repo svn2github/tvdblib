@@ -136,8 +136,8 @@ namespace TvdbConnector
     /// <summary>
     /// Converts a unix timestamp (used on tvdb) into a .net datetime object
     /// </summary>
-    /// <param name="_unixTimestamp"></param>
-    /// <returns></returns>
+    /// <param name="_unixTimestamp">Timestamp to convert</param>
+    /// <returns>.net DateTime object</returns>
     internal static DateTime UnixToDotNet(String _unixTimestamp)
     {
       System.DateTime date = System.DateTime.Parse("1/1/1970");
@@ -147,8 +147,8 @@ namespace TvdbConnector
     /// <summary>
     /// Converts a .net datetime object into a unix timestamp (used on tvdb)  
     /// </summary>
-    /// <param name="_unixTimestamp"></param>
-    /// <returns></returns>
+    /// <param name="_date">Date to convert</param>
+    /// <returns>Unix timestamp</returns>
     internal static String DotNetToUnix(DateTime _date)
     {
       TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
@@ -158,8 +158,8 @@ namespace TvdbConnector
     /// <summary>
     /// returns a day of the week object parsed from the string
     /// </summary>
-    /// <param name="_dayOfWeek"></param>
-    /// <returns></returns>
+    /// <param name="_dayOfWeek">String representation of this day of the week</param>
+    /// <returns>.net DayOfWeek enum</returns>
     internal static DayOfWeek? GetDayOfWeek(string _dayOfWeek)
     {
       switch (_dayOfWeek.ToLower())

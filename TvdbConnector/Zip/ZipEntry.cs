@@ -39,8 +39,9 @@
 
 using System;
 using System.IO;
+using TvdbConnector.SharpZipLib.Zip;
 
-namespace ICSharpCode.SharpZipLib.Zip
+namespace TvdbConnector.ICSharpCode.SharpZipLib.Zip
 {
 
 	/// <summary>
@@ -380,7 +381,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// <summary>
 		/// Get/Set index of this entry in Zip file
 		/// </summary>
-		/// <remarks>This is only valid when the entry is part of a <see cref="ZipFile"></see></remarks>
+		/// <remarks>This is only valid when the entry is part of a</remarks>
 		public long ZipFileIndex 
 		{
 			get {
@@ -735,7 +736,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// The unix naming convention is followed.
 		/// Path components in the entry should always separated by forward slashes ('/').
 		/// Dos device names like C: should also be removed.
-		/// See the <see cref="ZipNameTransform"/> class, or <see cref="CleanName(string)"/>
+		/// See the  class, or <see cref="CleanName(string)"/>
 		///</remarks>
 		public string Name 
 		{
@@ -809,8 +810,6 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// <returns>
 		/// The compression method for this entry
 		/// </returns>
-		/// <see cref="ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated"/>
-		/// <see cref="ICSharpCode.SharpZipLib.Zip.CompressionMethod.Stored"/>
 		public CompressionMethod CompressionMethod {
 			get {
 				return method;
@@ -951,7 +950,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// The comment or null if not set.
 		/// </returns>
 		/// <remarks>
-		/// A comment is only available for entries when read via the <see cref="ZipFile"/> class.
+		/// A comment is only available for entries when read via the ZipFile class.
 		/// The <see cref="ZipInputStream"/> class doesnt have the comment data available.
 		/// </remarks>
 		public string Comment {
@@ -1076,7 +1075,7 @@ namespace ICSharpCode.SharpZipLib.Zip
 		/// <param name="name">The name to clean</param>
 		/// <returns>The 'cleaned' name.</returns>
 		/// <remarks>
-		/// The <seealso cref="ZipNameTransform">Zip name transform</seealso> class is more flexible.
+		/// The Zip name transform class is more flexible.
 		/// </remarks>
 		public static string CleanName(string name)
 		{

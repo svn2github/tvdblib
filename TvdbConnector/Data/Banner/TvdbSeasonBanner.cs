@@ -16,7 +16,19 @@ namespace TvdbConnector.Data.Banner
     /// <summary>
     /// Type of the season banner
     /// </summary>
-    public enum Type  { season = 0, seasonwide = 1 , none = 2};
+    public enum Type  { 
+      /// <summary>
+      /// Season banner (poster format)
+      /// </summary>
+      season = 0, 
+      /// <summary>
+      /// Wide season banner (banner format)
+      /// </summary>
+      seasonwide = 1 , 
+      /// <summary>
+      /// no format specified
+      /// </summary>
+      none = 2};
 
     #region private fields
     private Type m_bannerType;

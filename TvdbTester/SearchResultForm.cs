@@ -13,7 +13,6 @@ namespace TvdbTester
   public partial class SearchResultForm : Form
   {
     List<TvdbSearchResult> m_results;
-    private DialogResult m_result = DialogResult.Cancel;
     private TvdbSearchResult m_selection = null;
 
     public SearchResultForm(List<TvdbSearchResult> _searchResults)
@@ -46,7 +45,7 @@ namespace TvdbTester
 
     private void cmdCancel_Click(object sender, EventArgs e)
     {
-      m_result = DialogResult.Cancel;
+      this.DialogResult = DialogResult.Cancel;
       this.Close();
     }
 

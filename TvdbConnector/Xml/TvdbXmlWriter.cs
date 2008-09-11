@@ -26,7 +26,7 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Create the file contents
     /// </summary>
-    /// <param name="_languages"></param>
+    /// <param name="_languages">List of languages to store</param>
     /// <returns></returns>
     internal String CreateLanguageFile(List<TvdbLanguage> _languages)
     {
@@ -45,9 +45,9 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Write the list of languages to file
     /// </summary>
-    /// <param name="_languages"></param>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_languages">List of languages to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
     internal bool WriteLanguageFile(List<TvdbLanguage> _languages, String _path)
     {
       String fileContent = CreateLanguageFile(_languages);
@@ -67,8 +67,8 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Create the file content for a list of mirrors
     /// </summary>
-    /// <param name="_mirrors"></param>
-    /// <returns></returns>
+    /// <param name="_mirrors">List of mirrors to store</param>
+    /// <returns>xml content</returns>
     internal String CreateMirrorList(List<TvdbMirror> _mirrors)
     {
       XElement xml = new XElement("Mirrors");
@@ -86,9 +86,9 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Write the xml file for the mirrors to file
     /// </summary>
-    /// <param name="_mirrors"></param>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_mirrors">List of mirrors to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
     internal bool WriteMirrorFile(List<TvdbMirror> _mirrors, String _path)
     {
       String fileContent = CreateMirrorList(_mirrors);
@@ -108,8 +108,8 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Create the file content for a list of actors
     /// </summary>
-    /// <param name="_mirrors"></param>
-    /// <returns></returns>
+    /// <param name="_actors">List of actors to store</param>
+    /// <returns>xml content</returns>
     internal String CreateActorList(List<TvdbActor> _actors)
     {
       XElement xml = new XElement("Actors");
@@ -129,9 +129,9 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Write the xml file for the actors to file
     /// </summary>
-    /// <param name="_mirrors"></param>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_actors">List of actors to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
     internal bool WriteActorFile(List<TvdbActor> _actors, String _path)
     {
       String fileContent = CreateActorList(_actors);
@@ -151,39 +151,39 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Create the series content
     /// </summary>
-    /// <param name="m"></param>
-    /// <returns></returns>
-    internal String CreateSeriesContent(TvdbSeries m)
+    /// <param name="_series">Series to store</param>
+    /// <returns>xml content</returns>
+    internal String CreateSeriesContent(TvdbSeries _series)
     {
       XElement xml = new XElement("Data");
 
       xml.Add(new XElement("Series",
-                  new XElement("id", m.Id),
-                  new XElement("Actors", m.ActorsString),
-                  new XElement("Airs_DayOfWeek", m.AirsDayOfWeek),
-                  new XElement("Airs_Time", m.AirsTime),
-                  new XElement("ContentRating", m.ContentRating),
-                  new XElement("FirstAired", m.FirstAired),
-                  new XElement("Genre", m.GenreString),
-                  new XElement("IMDB_ID", m.ImdbId),
-                  new XElement("Language", m.Language),
-                  new XElement("Network", m.Network),
-                  new XElement("Overview", m.Overview),
-                  new XElement("Rating", m.Rating),
-                  new XElement("Runtime", m.Runtime),
-                  new XElement("SeriesID", m.TvDotComId),
-                  new XElement("SeriesName", m.SeriesName),
-                  new XElement("Status", m.Status),
-                  new XElement("banner", m.BannerPath != null ? m.BannerPath : ""),
-                  new XElement("fanart", m.FanartPath != null ? m.FanartPath : ""),
-                  new XElement("lastupdated", Util.DotNetToUnix(m.LastUpdated)),
-                  new XElement("zap2it_id", m.Zap2itId))
+                  new XElement("id", _series.Id),
+                  new XElement("Actors", _series.ActorsString),
+                  new XElement("Airs_DayOfWeek", _series.AirsDayOfWeek),
+                  new XElement("Airs_Time", _series.AirsTime),
+                  new XElement("ContentRating", _series.ContentRating),
+                  new XElement("FirstAired", _series.FirstAired),
+                  new XElement("Genre", _series.GenreString),
+                  new XElement("IMDB_ID", _series.ImdbId),
+                  new XElement("Language", _series.Language.Abbriviation),
+                  new XElement("Network", _series.Network),
+                  new XElement("Overview", _series.Overview),
+                  new XElement("Rating", _series.Rating),
+                  new XElement("Runtime", _series.Runtime),
+                  new XElement("SeriesID", _series.TvDotComId),
+                  new XElement("SeriesName", _series.SeriesName),
+                  new XElement("Status", _series.Status),
+                  new XElement("banner", _series.BannerPath != null ? _series.BannerPath : ""),
+                  new XElement("fanart", _series.FanartPath != null ? _series.FanartPath : ""),
+                  new XElement("lastupdated", Util.DotNetToUnix(_series.LastUpdated)),
+                  new XElement("zap2it_id", _series.Zap2itId))
              );
 
 
-      if (m.Episodes != null && m.EpisodesLoaded)
+      if (_series.Episodes != null && _series.EpisodesLoaded)
       {
-        foreach (TvdbEpisode e in m.Episodes)
+        foreach (TvdbEpisode e in _series.Episodes)
         {
           xml.Add(new XElement("Episode",
                   new XElement("id", e.Id),
@@ -209,7 +209,7 @@ namespace TvdbConnector.Xml
                   new XElement("airsafter_season", e.AirsAfterSeason != -99 ? e.AirsAfterSeason.ToString() : ""),
                   new XElement("airsbefore_episode", e.AirsBeforeEpisode != -99 ? e.AirsBeforeEpisode.ToString() : ""),
                   new XElement("airsbefore_season", e.AirsBeforeSeason != -99 ? e.AirsBeforeSeason.ToString() : ""),
-                  new XElement("filename", e.Banner.BannerPath),
+                  new XElement("filename", e.BannerPath),
                   new XElement("lastupdated", Util.DotNetToUnix(e.LastUpdated)),
                   new XElement("seasonid", e.SeasonId),
                   new XElement("seriesid", e.SeriesId))
@@ -223,9 +223,9 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Write the series content to file
     /// </summary>
-    /// <param name="_series"></param>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_series">Series to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
     internal bool WriteSeriesContent(TvdbSeries _series, String _path)
     {
       String fileContent = CreateSeriesContent(_series);
@@ -233,7 +233,7 @@ namespace TvdbConnector.Xml
       {
         FileInfo info = new FileInfo(_path);
         if (!info.Directory.Exists) info.Directory.Create();
-        File.WriteAllText(info.FullName , fileContent);
+        File.WriteAllText(info.FullName, fileContent);
         return true;
       }
       catch (Exception)
@@ -245,12 +245,12 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Create the series banner content
     /// </summary>
-    /// <param name="_bannerList"></param>
-    /// <returns></returns>
+    /// <param name="_bannerList">List of banners to store</param>
+    /// <returns>xml content</returns>
     internal String CreateSeriesBannerContent(List<TvdbBanner> _bannerList)
     {
       XElement xml = new XElement("Banners");
-      
+
       foreach (TvdbBanner b in _bannerList)
       {
         XElement banner = new XElement("Banner");
@@ -326,12 +326,71 @@ namespace TvdbConnector.Xml
     /// <summary>
     /// Write the series banner contents to xml file
     /// </summary>
-    /// <param name="_bannerList"></param>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_bannerList">Bannerlist to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
     internal bool WriteSeriesBannerContent(List<TvdbBanner> _bannerList, String _path)
     {
       String fileContent = CreateSeriesBannerContent(_bannerList);
+      try
+      {
+        FileInfo info = new FileInfo(_path);
+        if (!info.Directory.Exists) info.Directory.Create();
+        File.WriteAllText(info.FullName, fileContent);
+        return true;
+      }
+      catch (Exception)
+      {
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Create the xml content to save a TvdbUser to file
+    /// </summary>
+    /// <param name="_user">User to store</param>
+    /// <returns>xml content</returns>
+    internal String CreateUserData(TvdbUser _user)
+    {
+      XElement xml = new XElement("Data");
+
+      StringBuilder favBuilder = new StringBuilder();
+      if (_user.UserFavorites != null && _user.UserFavorites.Count > 0)
+      {
+        foreach (int f in _user.UserFavorites)
+        {
+          favBuilder.Append(f);
+          favBuilder.Append(",");
+        }
+      }
+
+      XElement preferred = new XElement("PreferredLanguage");
+      if (_user.UserPreferredLanguage != null)
+      {
+        preferred.Add(new XAttribute("Id", _user.UserPreferredLanguage.Id));
+        preferred.Add(new XAttribute("Abbriviation", _user.UserPreferredLanguage.Abbriviation));
+        preferred.Add(new XAttribute("Name", _user.UserPreferredLanguage.Name));
+      }
+
+      xml.Add(new XElement("User",
+                  new XElement("Name", _user.UserName),
+                  new XElement("Identifier", _user.UserIdentifier),
+                  new XElement("Favorites", favBuilder.ToString()),
+                  preferred
+             ));
+
+      return xml.ToString();
+    }
+
+    /// <summary>
+    /// Write the user data to file
+    /// </summary>
+    /// <param name="_user">User to store</param>
+    /// <param name="_path">Path on disk</param>
+    /// <returns>true if the file could be stored, false otherwise</returns>
+    internal bool WriteUserData(TvdbUser _user, String _path)
+    {
+      String fileContent = CreateUserData(_user);
       try
       {
         FileInfo info = new FileInfo(_path);

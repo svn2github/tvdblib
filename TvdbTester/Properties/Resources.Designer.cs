@@ -68,7 +68,7 @@ namespace TvdbTester.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to E8D8A47528D5B5AD.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string API_KEY {
             get {

@@ -120,10 +120,18 @@
   <data name="richTextBox1.Text" xml:space="preserve">
     <value>To get your personal user id, go to http://thetvdb.com and register an account. After logging in at the page you can access your "Account Identifier"  on the "Account" page. 
 
-If you're not setting a correct identifier, you won't be able to retrieve and edit your user favorites or do any voting!</value>
+If you're not using an identifier, you won't be able to retrieve and edit your user favorites nor do any voting!</value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <data name="richTextBox2.Text" xml:space="preserve">
+    <value>You can save all the information you loaded from http://thetvdb.com locally with a so called "cache provider". If you attempt to retrieve the same series later you won't have to download it but only load it from your hard disk.
+
+You can choose between storing the information in xml files, in "serialized objects" or you can pass and use no caching at all</value>
+  </data>
+  <metadata name="folderBrowseCache.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>127, 17</value>
   </metadata>
   <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

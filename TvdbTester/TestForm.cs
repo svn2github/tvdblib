@@ -11,7 +11,7 @@ using TvdbConnector.Cache;
 using TvdbTester.Properties;
 using TvdbConnector.Data;
 using TvdbConnector.Data.Banner;
-using ICSharpCode.SharpZipLib.Zip;
+using TvdbConnector.SharpZipLib.Zip;
 using System.IO;
 
 namespace TvdbTester
@@ -21,6 +21,11 @@ namespace TvdbTester
     public TestForm()
     {
       InitializeComponent();
+      TvdbEpisode.EpisodeOrdering[] names = (TvdbEpisode.EpisodeOrdering[])Enum.GetValues(typeof(TvdbEpisode.EpisodeOrdering));
+      foreach (TvdbEpisode.EpisodeOrdering o in names)
+      {
+        cbOrdering.Items.Add(o);
+      }
     }
 
     private Tvdb m_tvdbHandler;
@@ -88,6 +93,24 @@ namespace TvdbTester
     private void cmdEnd_Click(object sender, EventArgs e)
     {
       m_tvdbHandler.SaveCache();
+    }
+
+    private void cmdGetEpisodes_Click(object sender, EventArgs e)
+    {
+      int sId = Int32.Parse(txtSeriesId2.Text);
+      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, 1, 1, 
+                                               (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem, 
+                                               TvdbLanguage.DefaultLanguage);
+
+      lvSeries.Items.Clear();
+      lvSeries.Items.Add(CreateItem("Series Id", ep.SeriesId.ToString()));
+      lvSeries.Items.Add(CreateItem("Episode Id", ep.Id.ToString()));
+      lvSeries.Items.Add(CreateItem("Name", ep.EpisodeName));
+      lvSeries.Items.Add(CreateItem("Gueststars", ep.GuestStarsString));
+      lvSeries.Items.Add(CreateItem("Directors", ep.DirectorsString));
+      lvSeries.Items.Add(CreateItem("Writer", ep.WriterString));
+      lvSeries.Items.Add(CreateItem("Overview", ep.Overview));
+      lvSeries.Items.Add(CreateItem("Imdb Id", ep.ImdbId));
     }
 
 

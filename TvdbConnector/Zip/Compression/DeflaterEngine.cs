@@ -39,9 +39,9 @@
 
 using System;
 
-using ICSharpCode.SharpZipLib.Checksums;
+using TvdbConnector.SharpZipLib.Checksums;
 
-namespace ICSharpCode.SharpZipLib.Zip.Compression 
+namespace TvdbConnector.SharpZipLib.Zip.Compression 
 {
 	
 	/// <summary>

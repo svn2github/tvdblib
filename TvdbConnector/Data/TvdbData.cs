@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using TvdbConnector.Data;
 
-namespace TvdbConnector.Cache
+namespace TvdbConnector
 {
+  /// <summary>
+  /// TvdbData contains a list of series, a list of languages and a list of mirror
+  /// </summary>
   [Serializable]
   public class TvdbData
   {

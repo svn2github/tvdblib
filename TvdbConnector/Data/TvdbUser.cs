@@ -5,7 +5,9 @@ using System.Text;
 
 namespace TvdbConnector.Data
 {
-
+  /// <summary>
+  /// Class that holds all user information
+  /// </summary>
   [Serializable]
   public class TvdbUser
   {
@@ -19,12 +21,21 @@ namespace TvdbConnector.Data
     /// <summary>
     /// TvdbUser constructor
     /// </summary>
-    /// <param name="_username"></param>
-    /// <param name="_userIdentifier"></param>
+    /// <param name="_username">Name of the user, can be choosen freely</param>
+    /// <param name="_userIdentifier">User identifier from http://thetvdb.com</param>
     public TvdbUser(String _username, String _userIdentifier)
+      : this()
     {
       m_userName = _username;
       m_userIdentifier = _userIdentifier;
+    }
+
+    /// <summary>
+    /// TvdbUser constructor
+    /// </summary>
+    public TvdbUser()
+    {
+
     }
 
     /// <summary>

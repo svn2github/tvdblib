@@ -38,13 +38,13 @@
 
 using System;
 using System.IO;
-using ICSharpCode.SharpZipLib.Checksums;
-using ICSharpCode.SharpZipLib.Zip.Compression;
+using TvdbConnector.SharpZipLib.Checksums;
+using TvdbConnector.SharpZipLib.Zip.Compression;
 using System.Security.Cryptography;
-using ICSharpCode.SharpZipLib.Encryption;
+using TvdbConnector.SharpZipLib.Encryption;
 
 
-namespace ICSharpCode.SharpZipLib.Zip.Compression.Streams 
+namespace TvdbConnector.SharpZipLib.Zip.Compression.Streams 
 {
 	/// <summary>
 	/// A special stream deflating or compressing the bytes that are

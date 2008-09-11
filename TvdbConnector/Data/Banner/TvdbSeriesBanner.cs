@@ -24,7 +24,23 @@ namespace TvdbConnector.Data.Banner
     /// <summary>
     /// Type of the series banner
     /// </summary>
-    public enum Type { text, graphical, blank, none };
+    public enum Type { 
+      /// <summary>
+      /// Banners contains a text of the seriesname
+      /// </summary>
+      text, 
+      /// <summary>
+      /// Banner containing a graphical representation of the seriesname
+      /// </summary>
+      graphical, 
+      /// <summary>
+      /// Banner containing a free space on the left side to place your own series description
+      /// </summary>
+      blank, 
+      /// <summary>
+      /// Nothing specified
+      /// </summary>
+      none };
 
     /// <summary>
     /// TvdbSeriesBanner constructor

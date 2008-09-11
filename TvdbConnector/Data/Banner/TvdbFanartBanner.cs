@@ -65,6 +65,24 @@ namespace TvdbConnector.Data.Banner
     }
 
     /// <summary>
+    /// Is the vignette currently beeing loaded
+    /// </summary>
+    public bool VignetteLoading
+    {
+      get { return m_vignetteLoading; }
+      set { m_vignetteLoading = value; }
+    }
+
+    /// <summary>
+    /// Is the thumbnail currently beeing loaded
+    /// </summary>
+    public bool ThumbLoading
+    {
+      get { return m_thumbLoading; }
+      set { m_thumbLoading = value; }
+    }
+
+    /// <summary>
     /// Vignette Image
     /// </summary>
     public Image VignetteImage

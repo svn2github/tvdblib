@@ -39,10 +39,10 @@
 
 using System;
 
-using ICSharpCode.SharpZipLib.Checksums;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using TvdbConnector.SharpZipLib.Checksums;
+using TvdbConnector.SharpZipLib.Zip.Compression.Streams;
 
-namespace ICSharpCode.SharpZipLib.Zip.Compression 
+namespace TvdbConnector.SharpZipLib.Zip.Compression 
 {
 	/// <summary>
 	/// Inflater is used to decompress data that has been compressed according

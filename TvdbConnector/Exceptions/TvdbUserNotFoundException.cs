@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TvdbConnector
+namespace TvdbConnector.Exceptions
 {
   /// <summary>
   /// Exception thrown when no user has been found

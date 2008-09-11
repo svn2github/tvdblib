@@ -8,6 +8,7 @@ using TvdbConnector.Cache;
 using TvdbConnector.Data.Banner;
 using TvdbConnector.Xml;
 using System.Diagnostics;
+using TvdbConnector.Exceptions;
 
 namespace TvdbConnector
 {
@@ -132,9 +133,12 @@ namespace TvdbConnector
     /// 
     /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
     /// </summary>
+    /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
-    /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
+    /// <param name="_loadEpisodes">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
+    /// <param name="_loadActors">if true also loads the extended actor information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
@@ -150,6 +154,8 @@ namespace TvdbConnector
     /// 
     /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
     /// </summary>
+    /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
@@ -164,10 +170,13 @@ namespace TvdbConnector
     /// 
     /// To check if this series has already been cached, use the Method IsCached(TvdbSeries _series)
     /// </summary>
+    /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
-    /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
+    /// <param name="_loadEpisodes">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
+    /// <param name="_loadActors">if true also loads the extended actor information</param>
     /// <param name="_useZip">If this series is not already cached and the series has to be downloaded, the zipped version will be downloaded</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
@@ -235,17 +244,32 @@ namespace TvdbConnector
 
         if (_loadActors && !series.TvdbActorsLoaded)
         {//user wants actors loaded
-          series.TvdbActors = m_downloader.DownloadActors(_seriesId);
+          List<TvdbActor> actorList = m_downloader.DownloadActors(_seriesId);
+          if (actorList != null)
+          {
+            series.TvdbActorsLoaded = true;
+            series.TvdbActors = actorList;
+          }
         }
 
         if (_loadEpisodes && !series.EpisodesLoaded)
         {//user wants the full version but only the basic has been loaded (without episodes
-          series.Episodes = m_downloader.DownloadEpisodes(_seriesId, _language);
+          List<TvdbEpisode> epList = m_downloader.DownloadEpisodes(_seriesId, _language);
+          if (epList != null)
+          {
+            series.EpisodesLoaded = true;
+            series.Episodes = epList;
+          }
         }
 
         if (_loadBanners && !series.BannersLoaded)
         {//user wants banners loaded but current series hasn't -> Do it baby
-          series.Banners = m_downloader.DownloadBanners(_seriesId);
+          List<TvdbBanner> bannerList = m_downloader.DownloadBanners(_seriesId);
+          if (bannerList != null)
+          {
+            series.BannersLoaded = true;
+            series.Banners = bannerList;
+          }
         }
 
         watch.Stop();
@@ -262,9 +286,10 @@ namespace TvdbConnector
     /// 
     /// To check if this series has already been cached, pleas use the Method IsCached(TvdbSeries _series)
     /// </summary>
+    /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
-    /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetFullSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
@@ -278,9 +303,10 @@ namespace TvdbConnector
     /// 
     /// To check if this series has already been cached, please use the Method IsCached(TvdbSeries _series)
     /// </summary>
+    /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language that should be retrieved</param>
-    /// <param name="_full">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
     public TvdbSeries GetBasicSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
@@ -288,13 +314,17 @@ namespace TvdbConnector
       return GetSeries(_seriesId, _language, false, false, _loadBanners);
     }
 
+
+    
     /// <summary>
     /// Returns if the series is locally cached
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_language"></param>
-    /// <param name="_full"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">Id of the series</param>
+    /// <param name="_language">Language</param>
+    /// <param name="_loadEpisodes">Load Episodes</param>
+    /// <param name="_loadActors">Load Actors</param>
+    /// <param name="_loadBanners">Load Banners</param>
+    /// <returns>True if the series is cached in the given configuration</returns>
     public bool IsCached(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                          bool _loadActors, bool _loadBanners)
     {
@@ -313,21 +343,7 @@ namespace TvdbConnector
 
       if (m_cacheProvider != null)
       {
-        List<int> cachedSeries = m_cacheProvider.GetCachedSeries();
-        foreach (int s in cachedSeries)
-        {
-          if (s == _seriesId)
-          {
-            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
-            if (series.Language.Abbriviation.Equals(_language.Abbriviation) &&
-               (series.BannersLoaded || !_loadActors) &&
-               (series.TvdbActorsLoaded || !_loadActors) &&
-               (series.EpisodesLoaded || !_loadEpisodes))
-            {
-              return true;
-            }
-          }
-        }
+        return m_cacheProvider.IsCached(_seriesId, _language, _loadEpisodes, _loadBanners, _loadActors);
       }
       return false;
     }
@@ -335,11 +351,11 @@ namespace TvdbConnector
 
 
     /// <summary>
-    /// 
+    /// Retrieve the episode with the given id in the given language
     /// </summary>
-    /// <param name="_episodeId"></param>
-    /// <param name="_language"></param>
-    /// <returns></returns>
+    /// <param name="_episodeId">id of the episode</param>
+    /// <param name="_language">languageof the episode</param>
+    /// <returns>The retrieved episode</returns>
     public TvdbEpisode GetEpisode(int _episodeId, TvdbLanguage _language)
     {
       TvdbEpisode episode = GetEpisodeFromCache(_episodeId, _language);
@@ -353,8 +369,37 @@ namespace TvdbConnector
         episode = m_downloader.DownloadEpisode(_episodeId, _language);
         AddEpisodeToCache(episode);
         return episode;
-
       }
+    }
+
+    /// <summary>
+    /// Retrieve the episode with the given parameters
+    /// </summary>
+    /// <param name="_seriesId">id of the series</param>
+    /// <param name="_seasonNr">season number of the episode</param>
+    /// <param name="_episodeNr">number of the episode</param>
+    /// <param name="_language">language of the episode</param>
+    /// <param name="_order">The sorting order that should be user when downloading the episode</param>
+    /// <returns>The retrieved episode</returns>
+    public TvdbEpisode GetEpisode(int _seriesId, int _seasonNr, int _episodeNr,
+                                  TvdbEpisode.EpisodeOrdering _order, TvdbLanguage _language)
+    {
+      String order = null;
+      switch (_order)
+      {
+        case TvdbEpisode.EpisodeOrdering.AbsoluteOrder:
+          order = "absolut";
+          break;
+        case TvdbEpisode.EpisodeOrdering.DefaultOrder:
+          order = "default";
+          break;
+        case TvdbEpisode.EpisodeOrdering.DvdOrder:
+          order = "dvd";
+          break;
+      }
+
+      TvdbEpisode episode = m_downloader.DownloadEpisode(_seriesId, _seasonNr, _episodeNr, order, _language);
+      return episode;
     }
 
     /// <summary>
@@ -391,37 +436,38 @@ namespace TvdbConnector
     }
 
     /// <summary>
-    /// 
+    /// Add this episode to the proper cached series
     /// </summary>
-    /// <param name="_epList"></param>
-    private void AddEpisodeToCache(TvdbEpisode e)
+    /// <param name="_episode">Episode to add to cache</param>
+    private void AddEpisodeToCache(TvdbEpisode _episode)
     {
       bool seriesFound = false;
       foreach (TvdbSeries s in m_loadedData.SeriesList)
       {
-        if (s.Id == e.SeriesId)
+        if (s.Id == _episode.SeriesId)
         {//series for ep found
           seriesFound = true;
-          Util.AddEpisodeToSeries(e, s);
+          Util.AddEpisodeToSeries(_episode, s);
           break;
         }
 
       }
+
+      //todo: maybe skip this since downloading an episode is no biggie
       if (!seriesFound)
       {//the series doesn't exist yet -> add episode to dummy series
         TvdbSeries newSeries = new TvdbSeries();
         newSeries.LastUpdated = new DateTime(1, 1, 1);
-        newSeries.Episodes.Add(e);
+        newSeries.Episodes.Add(_episode);
         m_loadedData.SeriesList.Add(newSeries);
       }
     }
 
 
     /// <summary>
-    /// 
+    /// Get the series from cache
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_language"></param>
+    /// <param name="_seriesId">Id of series</param>
     /// <returns></returns>
     private TvdbSeries GetSeriesFromCache(int _seriesId)
     {
@@ -437,8 +483,11 @@ namespace TvdbConnector
       try
       {
         TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(_seriesId);
-        series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(series.Id, m_userInfo.UserFavorites);
-        AddSeriesToCache(series);
+        if (series != null)
+        {
+          series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(series.Id, m_userInfo.UserFavorites);
+          AddSeriesToCache(series);
+        }
         return series;
       }
       catch (Exception)
@@ -505,12 +554,20 @@ namespace TvdbConnector
       }
     }
 
-
+    /// <summary>
+    /// Update all the series (not using zip) with the updated information
+    /// </summary>
+    /// <returns>true if the update was successful, false otherwise</returns>
     public bool UpdateAllSeries()
     {
       return UpdateAllSeries(false);
     }
 
+    /// <summary>
+    /// Update all the series with the updated information
+    /// </summary>
+    /// <param name="_zipped">download zipped file?</param>
+    /// <returns>true if the update was successful, false otherwise</returns>
     public bool UpdateAllSeries(bool _zipped)
     {
       //MakeUpdate(Util.UpdateInterval.month);
@@ -749,7 +806,8 @@ namespace TvdbConnector
     /// <summary>
     /// Download the new series and update the information
     /// </summary>
-    /// <param name="_series"></param>
+    /// <param name="_series">Series to update</param>
+    /// <param name="_lastUpdated">When was the last update made</param>
     private void UpdateSeries(TvdbSeries _series, DateTime _lastUpdated)
     {
       //get series info
@@ -824,8 +882,11 @@ namespace TvdbConnector
     /// </summary>
     public void SaveCache()
     {
-      m_cacheProvider.SaveAllToCache(m_loadedData);
-      if (m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
+      if (m_cacheProvider != null)
+      {
+        m_cacheProvider.SaveAllToCache(m_loadedData);
+        if (m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
+      }
     }
 
 
@@ -859,7 +920,7 @@ namespace TvdbConnector
     /// <summary>
     /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
-    /// <param name="_seriesId"></param>
+    /// <param name="_series">Series to reload</param>
     public TvdbSeries ForceUpdate(TvdbSeries _series)
     {
       return ForceUpdate(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
@@ -869,10 +930,10 @@ namespace TvdbConnector
     /// <summary>
     /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
-    /// <param name="m_currentSeries"></param>
-    /// <param name="p"></param>
-    /// <param name="p_3"></param>
-    /// <param name="p_4"></param>
+    /// <param name="_series">Series to update</param>
+    /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
+    /// <param name="_loadActors">Should actors be loaded as well</param>
+    /// <param name="_loadBanners">Should banners be loaded as well</param>
     /// <returns></returns>
     public TvdbSeries ForceUpdate(TvdbSeries _series, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)

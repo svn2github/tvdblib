@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using TvdbConnector.Xml;
-using ICSharpCode.SharpZipLib.Zip;
+using TvdbConnector.SharpZipLib.Zip;
 using System.IO;
+using TvdbConnector.Exceptions;
+using TvdbConnector.ICSharpCode.SharpZipLib.Zip;
 
 namespace TvdbConnector.Data
 {
@@ -37,7 +39,25 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesEpisodesLink(m_apiKey, _seriesId, _language));
+      String xml;
+      try
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesEpisodesLink(m_apiKey, _seriesId, _language));
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve episodes fo " + _seriesId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve episodes for" + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
       List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
 
       return epList;
@@ -50,16 +70,38 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<TvdbBanner> DownloadBanners(int _seriesId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesBannersLink(m_apiKey, _seriesId));
+      String xml;
+      try
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateSeriesBannersLink(m_apiKey, _seriesId));
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve banners fo " + _seriesId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve banners for" + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
       List<TvdbBanner> banners = m_xmlHandler.ExtractBanners(xml);
       return banners;
     }
 
-    /// <summary>
+/// <summary>
     /// Download series from tvdb
-    /// </summary>
-    /// <param name="series"></param>
-    /// <returns></returns>
+/// </summary>
+/// <param name="_seriesId">id of series</param>
+/// <param name="_language">language of series</param>
+/// <param name="_loadEpisodes">load episodes</param>
+/// <param name="_loadActors">load actors</param>
+/// <param name="_loadBanners">load banners</param>
+/// <returns></returns>
     internal TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, bool _loadActors, bool _loadBanners)
     {
       //download the xml data from this request
@@ -68,10 +110,19 @@ namespace TvdbConnector.Data
       {
         data = m_webClient.DownloadString(TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, _loadEpisodes, false));
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Warn("Request not successfull", ex);
-        return null;
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
       }
       //extract all series the xml file contains
       List<TvdbSeries> seriesList = m_xmlHandler.ExtractSeries(data);
@@ -127,10 +178,19 @@ namespace TvdbConnector.Data
       {
         data = m_webClient.DownloadData(TvdbLinks.CreateSeriesLinkZipped(m_apiKey, _seriesId, _language));
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Warn("Request not successfull", ex);
-        return null;
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
       }
 
       ZipInputStream zip = new ZipInputStream(new MemoryStream(data));
@@ -168,7 +228,8 @@ namespace TvdbConnector.Data
       if (seriesList != null && seriesList.Count == 1)
       {
         TvdbSeries series = seriesList[0];
-
+        series.EpisodesLoaded = true;
+        series.Episodes = new List<TvdbEpisode>();
         //add episode info to series
         List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(seriesString);
         foreach (TvdbEpisode e in epList)
@@ -180,6 +241,7 @@ namespace TvdbConnector.Data
         List<TvdbActor> actors = m_xmlHandler.ExtractActors(actorsString);
         if (actors != null)
         {
+          series.TvdbActorsLoaded = true;
           series.TvdbActors = actors;
         }
 
@@ -187,6 +249,7 @@ namespace TvdbConnector.Data
         List<TvdbBanner> banners = m_xmlHandler.ExtractBanners(bannersString);
         if (banners != null)
         {
+          series.BannersLoaded = true;
           series.Banners = banners;
         }
 
@@ -206,10 +269,19 @@ namespace TvdbConnector.Data
       {
         data = m_webClient.DownloadString(TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, false, false));
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Warn("Request not successfull", ex);
-        return null;
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
       }
       //extract all series the xml file contains
       List<TvdbSeriesFields> seriesList = m_xmlHandler.ExtractSeriesFields(data);
@@ -237,10 +309,19 @@ namespace TvdbConnector.Data
       {
         data = m_webClient.DownloadString(TvdbLinks.CreateEpisodeLink(m_apiKey, _episodeId, _language, false));
       }
-      catch (Exception ex)
+      catch (WebException ex)
       {
         Log.Warn("Request not successfull", ex);
-        return null;
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve episode " + _episodeId +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _episodeId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
       }
       List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(data);
 
@@ -255,13 +336,73 @@ namespace TvdbConnector.Data
     }
 
     /// <summary>
+    /// Download the episode specified from http://thetvdb.com
+    /// </summary>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_seasonNr">season nr</param>
+    /// <param name="_episodeNr">episode nr</param>
+    /// <param name="_language">language</param>
+    /// <param name="_order">order</param>
+    /// <returns></returns>
+    internal TvdbEpisode DownloadEpisode(int _seriesId, int _seasonNr, int _episodeNr, String _order, TvdbLanguage _language)
+    {
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateEpisodeLink(m_apiKey, _seriesId, _seasonNr, _episodeNr, _order, _language));
+        List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
+        if (epList.Count == 1)
+        {
+          return epList[0];
+        }
+        else
+        {
+          return null;
+        }
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId + "/" +
+                                               _order + "/" + _seasonNr + "/" + _episodeNr + "/" + _language.Abbriviation +
+                                               ", it seems like you have an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId + "/" +
+                                              _order + "/" + _seasonNr + "/" + _episodeNr + "/" + _language.Abbriviation +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
+    }
+
+    /// <summary>
     /// Download the preferred language of the user
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
     internal TvdbLanguage DownloadUserPreferredLanguage(String _userId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserLanguageLink(_userId));
+      String xml;
+      try
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateUserLanguageLink(_userId));
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve preferred languae for user " + _userId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve preferred languae for user " + _userId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
       List<TvdbLanguage> langList = m_xmlHandler.ExtractLanguages(xml);
       if (langList != null && langList.Count == 1)
       {
@@ -289,36 +430,73 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<int> DownloadUserFavoriteList(String _userId, Util.UserFavouriteAction _type, int _seriesId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserFavouriteLink(_userId, _type, _seriesId));
+      String xml;
+      try
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateUserFavouriteLink(_userId, _type, _seriesId));
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve favorite list for user " + _userId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve favorite list for user " + _userId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
       List<int> favList = m_xmlHandler.ExtractSeriesFavorites(xml);
       return favList;
     }
-
     /// <summary>
     /// Download an Update
     /// </summary>
-    /// <param name="updateSeries"></param>
-    /// <param name="updateEpisodes"></param>
-    /// <param name="_interval"></param>
-    /// <returns></returns>
+    /// <param name="_updateSeries">updated series to return</param>
+    /// <param name="_updateEpisodes">updated episodes to return</param>
+    /// <param name="_updateBanners">updated banners to return</param>
+    /// <param name="_interval">interval to download</param>
+    /// <param name="_zipped">use zip</param>
+    /// <returns>Time of the update</returns>
     internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
                                      out List<TvdbBanner> _updateBanners, Util.UpdateInterval _interval, bool _zipped)
     {
 
       String xml = null;
-      if (_zipped)
+      try
       {
-        byte[] data = m_webClient.DownloadData(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
-        ZipInputStream zip = new ZipInputStream(new MemoryStream(data));
-        zip.GetNextEntry();
-        byte[] buffer = new byte[zip.Length];
-        int count = zip.Read(buffer, 0, (int)zip.Length);
-        xml = Encoding.UTF8.GetString(buffer);
+        if (_zipped)
+        {
+          byte[] data = m_webClient.DownloadData(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
+          ZipInputStream zip = new ZipInputStream(new MemoryStream(data));
+          zip.GetNextEntry();
+          byte[] buffer = new byte[zip.Length];
+          int count = zip.Read(buffer, 0, (int)zip.Length);
+          xml = Encoding.UTF8.GetString(buffer);
+        }
+        else
+        {
+          xml = m_webClient.DownloadString(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
+        }
       }
-      else
+      catch (WebException ex)
       {
-        xml = m_webClient.DownloadString(TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped));
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve updates for " + _interval +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve updates for " + _interval +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
       }
+
 
       _updateEpisodes = m_xmlHandler.ExtractEpisodeUpdates(xml);
       _updateSeries = m_xmlHandler.ExtractSeriesUpdates(xml);
@@ -333,9 +511,25 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<TvdbLanguage> DownloadLanguages()
     {
-      TvdbXmlReader hand = new TvdbXmlReader();
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateLanguageLink(m_apiKey));
-      return hand.ExtractLanguages(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateLanguageLink(m_apiKey));
+        return m_xmlHandler.ExtractLanguages(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve the list of available languages" +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve the list of available languages" +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     /// <summary>
@@ -345,8 +539,25 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<TvdbSearchResult> DownloadSearchResults(String _name)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateSearchLink(_name));
-      return m_xmlHandler.ExtractSeriesSearchResults(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateSearchLink(_name));
+        return m_xmlHandler.ExtractSeriesSearchResults(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve search results for " + _name +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve search results for " + _name +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     /// <summary>
@@ -358,7 +569,25 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal double RateSeries(String _userId, int _seriesId, int _rating)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId, _rating));
+      String xml;
+      try
+      {
+        xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId, _rating));
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate series " + _seriesId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to rate series " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
       return m_xmlHandler.ExtractRating(xml);
     }
 
@@ -371,8 +600,25 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal double RateEpisode(String _userId, int _episodeId, int _rating)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId, _rating));
-      return m_xmlHandler.ExtractRating(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId, _rating));
+        return m_xmlHandler.ExtractRating(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate episode " + _episodeId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to rate episode " + _episodeId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     /// <summary>
@@ -383,20 +629,54 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal double DownloadSeriesRating(String _userId, int _seriesId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId));
-      return m_xmlHandler.ExtractRating(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateUserSeriesRating(_userId, _seriesId));
+        return m_xmlHandler.ExtractRating(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _seriesId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     /// <summary>
     /// Download the episode rating without rating 
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <param name="_seriesId"></param>
+    /// <param name="_userId">id of the user</param>
+    /// <param name="_episodeId">id of the episode</param>
     /// <returns></returns>
-    internal double DownloadEpisodeRating(String _userId, int _seriesId)
+    internal double DownloadEpisodeRating(String _userId, int _episodeId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _seriesId));
-      return m_xmlHandler.ExtractRating(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId));
+        return m_xmlHandler.ExtractRating(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _episodeId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _episodeId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     /// <summary>
@@ -406,15 +686,49 @@ namespace TvdbConnector.Data
     /// <returns></returns>
     internal List<TvdbActor> DownloadActors(int _seriesId)
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateActorLink(_seriesId, m_apiKey));
-      return m_xmlHandler.ExtractActors(xml);
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateActorLink(_seriesId, m_apiKey));
+        return m_xmlHandler.ExtractActors(xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Couldn't download actor info from thetvdb.com", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve actor info of series " + _seriesId +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve actor info of series " + _seriesId +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
 
     internal List<TvdbMirror> DownloadMirrorList()
     {
-      String xml = m_webClient.DownloadString(TvdbLinks.CreateMirrorsLink(m_apiKey));
-      List<TvdbMirror> list = m_xmlHandler.ExtractMirrors(xml);
-      return list;
+      try
+      {
+        String xml = m_webClient.DownloadString(TvdbLinks.CreateMirrorsLink(m_apiKey));
+        List<TvdbMirror> list = m_xmlHandler.ExtractMirrors(xml);
+        return list;
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Couldn't download mirror list from thetvdb.com", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve mirror list" +
+                                               ", it seems like you use an invalid api key (" + m_apiKey + ")");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve mirror list" +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
     }
   }
 }

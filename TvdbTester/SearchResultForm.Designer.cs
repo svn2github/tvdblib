@@ -55,10 +55,10 @@
             this.chName,
             this.chLang});
       this.lvSearchResult.FullRowSelect = true;
-      this.lvSearchResult.Location = new System.Drawing.Point(12, 153);
+      this.lvSearchResult.Location = new System.Drawing.Point(12, 118);
       this.lvSearchResult.MultiSelect = false;
       this.lvSearchResult.Name = "lvSearchResult";
-      this.lvSearchResult.Size = new System.Drawing.Size(345, 256);
+      this.lvSearchResult.Size = new System.Drawing.Size(568, 156);
       this.lvSearchResult.TabIndex = 0;
       this.lvSearchResult.UseCompatibleStateImageBehavior = false;
       this.lvSearchResult.View = System.Windows.Forms.View.Details;
@@ -88,9 +88,9 @@
       this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Location = new System.Drawing.Point(374, 153);
+      this.groupBox1.Location = new System.Drawing.Point(12, 280);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(396, 256);
+      this.groupBox1.Size = new System.Drawing.Size(568, 256);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Details";
@@ -108,7 +108,7 @@
       this.txtOverview.Location = new System.Drawing.Point(67, 83);
       this.txtOverview.Name = "txtOverview";
       this.txtOverview.ReadOnly = true;
-      this.txtOverview.Size = new System.Drawing.Size(323, 163);
+      this.txtOverview.Size = new System.Drawing.Size(495, 163);
       this.txtOverview.TabIndex = 2;
       this.txtOverview.Text = "";
       // 
@@ -117,7 +117,7 @@
       this.txtFirstAired.Location = new System.Drawing.Point(67, 30);
       this.txtFirstAired.Name = "txtFirstAired";
       this.txtFirstAired.ReadOnly = true;
-      this.txtFirstAired.Size = new System.Drawing.Size(323, 20);
+      this.txtFirstAired.Size = new System.Drawing.Size(495, 20);
       this.txtFirstAired.TabIndex = 1;
       // 
       // label3
@@ -149,9 +149,9 @@
       // 
       // cmdChoose
       // 
-      this.cmdChoose.Location = new System.Drawing.Point(189, 415);
+      this.cmdChoose.Location = new System.Drawing.Point(12, 542);
       this.cmdChoose.Name = "cmdChoose";
-      this.cmdChoose.Size = new System.Drawing.Size(159, 23);
+      this.cmdChoose.Size = new System.Drawing.Size(271, 23);
       this.cmdChoose.TabIndex = 3;
       this.cmdChoose.Text = "Choose";
       this.cmdChoose.UseVisualStyleBackColor = true;
@@ -159,9 +159,9 @@
       // 
       // cmdCancel
       // 
-      this.cmdCancel.Location = new System.Drawing.Point(405, 415);
+      this.cmdCancel.Location = new System.Drawing.Point(289, 542);
       this.cmdCancel.Name = "cmdCancel";
-      this.cmdCancel.Size = new System.Drawing.Size(159, 23);
+      this.cmdCancel.Size = new System.Drawing.Size(291, 23);
       this.cmdCancel.TabIndex = 3;
       this.cmdCancel.Text = "Cancel";
       this.cmdCancel.UseVisualStyleBackColor = true;
@@ -172,9 +172,9 @@
       this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus});
       this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-      this.statusStrip1.Location = new System.Drawing.Point(0, 450);
+      this.statusStrip1.Location = new System.Drawing.Point(0, 568);
       this.statusStrip1.Name = "statusStrip1";
-      this.statusStrip1.Size = new System.Drawing.Size(780, 18);
+      this.statusStrip1.Size = new System.Drawing.Size(586, 18);
       this.statusStrip1.TabIndex = 4;
       this.statusStrip1.Text = "statusStrip1";
       // 
@@ -189,14 +189,14 @@
       // 
       this.bcSeriesBanner.BannerImage = null;
       this.bcSeriesBanner.BannerImages = null;
-      this.bcSeriesBanner.DefaultImage = null;
+      this.bcSeriesBanner.DefaultImage = global::TvdbTester.Properties.Resources.tvdb_logo1;
       this.bcSeriesBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
       this.bcSeriesBanner.Index = 0;
       this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
       this.bcSeriesBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
       this.bcSeriesBanner.Location = new System.Drawing.Point(12, 7);
       this.bcSeriesBanner.Name = "bcSeriesBanner";
-      this.bcSeriesBanner.Size = new System.Drawing.Size(758, 140);
+      this.bcSeriesBanner.Size = new System.Drawing.Size(568, 105);
       this.bcSeriesBanner.TabIndex = 6;
       this.bcSeriesBanner.UnavailableImage = null;
       // 
@@ -205,7 +205,7 @@
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CausesValidation = false;
-      this.ClientSize = new System.Drawing.Size(780, 468);
+      this.ClientSize = new System.Drawing.Size(586, 586);
       this.Controls.Add(this.bcSeriesBanner);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.cmdCancel);

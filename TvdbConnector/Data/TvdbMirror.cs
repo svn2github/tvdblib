@@ -6,7 +6,7 @@ namespace TvdbConnector.Data
 {
   /// <summary>
   /// Baseclass for a tvdb mirror. A mirror is defined in the tvdb xml by:
-  /// 
+  /// <![CDATA[
   /// <?xml version="1.0" encoding="UTF-8" ?>
   /// <Mirrors>
   ///  <Mirror>
@@ -15,7 +15,7 @@ namespace TvdbConnector.Data
   ///    <typemask>7</typemask>
   ///  </Mirror>
   /// </Mirrors>
-  /// 
+  /// ]]>
   /// </summary>
   [Serializable]
   public class TvdbMirror
@@ -36,9 +36,9 @@ namespace TvdbConnector.Data
     /// <summary>
     /// TvdbMirror constructor
     /// </summary>
-    /// <param name="_id"></param>
-    /// <param name="_mirror"></param>
-    /// <param name="_typeMask"></param>
+    /// <param name="_id">Id of the mirror</param>
+    /// <param name="_mirror">Url to the mirror</param>
+    /// <param name="_typeMask">Typemask of the mirror, see property "TypeMask"</param>
     public TvdbMirror(int _id, Uri _mirror, int _typeMask)
     {
       m_id = _id;

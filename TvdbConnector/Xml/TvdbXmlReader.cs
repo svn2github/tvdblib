@@ -14,6 +14,9 @@ namespace TvdbConnector.Xml
   /// </summary>
   internal class TvdbXmlReader
   {
+    /// <summary>
+    /// Base constructor for a TvdbXmlReader class
+    /// </summary>
     internal TvdbXmlReader()
     {
 
@@ -21,7 +24,8 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of languages when the data has the format:
-    /// 
+    /// <![CDATA[
+    ///
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Languages>
     ///  <Language>
@@ -31,6 +35,7 @@ namespace TvdbConnector.Xml
     ///  </Language>
     /// </Languages>
     /// 
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -61,7 +66,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of mirrors if the data has the format:
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Mirrors>
     ///  <Mirror>
@@ -70,7 +75,7 @@ namespace TvdbConnector.Xml
     ///    <typemask>7</typemask>
     ///  </Mirror>
     /// </Mirrors>
-    /// 
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -101,7 +106,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of series in the format:
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data>
     ///    <Series>
@@ -127,7 +132,7 @@ namespace TvdbConnector.Xml
     ///       <zap2it_id>SH672362</zap2it_id>
     ///    </Series>
     /// </Data>
-    /// 
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -139,7 +144,7 @@ namespace TvdbConnector.Xml
       foreach (TvdbSeriesFields s in tvdbInfo)
       {
         TvdbSeries series = new TvdbSeries(s);
-        
+
         if (!series.BannerPath.Equals(""))
         {
           series.Banners.Add(new TvdbSeriesBanner(series.Id, series.BannerPath, series.Language, TvdbSeriesBanner.Type.graphical));
@@ -156,7 +161,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract all the series fields that are available on thetvdb
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data>
     ///    <Series>
@@ -181,8 +186,9 @@ namespace TvdbConnector.Xml
     ///       <lastupdated>1205694666</lastupdated>
     ///       <zap2it_id>SH672362</zap2it_id>
     ///    </Series>
+    ///  
     /// </Data>
-    /// 
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -251,7 +257,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of episodes from the given data when the data has the following format:
-    /// 
+    /// <![CDATA[
     ///  <?xml version="1.0" encoding="UTF-8" ?>
     ///  <Episode>
     ///      <id>332179</id>
@@ -280,6 +286,7 @@ namespace TvdbConnector.Xml
     ///      <seasonid>27985</seasonid>
     ///      <seriesid>80348</seriesid>
     ///  </Episode>
+    ///  ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -374,6 +381,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract list of updated series
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data time="1203923101">
     ///    <Series>
@@ -381,6 +389,7 @@ namespace TvdbConnector.Xml
     ///      <time>1203848965</time>
     ///    </Series>
     ///  </Data>
+    ///  ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -408,7 +417,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract the results of a series search with format:
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data>
     ///   <Series>
@@ -423,6 +432,7 @@ namespace TvdbConnector.Xml
     ///      <id>73739</id>
     ///   </Series>
     /// </Data>
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -470,7 +480,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Exctract the series favorites
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Favorites>
     ///   <Series>73067</Series>
@@ -480,7 +490,7 @@ namespace TvdbConnector.Xml
     ///   <Series>73244</Series>
     ///   <Series>75397</Series>
     /// </Favorites>
-    /// 
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -506,13 +516,14 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a rating from the data in the format
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data>
     ///  <Series>
     ///    <Rating>7.5</Rating>
     ///  </Series>
     /// </Data>
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -537,6 +548,8 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract the updated episodes from the data in the format:
+    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data time="1203923101">
     ///    <Episode>
@@ -544,6 +557,7 @@ namespace TvdbConnector.Xml
     ///      <time>1203848662</time>
     ///    </Episode>
     ///  </Data>
+    ///  ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -570,6 +584,8 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract the data of updated banners
+    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Data time="1203923101">
     ///    <Banner>
@@ -581,6 +597,7 @@ namespace TvdbConnector.Xml
     ///      <type>season</type>
     ///    </Banner>
     ///  </Data>
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -675,8 +692,6 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract the update time from data
-    /// 
-    /// <Data time="1203923101
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -701,7 +716,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of banners from the data when the data has the format:
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Banners>
     ///    <Banner>
@@ -730,6 +745,7 @@ namespace TvdbConnector.Xml
     ///       <Language>en</Language>
     ///    </Banner>
     /// </Banners>
+    /// ]]>
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
@@ -816,7 +832,7 @@ namespace TvdbConnector.Xml
 
     /// <summary>
     /// Extract a list of actors when the data has the format:
-    /// 
+    /// <![CDATA[
     /// <?xml version="1.0" encoding="UTF-8" ?>
     /// <Actors>
     ///   <Actor>
@@ -827,10 +843,10 @@ namespace TvdbConnector.Xml
     ///     <SortOrder>0</SortOrder>
     ///   </Actor>
     /// </Actors>
-    /// 
+    /// ]]>
     /// </summary>
-    /// <param name="_data"></param>
-    /// <returns></returns>
+    /// <param name="_data">data</param>
+    /// <returns>List of actors</returns>
     internal List<TvdbActor> ExtractActors(String _data)
     {
       Stopwatch watch = new Stopwatch();
@@ -870,5 +886,52 @@ namespace TvdbConnector.Xml
       Log.Debug("Extracted " + actorList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
       return actorList;
     }
+
+    /// <summary>
+    /// Extract user data from
+    /// </summary>
+    /// <param name="_data"></param>
+    /// <returns></returns>
+    internal List<TvdbUser> ExtractUser(String _data)
+    {
+      Stopwatch watch = new Stopwatch();
+      watch.Start();
+
+      XDocument xml = XDocument.Parse(_data);
+      List<TvdbBanner> retList = new List<TvdbBanner>();
+      var allUsers = from episode in xml.Descendants("User")
+                     select new
+                     {
+
+                       Identifier = episode.Element("Identifier").Value,
+                       Name = episode.Element("Name").Value,
+                       Favorites = episode.Element("Favorites"),
+                       Preferred = episode.Element("PreferredLanguage")
+                     };
+
+      List<TvdbUser> userList = new List<TvdbUser>();
+      foreach (var a in allUsers)
+      {
+        TvdbUser user = new TvdbUser();
+        user.UserIdentifier = a.Identifier;
+        user.UserName = a.Name;
+        user.UserPreferredLanguage = Util.ParseLanguage(a.Preferred.FirstAttribute.NextAttribute.Value);
+        List<int> favList = new List<int>();
+        foreach(String f in a.Favorites.Value.Split(','))
+        {
+          int val;
+          if(Int32.TryParse(f, out val))
+          {
+            favList.Add(val);
+          }
+        }
+        user.UserFavorites = favList;
+        userList.Add(user);
+      }
+      watch.Stop();
+      Log.Debug("Extracted " + userList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
+      return userList;
+    }
+
   }
 }

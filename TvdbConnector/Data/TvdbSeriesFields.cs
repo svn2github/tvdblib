@@ -7,9 +7,9 @@ namespace TvdbConnector.Data
 {
   /// <summary>
   /// This class represents all fields that are available on http://thetvdb.com and
-  /// a list of episodefields. This is used for localised series information
+  /// a list of episodefields. This is used for localised series information.
   /// 
-  /// These are like the following:
+  /// These are as follows:
   ///       <id>73739</id>
   ///       <Actors>|Malcolm David Kelley|Jorge Garcia|Maggie Grace|...|</Actors>
   ///       <Airs_DayOfWeek>Thursday</Airs_DayOfWeek>
@@ -55,6 +55,7 @@ namespace TvdbConnector.Data
     private String m_fanartPath;
     private DateTime m_lastUpdated;
     private String m_zap2itId;
+    private bool m_episodesLoaded;
 
     private List<TvdbEpisode> m_episodes = null;
     #endregion
@@ -66,6 +67,15 @@ namespace TvdbConnector.Data
     {
       get { return m_episodes; }
       set { m_episodes = value; }
+    }
+
+    /// <summary>
+    /// Is the episode info loaded
+    /// </summary>
+    public bool EpisodesLoaded
+    {
+      get { return m_episodesLoaded; }
+      set { m_episodesLoaded = value; }
     }
 
     /// <summary>

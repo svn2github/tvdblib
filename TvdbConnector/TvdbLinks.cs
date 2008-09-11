@@ -10,7 +10,7 @@ namespace TvdbConnector
   /// <summary>
   /// Information on server structure and mirrors of tvdb
   /// 
-  /// 
+  /// <![CDATA[
   /// <mirrorpath>/api/<apikey>/
   /// |---- mirrors.xml
   /// |---- languages.xml
@@ -43,7 +43,7 @@ namespace TvdbConnector
   /// |---- (updates)
   ///       |---- s<timeframe>.xml
   ///       |---- updates_<timeframe>.zip
-  /// 
+  /// ]]>
   /// </summary>
   internal class TvdbLinks
   {
@@ -105,6 +105,13 @@ namespace TvdbConnector
         + _episodeId + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
+    internal static string CreateEpisodeLink(string _apiKey, int _seriesId, int _seasonNr, 
+                                             int _episodeNr, string _order, TvdbLanguage _lang)
+    {
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/" + _order + "/" + _seasonNr + "/"
+                                               + "/" + _episodeNr + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+    }
+
     internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval, bool _zipped)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/updates/updates_"
@@ -139,7 +146,7 @@ namespace TvdbConnector
     /// <param name="_identifier"></param>
     /// <param name="_type"></param>
     /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <returns>Link</returns>
     internal static String CreateUserFavouriteLink(String _identifier, Util.UserFavouriteAction _type, int _seriesId)
     {
       return TvdbLinks.BASE_SERVER + "/api/User_Favorites.php?accountid=" + _identifier
@@ -149,7 +156,7 @@ namespace TvdbConnector
     /// Creates link which only retrieves the user favourites
     /// </summary>
     /// <param name="_identifier"></param>
-    /// <returns></returns>
+    /// <returns>Link</returns>
     internal static String CreateUserFavouriteLink(String _identifier)
     {
       return CreateUserFavouriteLink(_identifier, Util.UserFavouriteAction.none, 0);
@@ -187,9 +194,9 @@ namespace TvdbConnector
     /// <summary>
     /// Create link to get actor info
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_apiKey"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_apiKey">api key</param>
+    /// <returns>Link</returns>
     internal static String CreateActorLink(int _seriesId, String _apiKey)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/actors.xml";
@@ -199,8 +206,8 @@ namespace TvdbConnector
     /// <summary>
     /// Create link to list of available mirrors
     /// </summary>
-    /// <param name="m_apiKey"></param>
-    /// <returns></returns>
+    /// <param name="_apiKey">api key</param>
+    /// <returns>Link</returns>
     internal static String CreateMirrorsLink(String _apiKey)
     {
       return TvdbLinks.BASE_SERVER + "api/" + _apiKey + TvdbLinks.MIRROR_PATH;

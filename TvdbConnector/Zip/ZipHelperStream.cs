@@ -36,8 +36,9 @@
 using System;
 using System.IO;
 using System.Text;
+using TvdbConnector.ICSharpCode.SharpZipLib.Zip;
 
-namespace ICSharpCode.SharpZipLib.Zip
+namespace TvdbConnector.SharpZipLib.Zip
 {
 
 	/// <summary>

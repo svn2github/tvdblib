@@ -11,6 +11,9 @@ using System.Text.RegularExpressions;
 
 namespace TvdbConnector.Cache
 {
+  /// <summary>
+  /// XmlCacheProvider stores all the information that have been retrieved from http://thetvdb.com as human-readable xml files on the hard disk
+  /// </summary>
   public class XmlCacheProvider : ICacheProvider
   {
     #region private fields
@@ -19,6 +22,10 @@ namespace TvdbConnector.Cache
     String m_rootFolder;
     #endregion
 
+    /// <summary>
+    /// Constructor for XmlCacheProvider
+    /// </summary>
+    /// <param name="_rootFolder">This is the folder on the disk where all the information are stored</param>
     public XmlCacheProvider(String _rootFolder)
     {
       m_xmlWriter = new TvdbXmlWriter();
@@ -118,7 +125,7 @@ namespace TvdbConnector.Cache
         foreach (TvdbEpisode e in _series.Episodes)
         {
           FileInfo file = new FileInfo(root + "\\EpisodeImages\\S" + e.SeasonNumber + "E" + e.EpisodeNumber + ".jpg");
-          if (e.Banner.IsLoaded && !file.Exists)
+          if (e.Banner != null && e.Banner.IsLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
             e.Banner.Banner.Save(file.FullName);
@@ -223,7 +230,11 @@ namespace TvdbConnector.Cache
       {
         TvdbSeries series = seriesList[0];
         List<TvdbEpisode> epList = m_xmlReader.ExtractEpisodes(content);
-        series.Episodes = epList;
+        if (epList != null && epList.Count > 0)
+        {
+          series.EpisodesLoaded = true;
+          series.Episodes = epList;
+        }
         String bannerFile = seriesRoot + "\\banners.xml";
         String actorFile = seriesRoot + "\\actors.xml";
         Regex rex = new Regex("S(\\d+)E(\\d+)");
@@ -248,7 +259,7 @@ namespace TvdbConnector.Cache
                 }
               }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
               Log.Warn("Couldn't load episode image file " + epImageFile);
             }
@@ -329,35 +340,119 @@ namespace TvdbConnector.Cache
       }
     }
 
+    /// <summary>
+    /// Load user info from cache
+    /// </summary>
+    /// <param name="_userId">Id of the user</param>
+    /// <returns>TvdbUser object or null if the user couldn't be loaded</returns>
     public TvdbUser LoadUserInfoFromCache(string _userId)
     {
-      throw new NotImplementedException();
+      String seriesRoot = m_rootFolder;
+      String xmlFile = seriesRoot + "\\user_" + _userId + ".xml";
+      if (!File.Exists(xmlFile)) return null;
+      String content = File.ReadAllText(xmlFile);
+      List<TvdbUser> userList = m_xmlReader.ExtractUser(content);
+      if (userList != null && userList.Count == 1)
+      {
+        return userList[0];
+      }
+      else
+      {
+        return null;
+      }
     }
 
+    /// <summary>
+    /// Saves the user data to cache
+    /// </summary>
+    /// <param name="_user">TvdbUser object</param>
     public void SaveToCache(TvdbUser _user)
     {
-      throw new NotImplementedException();
+      if (_user != null)
+      {
+        m_xmlWriter.WriteUserData(_user, m_rootFolder + "\\user_" + _user.UserIdentifier + ".xml");
+      }
     }
 
 
-
+    /// <summary>
+    /// Receives a list of all series that have been cached
+    /// </summary>
+    /// <returns>A list of series that have been already stored with this cache provider</returns>
     public List<int> GetCachedSeries()
     {
       List<int> retList = new List<int>();
-      string[] dirs = Directory.GetDirectories(m_rootFolder);
-      foreach (String d in dirs)
+      if (Directory.Exists(m_rootFolder))
       {
-        try
+        string[] dirs = Directory.GetDirectories(m_rootFolder);
+        foreach (String d in dirs)
         {
-          int series = Int32.Parse(d.Remove(0, d.LastIndexOf("\\") + 1));
-          retList.Add(series);
-        }
-        catch (FormatException)
-        {
-          Log.Error("Couldn't parse " + d + " when loading list of cached series");
+          try
+          {
+            int series = Int32.Parse(d.Remove(0, d.LastIndexOf("\\") + 1));
+            retList.Add(series);
+          }
+          catch (FormatException)
+          {
+            Log.Error("Couldn't parse " + d + " when loading list of cached series");
+          }
         }
       }
       return retList;
+    }
+
+    /// <summary>
+    /// Check if the series is cached in the given configuration
+    /// </summary>
+    /// <param name="_seriesId">Id of the series</param>
+    /// <param name="_episodesLoaded">are episodes loaded</param>
+    /// <param name="_bannersLoaded">are banners loaded</param>
+    /// <param name="_actorsLoaded">are actors loaded</param>
+    /// <param name="_language">language of the series</param>
+    /// <returns>true if the series is cached, false otherwise</returns>
+    public bool IsCached(int _seriesId, TvdbLanguage _language, bool _episodesLoaded, 
+                         bool _bannersLoaded, bool _actorsLoaded)
+    {
+      bool actorsLoaded = false;
+      bool episodesLoaded = false;
+      bool bannersLoaded = false;
+
+      //todo: handle language
+      String seriesRoot = m_rootFolder + "\\" + _seriesId;
+      String xmlFile = seriesRoot + "\\all.xml";
+      if (!File.Exists(xmlFile)) return false;
+      String content = File.ReadAllText(xmlFile);
+
+      List<TvdbEpisode> epList = m_xmlReader.ExtractEpisodes(content);
+      if (epList != null && epList.Count > 0)
+      {//episodes are not loaded
+        episodesLoaded = true;
+      }
+      String bannerFile = seriesRoot + "\\banners.xml";
+      String actorFile = seriesRoot + "\\actors.xml";
+      
+      //load cached banners
+      if (File.Exists(bannerFile))
+      {//banners have been already loaded
+        bannersLoaded = true;
+      }
+
+      //load actor info
+      if (File.Exists(actorFile))
+      {
+        actorsLoaded = true;
+      }
+
+      if (episodesLoaded || !_episodesLoaded &&
+          bannersLoaded || !_bannersLoaded &&
+          actorsLoaded || !_actorsLoaded)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
     }
 
     #endregion

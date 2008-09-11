@@ -14,6 +14,7 @@ using TvdbConnector.Cache;
 using TvdbConnector.Data;
 using TvdbConnector.Data.Banner;
 using TvdbTester.Properties;
+using TvdbConnector.Exceptions;
 
 namespace TvdbTester
 {
@@ -71,13 +72,24 @@ namespace TvdbTester
         screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
         screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
         DialogResult res = screen.ShowDialog();
+
+        ICacheProvider p = null;
+        if (screen.CacheProvider == typeof(XmlCacheProvider))
+        {
+          p = new XmlCacheProvider(screen.RootFolder);
+        }
+        else if (screen.CacheProvider == typeof(BinaryCacheProvider))
+        {
+          p = new BinaryCacheProvider(screen.RootFolder);
+        }
+
         if (res == DialogResult.Cancel)
         {
-          InitialiseForm(null);
+          InitialiseForm(null, p);
         }
         else
         {
-          InitialiseForm(screen.UserIdentifier);
+          InitialiseForm(screen.UserIdentifier, p);
         }
       }
       else
@@ -92,10 +104,11 @@ namespace TvdbTester
     /// Initialise the form
     /// </summary>
     /// <param name="_userId"></param>
-    public void InitialiseForm(String _userId)
+    public void InitialiseForm(String _userId, ICacheProvider _provider)
     {
-      //m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);
-      m_tvdbHandler = new Tvdb(new BinaryCacheProvider("BinCache"), Resources.API_KEY);
+      //m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);new XmlCacheProvider("XmlCache")
+
+      m_tvdbHandler = new Tvdb(_provider, Resources.API_KEY);
       m_tvdbHandler.InitCache();
 
 
@@ -113,11 +126,27 @@ namespace TvdbTester
       {
         TvdbUser user = new TvdbUser("user", _userId);
         m_tvdbHandler.UserInfo = user;
-        user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
-        List<TvdbSeries> favList = m_tvdbHandler.GetUserFavorites(user.UserPreferredLanguage);
-        foreach (TvdbSeries s in favList)
+        List<TvdbSeries> favList = null;
+        try
         {
-          cbUserFavourites.Items.Add(s);
+          user.UserPreferredLanguage = m_tvdbHandler.GetPreferredLanguage();
+          favList = m_tvdbHandler.GetUserFavorites(user.UserPreferredLanguage);
+        }
+        catch (TvdbInvalidApiKeyException ex)
+        {
+          MessageBox.Show(ex.Message);
+        }
+        catch (TvdbNotAvailableException ex)
+        {
+          MessageBox.Show(ex.Message);
+        }
+
+        if (favList != null)
+        {
+          foreach (TvdbSeries s in favList)
+          {
+            cbUserFavourites.Items.Add(s);
+          }
         }
       }
       else
@@ -125,6 +154,7 @@ namespace TvdbTester
         cbUserFavourites.Text = "No userinfo set";
         cbUserFavourites.Enabled = false;
       }
+
       cmdAddRemoveFavorites.Enabled = false;
       cmdSendSeriesRating.Enabled = false;
       raterSeriesYourRating.Enabled = false;
@@ -167,8 +197,21 @@ namespace TvdbTester
 
     private void LoadSeries(int _seriesId)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(_seriesId, m_currentLanguage, cbLoadFull.Checked,
-                                                  cbLoadActors.Checked, cbLoadBanner.Checked, cbUseZipped.Checked);
+      TvdbSeries series = null;
+
+      try
+      {
+        series = m_tvdbHandler.GetSeries(_seriesId, m_currentLanguage, cbLoadFull.Checked,
+                                                    cbLoadActors.Checked, cbLoadBanner.Checked, cbUseZipped.Checked);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
 
       if (series != null)
       {
@@ -287,19 +330,19 @@ namespace TvdbTester
     private void ClearEpisodeDetail()
     {
       txtEpisodeAbsoluteNumber.Text = "";
-      txtEpisodeDirector.Text = "";
       txtEpisodeDVDChapter.Text = "";
       txtEpisodeDVDId.Text = "";
       txtEpisodeDVDNumber.Text = "";
       txtEpisodeDVDSeason.Text = "";
       txtEpisodeFirstAired.Text = "";
       lbGuestStars.Items.Clear();
+      lbWriters.Items.Clear();
+      lbDirectors.Items.Clear();
       txtEpisodeImdbID.Text = "";
       txtEpisodeLanguage.Text = "";
       lbEpisodeInformation.Text = "Episode Info";
       txtEpisodeOverview.Text = "";
       txtEpisodeProductionCode.Text = "";
-      txtEpisodeWriter.Text = "";
       bcEpisodeBanner.ClearControl();
     }
 
@@ -401,12 +444,22 @@ namespace TvdbTester
       lbEpisodeInformation.Text = _episode.EpisodeName + "(" + _episode.EpisodeNumber + ")";
       txtEpisodeLanguage.Text = _episode.Language != null ? _episode.Language.ToString() : "";
       txtEpisodeFirstAired.Text = _episode.FirstAired.ToShortDateString();
+      
       foreach (String s in _episode.GuestStars)
       {
         lbGuestStars.Items.Add(s.Trim());
       }
-      txtEpisodeDirector.Text = _episode.DirectorsString;
-      txtEpisodeWriter.Text = _episode.WriterString;
+
+      foreach (String s in _episode.Directors)
+      {
+        lbDirectors.Items.Add(s.Trim());
+      }
+
+      foreach (String s in _episode.Writer)
+      {
+        lbWriters.Items.Add(s.Trim());
+      }
+
       txtEpisodeProductionCode.Text = _episode.ProductionCode;
       txtEpisodeOverview.Text = _episode.Overview;
       txtEpisodeDVDId.Text = _episode.DvdDiscId != -99 ? _episode.DvdDiscId.ToString() : "";
@@ -562,15 +615,44 @@ namespace TvdbTester
 
     private void cmdForceUpdate_Click(object sender, EventArgs e)
     {
-      m_currentSeries = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked,
-                                                  cbLoadActors.Checked, cbLoadBanner.Checked);
-      UpdateSeries(m_currentSeries);
+      TvdbSeries series = null;
+      try
+      {
+        series = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked,
+                                                    cbLoadActors.Checked, cbLoadBanner.Checked);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      if (series != null)
+      {
+        m_currentSeries = series;
+        UpdateSeries(m_currentSeries);
+      }
     }
 
     private void cmdLoadFullSeriesInfo_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true,
-                                                  m_currentSeries.TvdbActorsLoaded, m_currentSeries.BannersLoaded);
+      TvdbSeries series = null;
+      try
+      {
+        series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, true,
+                                                    m_currentSeries.TvdbActorsLoaded, m_currentSeries.BannersLoaded);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+
       if (series != null && series.Episodes != null && series.Episodes.Count != 0)
       {
         UpdateSeries(series);
@@ -583,8 +665,20 @@ namespace TvdbTester
 
     private void cmdLoadActorInfo_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, m_currentSeries.EpisodesLoaded,
+      TvdbSeries series = null;
+      try
+      {
+        series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language, m_currentSeries.EpisodesLoaded,
                                                   true, m_currentSeries.BannersLoaded);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
 
       if (series != null && series.TvdbActorsLoaded)
       {
@@ -598,9 +692,21 @@ namespace TvdbTester
 
     private void cmdLoadBanners_Click(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language,
+      TvdbSeries series = null;
+      try
+      {
+        series = m_tvdbHandler.GetSeries(m_currentSeries.Id, m_currentSeries.Language,
                                                   m_currentSeries.EpisodesLoaded, m_currentSeries.TvdbActorsLoaded,
                                                   true);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
 
       if (series != null && series.BannersLoaded)
       {
@@ -614,9 +720,21 @@ namespace TvdbTester
 
     private void cbUserFavourites_SelectedIndexChanged(object sender, EventArgs e)
     {
-      TvdbSeries series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
+      TvdbSeries series = null;
+      try
+      {
+        series = m_tvdbHandler.GetSeries(((TvdbSeries)cbUserFavourites.SelectedItem).Id,
                                                       m_currentLanguage, cbLoadFull.Checked, cbLoadActors.Checked,
                                                       cbLoadBanner.Checked, cbUseZipped.Checked);
+      }
+      catch (TvdbInvalidApiKeyException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
+      catch (TvdbNotAvailableException ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
 
       if (series != null)
       {

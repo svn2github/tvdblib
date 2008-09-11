@@ -6,6 +6,40 @@ using TvdbConnector.Data.Banner;
 
 namespace TvdbConnector.Data
 {
+  /// <summary>
+  /// Class representing an episode with all the information that can be retrieved from http://thetvdb.com. <br/> 
+  /// <br/>
+  /// Those are: <br/>
+  /// <![CDATA[
+  ///      <id>332179</id>
+  ///      <DVD_chapter></DVD_chapter>
+  ///      <DVD_discid></DVD_discid>
+  ///      <DVD_episodenumber></DVD_episodenumber>
+  ///      <DVD_season></DVD_season>
+  ///      <Director>|Joseph McGinty Nichol|</Director>
+  ///      <EpisodeName>Chuck Versus the World</EpisodeName>
+  ///      <EpisodeNumber>1</EpisodeNumber>
+  ///      <FirstAired>2007-09-24</FirstAired>
+  ///      <GuestStars>|Julia Ling|Vik Sahay|Mieko Hillman|</GuestStars>
+  ///      <IMDB_ID></IMDB_ID>
+  ///      <Language>English</Language>
+  ///      <Overview>Chuck Bartowski is an average computer geek...</Overview>
+  ///      <ProductionCode></ProductionCode>
+  ///      <Rating>9.0</Rating>
+  ///      <SeasonNumber>1</SeasonNumber>
+  ///      <Writer>|Josh Schwartz|Chris Fedak|</Writer>
+  ///      <absolute_number></absolute_number>
+  ///      <airsafter_season></airsafter_season>
+  ///      <airsbefore_episode></airsbefore_episode>
+  ///      <airsbefore_season></airsbefore_season>
+  ///      <filename>episodes/80348-332179.jpg</filename>
+  ///      <lastupdated>1201292806</lastupdated>
+  ///      <seasonid>27985</seasonid>
+  ///      <seriesid>80348</seriesid>
+  ///  </list>
+  /// ]]>
+  /// Additionally the banner image is stored
+  /// </summary>
   [Serializable]
   public class TvdbEpisode
   {
@@ -42,7 +76,34 @@ namespace TvdbConnector.Data
     private int m_airsBeforeSeason;
     #endregion
 
+    /// <summary>
+    /// While one would think that the episode number would be a simple affair there are several different ways that someone might choose to number the episodes on this site episodes are numbered in the order they aired on TV. That being said the site does provide two alternative numbering methods. <br /> <br />
+    /// 1. Absolute Episode Order <br />
+    /// 2. DVD Release Order <br />
+    /// <br />
+    /// More information on the topic can be found at: http://thetvdb.com/wiki/index.php/Category:Episodes
+    /// </summary>
+    public enum EpisodeOrdering
+    {
+      /// <summary>
+      /// Default order used by thetvdb
+      /// </summary>
+      DefaultOrder = 0,
 
+      /// <summary>
+      /// As everyone knows series can air on tv in an order completely different than the one intended by the series creator. Firefly being the most often discussed example on this site. Therefore we have provided a method for entering this "Correct" order. See also http://thetvdb.com/wiki/index.php/DVD_Order
+      /// </summary>
+      DvdOrder = 1,
+
+      /// <summary>
+      /// The standard for this site is the the primary episode number is representative of the shows aired order. But as any Anime fan will tell you Anime episodes are usually numbered without seasons and go from episode 1 to whatever the final episode is, often into the hundreds. Most western broadcasters however do break these shows into seasons, so in order to accommodate this alternate numbering scheme an additional field Absolute Number is available. While this system is primarily intended for Anime series that don't really have seasons, it will work for any program. To use this interface there is no alternate season number only the absolute episode number. Numbering continues on from season to season. So if season 1 ends with 25 then season 2 begins with 26. So for example Bleach is currently in it's "sixth season" but season 5 episode 14 Shock! The Father's True Character is actually episode 111. 
+      /// </summary>
+      AbsoluteOrder = 2
+    }
+
+    /// <summary>
+    /// Default constructor for the TvdbEpisode class
+    /// </summary>
     public TvdbEpisode()
     {
 
@@ -171,6 +232,9 @@ namespace TvdbConnector.Data
       set { m_lastUpdated = value; }
     }
 
+    /// <summary>
+    /// Path to the banner image on http://thetvdb.com
+    /// </summary>
     public String BannerPath
     {
       get { return m_bannerPath; }
@@ -312,7 +376,7 @@ namespace TvdbConnector.Data
       set { m_combinedEpisodeNumber = value; }
     }
     #endregion
-   
+
 
     /// <summary>
     /// Formatted String of writers for this episode in the 
@@ -354,7 +418,7 @@ namespace TvdbConnector.Data
       }
     }
 
-    
+
 
     /// <summary>
     /// Formatted String of directors of this episode in the 

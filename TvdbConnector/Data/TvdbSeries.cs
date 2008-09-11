@@ -6,6 +6,43 @@ using TvdbConnector.Data.Banner;
 
 namespace TvdbConnector.Data
 {
+  /// <summary>
+  /// Series class holds all the info that can be retrieved from http://thetvdb.com.  <br/>
+  /// <br/>
+  /// Those are as follows:<br/>
+  /// <br/>
+  ///  - Base information: <br/>
+  ///  <code>
+  ///    <Series>
+  ///       <id>73739</id>
+  ///       <Actors>|Malcolm David Kelley|Jorge Garcia|Maggie Grace|...|</Actors>
+  ///       <Airs_DayOfWeek>Thursday</Airs_DayOfWeek>
+  ///       <Airs_Time>9:00 PM</Airs_Time>
+  ///       <ContentRating>TV-14</ContentRating>
+  ///       <FirstAired>2004-09-22</FirstAired>
+  ///       <Genre>|Action and Adventure|Drama|Science-Fiction|</Genre>
+  ///       <IMDB_ID>tt0411008</IMDB_ID>
+  ///       <Language>en</Language>
+  ///       <Network>ABC</Network>
+  ///       <Overview>After Oceanic Air flight 815...</Overview>
+  ///       <Rating>8.9</Rating>
+  ///       <Runtime>60</Runtime>
+  ///       <SeriesID>24313</SeriesID>
+  ///       <SeriesName>Lost</SeriesName>
+  ///       <Status>Continuing</Status>
+  ///       <banner>graphical/24313-g2.jpg</banner>
+  ///       <fanart>fanart/original/73739-1.jpg</fanart>
+  ///       <lastupdated>1205694666</lastupdated>
+  ///       <zap2it_id>SH672362</zap2it_id>
+  ///    </Series>
+  ///  </code>
+  ///  - Banner information <br/>
+  ///  - Episode information <br/>
+  ///  - Extended actor information <br/>
+  ///  <br/>
+  /// Each of those can be downloaded seperately. If the information is downloaded as 
+  /// zipped file, everything is downloaded at once
+  /// </summary>
   [Serializable]
   public class TvdbSeries : TvdbSeriesFields
   {
@@ -13,10 +50,13 @@ namespace TvdbConnector.Data
     private Dictionary<TvdbLanguage, TvdbSeriesFields> m_seriesTranslations;
     #endregion
 
+    /// <summary>
+    /// Basic constructor for the TvdbSeries class
+    /// </summary>
     public TvdbSeries()
     {
-      m_episodes = new List<TvdbEpisode>();
-      m_episodesLoaded = false;
+      this.Episodes = new List<TvdbEpisode>();
+      this.EpisodesLoaded = false;
 
       m_banners = new List<TvdbBanner>();
       m_bannersLoaded = false;
@@ -58,14 +98,14 @@ namespace TvdbConnector.Data
     /// Set the language of the series to one of the languages that have
     /// already been loaded
     /// </summary>
-    /// <param name="_language"></param>
-    /// <returns></returns>
+    /// <param name="_language">The new language for this series</param>
+    /// <returns>true if success, false otherwise</returns>
     public bool SetLanguage(TvdbLanguage _language)
     {
       if (m_seriesTranslations.Keys.Contains(_language))
       {
-        if (!m_seriesTranslations.Keys.Contains(Language))
-        {
+        if (!m_seriesTranslations.Keys.Contains(this.Language))
+        {//the current language is not added to the dictionary -> add it
           TvdbSeriesFields f = new TvdbSeriesFields();
           f.Id = this.Id;
           f.Actors = this.Actors;
@@ -87,9 +127,11 @@ namespace TvdbConnector.Data
           f.FanartPath = this.FanartPath;
           f.LastUpdated = this.LastUpdated;
           f.Zap2itId = this.Zap2itId;
-        }
-        m_seriesTranslations[Language].Episodes = this.Episodes;
+          f.Episodes = this.Episodes;
+          f.EpisodesLoaded = this.EpisodesLoaded;
 
+          m_seriesTranslations.Add(this.Language, f);
+        }
         this.UpdateTvdbFields(m_seriesTranslations[_language]);
         return true;
       }
@@ -150,11 +192,11 @@ namespace TvdbConnector.Data
 
       if (_fields.Episodes != null)
       {
-        this.EpisodesLoaded = true;
+        this.EpisodesLoaded = _fields.EpisodesLoaded;
         //check for each episode if episode images have been loaded... if yes -> copy image
         foreach (TvdbEpisode f in _fields.Episodes)
         {
-          foreach (TvdbEpisode e in m_episodes)
+          foreach (TvdbEpisode e in this.Episodes)
           {
             if (e.Id == f.Id && e.Banner != null && e.Banner.IsLoaded)
             {
@@ -163,7 +205,7 @@ namespace TvdbConnector.Data
             }
           }
         }
-        m_episodes = _fields.Episodes;
+        this.Episodes = _fields.Episodes;
       }
       else
       {
@@ -336,31 +378,10 @@ namespace TvdbConnector.Data
     #endregion
 
     #region episodes
-    //Episode information
-    private List<TvdbEpisode> m_episodes;
-    private bool m_episodesLoaded;
 
-    /// <summary>
-    /// Is the episode info loaded
-    /// </summary>
-    public bool EpisodesLoaded
-    {
-      get { return m_episodesLoaded; }
-      set { m_episodesLoaded = value; }
-    }
 
-    /// <summary>
-    /// List of Loaded episodes
-    /// </summary>
-    public List<TvdbEpisode> Episodes
-    {
-      get { return m_episodes; }
-      set
-      {
-        m_episodes = value;
-        m_episodesLoaded = true;
-      }
-    }
+
+
     #endregion
 
     #region Actors
