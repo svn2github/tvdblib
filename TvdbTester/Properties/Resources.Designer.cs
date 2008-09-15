@@ -146,9 +146,9 @@ namespace TvdbTester.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap play_back {
+        internal static System.Drawing.Bitmap playback {
             get {
-                object obj = ResourceManager.GetObject("play back", resourceCulture);
+                object obj = ResourceManager.GetObject("playback", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

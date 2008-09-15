@@ -263,11 +263,14 @@ namespace TvdbTester
       {
         cmdLoadActorInfo.Enabled = false;
         pnlActorsEnabled.Visible = false;
+        lbAllActors.Items.Clear();
+        bcActors.ClearControl();
         if (_series.TvdbActors.Count > 0)
         {
           List<TvdbBanner> bannerList = new List<TvdbBanner>();
           foreach (TvdbActor a in _series.TvdbActors)
           {
+            lbAllActors.Items.Add(a.Name);
             bannerList.Add(a.ActorImage);
           }
 
@@ -299,6 +302,8 @@ namespace TvdbTester
       bcSeasonBanner.ClearControl();
       bcSeasonBannerWide.ClearControl();
       bcEpisodeBanner.ClearControl();
+      bcActors.ClearControl();
+      lbAllActors.Items.Clear();
       ClearSeriesDetails();
 
       ClearEpisodeDetail();
@@ -876,6 +881,12 @@ namespace TvdbTester
         cbLoadBanner.Enabled = true;
         cbLoadActors.Enabled = true;
       }
+    }
+
+    private void lbAllActors_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      bcActors.Index = lbAllActors.SelectedIndex;
+      SetActorInfo(m_currentSeries.TvdbActors[lbAllActors.SelectedIndex]);
     }
   }
 }

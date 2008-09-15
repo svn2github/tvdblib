@@ -154,6 +154,8 @@
       this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
       this.pnlActorsEnabled = new System.Windows.Forms.Panel();
       this.label20 = new System.Windows.Forms.Label();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.lbAllActors = new System.Windows.Forms.ListBox();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
@@ -171,6 +173,7 @@
       this.pnlEpisodeEnabled.SuspendLayout();
       this.pnlFanartEnabled.SuspendLayout();
       this.pnlActorsEnabled.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // label5
@@ -1201,15 +1204,9 @@
       // 
       // tabActors
       // 
+      this.tabActors.Controls.Add(this.lbAllActors);
+      this.tabActors.Controls.Add(this.groupBox2);
       this.tabActors.Controls.Add(this.panel1);
-      this.tabActors.Controls.Add(this.txtActorSortOrder);
-      this.tabActors.Controls.Add(this.txtActorRole);
-      this.tabActors.Controls.Add(this.txtActorName);
-      this.tabActors.Controls.Add(this.txtActorId);
-      this.tabActors.Controls.Add(this.label46);
-      this.tabActors.Controls.Add(this.label45);
-      this.tabActors.Controls.Add(this.label44);
-      this.tabActors.Controls.Add(this.label43);
       this.tabActors.Controls.Add(this.label24);
       this.tabActors.Location = new System.Drawing.Point(4, 22);
       this.tabActors.Name = "tabActors";
@@ -1223,7 +1220,7 @@
       // 
       this.panel1.BackColor = System.Drawing.Color.Chocolate;
       this.panel1.Controls.Add(this.bcActors);
-      this.panel1.Location = new System.Drawing.Point(58, 102);
+      this.panel1.Location = new System.Drawing.Point(407, 126);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(310, 460);
       this.panel1.TabIndex = 4;
@@ -1247,36 +1244,36 @@
       // 
       // txtActorSortOrder
       // 
-      this.txtActorSortOrder.Location = new System.Drawing.Point(505, 186);
+      this.txtActorSortOrder.Location = new System.Drawing.Point(107, 104);
       this.txtActorSortOrder.Name = "txtActorSortOrder";
-      this.txtActorSortOrder.Size = new System.Drawing.Size(212, 20);
+      this.txtActorSortOrder.Size = new System.Drawing.Size(163, 20);
       this.txtActorSortOrder.TabIndex = 3;
       // 
       // txtActorRole
       // 
-      this.txtActorRole.Location = new System.Drawing.Point(505, 157);
+      this.txtActorRole.Location = new System.Drawing.Point(107, 75);
       this.txtActorRole.Name = "txtActorRole";
-      this.txtActorRole.Size = new System.Drawing.Size(212, 20);
+      this.txtActorRole.Size = new System.Drawing.Size(163, 20);
       this.txtActorRole.TabIndex = 3;
       // 
       // txtActorName
       // 
-      this.txtActorName.Location = new System.Drawing.Point(505, 128);
+      this.txtActorName.Location = new System.Drawing.Point(107, 46);
       this.txtActorName.Name = "txtActorName";
-      this.txtActorName.Size = new System.Drawing.Size(212, 20);
+      this.txtActorName.Size = new System.Drawing.Size(163, 20);
       this.txtActorName.TabIndex = 3;
       // 
       // txtActorId
       // 
-      this.txtActorId.Location = new System.Drawing.Point(505, 102);
+      this.txtActorId.Location = new System.Drawing.Point(107, 20);
       this.txtActorId.Name = "txtActorId";
-      this.txtActorId.Size = new System.Drawing.Size(212, 20);
+      this.txtActorId.Size = new System.Drawing.Size(163, 20);
       this.txtActorId.TabIndex = 3;
       // 
       // label46
       // 
       this.label46.AutoSize = true;
-      this.label46.Location = new System.Drawing.Point(413, 189);
+      this.label46.Location = new System.Drawing.Point(15, 107);
       this.label46.Name = "label46";
       this.label46.Size = new System.Drawing.Size(55, 13);
       this.label46.TabIndex = 2;
@@ -1285,7 +1282,7 @@
       // label45
       // 
       this.label45.AutoSize = true;
-      this.label45.Location = new System.Drawing.Point(413, 160);
+      this.label45.Location = new System.Drawing.Point(15, 78);
       this.label45.Name = "label45";
       this.label45.Size = new System.Drawing.Size(32, 13);
       this.label45.TabIndex = 2;
@@ -1294,7 +1291,7 @@
       // label44
       // 
       this.label44.AutoSize = true;
-      this.label44.Location = new System.Drawing.Point(413, 131);
+      this.label44.Location = new System.Drawing.Point(15, 49);
       this.label44.Name = "label44";
       this.label44.Size = new System.Drawing.Size(38, 13);
       this.label44.TabIndex = 2;
@@ -1303,7 +1300,7 @@
       // label43
       // 
       this.label43.AutoSize = true;
-      this.label43.Location = new System.Drawing.Point(413, 105);
+      this.label43.Location = new System.Drawing.Point(15, 23);
       this.label43.Name = "label43";
       this.label43.Size = new System.Drawing.Size(19, 13);
       this.label43.TabIndex = 2;
@@ -1313,7 +1310,7 @@
       // 
       this.label24.AutoSize = true;
       this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label24.Location = new System.Drawing.Point(347, 46);
+      this.label24.Location = new System.Drawing.Point(335, 32);
       this.label24.Name = "label24";
       this.label24.Size = new System.Drawing.Size(74, 25);
       this.label24.TabIndex = 1;
@@ -1509,6 +1506,32 @@
       this.label20.TabIndex = 0;
       this.label20.Text = "Actors";
       // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.txtActorSortOrder);
+      this.groupBox2.Controls.Add(this.label43);
+      this.groupBox2.Controls.Add(this.label44);
+      this.groupBox2.Controls.Add(this.txtActorRole);
+      this.groupBox2.Controls.Add(this.label45);
+      this.groupBox2.Controls.Add(this.txtActorName);
+      this.groupBox2.Controls.Add(this.label46);
+      this.groupBox2.Controls.Add(this.txtActorId);
+      this.groupBox2.Location = new System.Drawing.Point(72, 438);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(285, 148);
+      this.groupBox2.TabIndex = 5;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = ".:: Information ::.";
+      // 
+      // lbAllActors
+      // 
+      this.lbAllActors.FormattingEnabled = true;
+      this.lbAllActors.Location = new System.Drawing.Point(72, 131);
+      this.lbAllActors.Name = "lbAllActors";
+      this.lbAllActors.Size = new System.Drawing.Size(285, 290);
+      this.lbAllActors.TabIndex = 6;
+      this.lbAllActors.SelectedIndexChanged += new System.EventHandler(this.lbAllActors_SelectedIndexChanged);
+      // 
       // SeriesBrowser
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1554,6 +1577,8 @@
       this.pnlFanartEnabled.PerformLayout();
       this.pnlActorsEnabled.ResumeLayout(false);
       this.pnlActorsEnabled.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1686,6 +1711,8 @@
     private System.Windows.Forms.CheckBox cbUseZipped;
     private System.Windows.Forms.ListBox lbDirectors;
     private System.Windows.Forms.ListBox lbWriters;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.ListBox lbAllActors;
   }
 }
 

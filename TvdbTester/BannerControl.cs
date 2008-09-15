@@ -128,7 +128,7 @@ namespace TvdbTester
       get { return m_index; }
       set
       {
-        if (m_index > 0 && m_index < m_imageList.Count)
+        if (m_imageList != null && m_index >= 0 && m_index < m_imageList.Count)
         {
           m_index = value;
           SetBannerImage(m_imageList[value]);

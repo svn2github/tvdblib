@@ -100,7 +100,7 @@
       // panelLeft
       // 
       this.panelLeft.BackColor = System.Drawing.Color.Transparent;
-      this.panelLeft.BackgroundImage = global::TvdbTester.Properties.Resources.play_back;
+      this.panelLeft.BackgroundImage = global::TvdbTester.Properties.Resources.playback;
       this.panelLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
       this.panelLeft.Location = new System.Drawing.Point(0, 0);
       this.panelLeft.Name = "panelLeft";
