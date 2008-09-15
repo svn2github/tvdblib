@@ -8,7 +8,7 @@ namespace TvdbConnector.Exceptions
   /// <summary>
   /// Exception thrown when no user has been found
   /// </summary>
-  public class TvdbUserNotFoundException: Exception
+  public class TvdbUserNotFoundException : TvdbException
   {
     /// <summary>
     /// TvdbUserNotFoundException constructor

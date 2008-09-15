@@ -6,16 +6,15 @@ using System.Text;
 namespace TvdbConnector.Exceptions
 {
   /// <summary>
-  /// Exception thrown when a request is made which requires a valid
-  /// api key but none is set
+  /// Exception that is thrown when a nonexistent content is requested
   /// </summary>
-  public class TvdbInvalidApiKeyException : TvdbException
+  public class TvdbContentNotFoundException: TvdbException
   {
-    /// <summary>
+        /// <summary>
     /// TvdbInvalidAPIKeyException constructor
     /// </summary>
     /// <param name="_text"></param>
-    public TvdbInvalidApiKeyException(String _text)
+    public TvdbContentNotFoundException(String _text)
       : base(_text)
     {
     }
@@ -23,7 +22,7 @@ namespace TvdbConnector.Exceptions
     /// <summary>
     /// TvdbInvalidAPIKeyException constructor
     /// </summary>
-    public TvdbInvalidApiKeyException()
+    public TvdbContentNotFoundException()
       : base()
     {
 

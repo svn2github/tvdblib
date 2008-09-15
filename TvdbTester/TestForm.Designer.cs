@@ -35,23 +35,24 @@
       this.lvSeries = new System.Windows.Forms.ListView();
       this.chProperty = new System.Windows.Forms.ColumnHeader();
       this.chValue = new System.Windows.Forms.ColumnHeader();
-      this.bcSeriesBanner = new TvdbTester.BannerControl();
-      this.bcActors = new TvdbTester.BannerControl();
       this.txtSeriesId = new System.Windows.Forms.TextBox();
       this.txtSeriesId2 = new System.Windows.Forms.TextBox();
-      this.textBox1 = new System.Windows.Forms.TextBox();
-      this.textBox2 = new System.Windows.Forms.TextBox();
+      this.txtSeason = new System.Windows.Forms.TextBox();
+      this.txtEpisode = new System.Windows.Forms.TextBox();
       this.Episodes = new System.Windows.Forms.GroupBox();
       this.cbOrdering = new System.Windows.Forms.ComboBox();
       this.cmdGetEpisodes = new System.Windows.Forms.Button();
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
+      this.bcSeriesBanner = new TvdbTester.BannerControl();
+      this.bcActors = new TvdbTester.BannerControl();
       this.Episodes.SuspendLayout();
       this.SuspendLayout();
       // 
       // cmdTest1
       // 
+      this.cmdTest1.Enabled = false;
       this.cmdTest1.Location = new System.Drawing.Point(22, 67);
       this.cmdTest1.Name = "cmdTest1";
       this.cmdTest1.Size = new System.Drawing.Size(137, 23);
@@ -62,6 +63,7 @@
       // 
       // cmdTestZip
       // 
+      this.cmdTestZip.Enabled = false;
       this.cmdTestZip.Location = new System.Drawing.Point(77, 96);
       this.cmdTestZip.Name = "cmdTestZip";
       this.cmdTestZip.Size = new System.Drawing.Size(82, 23);
@@ -82,6 +84,7 @@
       // 
       // cmdEnd
       // 
+      this.cmdEnd.Enabled = false;
       this.cmdEnd.Location = new System.Drawing.Point(22, 293);
       this.cmdEnd.Name = "cmdEnd";
       this.cmdEnd.Size = new System.Drawing.Size(137, 23);
@@ -113,38 +116,6 @@
       this.chValue.Text = "Value";
       this.chValue.Width = 200;
       // 
-      // bcSeriesBanner
-      // 
-      this.bcSeriesBanner.BackColor = System.Drawing.SystemColors.ControlDark;
-      this.bcSeriesBanner.BannerImage = null;
-      this.bcSeriesBanner.BannerImages = null;
-      this.bcSeriesBanner.DefaultImage = null;
-      this.bcSeriesBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcSeriesBanner.Index = 0;
-      this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Transparent;
-      this.bcSeriesBanner.LoadingImage = null;
-      this.bcSeriesBanner.Location = new System.Drawing.Point(180, 9);
-      this.bcSeriesBanner.Name = "bcSeriesBanner";
-      this.bcSeriesBanner.Size = new System.Drawing.Size(348, 81);
-      this.bcSeriesBanner.TabIndex = 6;
-      this.bcSeriesBanner.UnavailableImage = null;
-      // 
-      // bcActors
-      // 
-      this.bcActors.BackColor = System.Drawing.SystemColors.AppWorkspace;
-      this.bcActors.BannerImage = null;
-      this.bcActors.BannerImages = null;
-      this.bcActors.DefaultImage = null;
-      this.bcActors.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcActors.Index = 0;
-      this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcActors.Location = new System.Drawing.Point(543, 9);
-      this.bcActors.Name = "bcActors";
-      this.bcActors.Size = new System.Drawing.Size(300, 450);
-      this.bcActors.TabIndex = 1;
-      this.bcActors.UnavailableImage = null;
-      // 
       // txtSeriesId
       // 
       this.txtSeriesId.Location = new System.Drawing.Point(22, 98);
@@ -160,19 +131,19 @@
       this.txtSeriesId2.Size = new System.Drawing.Size(46, 20);
       this.txtSeriesId2.TabIndex = 8;
       // 
-      // textBox1
+      // txtSeason
       // 
-      this.textBox1.Location = new System.Drawing.Point(62, 37);
-      this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(41, 20);
-      this.textBox1.TabIndex = 8;
+      this.txtSeason.Location = new System.Drawing.Point(62, 37);
+      this.txtSeason.Name = "txtSeason";
+      this.txtSeason.Size = new System.Drawing.Size(41, 20);
+      this.txtSeason.TabIndex = 8;
       // 
-      // textBox2
+      // txtEpisode
       // 
-      this.textBox2.Location = new System.Drawing.Point(109, 37);
-      this.textBox2.Name = "textBox2";
-      this.textBox2.Size = new System.Drawing.Size(49, 20);
-      this.textBox2.TabIndex = 8;
+      this.txtEpisode.Location = new System.Drawing.Point(109, 37);
+      this.txtEpisode.Name = "txtEpisode";
+      this.txtEpisode.Size = new System.Drawing.Size(49, 20);
+      this.txtEpisode.TabIndex = 8;
       // 
       // Episodes
       // 
@@ -182,8 +153,8 @@
       this.Episodes.Controls.Add(this.label2);
       this.Episodes.Controls.Add(this.label1);
       this.Episodes.Controls.Add(this.txtSeriesId2);
-      this.Episodes.Controls.Add(this.textBox2);
-      this.Episodes.Controls.Add(this.textBox1);
+      this.Episodes.Controls.Add(this.txtEpisode);
+      this.Episodes.Controls.Add(this.txtSeason);
       this.Episodes.Location = new System.Drawing.Point(6, 125);
       this.Episodes.Name = "Episodes";
       this.Episodes.Size = new System.Drawing.Size(168, 100);
@@ -201,6 +172,7 @@
       // 
       // cmdGetEpisodes
       // 
+      this.cmdGetEpisodes.Enabled = false;
       this.cmdGetEpisodes.Location = new System.Drawing.Point(80, 63);
       this.cmdGetEpisodes.Name = "cmdGetEpisodes";
       this.cmdGetEpisodes.Size = new System.Drawing.Size(78, 23);
@@ -235,6 +207,38 @@
       this.label1.Size = new System.Drawing.Size(36, 13);
       this.label1.TabIndex = 9;
       this.label1.Text = "Series";
+      // 
+      // bcSeriesBanner
+      // 
+      this.bcSeriesBanner.BackColor = System.Drawing.SystemColors.ControlDark;
+      this.bcSeriesBanner.BannerImage = null;
+      this.bcSeriesBanner.BannerImages = null;
+      this.bcSeriesBanner.DefaultImage = null;
+      this.bcSeriesBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcSeriesBanner.Index = 0;
+      this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Transparent;
+      this.bcSeriesBanner.LoadingImage = null;
+      this.bcSeriesBanner.Location = new System.Drawing.Point(180, 9);
+      this.bcSeriesBanner.Name = "bcSeriesBanner";
+      this.bcSeriesBanner.Size = new System.Drawing.Size(348, 81);
+      this.bcSeriesBanner.TabIndex = 6;
+      this.bcSeriesBanner.UnavailableImage = null;
+      // 
+      // bcActors
+      // 
+      this.bcActors.BackColor = System.Drawing.SystemColors.AppWorkspace;
+      this.bcActors.BannerImage = null;
+      this.bcActors.BannerImages = null;
+      this.bcActors.DefaultImage = null;
+      this.bcActors.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcActors.Index = 0;
+      this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcActors.Location = new System.Drawing.Point(543, 9);
+      this.bcActors.Name = "bcActors";
+      this.bcActors.Size = new System.Drawing.Size(300, 450);
+      this.bcActors.TabIndex = 1;
+      this.bcActors.UnavailableImage = null;
       // 
       // TestForm
       // 
@@ -272,8 +276,8 @@
     private BannerControl bcSeriesBanner;
     private System.Windows.Forms.TextBox txtSeriesId;
     private System.Windows.Forms.TextBox txtSeriesId2;
-    private System.Windows.Forms.TextBox textBox1;
-    private System.Windows.Forms.TextBox textBox2;
+    private System.Windows.Forms.TextBox txtSeason;
+    private System.Windows.Forms.TextBox txtEpisode;
     private System.Windows.Forms.GroupBox Episodes;
     private System.Windows.Forms.ComboBox cbOrdering;
     private System.Windows.Forms.Button cmdGetEpisodes;

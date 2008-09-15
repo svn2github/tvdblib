@@ -6,23 +6,23 @@ using System.Text;
 namespace TvdbConnector.Exceptions
 {
   /// <summary>
-  /// Exception that is thrown if http://thetvdb.com seems to be unavailable
+  /// Base excpetion for tvdblib 
   /// </summary>
-  public class TvdbNotAvailableException : TvdbException
+  public class TvdbException: Exception
   {
-    /// <summary>
-    /// TvdbNotAvailableException constructor
+        /// <summary>
+    /// TvdbException constructor
     /// </summary>
     /// <param name="_text"></param>
-    public TvdbNotAvailableException(String _text)
+    public TvdbException(String _text)
       : base(_text)
     {
     }
 
     /// <summary>
-    /// TvdbNotAvailableException constructor
+    /// TvdbException constructor
     /// </summary>
-    public TvdbNotAvailableException()
+    public TvdbException()
       : base()
     {
     }

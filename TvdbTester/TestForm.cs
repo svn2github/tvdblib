@@ -34,6 +34,10 @@ namespace TvdbTester
     {
       m_tvdbHandler = new Tvdb(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
       List<TvdbLanguage> lang = m_tvdbHandler.Languages;
+      cmdTest1.Enabled = true;
+      cmdTestZip.Enabled = true;
+      cmdGetEpisodes.Enabled = true;
+      cmdEnd.Enabled = true;
     }
 
     private void cmdTest1_Click(object sender, EventArgs e)
@@ -54,9 +58,8 @@ namespace TvdbTester
 
     private void cmdTestZip_Click(object sender, EventArgs e)
     {
-      Tvdb tvdb = new Tvdb(new BinaryCacheProvider("C:\\test"), Resources.API_KEY);
-      List<TvdbLanguage> lang = tvdb.Languages;
-      TvdbSeries s = tvdb.GetSeries(Int32.Parse(txtSeriesId.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
+      List<TvdbLanguage> lang = m_tvdbHandler.Languages;
+      TvdbSeries s = m_tvdbHandler.GetSeries(Int32.Parse(txtSeriesId.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
 
       lvSeries.Items.Add(CreateItem("Id", s.Id.ToString()));
       lvSeries.Items.Add(CreateItem("Name", s.SeriesName));
@@ -98,7 +101,9 @@ namespace TvdbTester
     private void cmdGetEpisodes_Click(object sender, EventArgs e)
     {
       int sId = Int32.Parse(txtSeriesId2.Text);
-      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, 1, 1, 
+      int season = Int32.Parse(txtSeason.Text);
+      int episode = Int32.Parse(txtEpisode.Text);
+      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, season, episode, 
                                                (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem, 
                                                TvdbLanguage.DefaultLanguage);
 
