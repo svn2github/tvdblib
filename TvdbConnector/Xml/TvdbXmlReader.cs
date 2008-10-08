@@ -304,14 +304,16 @@ namespace TvdbConnector.Xml
                           DVD_chapter = episode.Element("DVD_chapter").Value,
                           DVD_discid = episode.Element("DVD_discid").Value,
                           DVD_episodenumber = episode.Element("DVD_episodenumber").Value,
-                          DVD_season = episode.Element("DVD_season").Value,
+                          DVD_season = episode.Elements("DVD_season").Count() == 1 
+                                       ? episode.Element("DVD_season").Value : episode.Element("DVD_Season").Value,
                           Director = episode.Element("Director").Value,
                           EpisodeName = episode.Element("EpisodeName").Value,
                           EpisodeNumber = episode.Element("EpisodeNumber").Value,
                           FirstAired = episode.Element("FirstAired").Value,
                           GuestStars = episode.Element("GuestStars").Value,
                           IMDB_ID = episode.Element("IMDB_ID").Value,
-                          Language = episode.Element("Language").Value,
+                          Language = episode.Elements("Language").Count() == 1
+                                     ? episode.Element("Language").Value : "en",
                           Overview = episode.Element("Overview").Value,
                           ProductionCode = episode.Element("ProductionCode").Value,
                           Rating = episode.Element("Rating").Value,
@@ -933,5 +935,66 @@ namespace TvdbConnector.Xml
       return userList;
     }
 
+    /// <summary>
+    /// Extract a list of series ratings
+    /// 
+    /// The xml file is in the following format:
+    /// <![CDATA[
+    /// <?xml version="1.0" encoding="UTF-8" ?> 
+    /// <Data>
+    ///   <Series>
+    ///     <seriesid>80344</seriesid> 
+    ///     <UserRating>7</UserRating> 
+    ///     <CommunityRating>8.3224</CommunityRating> 
+    ///   </Series>
+    ///   <Series>
+    ///     <seriesid>72227</seriesid> 
+    ///     <UserRating>8</UserRating> 
+    ///     <CommunityRating>8.3224</CommunityRating> 
+    ///   </Series>
+    /// </Data>
+    /// ]]>
+    /// </summary>
+    /// <param name="_data">The xml content</param>
+    /// <param name="_type">The item type for the ratings</param>
+    /// <returns></returns>
+    internal Dictionary<int, TvdbRating> ExtractRatings(string _data, TvdbRating.ItemType _type)
+    {
+      XDocument xml = XDocument.Parse(_data);
+      String itemType = null;
+      String idDefinition = null;
+      switch (_type)
+      {
+        case TvdbRating.ItemType.Episode:
+          itemType = "Episode";
+          idDefinition = "id";
+          break;
+        case TvdbRating.ItemType.Series:
+          itemType = "Series";
+          idDefinition = "seriesid";
+          break;
+        default:
+          return null;
+      }
+
+      var allRatings = from episode in xml.Descendants(itemType)
+                        select new
+                        {
+                          SeriesId = Util.Int32Parse(episode.Element(idDefinition).Value),
+                          UserRating = Util.Int32Parse(episode.Element("UserRating").Value),
+                          CommunityRating = Util.DoubleParse(episode.Element("CommunityRating").Value)
+                        };
+
+      Dictionary<int, TvdbRating> retList = new Dictionary<int, TvdbRating>();
+      foreach (var r in allRatings)
+      {
+        TvdbRating rating = new TvdbRating();
+        rating.UserRating = r.UserRating;
+        rating.CommunityRating = r.CommunityRating;
+        rating.RatingItemType = _type;
+        if (r.SeriesId != -99 && !retList.ContainsKey(r.SeriesId)) retList.Add(r.SeriesId, rating);
+      }
+      return retList;
+    }
   }
 }

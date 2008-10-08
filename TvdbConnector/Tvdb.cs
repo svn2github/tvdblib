@@ -403,6 +403,20 @@ namespace TvdbConnector
     }
 
     /// <summary>
+    /// Retrieve the episode with the given parameters
+    /// </summary>
+    /// <param name="_seriesId">id of the series</param>
+    /// <param name="_airDate">When did the episode air</param>
+    /// <param name="_language">language of the episode</param>
+    /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
+    /// <returns>The retrieved episode</returns>
+    public TvdbEpisode GetEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
+    {
+      TvdbEpisode ep = m_downloader.DownloadEpisode(_seriesId, _airDate, _language);
+      return ep;
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="_seriesList"></param>
@@ -1190,6 +1204,40 @@ namespace TvdbConnector
           throw new ArgumentOutOfRangeException("rating must be an integer between 0 and 10");
         }
         return m_downloader.RateEpisode(m_userInfo.UserIdentifier, _seriesId, _rating);
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
+      }
+    }
+
+    /// <summary>
+    /// Gets all series this user has already ratet
+    /// </summary>
+    /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
+    /// <returns>A list of all rated series</returns>
+    public Dictionary<int, TvdbRating> GetRatedSeries()
+    {
+      if (m_userInfo != null)
+      {
+        return m_downloader.DownloadAllSeriesRatings(m_userInfo.UserIdentifier);
+      }
+      else
+      {
+        throw new TvdbUserNotFoundException("You can only add favorites if a user is set");
+      }
+    }
+
+    /// <summary>
+    /// Gets all series this user has already ratet
+    /// </summary>
+    /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
+    /// <returns>A list of all ratings for the series</returns>
+    public Dictionary<int, TvdbRating> GetRatingsForSeries(int _seriesId)
+    {
+      if (m_userInfo != null)
+      {
+        return m_downloader.DownloadRatingsForSeries(m_userInfo.UserIdentifier, _seriesId);
       }
       else
       {

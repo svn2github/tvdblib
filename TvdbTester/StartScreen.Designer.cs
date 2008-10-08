@@ -46,6 +46,7 @@
       this.folderBrowseCache = new System.Windows.Forms.FolderBrowserDialog();
       this.txtRootFolder = new System.Windows.Forms.TextBox();
       this.cmdBrowseCacheFolder = new System.Windows.Forms.Button();
+      this.cbSaveLogin = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.statusStrip1.SuspendLayout();
       this.SuspendLayout();
@@ -62,7 +63,7 @@
       // 
       // txtUserIdentifier
       // 
-      this.txtUserIdentifier.Location = new System.Drawing.Point(126, 483);
+      this.txtUserIdentifier.Location = new System.Drawing.Point(94, 483);
       this.txtUserIdentifier.Name = "txtUserIdentifier";
       this.txtUserIdentifier.Size = new System.Drawing.Size(187, 20);
       this.txtUserIdentifier.TabIndex = 1;
@@ -71,7 +72,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(45, 486);
+      this.label1.Location = new System.Drawing.Point(13, 486);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(75, 13);
       this.label1.TabIndex = 2;
@@ -202,12 +203,25 @@
       this.cmdBrowseCacheFolder.UseVisualStyleBackColor = true;
       this.cmdBrowseCacheFolder.Click += new System.EventHandler(this.cmdBrowseCacheFolder_Click);
       // 
+      // cbSaveLogin
+      // 
+      this.cbSaveLogin.AutoSize = true;
+      this.cbSaveLogin.Checked = true;
+      this.cbSaveLogin.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.cbSaveLogin.Location = new System.Drawing.Point(288, 485);
+      this.cbSaveLogin.Name = "cbSaveLogin";
+      this.cbSaveLogin.Size = new System.Drawing.Size(80, 17);
+      this.cbSaveLogin.TabIndex = 12;
+      this.cbSaveLogin.Text = "Save Login";
+      this.cbSaveLogin.UseVisualStyleBackColor = true;
+      // 
       // StartScreen
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this.cmdUseWithoutId;
       this.ClientSize = new System.Drawing.Size(379, 564);
+      this.Controls.Add(this.cbSaveLogin);
       this.Controls.Add(this.cmdBrowseCacheFolder);
       this.Controls.Add(this.txtRootFolder);
       this.Controls.Add(this.label5);
@@ -257,5 +271,6 @@
     private System.Windows.Forms.FolderBrowserDialog folderBrowseCache;
     private System.Windows.Forms.TextBox txtRootFolder;
     private System.Windows.Forms.Button cmdBrowseCacheFolder;
+    private System.Windows.Forms.CheckBox cbSaveLogin;
   }
 }

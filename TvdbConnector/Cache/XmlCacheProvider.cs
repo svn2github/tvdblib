@@ -31,6 +31,10 @@ namespace TvdbConnector.Cache
       m_xmlWriter = new TvdbXmlWriter();
       m_xmlReader = new TvdbXmlReader();
       m_rootFolder = _rootFolder;
+      if (!Directory.Exists(_rootFolder))
+      {
+        Directory.CreateDirectory(_rootFolder);
+      }
     }
 
     #region ICacheProvider Members
@@ -57,6 +61,7 @@ namespace TvdbConnector.Cache
     {
       if (_languageList != null && _languageList.Count > 0)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_xmlWriter.WriteLanguageFile(_languageList, m_rootFolder + "\\languages.xml");
       }
     }
@@ -69,6 +74,7 @@ namespace TvdbConnector.Cache
     {
       if (_mirrorInfo != null && _mirrorInfo.Count > 0)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_xmlWriter.WriteMirrorFile(_mirrorInfo, m_rootFolder + "\\mirrors.xml");
       }
     }
@@ -80,6 +86,7 @@ namespace TvdbConnector.Cache
     /// <param name="_series">The series to save</param>
     public void SaveToCache(TvdbSeries _series)
     {
+      if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
       String root = m_rootFolder + "\\" + _series.Id;
 
       m_xmlWriter.WriteSeriesContent(_series, root + "\\all.xml");
@@ -410,6 +417,7 @@ namespace TvdbConnector.Cache
     {
       if (_user != null)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_xmlWriter.WriteUserData(_user, m_rootFolder + "\\user_" + _user.UserIdentifier + ".xml");
       }
     }

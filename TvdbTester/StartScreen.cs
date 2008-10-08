@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TvdbConnector.Cache;
+using System.IO;
 
 namespace TvdbTester
 {
@@ -26,6 +27,12 @@ namespace TvdbTester
       m_cacheProvider = typeof(XmlCacheProvider);
       m_rootFolder = "Cache";
       txtRootFolder.Text = "Cache";
+
+      if (File.Exists("tvdbUser.txt"))
+      {
+        cbSaveLogin.Checked = true;
+        txtUserIdentifier.Text = File.ReadAllLines("tvdbUser.txt")[0];
+      }
     }
 
     private String m_userIdentifier;
@@ -58,6 +65,10 @@ namespace TvdbTester
       }
       else
       {
+        if (cbSaveLogin.Checked)
+        {
+          File.WriteAllText("tvdbUser.txt", txtUserIdentifier.Text);
+        }
         this.DialogResult = DialogResult.OK;
         UserIdentifier = txtUserIdentifier.Text;
         this.Close();

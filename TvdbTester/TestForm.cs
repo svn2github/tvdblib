@@ -38,6 +38,8 @@ namespace TvdbTester
       cmdTestZip.Enabled = true;
       cmdGetEpisodes.Enabled = true;
       cmdEnd.Enabled = true;
+      cmdSetUser.Enabled = true;
+      cmdGetEpisodeAired.Enabled = true;
     }
 
     private void cmdTest1_Click(object sender, EventArgs e)
@@ -116,6 +118,73 @@ namespace TvdbTester
       lvSeries.Items.Add(CreateItem("Writer", ep.WriterString));
       lvSeries.Items.Add(CreateItem("Overview", ep.Overview));
       lvSeries.Items.Add(CreateItem("Imdb Id", ep.ImdbId));
+    }
+
+    private void cmdGetAllSeriesRatings_Click(object sender, EventArgs e)
+    {
+      Dictionary<int, TvdbRating> ratingList = m_tvdbHandler.GetRatedSeries();
+      if (ratingList != null)
+      {
+        lvSeries.Items.Clear();
+        foreach (KeyValuePair<int, TvdbRating> r in ratingList)
+        {
+         
+          lvSeries.Items.Add(CreateItem(r.Key.ToString(), "Community: " + r.Value.CommunityRating + ", User: " + r.Value.UserRating));
+        }
+      }
+      else
+      {
+        MessageBox.Show("Nothing returned");
+      }
+    }
+
+    private void cmdSetUser_Click(object sender, EventArgs e)
+    {
+      TvdbUser user = new TvdbUser();
+      user.UserIdentifier = txtUserId.Text;
+      user.UserName = "test";
+      m_tvdbHandler.UserInfo = user;
+      cmdGetAllSeriesRatings.Enabled = true;
+      cmdGetRatingsForSeries.Enabled = true;
+
+    }
+
+    private void button1_Click(object sender, EventArgs e)
+    {
+      Dictionary<int, TvdbRating> ratingList = m_tvdbHandler.GetRatingsForSeries(Int32.Parse(txtSeriesRatingsId.Text));
+      if (ratingList != null)
+      {
+        lvSeries.Items.Clear();
+        foreach (KeyValuePair<int, TvdbRating> r in ratingList)
+        {
+          lvSeries.Items.Add(CreateItem(r.Value.RatingItemType.ToString() + ": " + r.Key.ToString(), "Community: " + r.Value.CommunityRating + ", User: " + r.Value.UserRating));
+        }
+      }
+      else
+      {
+        MessageBox.Show("Nothing returned");
+      }
+    }
+
+    private void cmdGetEpisodeAired_Click(object sender, EventArgs e)
+    {
+      TvdbEpisode ep = m_tvdbHandler.GetEpisode(Int32.Parse(txtSeriesEpisodeAiredId.Text), dateTimePickerEpAired.Value, TvdbLanguage.DefaultLanguage);
+      if (ep != null)
+      {
+        lvSeries.Items.Clear();
+        lvSeries.Items.Add(CreateItem("Series Id", ep.SeriesId.ToString()));
+        lvSeries.Items.Add(CreateItem("Episode Id", ep.Id.ToString()));
+        lvSeries.Items.Add(CreateItem("Name", ep.EpisodeName));
+        lvSeries.Items.Add(CreateItem("Gueststars", ep.GuestStarsString));
+        lvSeries.Items.Add(CreateItem("Directors", ep.DirectorsString));
+        lvSeries.Items.Add(CreateItem("Writer", ep.WriterString));
+        lvSeries.Items.Add(CreateItem("Overview", ep.Overview));
+        lvSeries.Items.Add(CreateItem("Imdb Id", ep.ImdbId));
+      }
+      else
+      {
+        MessageBox.Show("Nothing found");
+      }
     }
 
 

@@ -152,6 +152,7 @@ namespace TvdbConnector.Cache
 
     private void SaveToCache(DateTime _time)
     {
+      if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
       m_filestream = new FileStream(m_rootFolder + "\\lastUpdated.ser", FileMode.Create);
       m_formatter.Serialize(m_filestream, _time);
       m_filestream.Close();
@@ -166,6 +167,7 @@ namespace TvdbConnector.Cache
     {
       if (_languageList != null)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_filestream = new FileStream(m_rootFolder + "\\languageInfo.ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _languageList);
         m_filestream.Close();
@@ -180,6 +182,7 @@ namespace TvdbConnector.Cache
     {
       if (_mirrorInfo != null)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_filestream = new FileStream(m_rootFolder + "\\mirrorInfo.ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _mirrorInfo);
         m_filestream.Close();
@@ -276,6 +279,7 @@ namespace TvdbConnector.Cache
     {
       if (_series != null)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_filestream = new FileStream(m_rootFolder + "\\series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
         m_filestream.Close();
@@ -296,6 +300,7 @@ namespace TvdbConnector.Cache
     {
       if (_user != null)
       {
+        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
         m_filestream = new FileStream(m_rootFolder + "\\user_" + _user.UserIdentifier + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _user);
         m_filestream.Close();

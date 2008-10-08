@@ -50,6 +50,7 @@
     <Compile Include="Data\TvdbEpisode.cs" />
     <Compile Include="Data\TvdbLanguage.cs" />
     <Compile Include="Data\TvdbSeries.cs" />
+    <Compile Include="Exceptions\TvdbInvalidXmlException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\TvdbXmlReader.cs" />
   </ItemGroup>
@@ -71,6 +72,7 @@
     <Compile Include="Data\Banner\TvdbSeasonBanner.cs" />
     <Compile Include="Data\Banner\TvdbSeriesBanner.cs" />
     <Compile Include="Data\TvdbDownloader.cs" />
+    <Compile Include="Data\TvdbRating.cs" />
     <Compile Include="Data\TvdbSearchResult.cs" />
     <Compile Include="Data\TvdbSeriesFields.cs" />
     <Compile Include="Data\TvdbUser.cs" />

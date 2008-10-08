@@ -105,11 +105,17 @@ namespace TvdbConnector
         + _episodeId + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
     }
 
-    internal static string CreateEpisodeLink(string _apiKey, int _seriesId, int _seasonNr, 
+    internal static string CreateEpisodeLink(string _apiKey, int _seriesId, int _seasonNr,
                                              int _episodeNr, string _order, TvdbLanguage _lang)
     {
       return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/" + _order + "/" + _seasonNr + "/"
                                                + "/" + _episodeNr + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+    }
+
+    internal static string CreateEpisodeLink(string _apiKey, int _seriesId, DateTime _airDate, TvdbLanguage _language)
+    {
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/GetEpisodeByAirDate.php?apikey=" + _apiKey + "&seriesid=" + _seriesId + 
+              "&airdate=" + _airDate.ToShortDateString() + "&language=" + _language.Abbriviation;
     }
 
     internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval, bool _zipped)
@@ -212,5 +218,30 @@ namespace TvdbConnector
     {
       return TvdbLinks.BASE_SERVER + "api/" + _apiKey + TvdbLinks.MIRROR_PATH;
     }
+
+    /// <summary>
+    /// create a link to all series rated by the user
+    /// </summary>
+    /// <param name="_apiKey">api key</param>
+    /// <param name="_userIdentifier">user identifier</param>
+    /// <returns>Link</returns>
+    internal static String CreateAllSeriesRatingsLink(String _apiKey, String _userIdentifier)
+    {
+      return TvdbLinks.ActiveMirror.MirrorPath + "/api/GetRatingsForUser.php?apikey=" + _apiKey
+                                               + "&accountid=" + _userIdentifier;
+    }
+
+    /// <summary>
+    /// create a link to all items rated by the user for this series
+    /// </summary>
+    /// <param name="_apiKey">api key</param>
+    /// <param name="_userIdentifier">user identifier</param>
+    /// <returns>Link</returns>
+    internal static String CreateSeriesRatingsLink(String _apiKey, String _userIdentifier, int _seriesId)
+    {
+      return CreateAllSeriesRatingsLink(_apiKey, _userIdentifier) + "&seriesid=" + _seriesId;
+    }
+
+
   }
 }

@@ -45,9 +45,20 @@
       this.label3 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.label1 = new System.Windows.Forms.Label();
+      this.cmdGetAllSeriesRatings = new System.Windows.Forms.Button();
+      this.cmdSetUser = new System.Windows.Forms.Button();
+      this.txtUserId = new System.Windows.Forms.TextBox();
+      this.cmdGetRatingsForSeries = new System.Windows.Forms.Button();
+      this.txtSeriesRatingsId = new System.Windows.Forms.TextBox();
+      this.dateTimePickerEpAired = new System.Windows.Forms.DateTimePicker();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.txtSeriesEpisodeAiredId = new System.Windows.Forms.TextBox();
+      this.label4 = new System.Windows.Forms.Label();
+      this.cmdGetEpisodeAired = new System.Windows.Forms.Button();
       this.bcSeriesBanner = new TvdbTester.BannerControl();
       this.bcActors = new TvdbTester.BannerControl();
       this.Episodes.SuspendLayout();
+      this.groupBox1.SuspendLayout();
       this.SuspendLayout();
       // 
       // cmdTest1
@@ -55,16 +66,16 @@
       this.cmdTest1.Enabled = false;
       this.cmdTest1.Location = new System.Drawing.Point(22, 67);
       this.cmdTest1.Name = "cmdTest1";
-      this.cmdTest1.Size = new System.Drawing.Size(137, 23);
+      this.cmdTest1.Size = new System.Drawing.Size(184, 23);
       this.cmdTest1.TabIndex = 0;
-      this.cmdTest1.Text = "Test 1";
+      this.cmdTest1.Text = "Test Actors";
       this.cmdTest1.UseVisualStyleBackColor = true;
       this.cmdTest1.Click += new System.EventHandler(this.cmdTest1_Click);
       // 
       // cmdTestZip
       // 
       this.cmdTestZip.Enabled = false;
-      this.cmdTestZip.Location = new System.Drawing.Point(77, 96);
+      this.cmdTestZip.Location = new System.Drawing.Point(124, 96);
       this.cmdTestZip.Name = "cmdTestZip";
       this.cmdTestZip.Size = new System.Drawing.Size(82, 23);
       this.cmdTestZip.TabIndex = 2;
@@ -76,7 +87,7 @@
       // 
       this.cmdInit.Location = new System.Drawing.Point(22, 9);
       this.cmdInit.Name = "cmdInit";
-      this.cmdInit.Size = new System.Drawing.Size(137, 23);
+      this.cmdInit.Size = new System.Drawing.Size(184, 23);
       this.cmdInit.TabIndex = 3;
       this.cmdInit.Text = "Initialise";
       this.cmdInit.UseVisualStyleBackColor = true;
@@ -85,9 +96,9 @@
       // cmdEnd
       // 
       this.cmdEnd.Enabled = false;
-      this.cmdEnd.Location = new System.Drawing.Point(22, 293);
+      this.cmdEnd.Location = new System.Drawing.Point(6, 436);
       this.cmdEnd.Name = "cmdEnd";
-      this.cmdEnd.Size = new System.Drawing.Size(137, 23);
+      this.cmdEnd.Size = new System.Drawing.Size(200, 23);
       this.cmdEnd.TabIndex = 4;
       this.cmdEnd.Text = "End";
       this.cmdEnd.UseVisualStyleBackColor = true;
@@ -99,7 +110,7 @@
             this.chProperty,
             this.chValue});
       this.lvSeries.FullRowSelect = true;
-      this.lvSeries.Location = new System.Drawing.Point(180, 96);
+      this.lvSeries.Location = new System.Drawing.Point(302, 96);
       this.lvSeries.Name = "lvSeries";
       this.lvSeries.Size = new System.Drawing.Size(348, 363);
       this.lvSeries.TabIndex = 5;
@@ -120,7 +131,7 @@
       // 
       this.txtSeriesId.Location = new System.Drawing.Point(22, 98);
       this.txtSeriesId.Name = "txtSeriesId";
-      this.txtSeriesId.Size = new System.Drawing.Size(49, 20);
+      this.txtSeriesId.Size = new System.Drawing.Size(96, 20);
       this.txtSeriesId.TabIndex = 7;
       this.txtSeriesId.Text = "73255";
       // 
@@ -157,7 +168,7 @@
       this.Episodes.Controls.Add(this.txtSeason);
       this.Episodes.Location = new System.Drawing.Point(6, 125);
       this.Episodes.Name = "Episodes";
-      this.Episodes.Size = new System.Drawing.Size(168, 100);
+      this.Episodes.Size = new System.Drawing.Size(200, 100);
       this.Episodes.TabIndex = 9;
       this.Episodes.TabStop = false;
       this.Episodes.Text = "Episodes";
@@ -208,6 +219,102 @@
       this.label1.TabIndex = 9;
       this.label1.Text = "Series";
       // 
+      // cmdGetAllSeriesRatings
+      // 
+      this.cmdGetAllSeriesRatings.Enabled = false;
+      this.cmdGetAllSeriesRatings.Location = new System.Drawing.Point(6, 231);
+      this.cmdGetAllSeriesRatings.Name = "cmdGetAllSeriesRatings";
+      this.cmdGetAllSeriesRatings.Size = new System.Drawing.Size(200, 24);
+      this.cmdGetAllSeriesRatings.TabIndex = 10;
+      this.cmdGetAllSeriesRatings.Text = "Get all rated series";
+      this.cmdGetAllSeriesRatings.UseVisualStyleBackColor = true;
+      this.cmdGetAllSeriesRatings.Click += new System.EventHandler(this.cmdGetAllSeriesRatings_Click);
+      // 
+      // cmdSetUser
+      // 
+      this.cmdSetUser.Enabled = false;
+      this.cmdSetUser.Location = new System.Drawing.Point(147, 38);
+      this.cmdSetUser.Name = "cmdSetUser";
+      this.cmdSetUser.Size = new System.Drawing.Size(59, 23);
+      this.cmdSetUser.TabIndex = 2;
+      this.cmdSetUser.Text = "Set User";
+      this.cmdSetUser.UseVisualStyleBackColor = true;
+      this.cmdSetUser.Click += new System.EventHandler(this.cmdSetUser_Click);
+      // 
+      // txtUserId
+      // 
+      this.txtUserId.Location = new System.Drawing.Point(22, 40);
+      this.txtUserId.Name = "txtUserId";
+      this.txtUserId.Size = new System.Drawing.Size(119, 20);
+      this.txtUserId.TabIndex = 7;
+      // 
+      // cmdGetRatingsForSeries
+      // 
+      this.cmdGetRatingsForSeries.Enabled = false;
+      this.cmdGetRatingsForSeries.Location = new System.Drawing.Point(109, 260);
+      this.cmdGetRatingsForSeries.Name = "cmdGetRatingsForSeries";
+      this.cmdGetRatingsForSeries.Size = new System.Drawing.Size(97, 23);
+      this.cmdGetRatingsForSeries.TabIndex = 11;
+      this.cmdGetRatingsForSeries.Text = "Get series ratings";
+      this.cmdGetRatingsForSeries.UseVisualStyleBackColor = true;
+      this.cmdGetRatingsForSeries.Click += new System.EventHandler(this.button1_Click);
+      // 
+      // txtSeriesRatingsId
+      // 
+      this.txtSeriesRatingsId.Location = new System.Drawing.Point(6, 263);
+      this.txtSeriesRatingsId.Name = "txtSeriesRatingsId";
+      this.txtSeriesRatingsId.Size = new System.Drawing.Size(102, 20);
+      this.txtSeriesRatingsId.TabIndex = 8;
+      this.txtSeriesRatingsId.Text = "73255";
+      // 
+      // dateTimePickerEpAired
+      // 
+      this.dateTimePickerEpAired.Location = new System.Drawing.Point(5, 45);
+      this.dateTimePickerEpAired.Name = "dateTimePickerEpAired";
+      this.dateTimePickerEpAired.Size = new System.Drawing.Size(189, 20);
+      this.dateTimePickerEpAired.TabIndex = 12;
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.cmdGetEpisodeAired);
+      this.groupBox1.Controls.Add(this.label4);
+      this.groupBox1.Controls.Add(this.dateTimePickerEpAired);
+      this.groupBox1.Controls.Add(this.txtSeriesEpisodeAiredId);
+      this.groupBox1.Location = new System.Drawing.Point(6, 290);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(200, 100);
+      this.groupBox1.TabIndex = 13;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "Episode Aired";
+      // 
+      // txtSeriesEpisodeAiredId
+      // 
+      this.txtSeriesEpisodeAiredId.Location = new System.Drawing.Point(125, 19);
+      this.txtSeriesEpisodeAiredId.Name = "txtSeriesEpisodeAiredId";
+      this.txtSeriesEpisodeAiredId.Size = new System.Drawing.Size(69, 20);
+      this.txtSeriesEpisodeAiredId.TabIndex = 7;
+      this.txtSeriesEpisodeAiredId.Text = "73255";
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(8, 22);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(48, 13);
+      this.label4.TabIndex = 13;
+      this.label4.Text = "Series Id";
+      // 
+      // cmdGetEpisodeAired
+      // 
+      this.cmdGetEpisodeAired.Enabled = false;
+      this.cmdGetEpisodeAired.Location = new System.Drawing.Point(5, 71);
+      this.cmdGetEpisodeAired.Name = "cmdGetEpisodeAired";
+      this.cmdGetEpisodeAired.Size = new System.Drawing.Size(189, 23);
+      this.cmdGetEpisodeAired.TabIndex = 14;
+      this.cmdGetEpisodeAired.Text = "Get Episode";
+      this.cmdGetEpisodeAired.UseVisualStyleBackColor = true;
+      this.cmdGetEpisodeAired.Click += new System.EventHandler(this.cmdGetEpisodeAired_Click);
+      // 
       // bcSeriesBanner
       // 
       this.bcSeriesBanner.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -218,7 +325,7 @@
       this.bcSeriesBanner.Index = 0;
       this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Transparent;
       this.bcSeriesBanner.LoadingImage = null;
-      this.bcSeriesBanner.Location = new System.Drawing.Point(180, 9);
+      this.bcSeriesBanner.Location = new System.Drawing.Point(302, 9);
       this.bcSeriesBanner.Name = "bcSeriesBanner";
       this.bcSeriesBanner.Size = new System.Drawing.Size(348, 81);
       this.bcSeriesBanner.TabIndex = 6;
@@ -234,7 +341,7 @@
       this.bcActors.Index = 0;
       this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
       this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcActors.Location = new System.Drawing.Point(543, 9);
+      this.bcActors.Location = new System.Drawing.Point(665, 9);
       this.bcActors.Name = "bcActors";
       this.bcActors.Size = new System.Drawing.Size(300, 450);
       this.bcActors.TabIndex = 1;
@@ -244,13 +351,19 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(855, 485);
+      this.ClientSize = new System.Drawing.Size(970, 485);
+      this.Controls.Add(this.groupBox1);
+      this.Controls.Add(this.cmdGetRatingsForSeries);
+      this.Controls.Add(this.cmdGetAllSeriesRatings);
       this.Controls.Add(this.Episodes);
+      this.Controls.Add(this.txtUserId);
       this.Controls.Add(this.txtSeriesId);
+      this.Controls.Add(this.txtSeriesRatingsId);
       this.Controls.Add(this.bcSeriesBanner);
       this.Controls.Add(this.lvSeries);
       this.Controls.Add(this.cmdEnd);
       this.Controls.Add(this.cmdInit);
+      this.Controls.Add(this.cmdSetUser);
       this.Controls.Add(this.cmdTestZip);
       this.Controls.Add(this.bcActors);
       this.Controls.Add(this.cmdTest1);
@@ -258,6 +371,8 @@
       this.Text = "TestForm";
       this.Episodes.ResumeLayout(false);
       this.Episodes.PerformLayout();
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -284,5 +399,15 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Button cmdGetAllSeriesRatings;
+    private System.Windows.Forms.Button cmdSetUser;
+    private System.Windows.Forms.TextBox txtUserId;
+    private System.Windows.Forms.Button cmdGetRatingsForSeries;
+    private System.Windows.Forms.TextBox txtSeriesRatingsId;
+    private System.Windows.Forms.DateTimePicker dateTimePickerEpAired;
+    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.Button cmdGetEpisodeAired;
+    private System.Windows.Forms.Label label4;
+    private System.Windows.Forms.TextBox txtSeriesEpisodeAiredId;
   }
 }
