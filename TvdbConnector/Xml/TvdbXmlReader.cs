@@ -337,11 +337,11 @@ namespace TvdbConnector.Xml
       {
         TvdbEpisode ep = new TvdbEpisode();
         ep.Id = Util.Int32Parse(e.Id);
-        ep.CombinedEpisodeNumber = Util.Int32Parse(e.Combined_episodenumber);
-        ep.CombinedSeason = Util.Int32Parse(e.Combined_season);
+        ep.CombinedEpisodeNumber = Util.DoubleParse(e.Combined_episodenumber);
+        ep.CombinedSeason = Util.DoubleParse(e.Combined_season);
         ep.DvdChapter = Util.Int32Parse(e.DVD_chapter);
         ep.DvdDiscId = Util.Int32Parse(e.DVD_discid);
-        ep.DvdEpisodeNumber = Util.Int32Parse(e.DVD_episodenumber);
+        ep.DvdEpisodeNumber = Util.DoubleParse(e.DVD_episodenumber);
         ep.DvdSeason = Util.Int32Parse(e.DVD_season);
         ep.Directors = Util.SplitTvdbString(e.Director);
         ep.EpisodeName = e.EpisodeName;

@@ -774,6 +774,26 @@ namespace TvdbTester
       }
     }
 
+    private void saveImageContext_Opening(object sender, CancelEventArgs e)
+    {
+      if (saveImageContext.SourceControl == pbFullscreen)
+      {
+        showImageToolStripMenuItem.Enabled = false;
+      }
+      else
+      {
+        showImageToolStripMenuItem.Enabled = true;
+      }
+    }
+
+    private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Image img = GetSelectedImage();
+      if (img != null)
+      {
+        Clipboard.SetImage(img);
+      }
+    }
 
     /// <summary>
     /// Context to save a loaded image
@@ -781,6 +801,21 @@ namespace TvdbTester
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void saveImageToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      Image saveImage = GetSelectedImage();
+
+      if (saveImage != null)
+      {
+        DialogResult res = saveImageDialog.ShowDialog();
+        if (res == DialogResult.OK)
+        {
+          String fileName = saveImageDialog.FileName;
+          saveImage.Save(fileName);
+        }
+      }
+    }
+
+    private Image GetSelectedImage()
     {
       Image saveImage = null;
       if (saveImageContext.SourceControl.GetType() == typeof(PictureBox))
@@ -799,16 +834,14 @@ namespace TvdbTester
       {
         saveImage = ((BannerControl)saveImageContext.SourceControl).ActiveImage;
       }
+      return saveImage;
+    }
 
-      if (saveImage != null)
-      {
-        DialogResult res = saveImageDialog.ShowDialog();
-        if (res == DialogResult.OK)
-        {
-          String fileName = saveImageDialog.FileName;
-          saveImage.Save(fileName);
-        }
-      }
+    private void showImageToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      pnlFullscreen.Visible = true;
+      pnlFullscreen.BringToFront();
+      pbFullscreen.Image= GetSelectedImage();
     }
 
     private void cmdSendSeriesRating_Click(object sender, EventArgs e)
@@ -888,5 +921,12 @@ namespace TvdbTester
       bcActors.Index = lbAllActors.SelectedIndex;
       SetActorInfo(m_currentSeries.TvdbActors[lbAllActors.SelectedIndex]);
     }
+
+    private void cmdBack_Click(object sender, EventArgs e)
+    {
+      pnlFullscreen.Visible = false;
+    }
+
+
   }
 }

@@ -41,15 +41,12 @@
       this.lblCurrentLanguage = new System.Windows.Forms.Label();
       this.tabEpisodes = new System.Windows.Forms.TabPage();
       this.lbDirectors = new System.Windows.Forms.ListBox();
-      this.bcEpisodeBanner = new TvdbTester.BannerControl();
       this.saveImageContext = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.saveImageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.lbWriters = new System.Windows.Forms.ListBox();
       this.lbGuestStars = new System.Windows.Forms.ListBox();
       this.pnlSeasonBanner = new System.Windows.Forms.Panel();
-      this.bcSeasonBanner = new TvdbTester.BannerControl();
       this.pnlSeasonBannerWide = new System.Windows.Forms.Panel();
-      this.bcSeasonBannerWide = new TvdbTester.BannerControl();
       this.txtEpisodeImdbID = new System.Windows.Forms.TextBox();
       this.txtEpisodeAbsoluteNumber = new System.Windows.Forms.TextBox();
       this.label33 = new System.Windows.Forms.Label();
@@ -80,16 +77,12 @@
       this.label38 = new System.Windows.Forms.Label();
       this.label42 = new System.Windows.Forms.Label();
       this.cmdAddRemoveFavorites = new System.Windows.Forms.Button();
-      this.raterSeriesYourRating = new Rater();
       this.cmdSendSeriesRating = new System.Windows.Forms.Button();
-      this.raterSeriesSiteRating = new Rater();
       this.cmdForceUpdate = new System.Windows.Forms.Button();
       this.cmdLoadBanners = new System.Windows.Forms.Button();
       this.cmdLoadFullSeriesInfo = new System.Windows.Forms.Button();
       this.cmdLoadActorInfo = new System.Windows.Forms.Button();
       this.panelSeriesBannerFrame = new System.Windows.Forms.Panel();
-      this.bcSeriesBanner = new TvdbTester.BannerControl();
-      this.posterControlSeries = new TvdbTester.PosterControl();
       this.txtOverview = new System.Windows.Forms.RichTextBox();
       this.txtActors = new System.Windows.Forms.TextBox();
       this.txtRuntime = new System.Windows.Forms.TextBox();
@@ -124,18 +117,18 @@
       this.label6 = new System.Windows.Forms.Label();
       this.tabControlTvdb = new System.Windows.Forms.TabControl();
       this.tabFanart = new System.Windows.Forms.TabPage();
-      this.coverFlowFanart = new TvdbTester.CoverFlow();
       this.tabActors = new System.Windows.Forms.TabPage();
-      this.panel1 = new System.Windows.Forms.Panel();
-      this.bcActors = new TvdbTester.BannerControl();
+      this.lbAllActors = new System.Windows.Forms.ListBox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.txtActorSortOrder = new System.Windows.Forms.TextBox();
-      this.txtActorRole = new System.Windows.Forms.TextBox();
-      this.txtActorName = new System.Windows.Forms.TextBox();
-      this.txtActorId = new System.Windows.Forms.TextBox();
-      this.label46 = new System.Windows.Forms.Label();
-      this.label45 = new System.Windows.Forms.Label();
-      this.label44 = new System.Windows.Forms.Label();
       this.label43 = new System.Windows.Forms.Label();
+      this.label44 = new System.Windows.Forms.Label();
+      this.txtActorRole = new System.Windows.Forms.TextBox();
+      this.label45 = new System.Windows.Forms.Label();
+      this.txtActorName = new System.Windows.Forms.TextBox();
+      this.label46 = new System.Windows.Forms.Label();
+      this.txtActorId = new System.Windows.Forms.TextBox();
+      this.panel1 = new System.Windows.Forms.Panel();
       this.label24 = new System.Windows.Forms.Label();
       this.panelSeriesOverview = new System.Windows.Forms.Panel();
       this.cbUseZipped = new System.Windows.Forms.CheckBox();
@@ -154,26 +147,40 @@
       this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
       this.pnlActorsEnabled = new System.Windows.Forms.Panel();
       this.label20 = new System.Windows.Forms.Label();
-      this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.lbAllActors = new System.Windows.Forms.ListBox();
+      this.pnlFullscreen = new System.Windows.Forms.Panel();
+      this.cmdBack = new System.Windows.Forms.Button();
+      this.showImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.pbFullscreen = new System.Windows.Forms.PictureBox();
+      this.raterSeriesYourRating = new Rater();
+      this.raterSeriesSiteRating = new Rater();
+      this.bcSeriesBanner = new TvdbTester.BannerControl();
+      this.posterControlSeries = new TvdbTester.PosterControl();
+      this.bcEpisodeBanner = new TvdbTester.BannerControl();
+      this.bcSeasonBanner = new TvdbTester.BannerControl();
+      this.bcSeasonBannerWide = new TvdbTester.BannerControl();
+      this.coverFlowFanart = new TvdbTester.CoverFlow();
+      this.bcActors = new TvdbTester.BannerControl();
+      this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
       this.pnlSeasonBannerWide.SuspendLayout();
       this.tabSeries.SuspendLayout();
       this.groupBox1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesYourRating)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesSiteRating)).BeginInit();
       this.panelSeriesBannerFrame.SuspendLayout();
       this.tabControlTvdb.SuspendLayout();
       this.tabFanart.SuspendLayout();
       this.tabActors.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.panel1.SuspendLayout();
       this.panelSeriesOverview.SuspendLayout();
       this.pnlEpisodeEnabled.SuspendLayout();
       this.pnlFanartEnabled.SuspendLayout();
       this.pnlActorsEnabled.SuspendLayout();
-      this.groupBox2.SuspendLayout();
+      this.pnlFullscreen.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbFullscreen)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesYourRating)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesSiteRating)).BeginInit();
       this.SuspendLayout();
       // 
       // label5
@@ -320,33 +327,20 @@
       this.lbDirectors.Size = new System.Drawing.Size(134, 69);
       this.lbDirectors.TabIndex = 87;
       // 
-      // bcEpisodeBanner
-      // 
-      this.bcEpisodeBanner.BannerImage = null;
-      this.bcEpisodeBanner.BannerImages = null;
-      this.bcEpisodeBanner.ContextMenuStrip = this.saveImageContext;
-      this.bcEpisodeBanner.DefaultImage = global::TvdbTester.Properties.Resources.episode_notfound;
-      this.bcEpisodeBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcEpisodeBanner.Index = 0;
-      this.bcEpisodeBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcEpisodeBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcEpisodeBanner.Location = new System.Drawing.Point(4, 443);
-      this.bcEpisodeBanner.Name = "bcEpisodeBanner";
-      this.bcEpisodeBanner.Size = new System.Drawing.Size(300, 195);
-      this.bcEpisodeBanner.TabIndex = 0;
-      this.bcEpisodeBanner.UnavailableImage = null;
-      // 
       // saveImageContext
       // 
       this.saveImageContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showImageToolStripMenuItem,
+            this.copyToClipboardToolStripMenuItem,
             this.saveImageToolStripMenuItem1});
       this.saveImageContext.Name = "saveImageContext";
-      this.saveImageContext.Size = new System.Drawing.Size(143, 26);
+      this.saveImageContext.Size = new System.Drawing.Size(172, 92);
+      this.saveImageContext.Opening += new System.ComponentModel.CancelEventHandler(this.saveImageContext_Opening);
       // 
       // saveImageToolStripMenuItem1
       // 
       this.saveImageToolStripMenuItem1.Name = "saveImageToolStripMenuItem1";
-      this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
+      this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
       this.saveImageToolStripMenuItem1.Text = "Save Image";
       this.saveImageToolStripMenuItem1.Click += new System.EventHandler(this.saveImageToolStripMenuItem1_Click);
       // 
@@ -375,23 +369,6 @@
       this.pnlSeasonBanner.Size = new System.Drawing.Size(205, 295);
       this.pnlSeasonBanner.TabIndex = 84;
       // 
-      // bcSeasonBanner
-      // 
-      this.bcSeasonBanner.BackColor = System.Drawing.SystemColors.Control;
-      this.bcSeasonBanner.BannerImage = null;
-      this.bcSeasonBanner.BannerImages = null;
-      this.bcSeasonBanner.ContextMenuStrip = this.saveImageContext;
-      this.bcSeasonBanner.DefaultImage = global::TvdbTester.Properties.Resources.season_notfound;
-      this.bcSeasonBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Stretch;
-      this.bcSeasonBanner.Index = 0;
-      this.bcSeasonBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcSeasonBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcSeasonBanner.Location = new System.Drawing.Point(3, 3);
-      this.bcSeasonBanner.Name = "bcSeasonBanner";
-      this.bcSeasonBanner.Size = new System.Drawing.Size(200, 289);
-      this.bcSeasonBanner.TabIndex = 0;
-      this.bcSeasonBanner.UnavailableImage = null;
-      // 
       // pnlSeasonBannerWide
       // 
       this.pnlSeasonBannerWide.BackColor = System.Drawing.SystemColors.Control;
@@ -400,23 +377,6 @@
       this.pnlSeasonBannerWide.Name = "pnlSeasonBannerWide";
       this.pnlSeasonBannerWide.Size = new System.Drawing.Size(763, 147);
       this.pnlSeasonBannerWide.TabIndex = 83;
-      // 
-      // bcSeasonBannerWide
-      // 
-      this.bcSeasonBannerWide.BackColor = System.Drawing.SystemColors.Control;
-      this.bcSeasonBannerWide.BannerImage = null;
-      this.bcSeasonBannerWide.BannerImages = null;
-      this.bcSeasonBannerWide.ContextMenuStrip = this.saveImageContext;
-      this.bcSeasonBannerWide.DefaultImage = global::TvdbTester.Properties.Resources.tvdb_logo1;
-      this.bcSeasonBannerWide.ImageSizeMode = System.Windows.Forms.ImageLayout.Stretch;
-      this.bcSeasonBannerWide.Index = 0;
-      this.bcSeasonBannerWide.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcSeasonBannerWide.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcSeasonBannerWide.Location = new System.Drawing.Point(0, 0);
-      this.bcSeasonBannerWide.Name = "bcSeasonBannerWide";
-      this.bcSeasonBannerWide.Size = new System.Drawing.Size(765, 145);
-      this.bcSeasonBannerWide.TabIndex = 0;
-      this.bcSeasonBannerWide.UnavailableImage = null;
       // 
       // txtEpisodeImdbID
       // 
@@ -704,6 +664,7 @@
       // 
       // groupBox1
       // 
+      this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.groupBox1.Controls.Add(this.label38);
       this.groupBox1.Controls.Add(this.label42);
       this.groupBox1.Controls.Add(this.cmdAddRemoveFavorites);
@@ -746,33 +707,6 @@
       this.cmdAddRemoveFavorites.UseVisualStyleBackColor = true;
       this.cmdAddRemoveFavorites.Click += new System.EventHandler(this.cmdAddRemoveFavorites_Click);
       // 
-      // raterSeriesYourRating
-      // 
-      this.raterSeriesYourRating.CurrentRating = 0;
-      this.raterSeriesYourRating.LabelAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-      this.raterSeriesYourRating.LabelText = "RateLabel";
-      this.raterSeriesYourRating.LabelTextItems = new string[] {
-        "Poor",
-        "Fair",
-        "Good",
-        "Better",
-        "Best"};
-      this.raterSeriesYourRating.LabelTypeHover = Rater.eLabelType.FormatString;
-      this.raterSeriesYourRating.LabelTypeText = Rater.eLabelType.FormatString;
-      this.raterSeriesYourRating.Location = new System.Drawing.Point(6, 116);
-      this.raterSeriesYourRating.MaxRating = 10;
-      this.raterSeriesYourRating.Name = "raterSeriesYourRating";
-      this.raterSeriesYourRating.RadiusInner = 0F;
-      this.raterSeriesYourRating.RadiusOuter = 7F;
-      this.raterSeriesYourRating.ShapeBorderEmptyColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesYourRating.ShapeBorderFilledColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesYourRating.ShapeBorderHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesYourRating.ShapeBorderWidth = 2;
-      this.raterSeriesYourRating.ShapeColorFill = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesYourRating.ShapeColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesYourRating.Size = new System.Drawing.Size(252, 16);
-      this.raterSeriesYourRating.TabIndex = 46;
-      // 
       // cmdSendSeriesRating
       // 
       this.cmdSendSeriesRating.Location = new System.Drawing.Point(264, 111);
@@ -782,34 +716,6 @@
       this.cmdSendSeriesRating.Text = "Send";
       this.cmdSendSeriesRating.UseVisualStyleBackColor = true;
       this.cmdSendSeriesRating.Click += new System.EventHandler(this.cmdSendSeriesRating_Click);
-      // 
-      // raterSeriesSiteRating
-      // 
-      this.raterSeriesSiteRating.CurrentRating = 0;
-      this.raterSeriesSiteRating.Enabled = false;
-      this.raterSeriesSiteRating.LabelAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-      this.raterSeriesSiteRating.LabelText = "RateLabel";
-      this.raterSeriesSiteRating.LabelTextItems = new string[] {
-        "Poor",
-        "Fair",
-        "Good",
-        "Better",
-        "Best"};
-      this.raterSeriesSiteRating.LabelTypeHover = Rater.eLabelType.FormatString;
-      this.raterSeriesSiteRating.LabelTypeText = Rater.eLabelType.FormatString;
-      this.raterSeriesSiteRating.Location = new System.Drawing.Point(128, 690);
-      this.raterSeriesSiteRating.MaxRating = 10;
-      this.raterSeriesSiteRating.Name = "raterSeriesSiteRating";
-      this.raterSeriesSiteRating.RadiusInner = 0F;
-      this.raterSeriesSiteRating.RadiusOuter = 7F;
-      this.raterSeriesSiteRating.ShapeBorderEmptyColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesSiteRating.ShapeBorderFilledColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesSiteRating.ShapeBorderHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesSiteRating.ShapeBorderWidth = 2;
-      this.raterSeriesSiteRating.ShapeColorFill = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesSiteRating.ShapeColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
-      this.raterSeriesSiteRating.Size = new System.Drawing.Size(251, 15);
-      this.raterSeriesSiteRating.TabIndex = 46;
       // 
       // cmdForceUpdate
       // 
@@ -864,31 +770,6 @@
       this.panelSeriesBannerFrame.Name = "panelSeriesBannerFrame";
       this.panelSeriesBannerFrame.Size = new System.Drawing.Size(761, 146);
       this.panelSeriesBannerFrame.TabIndex = 45;
-      // 
-      // bcSeriesBanner
-      // 
-      this.bcSeriesBanner.BackColor = System.Drawing.Color.DarkGray;
-      this.bcSeriesBanner.BannerImage = null;
-      this.bcSeriesBanner.BannerImages = null;
-      this.bcSeriesBanner.ContextMenuStrip = this.saveImageContext;
-      this.bcSeriesBanner.DefaultImage = global::TvdbTester.Properties.Resources.tvdb_logo1;
-      this.bcSeriesBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcSeriesBanner.Index = 0;
-      this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcSeriesBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcSeriesBanner.Location = new System.Drawing.Point(2, 3);
-      this.bcSeriesBanner.Name = "bcSeriesBanner";
-      this.bcSeriesBanner.Size = new System.Drawing.Size(758, 140);
-      this.bcSeriesBanner.TabIndex = 0;
-      this.bcSeriesBanner.UnavailableImage = null;
-      // 
-      // posterControlSeries
-      // 
-      this.posterControlSeries.ContextMenuStrip = this.saveImageContext;
-      this.posterControlSeries.Location = new System.Drawing.Point(451, 178);
-      this.posterControlSeries.Name = "posterControlSeries";
-      this.posterControlSeries.Size = new System.Drawing.Size(280, 365);
-      this.posterControlSeries.TabIndex = 44;
       // 
       // txtOverview
       // 
@@ -1187,21 +1068,6 @@
       this.tabFanart.Text = "Fanart";
       this.tabFanart.UseVisualStyleBackColor = true;
       // 
-      // coverFlowFanart
-      // 
-      this.coverFlowFanart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.coverFlowFanart.BackColor = System.Drawing.SystemColors.Control;
-      this.coverFlowFanart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-      this.coverFlowFanart.ContextMenuStrip = this.saveImageContext;
-      this.coverFlowFanart.CurrentIndex = 0;
-      this.coverFlowFanart.Items = null;
-      this.coverFlowFanart.Location = new System.Drawing.Point(3, 6);
-      this.coverFlowFanart.Name = "coverFlowFanart";
-      this.coverFlowFanart.Size = new System.Drawing.Size(761, 707);
-      this.coverFlowFanart.TabIndex = 1;
-      // 
       // tabActors
       // 
       this.tabActors.Controls.Add(this.lbAllActors);
@@ -1216,86 +1082,38 @@
       this.tabActors.Text = "Actors";
       this.tabActors.UseVisualStyleBackColor = true;
       // 
-      // panel1
+      // lbAllActors
       // 
-      this.panel1.BackColor = System.Drawing.Color.Chocolate;
-      this.panel1.Controls.Add(this.bcActors);
-      this.panel1.Location = new System.Drawing.Point(407, 126);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(310, 460);
-      this.panel1.TabIndex = 4;
+      this.lbAllActors.FormattingEnabled = true;
+      this.lbAllActors.Location = new System.Drawing.Point(127, 85);
+      this.lbAllActors.Name = "lbAllActors";
+      this.lbAllActors.Size = new System.Drawing.Size(230, 290);
+      this.lbAllActors.TabIndex = 6;
+      this.lbAllActors.SelectedIndexChanged += new System.EventHandler(this.lbAllActors_SelectedIndexChanged);
       // 
-      // bcActors
+      // groupBox2
       // 
-      this.bcActors.BackColor = System.Drawing.Color.Black;
-      this.bcActors.BannerImage = null;
-      this.bcActors.BannerImages = null;
-      this.bcActors.DefaultImage = null;
-      this.bcActors.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcActors.Index = 0;
-      this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
-      this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcActors.Location = new System.Drawing.Point(5, 5);
-      this.bcActors.Name = "bcActors";
-      this.bcActors.Size = new System.Drawing.Size(300, 450);
-      this.bcActors.TabIndex = 0;
-      this.bcActors.UnavailableImage = global::TvdbTester.Properties.Resources.actors_default;
-      this.bcActors.IndexChanged += new TvdbTester.BannerControl.IndexChangedHandler(this.bcActors_IndexChanged);
+      this.groupBox2.Controls.Add(this.txtActorSortOrder);
+      this.groupBox2.Controls.Add(this.label43);
+      this.groupBox2.Controls.Add(this.label44);
+      this.groupBox2.Controls.Add(this.txtActorRole);
+      this.groupBox2.Controls.Add(this.label45);
+      this.groupBox2.Controls.Add(this.txtActorName);
+      this.groupBox2.Controls.Add(this.label46);
+      this.groupBox2.Controls.Add(this.txtActorId);
+      this.groupBox2.Location = new System.Drawing.Point(127, 392);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(230, 148);
+      this.groupBox2.TabIndex = 5;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = ".:: Information ::.";
       // 
       // txtActorSortOrder
       // 
-      this.txtActorSortOrder.Location = new System.Drawing.Point(107, 104);
+      this.txtActorSortOrder.Location = new System.Drawing.Point(76, 104);
       this.txtActorSortOrder.Name = "txtActorSortOrder";
-      this.txtActorSortOrder.Size = new System.Drawing.Size(163, 20);
+      this.txtActorSortOrder.Size = new System.Drawing.Size(144, 20);
       this.txtActorSortOrder.TabIndex = 3;
-      // 
-      // txtActorRole
-      // 
-      this.txtActorRole.Location = new System.Drawing.Point(107, 75);
-      this.txtActorRole.Name = "txtActorRole";
-      this.txtActorRole.Size = new System.Drawing.Size(163, 20);
-      this.txtActorRole.TabIndex = 3;
-      // 
-      // txtActorName
-      // 
-      this.txtActorName.Location = new System.Drawing.Point(107, 46);
-      this.txtActorName.Name = "txtActorName";
-      this.txtActorName.Size = new System.Drawing.Size(163, 20);
-      this.txtActorName.TabIndex = 3;
-      // 
-      // txtActorId
-      // 
-      this.txtActorId.Location = new System.Drawing.Point(107, 20);
-      this.txtActorId.Name = "txtActorId";
-      this.txtActorId.Size = new System.Drawing.Size(163, 20);
-      this.txtActorId.TabIndex = 3;
-      // 
-      // label46
-      // 
-      this.label46.AutoSize = true;
-      this.label46.Location = new System.Drawing.Point(15, 107);
-      this.label46.Name = "label46";
-      this.label46.Size = new System.Drawing.Size(55, 13);
-      this.label46.TabIndex = 2;
-      this.label46.Text = "SortOrder:";
-      // 
-      // label45
-      // 
-      this.label45.AutoSize = true;
-      this.label45.Location = new System.Drawing.Point(15, 78);
-      this.label45.Name = "label45";
-      this.label45.Size = new System.Drawing.Size(32, 13);
-      this.label45.TabIndex = 2;
-      this.label45.Text = "Role:";
-      // 
-      // label44
-      // 
-      this.label44.AutoSize = true;
-      this.label44.Location = new System.Drawing.Point(15, 49);
-      this.label44.Name = "label44";
-      this.label44.Size = new System.Drawing.Size(38, 13);
-      this.label44.TabIndex = 2;
-      this.label44.Text = "Name:";
       // 
       // label43
       // 
@@ -1306,11 +1124,68 @@
       this.label43.TabIndex = 2;
       this.label43.Text = "Id:";
       // 
+      // label44
+      // 
+      this.label44.AutoSize = true;
+      this.label44.Location = new System.Drawing.Point(15, 49);
+      this.label44.Name = "label44";
+      this.label44.Size = new System.Drawing.Size(38, 13);
+      this.label44.TabIndex = 2;
+      this.label44.Text = "Name:";
+      // 
+      // txtActorRole
+      // 
+      this.txtActorRole.Location = new System.Drawing.Point(76, 75);
+      this.txtActorRole.Name = "txtActorRole";
+      this.txtActorRole.Size = new System.Drawing.Size(144, 20);
+      this.txtActorRole.TabIndex = 3;
+      // 
+      // label45
+      // 
+      this.label45.AutoSize = true;
+      this.label45.Location = new System.Drawing.Point(15, 78);
+      this.label45.Name = "label45";
+      this.label45.Size = new System.Drawing.Size(32, 13);
+      this.label45.TabIndex = 2;
+      this.label45.Text = "Role:";
+      // 
+      // txtActorName
+      // 
+      this.txtActorName.Location = new System.Drawing.Point(76, 46);
+      this.txtActorName.Name = "txtActorName";
+      this.txtActorName.Size = new System.Drawing.Size(144, 20);
+      this.txtActorName.TabIndex = 3;
+      // 
+      // label46
+      // 
+      this.label46.AutoSize = true;
+      this.label46.Location = new System.Drawing.Point(15, 107);
+      this.label46.Name = "label46";
+      this.label46.Size = new System.Drawing.Size(55, 13);
+      this.label46.TabIndex = 2;
+      this.label46.Text = "SortOrder:";
+      // 
+      // txtActorId
+      // 
+      this.txtActorId.Location = new System.Drawing.Point(76, 20);
+      this.txtActorId.Name = "txtActorId";
+      this.txtActorId.Size = new System.Drawing.Size(144, 20);
+      this.txtActorId.TabIndex = 3;
+      // 
+      // panel1
+      // 
+      this.panel1.BackColor = System.Drawing.Color.Chocolate;
+      this.panel1.Controls.Add(this.bcActors);
+      this.panel1.Location = new System.Drawing.Point(367, 80);
+      this.panel1.Name = "panel1";
+      this.panel1.Size = new System.Drawing.Size(310, 460);
+      this.panel1.TabIndex = 4;
+      // 
       // label24
       // 
       this.label24.AutoSize = true;
       this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label24.Location = new System.Drawing.Point(335, 32);
+      this.label24.Location = new System.Drawing.Point(335, 22);
       this.label24.Name = "label24";
       this.label24.Size = new System.Drawing.Size(74, 25);
       this.label24.TabIndex = 1;
@@ -1506,31 +1381,215 @@
       this.label20.TabIndex = 0;
       this.label20.Text = "Actors";
       // 
-      // groupBox2
+      // pnlFullscreen
       // 
-      this.groupBox2.Controls.Add(this.txtActorSortOrder);
-      this.groupBox2.Controls.Add(this.label43);
-      this.groupBox2.Controls.Add(this.label44);
-      this.groupBox2.Controls.Add(this.txtActorRole);
-      this.groupBox2.Controls.Add(this.label45);
-      this.groupBox2.Controls.Add(this.txtActorName);
-      this.groupBox2.Controls.Add(this.label46);
-      this.groupBox2.Controls.Add(this.txtActorId);
-      this.groupBox2.Location = new System.Drawing.Point(72, 438);
-      this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(285, 148);
-      this.groupBox2.TabIndex = 5;
-      this.groupBox2.TabStop = false;
-      this.groupBox2.Text = ".:: Information ::.";
+      this.pnlFullscreen.Controls.Add(this.cmdBack);
+      this.pnlFullscreen.Controls.Add(this.pbFullscreen);
+      this.pnlFullscreen.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.pnlFullscreen.Location = new System.Drawing.Point(0, 0);
+      this.pnlFullscreen.Name = "pnlFullscreen";
+      this.pnlFullscreen.Size = new System.Drawing.Size(792, 874);
+      this.pnlFullscreen.TabIndex = 51;
+      this.pnlFullscreen.Visible = false;
       // 
-      // lbAllActors
+      // cmdBack
       // 
-      this.lbAllActors.FormattingEnabled = true;
-      this.lbAllActors.Location = new System.Drawing.Point(72, 131);
-      this.lbAllActors.Name = "lbAllActors";
-      this.lbAllActors.Size = new System.Drawing.Size(285, 290);
-      this.lbAllActors.TabIndex = 6;
-      this.lbAllActors.SelectedIndexChanged += new System.EventHandler(this.lbAllActors_SelectedIndexChanged);
+      this.cmdBack.Location = new System.Drawing.Point(717, 2);
+      this.cmdBack.Name = "cmdBack";
+      this.cmdBack.Size = new System.Drawing.Size(75, 23);
+      this.cmdBack.TabIndex = 0;
+      this.cmdBack.Text = "back";
+      this.cmdBack.UseVisualStyleBackColor = true;
+      this.cmdBack.Click += new System.EventHandler(this.cmdBack_Click);
+      // 
+      // showImageToolStripMenuItem
+      // 
+      this.showImageToolStripMenuItem.Name = "showImageToolStripMenuItem";
+      this.showImageToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+      this.showImageToolStripMenuItem.Text = "Show Image";
+      this.showImageToolStripMenuItem.Click += new System.EventHandler(this.showImageToolStripMenuItem_Click);
+      // 
+      // pbFullscreen
+      // 
+      this.pbFullscreen.ContextMenuStrip = this.saveImageContext;
+      this.pbFullscreen.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.pbFullscreen.Location = new System.Drawing.Point(0, 0);
+      this.pbFullscreen.Name = "pbFullscreen";
+      this.pbFullscreen.Size = new System.Drawing.Size(792, 874);
+      this.pbFullscreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+      this.pbFullscreen.TabIndex = 1;
+      this.pbFullscreen.TabStop = false;
+      // 
+      // raterSeriesYourRating
+      // 
+      this.raterSeriesYourRating.CurrentRating = 0;
+      this.raterSeriesYourRating.LabelAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+      this.raterSeriesYourRating.LabelText = "RateLabel";
+      this.raterSeriesYourRating.LabelTextItems = new string[] {
+        "Poor",
+        "Fair",
+        "Good",
+        "Better",
+        "Best"};
+      this.raterSeriesYourRating.LabelTypeHover = Rater.eLabelType.FormatString;
+      this.raterSeriesYourRating.LabelTypeText = Rater.eLabelType.FormatString;
+      this.raterSeriesYourRating.Location = new System.Drawing.Point(6, 116);
+      this.raterSeriesYourRating.MaxRating = 10;
+      this.raterSeriesYourRating.Name = "raterSeriesYourRating";
+      this.raterSeriesYourRating.RadiusInner = 0F;
+      this.raterSeriesYourRating.RadiusOuter = 7F;
+      this.raterSeriesYourRating.ShapeBorderEmptyColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesYourRating.ShapeBorderFilledColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesYourRating.ShapeBorderHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesYourRating.ShapeBorderWidth = 2;
+      this.raterSeriesYourRating.ShapeColorFill = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesYourRating.ShapeColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesYourRating.Size = new System.Drawing.Size(252, 16);
+      this.raterSeriesYourRating.TabIndex = 46;
+      // 
+      // raterSeriesSiteRating
+      // 
+      this.raterSeriesSiteRating.CurrentRating = 0;
+      this.raterSeriesSiteRating.Enabled = false;
+      this.raterSeriesSiteRating.LabelAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+      this.raterSeriesSiteRating.LabelText = "RateLabel";
+      this.raterSeriesSiteRating.LabelTextItems = new string[] {
+        "Poor",
+        "Fair",
+        "Good",
+        "Better",
+        "Best"};
+      this.raterSeriesSiteRating.LabelTypeHover = Rater.eLabelType.FormatString;
+      this.raterSeriesSiteRating.LabelTypeText = Rater.eLabelType.FormatString;
+      this.raterSeriesSiteRating.Location = new System.Drawing.Point(128, 690);
+      this.raterSeriesSiteRating.MaxRating = 10;
+      this.raterSeriesSiteRating.Name = "raterSeriesSiteRating";
+      this.raterSeriesSiteRating.RadiusInner = 0F;
+      this.raterSeriesSiteRating.RadiusOuter = 7F;
+      this.raterSeriesSiteRating.ShapeBorderEmptyColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesSiteRating.ShapeBorderFilledColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesSiteRating.ShapeBorderHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesSiteRating.ShapeBorderWidth = 2;
+      this.raterSeriesSiteRating.ShapeColorFill = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesSiteRating.ShapeColorHover = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(227)))), ((int)(((byte)(21)))));
+      this.raterSeriesSiteRating.Size = new System.Drawing.Size(251, 15);
+      this.raterSeriesSiteRating.TabIndex = 46;
+      // 
+      // bcSeriesBanner
+      // 
+      this.bcSeriesBanner.BackColor = System.Drawing.Color.DarkGray;
+      this.bcSeriesBanner.BannerImage = null;
+      this.bcSeriesBanner.BannerImages = null;
+      this.bcSeriesBanner.ContextMenuStrip = this.saveImageContext;
+      this.bcSeriesBanner.DefaultImage = global::TvdbTester.Properties.Resources.tvdb_logo1;
+      this.bcSeriesBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcSeriesBanner.Index = 0;
+      this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcSeriesBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcSeriesBanner.Location = new System.Drawing.Point(2, 3);
+      this.bcSeriesBanner.Name = "bcSeriesBanner";
+      this.bcSeriesBanner.Size = new System.Drawing.Size(758, 140);
+      this.bcSeriesBanner.TabIndex = 0;
+      this.bcSeriesBanner.UnavailableImage = null;
+      // 
+      // posterControlSeries
+      // 
+      this.posterControlSeries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.posterControlSeries.ContextMenuStrip = this.saveImageContext;
+      this.posterControlSeries.Location = new System.Drawing.Point(451, 178);
+      this.posterControlSeries.Name = "posterControlSeries";
+      this.posterControlSeries.Size = new System.Drawing.Size(280, 365);
+      this.posterControlSeries.TabIndex = 44;
+      // 
+      // bcEpisodeBanner
+      // 
+      this.bcEpisodeBanner.BannerImage = null;
+      this.bcEpisodeBanner.BannerImages = null;
+      this.bcEpisodeBanner.ContextMenuStrip = this.saveImageContext;
+      this.bcEpisodeBanner.DefaultImage = global::TvdbTester.Properties.Resources.episode_notfound;
+      this.bcEpisodeBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcEpisodeBanner.Index = 0;
+      this.bcEpisodeBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcEpisodeBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcEpisodeBanner.Location = new System.Drawing.Point(4, 443);
+      this.bcEpisodeBanner.Name = "bcEpisodeBanner";
+      this.bcEpisodeBanner.Size = new System.Drawing.Size(300, 195);
+      this.bcEpisodeBanner.TabIndex = 0;
+      this.bcEpisodeBanner.UnavailableImage = null;
+      // 
+      // bcSeasonBanner
+      // 
+      this.bcSeasonBanner.BackColor = System.Drawing.SystemColors.Control;
+      this.bcSeasonBanner.BannerImage = null;
+      this.bcSeasonBanner.BannerImages = null;
+      this.bcSeasonBanner.ContextMenuStrip = this.saveImageContext;
+      this.bcSeasonBanner.DefaultImage = global::TvdbTester.Properties.Resources.season_notfound;
+      this.bcSeasonBanner.ImageSizeMode = System.Windows.Forms.ImageLayout.Stretch;
+      this.bcSeasonBanner.Index = 0;
+      this.bcSeasonBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcSeasonBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcSeasonBanner.Location = new System.Drawing.Point(3, 3);
+      this.bcSeasonBanner.Name = "bcSeasonBanner";
+      this.bcSeasonBanner.Size = new System.Drawing.Size(200, 289);
+      this.bcSeasonBanner.TabIndex = 0;
+      this.bcSeasonBanner.UnavailableImage = null;
+      // 
+      // bcSeasonBannerWide
+      // 
+      this.bcSeasonBannerWide.BackColor = System.Drawing.SystemColors.Control;
+      this.bcSeasonBannerWide.BannerImage = null;
+      this.bcSeasonBannerWide.BannerImages = null;
+      this.bcSeasonBannerWide.ContextMenuStrip = this.saveImageContext;
+      this.bcSeasonBannerWide.DefaultImage = global::TvdbTester.Properties.Resources.tvdb_logo1;
+      this.bcSeasonBannerWide.ImageSizeMode = System.Windows.Forms.ImageLayout.Stretch;
+      this.bcSeasonBannerWide.Index = 0;
+      this.bcSeasonBannerWide.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcSeasonBannerWide.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcSeasonBannerWide.Location = new System.Drawing.Point(0, 0);
+      this.bcSeasonBannerWide.Name = "bcSeasonBannerWide";
+      this.bcSeasonBannerWide.Size = new System.Drawing.Size(765, 145);
+      this.bcSeasonBannerWide.TabIndex = 0;
+      this.bcSeasonBannerWide.UnavailableImage = null;
+      // 
+      // coverFlowFanart
+      // 
+      this.coverFlowFanart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.coverFlowFanart.BackColor = System.Drawing.SystemColors.Control;
+      this.coverFlowFanart.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+      this.coverFlowFanart.ContextMenuStrip = this.saveImageContext;
+      this.coverFlowFanart.CurrentIndex = 0;
+      this.coverFlowFanart.Items = null;
+      this.coverFlowFanart.Location = new System.Drawing.Point(3, 6);
+      this.coverFlowFanart.Name = "coverFlowFanart";
+      this.coverFlowFanart.Size = new System.Drawing.Size(761, 707);
+      this.coverFlowFanart.TabIndex = 1;
+      // 
+      // bcActors
+      // 
+      this.bcActors.BackColor = System.Drawing.Color.Black;
+      this.bcActors.BannerImage = null;
+      this.bcActors.BannerImages = null;
+      this.bcActors.ContextMenuStrip = this.saveImageContext;
+      this.bcActors.DefaultImage = null;
+      this.bcActors.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
+      this.bcActors.Index = 0;
+      this.bcActors.LoadingBackgroundColor = System.Drawing.Color.Black;
+      this.bcActors.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
+      this.bcActors.Location = new System.Drawing.Point(5, 5);
+      this.bcActors.Name = "bcActors";
+      this.bcActors.Size = new System.Drawing.Size(300, 450);
+      this.bcActors.TabIndex = 0;
+      this.bcActors.UnavailableImage = global::TvdbTester.Properties.Resources.actors_default;
+      this.bcActors.IndexChanged += new TvdbTester.BannerControl.IndexChangedHandler(this.bcActors_IndexChanged);
+      // 
+      // copyToClipboardToolStripMenuItem
+      // 
+      this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+      this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+      this.copyToClipboardToolStripMenuItem.Text = "Copy to Clipboard";
+      this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
       // 
       // SeriesBrowser
       // 
@@ -1546,6 +1605,7 @@
       this.Controls.Add(this.label5);
       this.Controls.Add(this.panelSeriesOverview);
       this.Controls.Add(this.panel2);
+      this.Controls.Add(this.pnlFullscreen);
       this.MinimumSize = new System.Drawing.Size(800, 600);
       this.Name = "SeriesBrowser";
       this.Text = "Series Browser";
@@ -1561,13 +1621,13 @@
       this.tabSeries.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesYourRating)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesSiteRating)).EndInit();
       this.panelSeriesBannerFrame.ResumeLayout(false);
       this.tabControlTvdb.ResumeLayout(false);
       this.tabFanart.ResumeLayout(false);
       this.tabActors.ResumeLayout(false);
       this.tabActors.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.panel1.ResumeLayout(false);
       this.panelSeriesOverview.ResumeLayout(false);
       this.panelSeriesOverview.PerformLayout();
@@ -1577,8 +1637,10 @@
       this.pnlFanartEnabled.PerformLayout();
       this.pnlActorsEnabled.ResumeLayout(false);
       this.pnlActorsEnabled.PerformLayout();
-      this.groupBox2.ResumeLayout(false);
-      this.groupBox2.PerformLayout();
+      this.pnlFullscreen.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.pbFullscreen)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesYourRating)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.raterSeriesSiteRating)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1713,6 +1775,11 @@
     private System.Windows.Forms.ListBox lbWriters;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.ListBox lbAllActors;
+    private System.Windows.Forms.Panel pnlFullscreen;
+    private System.Windows.Forms.Button cmdBack;
+    private System.Windows.Forms.ToolStripMenuItem showImageToolStripMenuItem;
+    private System.Windows.Forms.PictureBox pbFullscreen;
+    private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
   }
 }
 

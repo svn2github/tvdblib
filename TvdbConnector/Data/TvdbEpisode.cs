@@ -48,11 +48,11 @@ namespace TvdbConnector.Data
 
     private TvdbEpisodeBanner m_banner;
     private int m_id;
-    private int m_combinedEpisodeNumber;
-    private int m_combinedSeason;
+    private double m_combinedEpisodeNumber;
+    private double m_combinedSeason;
     private int m_dvdChapter;
     private int m_dvdDiscId;
-    private int m_dvdEpisodeNumber;
+    private double m_dvdEpisodeNumber;
     private int m_dvdSeason;
     private List<String> m_directors;
     private String m_episodeName;
@@ -169,7 +169,7 @@ namespace TvdbConnector.Data
     /// <summary>
     /// The Dvd Episode Number
     /// </summary>
-    public int DvdEpisodeNumber
+    public double DvdEpisodeNumber
     {
       get { return m_dvdEpisodeNumber; }
       set { m_dvdEpisodeNumber = value; }
@@ -362,7 +362,7 @@ namespace TvdbConnector.Data
     /// <summary>
     /// n/a
     /// </summary>
-    public int CombinedSeason
+    public double CombinedSeason
     {
       get { return m_combinedSeason; }
       set { m_combinedSeason = value; }
@@ -370,7 +370,7 @@ namespace TvdbConnector.Data
     /// <summary>
     /// n/a
     /// </summary>
-    public int CombinedEpisodeNumber
+    public double CombinedEpisodeNumber
     {
       get { return m_combinedEpisodeNumber; }
       set { m_combinedEpisodeNumber = value; }

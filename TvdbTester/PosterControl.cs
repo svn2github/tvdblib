@@ -68,7 +68,7 @@ namespace TvdbTester
         {
           return null;
         }
-        return panelImage.BackgroundImage;
+        return m_imageList[m_index].Banner;
       }
     }
 
