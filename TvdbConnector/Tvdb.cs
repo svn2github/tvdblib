@@ -62,21 +62,26 @@ namespace TvdbConnector
       get { return m_apiKey; }
     }
 
-    /// <summary>
-    /// Constructor for a tvdb class
-    /// </summary>
-    /// <param name="_cacheProvider">The cache provider used to store the information</param>
-    /// <param name="_apiKey">Api key to use for this project</param>
-    public Tvdb(ICacheProvider _cacheProvider, String _apiKey)
+    public Tvdb(String _apiKey)
     {
       m_apiKey = _apiKey; //store api key
-      m_cacheProvider = _cacheProvider; //store given cache provider
       m_loadedData = new TvdbData();
       m_loadedData.Mirrors = new List<TvdbMirror>();
       m_loadedData.SeriesList = new List<TvdbSeries>();
       m_loadedData.LanguageList = new List<TvdbLanguage>();
       TvdbLinks.ActiveMirror = new TvdbMirror(0, new Uri(TvdbLinks.BASE_SERVER), 7);
       m_downloader = new TvdbDownloader(m_apiKey);
+      m_cacheProvider = null;
+    }
+
+    /// <summary>
+    /// Constructor for a tvdb class
+    /// </summary>
+    /// <param name="_cacheProvider">The cache provider used to store the information</param>
+    /// <param name="_apiKey">Api key to use for this project</param>
+    public Tvdb(ICacheProvider _cacheProvider, String _apiKey):this(_apiKey)
+    {
+      m_cacheProvider = _cacheProvider; //store given cache provider
     }
 
     /// <summary>
