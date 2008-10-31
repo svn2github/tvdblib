@@ -110,7 +110,10 @@ namespace TvdbTester
 
       m_tvdbHandler = new Tvdb(_provider, Resources.API_KEY);
       m_tvdbHandler.InitCache();
-
+      if (!m_tvdbHandler.IsMirrorInformationCached)
+      {
+        m_tvdbHandler.UpdateTvdbMirrors();
+      }
 
       List<TvdbLanguage> m_languages = m_tvdbHandler.Languages;
 

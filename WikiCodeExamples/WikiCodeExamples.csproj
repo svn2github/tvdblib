@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{453E208C-C20A-485A-A030-19B5FA7F3ADE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -80,9 +80,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TvdbConnector\TvdbConnector.csproj">
+    <ProjectReference Include="..\TvdbConnector\TvdbLib.csproj">
       <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
-      <Name>TvdbConnector</Name>
+      <Name>TvdbLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

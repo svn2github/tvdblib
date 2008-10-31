@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using TvdbConnector.Data;
 
 namespace TvdbConnector
@@ -50,7 +48,7 @@ namespace TvdbConnector
     /// <summary>
     /// Base server where all operations start
     /// </summary>
-    internal const String BASE_SERVER = "http://thetvdb.com/";
+    internal const String BASE_SERVER = "http://thetvdb.com";
 
     /// <summary>
     /// Path of file where we get the available mirrors
@@ -69,25 +67,29 @@ namespace TvdbConnector
     /// TODO: should be choosen randomly, I don't care atm since
     /// there are no mirrors ;)
     /// </summary>
-    internal static TvdbMirror ActiveMirror = null;
+    internal static TvdbMirror ActiveMirror;
 
-
+    internal static List<TvdbMirror> m_mirrorList;
+    internal static Random m_random = new Random(DateTime.Now.Millisecond);
 
     internal static String CreateSeriesLink(String _apiKey, int _seriesId, TvdbLanguage _lang, bool _full, bool _zipped)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId +
-             (_full ? "/all/" : "/") + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+      return String.Format("{0}/api/{1}/series/{2}{3}{4}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey,
+                           _seriesId, (_full ? "/all/" : "/"), (_lang != null ? _lang.Abbriviation : "en"));
     }
 
     internal static String CreateSeriesLinkZipped(String _apiKey, int _seriesId, TvdbLanguage _lang)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId +
-                                    "/all/" + (_lang != null ? _lang.Abbriviation : "en") + ".zip";
+      String link = String.Format("{0}/api/{1}/series/{2}/all/{3}.zip", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _seriesId,
+                                  (_lang != null ? _lang.Abbriviation : "en"));
+
+      return link;
     }
 
     internal static String CreateSeriesBannersLink(String _apiKey, int _seriesId)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/banners.xml";
+      String link = String.Format("{0}/api/{1}/series/{2}/banners.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _seriesId);
+      return link;
     }
 
     internal static String CreateSeriesEpisodesLink(String _apiKey, int _seriesId, TvdbLanguage _lang)
@@ -95,54 +97,93 @@ namespace TvdbConnector
       //this in fact returns the "full series page (http://thetvdb.com/wiki/index.php/API:Full_Series_Record)
       //which sucks because to retrieve all episodes I have to also download the series information (which isn't)
       //all that big on the other hand
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/all/" +
-            (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+      String link = String.Format("{0}/api/{1}/series/{2}/all/{3}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _seriesId,
+                                  (_lang != null ? _lang.Abbriviation : "en"));
+      return link;
     }
 
     internal static String CreateEpisodeLink(string _apiKey, int _episodeId, TvdbLanguage _lang, bool p)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/episodes/"
-        + _episodeId + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+      String link = String.Format("{0}/api/{1}/episodes/{2}/{3}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _episodeId,
+                                  (_lang != null ? _lang.Abbriviation : "en"));
+      return link;
     }
 
     internal static string CreateEpisodeLink(string _apiKey, int _seriesId, int _seasonNr,
                                              int _episodeNr, string _order, TvdbLanguage _lang)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/" + _order + "/" + _seasonNr + "/"
-                                               + "/" + _episodeNr + "/" + (_lang != null ? _lang.Abbriviation : "en") + ".xml";
+      String link = String.Format("{0}/api/{1}/series/{2}/{3}/{4}//{5}/{6}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey,
+                                  _seriesId, _order, _seasonNr, _episodeNr, (_lang != null ? _lang.Abbriviation : "en"));
+      return link;
     }
 
     internal static string CreateEpisodeLink(string _apiKey, int _seriesId, DateTime _airDate, TvdbLanguage _language)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/GetEpisodeByAirDate.php?apikey=" + _apiKey + "&seriesid=" + _seriesId + 
-              "&airdate=" + _airDate.ToShortDateString() + "&language=" + _language.Abbriviation;
+      String link = String.Format("{0}/api/GetEpisodeByAirDate.php?apikey={1}&seriesid={2}&airdate={3}&language={4}",
+                                  ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _seriesId, _airDate.ToShortDateString(),
+                                  _language.Abbriviation);
+      return link;
     }
 
-    internal static String CreateUpdateLink(string _apiKey, TvdbConnector.Util.UpdateInterval _interval, bool _zipped)
+    internal static String CreateUpdateLink(string _apiKey, Util.UpdateInterval _interval, bool _zipped)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/updates/updates_"
-             + _interval.ToString() + (_zipped ? ".zip" : ".xml");
+      String link = String.Format("{0}/api/{1}/updates/updates_{2}{3}", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey,
+                                  _interval, (_zipped ? ".zip" : ".xml"));
+      return link;
     }
 
     internal static String CreateSearchLink(String _searchString)
     {
-      return TvdbLinks.BASE_SERVER + "/api/GetSeries.php?seriesname=" + _searchString;
+      String link = String.Format("{0}/api/GetSeries.php?seriesname={1}", BASE_SERVER.Trim('/'), _searchString);
+      return link;
     }
 
 
     internal static string CreateBannerLink(string _bannerPath)
     {
-      return TvdbLinks.BASE_SERVER + "/banners/" + _bannerPath;
+      //this was to test a random mirror choosing, which is done server-side now as it seems
+      /*String mirror = null;
+
+      if (m_mirrorList != null)
+      {
+        //int count = m_random.Next(0, m_mirrorList.Count);
+        int count = 1;
+        mirror = SelectMirror(count).MirrorPath.ToString().Trim('/');
+      }
+      {
+        mirror = BASE_SERVER;
+      }*/
+
+      String link = BASE_SERVER + "/banners/" + _bannerPath;
+      return link;
+
+    }
+
+    private static TvdbMirror SelectMirror(int _count)
+    {
+      int index = _count % m_mirrorList.Count;
+      if (m_mirrorList[index].OffersImages)
+      {//mirror offers images -> use this one
+        return m_mirrorList[index];
+      }
+      if (_count > m_mirrorList.Count * 2)
+      {//to prevent endless loop
+        return null;
+      }
+      //select next mirror
+      return SelectMirror(_count + 1);
     }
 
     internal static string CreateLanguageLink(string _apiKey)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/languages.xml";
+      String link = String.Format("{0}/api/{1}/languages.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey);
+      return link;
     }
 
     internal static String CreateUserLanguageLink(String _identifier)
     {
-      return TvdbLinks.BASE_SERVER + "/api/User_PreferredLanguage.php?accountid=" + _identifier;
+      String link = String.Format("{0}/api/User_PreferredLanguage.php?accountid={1}", BASE_SERVER.Trim('/'), _identifier);
+      return link;
     }
 
     /// <summary>
@@ -155,8 +196,10 @@ namespace TvdbConnector
     /// <returns>Link</returns>
     internal static String CreateUserFavouriteLink(String _identifier, Util.UserFavouriteAction _type, int _seriesId)
     {
-      return TvdbLinks.BASE_SERVER + "/api/User_Favorites.php?accountid=" + _identifier
-        + ((_type == Util.UserFavouriteAction.none) ? "" : ("&type=" + _type.ToString() + "&seriesid=" + _seriesId));
+      String link = String.Format("{0}/api/User_Favorites.php?accountid={1}{2}", BASE_SERVER.Trim('/'), _identifier,
+                                  ((_type == Util.UserFavouriteAction.none) ? "" : ("&type=" + _type +
+                                  "&seriesid=" + _seriesId)));
+      return link;
     }
     /// <summary>
     /// Creates link which only retrieves the user favourites
@@ -172,7 +215,8 @@ namespace TvdbConnector
 
     private static String CreateBasicRating(String _identifier)
     {
-      return TvdbLinks.BASE_SERVER + "/api/User_Rating.php?accountid=" + _identifier;
+      String link = String.Format("{0}/api/User_Rating.php?accountid={1}", BASE_SERVER.Trim('/'), _identifier);
+      return link;
     }
 
     internal static String CreateUserSeriesRating(String _identifier, int _seriesId)
@@ -205,7 +249,8 @@ namespace TvdbConnector
     /// <returns>Link</returns>
     internal static String CreateActorLink(int _seriesId, String _apiKey)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/" + _apiKey + "/series/" + _seriesId + "/actors.xml";
+      String link = String.Format("{0}/api/{1}/series/{2}/actors.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _seriesId);
+      return link;
     }
 
 
@@ -216,7 +261,8 @@ namespace TvdbConnector
     /// <returns>Link</returns>
     internal static String CreateMirrorsLink(String _apiKey)
     {
-      return TvdbLinks.BASE_SERVER + "api/" + _apiKey + TvdbLinks.MIRROR_PATH;
+      String link = String.Format("{0}/api/{1}{2}", BASE_SERVER.Trim('/'), _apiKey, MIRROR_PATH);
+      return link;
     }
 
     /// <summary>
@@ -227,8 +273,9 @@ namespace TvdbConnector
     /// <returns>Link</returns>
     internal static String CreateAllSeriesRatingsLink(String _apiKey, String _userIdentifier)
     {
-      return TvdbLinks.ActiveMirror.MirrorPath + "/api/GetRatingsForUser.php?apikey=" + _apiKey
-                                               + "&accountid=" + _userIdentifier;
+      String link = String.Format("{0}/api/GetRatingsForUser.php?apikey={1}&accountid={2}",
+                                  ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _userIdentifier);
+      return link;
     }
 
     /// <summary>
@@ -236,10 +283,12 @@ namespace TvdbConnector
     /// </summary>
     /// <param name="_apiKey">api key</param>
     /// <param name="_userIdentifier">user identifier</param>
+    /// <param name="_seriesId">id of the series</param>
     /// <returns>Link</returns>
     internal static String CreateSeriesRatingsLink(String _apiKey, String _userIdentifier, int _seriesId)
     {
-      return CreateAllSeriesRatingsLink(_apiKey, _userIdentifier) + "&seriesid=" + _seriesId;
+      String link = CreateAllSeriesRatingsLink(_apiKey, _userIdentifier) + "&seriesid=" + _seriesId;
+      return link;
     }
 
 

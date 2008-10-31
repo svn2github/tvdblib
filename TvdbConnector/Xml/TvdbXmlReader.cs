@@ -617,7 +617,7 @@ namespace TvdbConnector.Xml
                         where episode.Element("type").Value.Equals("fanart")
                         select new TvdbFanartBanner
                         {
-                          Id = Util.Int32Parse(episode.Element("Series").Value),
+                          Id = -99,//Util.Int32Parse(episode.Element("Series").Value),
                           BannerPath = episode.Element("path").Value,
                           VignettePath = episode.Element("path").Value.Replace("/original/", "/vignette/"),
                           ThumbPath = "_cache/" + episode.Element("path").Value,
@@ -638,7 +638,7 @@ namespace TvdbConnector.Xml
                        where banner.Element("type").Value.Equals("season")
                        select new TvdbSeasonBanner
                        {
-                         Id = Util.Int32Parse(banner.Element("Series").Value),
+                         Id = -99,//Util.Int32Parse(banner.Element("Series").Value),
                          BannerPath = banner.Element("path").Value,
                          Season = Util.Int32Parse(banner.Element("SeasonNum").Value),
                          BannerType = Util.ParseSeasonBannerType(banner.Element("format").Value),
@@ -657,7 +657,7 @@ namespace TvdbConnector.Xml
                         where banner.Element("type").Value.Equals("series")
                         select new TvdbSeriesBanner
                         {
-                          Id = Util.Int32Parse(banner.Element("Series").Value),
+                          Id = -99,//Util.Int32Parse(banner.Element("Series").Value),
                           BannerPath = banner.Element("path").Value,
                           BannerType = Util.ParseSeriesBannerType(banner.Element("format").Value),
                           Language = Util.ParseLanguage(banner.Element("language").Value),
@@ -675,7 +675,7 @@ namespace TvdbConnector.Xml
                        where banner.Element("type").Value.Equals("poster")
                        select new TvdbPosterBanner
                        {
-                         Id = Util.Int32Parse(banner.Element("Series").Value),
+                         Id = -99,//Util.Int32Parse(banner.Element("Series").Value),
                          BannerPath = banner.Element("path").Value,
                          Resolution = Util.ParseResolution(banner.Element("format").Value),
                          Language = TvdbLanguage.UniversalLanguage,

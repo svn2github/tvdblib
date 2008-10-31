@@ -68,6 +68,43 @@ namespace TvdbConnector.Data
       set { m_typeMask = value; }
     }
 
+    ///<summary>
+    /// Returns true if the mirror offers images for downloading, false otherwise
+    ///</summary>
+    public bool OffersImages
+    {
+      get
+      {
+        //todo: proper way to calculate capabilities of a mirror
+        return (TypeMask == 2 || TypeMask == 6 || TypeMask == 5 || TypeMask == 7);
+      }
+    }
+
+    ///<summary>
+    /// Returns true if the mirror offers xml files for downloading, false otherwise
+    ///</summary>
+    public bool OffersXml
+    {      
+      get
+      {
+        //all uneven TypeMasks indicate the mirror offers xml files
+        return ((TypeMask%2) == 1);
+      }
+    }
+
+    ///<summary>
+    /// Returns true if the mirror offers zipped downloads, false otherwise
+    ///</summary>
+    public bool OffersZip
+    {
+     get
+     {
+       //if typemask is 4 or higher, it has to contain zipped files (1+2=3 ;))
+       return (TypeMask >= 4);
+     }
+
+    }
+
     /// <summary>
     /// Path to the mirror
     /// </summary>

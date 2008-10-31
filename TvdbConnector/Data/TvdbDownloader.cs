@@ -61,7 +61,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve episodes fo " + _seriesId +
-                                               ", it seems like you have an invalid api key");
+                                               ", you may use an invalid api key  or the series doesn't exists");
         }
         else
         {
@@ -101,7 +101,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve banners fo " + _seriesId +
-                                               ", it seems like you have an invalid api key");
+                                               ", you may use an invalid api key  or the series doesn't exists");
         }
         else
         {
@@ -186,7 +186,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
-                                               ", it seems like you have an invalid api key");
+                                               ", you may use an invalid api key  or the series doesn't exists");
         }
         else
         {
@@ -285,7 +285,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
-                                               ", it seems like you have an invalid api key");
+                                               ", you may an invalid api key  or the series doesn't exists");
         }
         else
         {
@@ -327,7 +327,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _seriesId +
-                                               ", it seems like you have an invalid api key");
+                                               ", you may use an invalid api key or the series doesn't exists");
         }
         else
         {
@@ -514,7 +514,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve preferred languae for user " + _userId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -567,7 +567,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve favorite list for user " + _userId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -632,7 +632,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve updates for " + _interval +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -667,7 +667,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve the list of available languages" +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -703,7 +703,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve search results for " + _name +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -740,7 +740,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate series " + _seriesId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -779,7 +779,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate episode " + _episodeId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key  or the episode doesn't exists");
         }
         else
         {
@@ -816,7 +816,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _seriesId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key or the series doesn't exists");
         }
         else
         {
@@ -853,7 +853,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _episodeId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key  or the episode doesn't exists");
         }
         else
         {
@@ -889,7 +889,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve actor info of series " + _seriesId +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key or the series doesn't exists");
         }
         else
         {
@@ -921,7 +921,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve mirror list" +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -959,7 +959,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of all series " +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {
@@ -1003,7 +1003,7 @@ namespace TvdbConnector.Data
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
           throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of all series " +
-                                               ", it seems like you use an invalid api key");
+                                               ", you may use an invalid api key");
         }
         else
         {

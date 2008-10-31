@@ -547,12 +547,25 @@ namespace TvdbConnector
       if (list != null && list.Count > 0)
       {
         m_mirrorInfo = list;
+        TvdbLinks.m_mirrorList = list;
         return true;
       }
       else
       {
         return false;
       }
+    }
+
+    ///<summary>
+    /// Returns a list of available mirrors
+    ///</summary>
+    public List<TvdbMirror> MirrorList
+    {
+      get
+      {
+        return m_mirrorInfo;
+      }
+
     }
 
     /// <summary>

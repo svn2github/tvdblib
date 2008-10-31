@@ -512,7 +512,7 @@ namespace TvdbConnector.Data
           {
             foreach (TvdbBanner nb in _series.Banners)
             {
-              if (ob.Id == nb.Id)
+              if (ob.BannerPath.Equals(nb.BannerPath))//I have to check for the banner path since the Update file doesn't include IDs
               {
                 if (ob.Banner != null && ob.IsLoaded)
                 {

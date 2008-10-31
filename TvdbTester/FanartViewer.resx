@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,57 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="last" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\last.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="user1_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\user1_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="loader4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\loader4.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\loading.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fanart_background" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\fanart_background.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="playback" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\play back.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="episode_notfound" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\episode_notfound.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dvdbox_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dvdbox_back.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tvdb_logo1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tvdb_logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dvdbox_front1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dvdbox_front1.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="first" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\first.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="tvdb_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tvdb_logo.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="dvdbox_front" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dvdbox_front.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="API_KEY" xml:space="preserve">
-    <value />
-    <comment>insert your api key here</comment>
-  </data>
-  <data name="play" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\play.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="season_notfound" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\season_notfound.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="actors_default" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\actors_default.jpg;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>

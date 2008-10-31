@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{524ED2AB-E2BF-4ABC-9154-C0B949ECF159}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -36,6 +36,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -61,6 +64,19 @@
     <Compile Include="CoverFlow.Designer.cs">
       <DependentUpon>CoverFlow.cs</DependentUpon>
     </Compile>
+    <Compile Include="FanartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FanartControl.Designer.cs">
+      <DependentUpon>FanartControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FanartViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FanartViewer.Designer.cs">
+      <DependentUpon>FanartViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GifImage.cs" />
     <Compile Include="iBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -109,6 +125,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CoverFlow.resx">
       <DependentUpon>CoverFlow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FanartControl.resx">
+      <DependentUpon>FanartControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FanartViewer.resx">
+      <DependentUpon>FanartViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="iBar.resx">
@@ -170,9 +194,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TvdbConnector\TvdbConnector.csproj">
+    <ProjectReference Include="..\TvdbConnector\TvdbLib.csproj">
       <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
-      <Name>TvdbConnector</Name>
+      <Name>TvdbLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
