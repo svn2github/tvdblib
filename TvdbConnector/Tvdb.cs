@@ -29,6 +29,56 @@ namespace TvdbConnector
     private TvdbData m_loadedData;
     #endregion
 
+    #region events
+
+    public class UpdateProgressEventArgs : EventArgs
+    {
+      public UpdateProgressEventArgs(UpdateStage _currentUpdateStage, String _currentUpdateDescription,
+                                     int _currentStageProgress, int _overallProgress)
+      {
+        CurrentUpdateStage = _currentUpdateStage;
+        CurrentUpdateDescription = _currentUpdateDescription;
+        CurrentStageProgress = _currentStageProgress;
+        OverallProgress = _overallProgress;
+      }
+
+      public enum UpdateStage { downloading = 0, seriesupdate = 1, episodesupdate = 2, bannerupdate = 3};
+      public UpdateStage CurrentUpdateStage { get; set; }
+      public String CurrentUpdateDescription { get; set; }
+      public int CurrentStageProgress { get; set; }
+      public int OverallProgress { get; set; }
+    }
+
+    public class UpdateFinishedEventArgs : EventArgs
+    {
+      public UpdateFinishedEventArgs(DateTime _started, DateTime _ended, List<int> _updatedSeries,
+                                     List<int> _updatedEpisodes, List<int> _updatedBanners)
+      {
+        UpdateStarted = _started;
+        UpdateFinished = _ended;
+        UpdatedSeries = _updatedSeries;
+        UpdatedEpisodes = _updatedEpisodes;
+        UpdatedBanners = _updatedBanners;
+      }
+      public DateTime UpdateStarted { get; set; }
+      public DateTime UpdateFinished { get; set; }
+      public List<int> UpdatedSeries { get; set; }
+      public List<int> UpdatedEpisodes { get; set; }
+      public List<int> UpdatedBanners { get; set; }
+    }
+
+    public delegate void UpdateProgressDelegate(UpdateProgressEventArgs _event);
+    public event UpdateProgressDelegate UpdateProgressed;
+
+    public delegate void UpdateFinishedDelegate(UpdateFinishedEventArgs _event);
+    public event UpdateFinishedDelegate UpdateFinished;
+    #endregion
+
+    /// <summary>
+    /// Update interval
+    /// </summary>
+    public enum Interval { day = 0, week = 1, month = 2, automatic = 3 };
+
     /// <summary>
     /// UserInfo for this class
     /// </summary>
@@ -79,7 +129,8 @@ namespace TvdbConnector
     /// </summary>
     /// <param name="_cacheProvider">The cache provider used to store the information</param>
     /// <param name="_apiKey">Api key to use for this project</param>
-    public Tvdb(ICacheProvider _cacheProvider, String _apiKey):this(_apiKey)
+    public Tvdb(ICacheProvider _cacheProvider, String _apiKey)
+      : this(_apiKey)
     {
       m_cacheProvider = _cacheProvider; //store given cache provider
     }
@@ -189,7 +240,6 @@ namespace TvdbConnector
     {
       Stopwatch watch = new Stopwatch();
       watch.Start();
-
       TvdbSeries series = GetSeriesFromCache(_seriesId);
 
       if (series == null || //series not yet cached
@@ -320,7 +370,7 @@ namespace TvdbConnector
     }
 
 
-    
+
     /// <summary>
     /// Returns if the series is locally cached
     /// </summary>
@@ -630,11 +680,36 @@ namespace TvdbConnector
       return true;
     }
 
+    public bool UpdateAllSeriesWithInterval(Interval _interval, bool _zipped)
+    {
+      switch (_interval)
+      {
+        case Interval.day:
+          return MakeUpdate(Util.UpdateInterval.day, _zipped);
+        case Interval.week:
+          return MakeUpdate(Util.UpdateInterval.week, _zipped);
+        case Interval.month:
+          return MakeUpdate(Util.UpdateInterval.month, _zipped);
+        case Interval.automatic:
+          return UpdateAllSeries(_zipped);
+        default:
+          return false;
+      }
+    }
+
     private bool MakeUpdate(Util.UpdateInterval _interval, bool _zipped)
     {
       Log.Info("Started update (" + _interval.ToString() + ")");
       Stopwatch watch = new Stopwatch();
       watch.Start();
+      DateTime startUpdate = DateTime.Now;
+      if (UpdateProgressed != null)
+      {//update has started, we're downloading the updated content from tvdb
+        UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
+                                                     "Downloading " + (_zipped ? " zipped " : " unzipped") + " updated content",
+                                                     0, 0));
+      }
+
       //update all flagged series
       List<TvdbSeries> updateSeries;
       List<TvdbEpisode> updateEpisodes;
@@ -644,6 +719,18 @@ namespace TvdbConnector
 
       List<TvdbSeries> seriesToSave = new List<TvdbSeries>();
 
+      if (UpdateProgressed != null)
+      {//update has started, we're downloading the updated content from tvdb
+        UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
+                                                     "Begin updating series",
+                                                     0, 25));
+      }
+
+      int countUpdatedSeries = updateSeries.Count;
+      int countSeriesDone = 0;
+      List<int> updatedSeries = new List<int>();
+      List<int> updatedEpisodes = new List<int>();
+      List<int> updatedBanners = new List<int>();
       foreach (TvdbSeries us in updateSeries)
       {
         foreach (TvdbSeries s in m_loadedData.SeriesList)
@@ -652,7 +739,15 @@ namespace TvdbConnector
           {
             if (s.LastUpdated < us.LastUpdated)
             {//changes occured in series
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+                int currProg = 100 / countUpdatedSeries * countSeriesDone;
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
+                                                             "Updating series " + us.SeriesName,
+                                                             currProg, 25 + (int)(currProg / 4)));
+              }
               UpdateSeries(s, us.LastUpdated);
+
             }
             break;
           }
@@ -666,6 +761,13 @@ namespace TvdbConnector
             TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(us.Id);
             if (series.LastUpdated < us.LastUpdated)
             {
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+                int currProg = (int)(100.0 / countUpdatedSeries * countSeriesDone);
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
+                                                             "Updating series " + us.SeriesName,
+                                                             currProg, 25 + (int)(currProg / 4)));
+              }
               UpdateSeries(series, us.LastUpdated);
               AddSeriesToCache(series);
               seriesToSave.Add(series);
@@ -673,8 +775,11 @@ namespace TvdbConnector
             break;
           }
         }
+        countSeriesDone++;
       }
 
+      int countEpisodeUpdates = updateEpisodes.Count; ;
+      int countEpisodesDone = 0;
       //update all flagged episodes
       foreach (TvdbEpisode ue in updateEpisodes)
       {
@@ -682,6 +787,14 @@ namespace TvdbConnector
         {
           if (ue.SeriesId == s.Id)
           {
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              int currProg = (int)(100.0 / countEpisodeUpdates * countEpisodesDone);
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
+                                                           "Updating episode " + ue.SeriesId + " " + ue.SeasonNumber +
+                                                           "x" + ue.EpisodeNumber + "(id: " + ue.Id + ")",
+                                                           currProg, 50 + (int)(currProg / 4)));
+            }
             UpdateEpisode(s, ue);
             break;
           }
@@ -691,20 +804,38 @@ namespace TvdbConnector
         {
           if (ue.SeriesId == s)
           {//changes occured in series
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              int currProg = (int)(100.0 /  countEpisodeUpdates * countEpisodesDone);
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
+                                                           "Updating episode " + ue.SeriesId + " " + ue.SeasonNumber +
+                                                           "x" + ue.EpisodeNumber + "(id: " + ue.Id + ")",
+                                                           currProg, 50 + (int)(currProg / 4)));
+            }
             TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(ue.SeriesId);
             UpdateEpisode(series, ue);
             break;
           }
         }
+        countEpisodesDone++;
       }
 
-      //todo: update banner information here -> wait for forum response regarding missing 
+      int countUpdatedBanner = updateBanners.Count;
+      int countBannerDone = 0;
+      //todo: update banner information here -> wait for forum response regarding missing banner id within updates
       foreach (TvdbBanner b in updateBanners)
       {
         foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (s.Id == b.SeriesId)
           {
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              int currProg = (int)(100.0 /  countUpdatedBanner * countBannerDone);
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
+                                                           "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
+                                                           currProg, 75 + (int)(currProg / 4)));
+            }
             UpdateBanner(s, b);
             break;
           }
@@ -714,16 +845,29 @@ namespace TvdbConnector
         {
           if (b.SeriesId == s)
           {//changes occured in series
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              int currProg = (int)(100.0 /  countUpdatedBanner * countBannerDone);
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
+                                                           "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
+                                                           currProg, 75 + (int)(currProg / 4)));
+            }
             TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
             UpdateBanner(series, b);
             break;
           }
         }
+        countBannerDone++;
       }
       //set the last updated time to time of this update
       m_loadedData.LastUpdated = updateTime;
       watch.Stop();
       Log.Info("Finished update (" + _interval.ToString() + ") in " + watch.ElapsedMilliseconds + " milliseconds");
+
+      if (UpdateFinished != null)
+      {
+        UpdateFinished(new UpdateFinishedEventArgs(startUpdate, DateTime.Now, null, null, null));
+      }
       return true;
 
     }

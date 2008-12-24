@@ -16,7 +16,7 @@ namespace TvdbConnector
     /// Update interval
     /// </summary>
     internal enum UpdateInterval { day = 0, week = 1, month = 2 };
-
+    
     /// <summary>
     /// Type when handling user favorites
     /// </summary>
