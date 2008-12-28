@@ -88,29 +88,36 @@ namespace TvdbTester
     {
       if (Resources.API_KEY != null && !Resources.API_KEY.Equals(""))
       {
-        StartScreen screen = new StartScreen();
-        screen.StartPosition = FormStartPosition.Manual;
-        screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
-        screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
-        DialogResult res = screen.ShowDialog();
+        try
+        {
+          StartScreen screen = new StartScreen();
+          screen.StartPosition = FormStartPosition.Manual;
+          screen.Left = (this.Left) + (this.Width / 2) - (screen.Width / 2);
+          screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
+          DialogResult res = screen.ShowDialog();
 
-        ICacheProvider p = null;
-        if (screen.CacheProvider == typeof(XmlCacheProvider))
-        {
-          p = new XmlCacheProvider(screen.RootFolder);
-        }
-        else if (screen.CacheProvider == typeof(BinaryCacheProvider))
-        {
-          p = new BinaryCacheProvider(screen.RootFolder);
-        }
+          ICacheProvider p = null;
+          if (screen.CacheProvider == typeof(XmlCacheProvider))
+          {
+            p = new XmlCacheProvider(screen.RootFolder);
+          }
+          else if (screen.CacheProvider == typeof(BinaryCacheProvider))
+          {
+            p = new BinaryCacheProvider(screen.RootFolder);
+          }
 
-        if (res == DialogResult.Cancel)
-        {
-          InitialiseForm(null, p);
+          if (res == DialogResult.Cancel)
+          {
+            InitialiseForm(null, p);
+          }
+          else
+          {
+            InitialiseForm(screen.UserIdentifier, p);
+          }
         }
-        else
+        catch (TvdbNotAvailableException)
         {
-          InitialiseForm(screen.UserIdentifier, p);
+          MessageBox.Show("Tvdb not available, try again later");
         }
       }
       else

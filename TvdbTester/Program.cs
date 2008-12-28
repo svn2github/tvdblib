@@ -15,7 +15,7 @@ namespace TvdbTester
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new FanartViewer());
+      Application.Run(new SeriesBrowser());
     }
   }
 }

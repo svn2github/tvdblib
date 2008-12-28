@@ -274,6 +274,44 @@ namespace TvdbTester
       Invalidate();
     }
 
+    private void UpdatePosition()
+    {
+      if (m_mouseDownClosestDegree >= 0 && m_mouseDownClosestDegree < 360)
+      {
+        FanartControlImage img = m_imagePositions[0];
+        img.Degree = m_mouseDownClosestDegree;
+        float size = CalcSize(m_mouseDownClosestDegree);//how 
+        PointF p = m_elipse[m_mouseDownClosestDegree];
+        m_imagePositions[0].Rectangle = new Rectangle((int)(p.X - 100 * size),
+                                                      (int)(p.Y - 50 * size),
+                                                      (int)(200.0 * size),
+                                                      (int)(100.0 * size));
+
+        //m_imagePositions[0].Position.X = 10;// = (int)m_elipse[m_mouseDownClosestDegree].X;
+        //m_imagePositions[0].Position.Y = 
+      }
+    }
+
+
+    /// <summary>
+    /// returns the factor on how large the object should be -> 1 = full size, 0 = hidden
+    /// </summary>
+    /// <param name="_degr"></param>
+    /// <returns></returns>
+    private float CalcSize(int _degr)
+    {
+      if (_degr < 0 || _degr >= 360) return 0;
+      if (_degr >= 90)
+      {
+        _degr = 360 - _degr - 90;
+      }
+      else
+      {
+        _degr = (_degr + 90) % 180;
+      }
+      return ((float)_degr) / 180;
+    }
+
     private void UpdateRectanglePositions(int _position)
     {
       if (_position < 0)
@@ -387,10 +425,47 @@ namespace TvdbTester
 
     private void Draw(Rectangle rect, Graphics g)
     {
-      g.DrawString("Current: " + m_imagePositions[m_selectedIndex].Degree + ", Nearest: " + m_mouseDownClosestDegree + ", Position: " + m_position, SystemFonts.DefaultFont, SystemBrushes.HotTrack, 10, 10);
+      //draw debug output
+      if (m_imagePositions.Count > m_selectedIndex && m_selectedIndex > 0)
+      {
+        g.DrawString("Current: " + m_imagePositions[m_selectedIndex].Degree + ", Nearest: " + m_mouseDownClosestDegree + ", Position: " + m_position, SystemFonts.DefaultFont, SystemBrushes.HotTrack, 10, 10);
+      }
 
-      rect.Inflate(-5, -5);
+      //draw the ellipse
       PointF prev = PointFromEllipse(m_elipseRect, 0);
+      for (int i = 1; i < 360; i++)
+      {
+        PointF next = PointFromEllipse(m_elipseRect, i);
+        g.DrawLine(new Pen(new SolidBrush(Color.Black), 5), prev, next);
+        prev = next;
+      }
+
+      if(m_imagePositions.Count > 0)
+      {
+        FanartControlImage fci = m_imagePositions[0];
+        if (fci.Image != null)
+        {
+          g.DrawImage(fci.CreateFramedImage(), fci.Rectangle);
+
+        }
+        else
+        {
+          g.FillRectangle(new SolidBrush(FrameColor), fci.Rectangle);
+          g.DrawRectangle(new Pen(Color.Black), fci.Rectangle);
+        }
+      }
+
+      //Draw a red dot representing the closest match
+      if (m_mouseDownClosestDegree != -99)
+      {
+        g.DrawEllipse(new Pen(new SolidBrush(Color.Red)),
+                      m_elipse[m_mouseDownClosestDegree].X - 5,
+                      m_elipse[m_mouseDownClosestDegree].Y - 5, 10, 10);
+      }
+
+      return;
+      rect.Inflate(-5, -5);
+      prev = PointFromEllipse(m_elipseRect, 0);
       for (int i = 1; i < 360; i++)
       {
         PointF next = PointFromEllipse(m_elipseRect, i);
@@ -511,11 +586,14 @@ namespace TvdbTester
         m_mouseDownClosestDegree = GetNearestDegree(e.Location);
         if (m_selectedIndex != -99)
         {
-          UpdateRectanglePositions((m_position + m_mouseDownClosestDegree - m_imagePositions[m_selectedIndex].Degree) % 360);
+          //UpdateRectanglePositions((m_position + m_mouseDownClosestDegree - m_imagePositions[m_selectedIndex].Degree) % 360);
+          UpdatePosition();
         }
         Invalidate();
       }
     }
+
+
 
     private int GetNearestDegree(Point _point)
     {
