@@ -194,12 +194,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TvdbConnector\TvdbLib.csproj">
-      <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
-      <Name>TvdbLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="fanart_background.png" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +245,12 @@
     <Content Include="plasma-tv.ico" />
     <None Include="Resources\actors_default.jpg" />
     <None Include="Resources\user1_refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TvdbLib\TvdbLib.csproj">
+      <Project>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</Project>
+      <Name>TvdbLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
