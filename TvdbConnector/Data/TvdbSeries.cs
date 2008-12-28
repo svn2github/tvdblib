@@ -388,7 +388,56 @@ namespace TvdbConnector.Data
 
     #region episodes
 
+    /// <summary>
+    /// Return a list of episodes for the given season
+    /// </summary>
+    /// <param name="_season">Season for which episodes should be returned</param>
+    /// <returns>List of episodes for the given season</returns>
+    public List<TvdbEpisode> GetEpisodes(int _season)
+    {
+      if (Episodes != null && Episodes.Count > 0 && EpisodesLoaded)
+      {
+        List<TvdbEpisode> retList = new List<TvdbEpisode>();
+        foreach (TvdbEpisode e in Episodes)
+        {
+          if (e.SeasonNumber == _season)
+          {
+            retList.Add(e);
+          }
+        }
+        return retList;
+      }
+      else
+      {
+        return null;
+      }
+    }
 
+    /// <summary>
+    /// How many Season does the series have
+    /// </summary>
+    public int NumSeasons
+    {
+      get
+      {
+        if (Episodes != null && EpisodesLoaded && Episodes.Count > 0)
+        {
+          int maxSeason = 0;
+          foreach (TvdbEpisode e in Episodes)
+          {
+            if (e.SeasonNumber > maxSeason)
+            {
+              maxSeason++;
+            }
+          }
+          return maxSeason;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+    }
 
 
     #endregion

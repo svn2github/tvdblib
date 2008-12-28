@@ -52,13 +52,32 @@
       this.txtSeriesRatingsId = new System.Windows.Forms.TextBox();
       this.dateTimePickerEpAired = new System.Windows.Forms.DateTimePicker();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.txtSeriesEpisodeAiredId = new System.Windows.Forms.TextBox();
-      this.label4 = new System.Windows.Forms.Label();
       this.cmdGetEpisodeAired = new System.Windows.Forms.Button();
+      this.label4 = new System.Windows.Forms.Label();
+      this.txtSeriesEpisodeAiredId = new System.Windows.Forms.TextBox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.cmdBannerTestingPrev = new System.Windows.Forms.Button();
+      this.cmdBannerTestingNext = new System.Windows.Forms.Button();
+      this.cmdLoadBannerTest = new System.Windows.Forms.Button();
+      this.rbLoadEpisodeBannerThumb = new System.Windows.Forms.RadioButton();
+      this.rbLoadPosterThumb = new System.Windows.Forms.RadioButton();
+      this.rbLoadEpisodeBanner = new System.Windows.Forms.RadioButton();
+      this.rbLoadPoster = new System.Windows.Forms.RadioButton();
+      this.rbLoadSeasonThumb = new System.Windows.Forms.RadioButton();
+      this.rbLoadFanartThumb = new System.Windows.Forms.RadioButton();
+      this.rbLoadSeason = new System.Windows.Forms.RadioButton();
+      this.rbLoadFanart = new System.Windows.Forms.RadioButton();
+      this.rbLoadSeriesBannerThumb = new System.Windows.Forms.RadioButton();
+      this.rbLoadSeriesBanner = new System.Windows.Forms.RadioButton();
+      this.txtSeriesIdForBanners = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
+      this.pbBannerTesting = new System.Windows.Forms.PictureBox();
       this.bcSeriesBanner = new TvdbTester.BannerControl();
       this.bcActors = new TvdbTester.BannerControl();
       this.Episodes.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.groupBox2.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbBannerTesting)).BeginInit();
       this.SuspendLayout();
       // 
       // cmdTest1
@@ -96,7 +115,7 @@
       // cmdEnd
       // 
       this.cmdEnd.Enabled = false;
-      this.cmdEnd.Location = new System.Drawing.Point(6, 436);
+      this.cmdEnd.Location = new System.Drawing.Point(6, 715);
       this.cmdEnd.Name = "cmdEnd";
       this.cmdEnd.Size = new System.Drawing.Size(200, 23);
       this.cmdEnd.TabIndex = 4;
@@ -112,7 +131,7 @@
       this.lvSeries.FullRowSelect = true;
       this.lvSeries.Location = new System.Drawing.Point(302, 96);
       this.lvSeries.Name = "lvSeries";
-      this.lvSeries.Size = new System.Drawing.Size(348, 363);
+      this.lvSeries.Size = new System.Drawing.Size(348, 560);
       this.lvSeries.TabIndex = 5;
       this.lvSeries.UseCompatibleStateImageBehavior = false;
       this.lvSeries.View = System.Windows.Forms.View.Details;
@@ -287,23 +306,6 @@
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Episode Aired";
       // 
-      // txtSeriesEpisodeAiredId
-      // 
-      this.txtSeriesEpisodeAiredId.Location = new System.Drawing.Point(125, 19);
-      this.txtSeriesEpisodeAiredId.Name = "txtSeriesEpisodeAiredId";
-      this.txtSeriesEpisodeAiredId.Size = new System.Drawing.Size(69, 20);
-      this.txtSeriesEpisodeAiredId.TabIndex = 7;
-      this.txtSeriesEpisodeAiredId.Text = "73255";
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(8, 22);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(48, 13);
-      this.label4.TabIndex = 13;
-      this.label4.Text = "Series Id";
-      // 
       // cmdGetEpisodeAired
       // 
       this.cmdGetEpisodeAired.Enabled = false;
@@ -314,6 +316,220 @@
       this.cmdGetEpisodeAired.Text = "Get Episode";
       this.cmdGetEpisodeAired.UseVisualStyleBackColor = true;
       this.cmdGetEpisodeAired.Click += new System.EventHandler(this.cmdGetEpisodeAired_Click);
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(8, 22);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(48, 13);
+      this.label4.TabIndex = 13;
+      this.label4.Text = "Series Id";
+      // 
+      // txtSeriesEpisodeAiredId
+      // 
+      this.txtSeriesEpisodeAiredId.Location = new System.Drawing.Point(125, 19);
+      this.txtSeriesEpisodeAiredId.Name = "txtSeriesEpisodeAiredId";
+      this.txtSeriesEpisodeAiredId.Size = new System.Drawing.Size(69, 20);
+      this.txtSeriesEpisodeAiredId.TabIndex = 7;
+      this.txtSeriesEpisodeAiredId.Text = "73255";
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.cmdBannerTestingPrev);
+      this.groupBox2.Controls.Add(this.cmdBannerTestingNext);
+      this.groupBox2.Controls.Add(this.cmdLoadBannerTest);
+      this.groupBox2.Controls.Add(this.rbLoadEpisodeBannerThumb);
+      this.groupBox2.Controls.Add(this.rbLoadPosterThumb);
+      this.groupBox2.Controls.Add(this.rbLoadEpisodeBanner);
+      this.groupBox2.Controls.Add(this.rbLoadPoster);
+      this.groupBox2.Controls.Add(this.rbLoadSeasonThumb);
+      this.groupBox2.Controls.Add(this.rbLoadFanartThumb);
+      this.groupBox2.Controls.Add(this.rbLoadSeason);
+      this.groupBox2.Controls.Add(this.rbLoadFanart);
+      this.groupBox2.Controls.Add(this.rbLoadSeriesBannerThumb);
+      this.groupBox2.Controls.Add(this.rbLoadSeriesBanner);
+      this.groupBox2.Controls.Add(this.txtSeriesIdForBanners);
+      this.groupBox2.Controls.Add(this.label5);
+      this.groupBox2.Location = new System.Drawing.Point(6, 396);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(200, 313);
+      this.groupBox2.TabIndex = 14;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Banners testing";
+      // 
+      // cmdBannerTestingPrev
+      // 
+      this.cmdBannerTestingPrev.Enabled = false;
+      this.cmdBannerTestingPrev.Location = new System.Drawing.Point(11, 284);
+      this.cmdBannerTestingPrev.Name = "cmdBannerTestingPrev";
+      this.cmdBannerTestingPrev.Size = new System.Drawing.Size(29, 23);
+      this.cmdBannerTestingPrev.TabIndex = 18;
+      this.cmdBannerTestingPrev.Text = "<<";
+      this.cmdBannerTestingPrev.UseVisualStyleBackColor = true;
+      this.cmdBannerTestingPrev.Click += new System.EventHandler(this.cmdBannerTestingPrev_Click);
+      // 
+      // cmdBannerTestingNext
+      // 
+      this.cmdBannerTestingNext.Enabled = false;
+      this.cmdBannerTestingNext.Location = new System.Drawing.Point(165, 284);
+      this.cmdBannerTestingNext.Name = "cmdBannerTestingNext";
+      this.cmdBannerTestingNext.Size = new System.Drawing.Size(29, 23);
+      this.cmdBannerTestingNext.TabIndex = 18;
+      this.cmdBannerTestingNext.Text = ">>";
+      this.cmdBannerTestingNext.UseVisualStyleBackColor = true;
+      this.cmdBannerTestingNext.Click += new System.EventHandler(this.cmdBannerTestingNext_Click);
+      // 
+      // cmdLoadBannerTest
+      // 
+      this.cmdLoadBannerTest.Enabled = false;
+      this.cmdLoadBannerTest.Location = new System.Drawing.Point(44, 284);
+      this.cmdLoadBannerTest.Name = "cmdLoadBannerTest";
+      this.cmdLoadBannerTest.Size = new System.Drawing.Size(115, 23);
+      this.cmdLoadBannerTest.TabIndex = 17;
+      this.cmdLoadBannerTest.Text = "Load";
+      this.cmdLoadBannerTest.UseVisualStyleBackColor = true;
+      this.cmdLoadBannerTest.Click += new System.EventHandler(this.cmdLoadBannerTest_Click);
+      // 
+      // rbLoadEpisodeBannerThumb
+      // 
+      this.rbLoadEpisodeBannerThumb.AutoSize = true;
+      this.rbLoadEpisodeBannerThumb.Location = new System.Drawing.Point(50, 253);
+      this.rbLoadEpisodeBannerThumb.Name = "rbLoadEpisodeBannerThumb";
+      this.rbLoadEpisodeBannerThumb.Size = new System.Drawing.Size(91, 17);
+      this.rbLoadEpisodeBannerThumb.TabIndex = 16;
+      this.rbLoadEpisodeBannerThumb.TabStop = true;
+      this.rbLoadEpisodeBannerThumb.Text = "Poster Thumb";
+      this.rbLoadEpisodeBannerThumb.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadPosterThumb
+      // 
+      this.rbLoadPosterThumb.AutoSize = true;
+      this.rbLoadPosterThumb.Location = new System.Drawing.Point(50, 161);
+      this.rbLoadPosterThumb.Name = "rbLoadPosterThumb";
+      this.rbLoadPosterThumb.Size = new System.Drawing.Size(91, 17);
+      this.rbLoadPosterThumb.TabIndex = 16;
+      this.rbLoadPosterThumb.TabStop = true;
+      this.rbLoadPosterThumb.Text = "Poster Thumb";
+      this.rbLoadPosterThumb.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadEpisodeBanner
+      // 
+      this.rbLoadEpisodeBanner.AutoSize = true;
+      this.rbLoadEpisodeBanner.Location = new System.Drawing.Point(50, 230);
+      this.rbLoadEpisodeBanner.Name = "rbLoadEpisodeBanner";
+      this.rbLoadEpisodeBanner.Size = new System.Drawing.Size(100, 17);
+      this.rbLoadEpisodeBanner.TabIndex = 16;
+      this.rbLoadEpisodeBanner.TabStop = true;
+      this.rbLoadEpisodeBanner.Text = "Episode Banner";
+      this.rbLoadEpisodeBanner.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadPoster
+      // 
+      this.rbLoadPoster.AutoSize = true;
+      this.rbLoadPoster.Location = new System.Drawing.Point(50, 138);
+      this.rbLoadPoster.Name = "rbLoadPoster";
+      this.rbLoadPoster.Size = new System.Drawing.Size(55, 17);
+      this.rbLoadPoster.TabIndex = 16;
+      this.rbLoadPoster.TabStop = true;
+      this.rbLoadPoster.Text = "Poster";
+      this.rbLoadPoster.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadSeasonThumb
+      // 
+      this.rbLoadSeasonThumb.AutoSize = true;
+      this.rbLoadSeasonThumb.Location = new System.Drawing.Point(50, 207);
+      this.rbLoadSeasonThumb.Name = "rbLoadSeasonThumb";
+      this.rbLoadSeasonThumb.Size = new System.Drawing.Size(134, 17);
+      this.rbLoadSeasonThumb.TabIndex = 16;
+      this.rbLoadSeasonThumb.TabStop = true;
+      this.rbLoadSeasonThumb.Text = "Season Banner Thumb";
+      this.rbLoadSeasonThumb.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadFanartThumb
+      // 
+      this.rbLoadFanartThumb.AutoSize = true;
+      this.rbLoadFanartThumb.Location = new System.Drawing.Point(50, 115);
+      this.rbLoadFanartThumb.Name = "rbLoadFanartThumb";
+      this.rbLoadFanartThumb.Size = new System.Drawing.Size(91, 17);
+      this.rbLoadFanartThumb.TabIndex = 16;
+      this.rbLoadFanartThumb.TabStop = true;
+      this.rbLoadFanartThumb.Text = "Fanart Thumb";
+      this.rbLoadFanartThumb.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadSeason
+      // 
+      this.rbLoadSeason.AutoSize = true;
+      this.rbLoadSeason.Location = new System.Drawing.Point(50, 184);
+      this.rbLoadSeason.Name = "rbLoadSeason";
+      this.rbLoadSeason.Size = new System.Drawing.Size(98, 17);
+      this.rbLoadSeason.TabIndex = 16;
+      this.rbLoadSeason.TabStop = true;
+      this.rbLoadSeason.Text = "Season Banner";
+      this.rbLoadSeason.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadFanart
+      // 
+      this.rbLoadFanart.AutoSize = true;
+      this.rbLoadFanart.Location = new System.Drawing.Point(50, 92);
+      this.rbLoadFanart.Name = "rbLoadFanart";
+      this.rbLoadFanart.Size = new System.Drawing.Size(55, 17);
+      this.rbLoadFanart.TabIndex = 16;
+      this.rbLoadFanart.TabStop = true;
+      this.rbLoadFanart.Text = "Fanart";
+      this.rbLoadFanart.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadSeriesBannerThumb
+      // 
+      this.rbLoadSeriesBannerThumb.AutoSize = true;
+      this.rbLoadSeriesBannerThumb.Location = new System.Drawing.Point(50, 69);
+      this.rbLoadSeriesBannerThumb.Name = "rbLoadSeriesBannerThumb";
+      this.rbLoadSeriesBannerThumb.Size = new System.Drawing.Size(127, 17);
+      this.rbLoadSeriesBannerThumb.TabIndex = 16;
+      this.rbLoadSeriesBannerThumb.TabStop = true;
+      this.rbLoadSeriesBannerThumb.Text = "Series Banner Thumb";
+      this.rbLoadSeriesBannerThumb.UseVisualStyleBackColor = true;
+      // 
+      // rbLoadSeriesBanner
+      // 
+      this.rbLoadSeriesBanner.AutoSize = true;
+      this.rbLoadSeriesBanner.Location = new System.Drawing.Point(50, 46);
+      this.rbLoadSeriesBanner.Name = "rbLoadSeriesBanner";
+      this.rbLoadSeriesBanner.Size = new System.Drawing.Size(91, 17);
+      this.rbLoadSeriesBanner.TabIndex = 16;
+      this.rbLoadSeriesBanner.TabStop = true;
+      this.rbLoadSeriesBanner.Text = "Series Banner";
+      this.rbLoadSeriesBanner.UseVisualStyleBackColor = true;
+      // 
+      // txtSeriesIdForBanners
+      // 
+      this.txtSeriesIdForBanners.Location = new System.Drawing.Point(94, 19);
+      this.txtSeriesIdForBanners.Name = "txtSeriesIdForBanners";
+      this.txtSeriesIdForBanners.Size = new System.Drawing.Size(100, 20);
+      this.txtSeriesIdForBanners.TabIndex = 15;
+      this.txtSeriesIdForBanners.Text = "73255";
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(13, 22);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(48, 13);
+      this.label5.TabIndex = 13;
+      this.label5.Text = "Series Id";
+      // 
+      // pbBannerTesting
+      // 
+      this.pbBannerTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.pbBannerTesting.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+      this.pbBannerTesting.Location = new System.Drawing.Point(226, 9);
+      this.pbBannerTesting.Name = "pbBannerTesting";
+      this.pbBannerTesting.Size = new System.Drawing.Size(735, 727);
+      this.pbBannerTesting.TabIndex = 15;
+      this.pbBannerTesting.TabStop = false;
+      this.pbBannerTesting.Visible = false;
       // 
       // bcSeriesBanner
       // 
@@ -330,6 +546,7 @@
       this.bcSeriesBanner.Size = new System.Drawing.Size(348, 81);
       this.bcSeriesBanner.TabIndex = 6;
       this.bcSeriesBanner.UnavailableImage = null;
+      this.bcSeriesBanner.UseThumb = false;
       // 
       // bcActors
       // 
@@ -346,12 +563,14 @@
       this.bcActors.Size = new System.Drawing.Size(300, 450);
       this.bcActors.TabIndex = 1;
       this.bcActors.UnavailableImage = null;
+      this.bcActors.UseThumb = false;
       // 
       // TestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(970, 485);
+      this.ClientSize = new System.Drawing.Size(962, 739);
+      this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.cmdGetRatingsForSeries);
       this.Controls.Add(this.cmdGetAllSeriesRatings);
@@ -367,12 +586,16 @@
       this.Controls.Add(this.cmdTestZip);
       this.Controls.Add(this.bcActors);
       this.Controls.Add(this.cmdTest1);
+      this.Controls.Add(this.pbBannerTesting);
       this.Name = "TestForm";
       this.Text = "TestForm";
       this.Episodes.ResumeLayout(false);
       this.Episodes.PerformLayout();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.pbBannerTesting)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -409,5 +632,22 @@
     private System.Windows.Forms.Button cmdGetEpisodeAired;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox txtSeriesEpisodeAiredId;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.Button cmdLoadBannerTest;
+    private System.Windows.Forms.RadioButton rbLoadPosterThumb;
+    private System.Windows.Forms.RadioButton rbLoadPoster;
+    private System.Windows.Forms.RadioButton rbLoadFanartThumb;
+    private System.Windows.Forms.RadioButton rbLoadFanart;
+    private System.Windows.Forms.RadioButton rbLoadSeriesBannerThumb;
+    private System.Windows.Forms.RadioButton rbLoadSeriesBanner;
+    private System.Windows.Forms.TextBox txtSeriesIdForBanners;
+    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Button cmdBannerTestingPrev;
+    private System.Windows.Forms.Button cmdBannerTestingNext;
+    private System.Windows.Forms.PictureBox pbBannerTesting;
+    private System.Windows.Forms.RadioButton rbLoadEpisodeBannerThumb;
+    private System.Windows.Forms.RadioButton rbLoadEpisodeBanner;
+    private System.Windows.Forms.RadioButton rbLoadSeasonThumb;
+    private System.Windows.Forms.RadioButton rbLoadSeason;
   }
 }

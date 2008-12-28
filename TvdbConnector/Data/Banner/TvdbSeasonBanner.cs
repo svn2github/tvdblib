@@ -11,7 +11,7 @@ namespace TvdbConnector.Data.Banner
   /// - Poster format: http://thetvdb.com/wiki/index.php/Season_Banners
   /// </summary>
   [Serializable]
-  public class TvdbSeasonBanner: TvdbBanner
+  public class TvdbSeasonBanner: TvdbBannerWithThumb
   {
     /// <summary>
     /// Type of the season banner

@@ -18,6 +18,9 @@ namespace TvdbTester
 {
   public partial class TestForm : Form
   {
+    private TvdbSeries m_selectedSeriesForBannerTesting = null;
+    private int m_bannerTestingIndex = 0;
+
     public TestForm()
     {
       InitializeComponent();
@@ -40,6 +43,9 @@ namespace TvdbTester
       cmdEnd.Enabled = true;
       cmdSetUser.Enabled = true;
       cmdGetEpisodeAired.Enabled = true;
+      cmdBannerTestingNext.Enabled = true;
+      cmdBannerTestingPrev.Enabled = true;
+      cmdLoadBannerTest.Enabled = true;
     }
 
     private void cmdTest1_Click(object sender, EventArgs e)
@@ -187,6 +193,177 @@ namespace TvdbTester
       }
     }
 
+    private void cmdLoadBannerTest_Click(object sender, EventArgs e)
+    {
+      m_selectedSeriesForBannerTesting = m_tvdbHandler.GetSeries(Int32.Parse(txtSeriesIdForBanners.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
+      if (m_selectedSeriesForBannerTesting != null)
+      {
+        m_bannerTestingIndex = 0;
+        pbBannerTesting.Visible = true;
+        pbBannerTesting.BringToFront();
+        LoadBanner(m_bannerTestingIndex);
+      }
+      else
+      {
+        MessageBox.Show("Couldn't load series");
+      }
+    }
 
+    private void LoadBanner(int _index)
+    {
+      if (rbLoadFanart.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.FanartBanners != null && m_selectedSeriesForBannerTesting.FanartBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.FanartBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.FanartBanners[_index].LoadBanner())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].Banner;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No fanart for this series");
+        }
+      }
+      else if (rbLoadFanartThumb.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.FanartBanners != null && m_selectedSeriesForBannerTesting.FanartBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.FanartBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.FanartBanners[_index].LoadThumb())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].BannerThumb;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No fanart for this series");
+        }
+      }
+      else if (rbLoadSeriesBanner.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.SeriesBanners != null && m_selectedSeriesForBannerTesting.SeriesBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.SeriesBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.SeriesBanners[_index].LoadBanner())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].Banner;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No series banners  for this series");
+        }
+      }
+      else if (rbLoadSeriesBannerThumb.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.SeriesBanners != null && m_selectedSeriesForBannerTesting.SeriesBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.SeriesBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.SeriesBanners[_index].LoadThumb())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].BannerThumb;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No series banners for this series");
+        }
+      }
+      else if (rbLoadPoster.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.PosterBanners != null && m_selectedSeriesForBannerTesting.PosterBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.PosterBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.PosterBanners[_index].LoadBanner())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].Banner;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners  for this Poster");
+        }
+      }
+      else if (rbLoadPosterThumb.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.PosterBanners != null && m_selectedSeriesForBannerTesting.PosterBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.PosterBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.PosterBanners[_index].LoadThumb())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].BannerThumb;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners for this Poster");
+        }
+      }
+      else if (rbLoadSeason.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.SeasonBanners != null && m_selectedSeriesForBannerTesting.SeasonBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.SeasonBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.SeasonBanners[_index].LoadBanner())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].Banner;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners  for this Poster");
+        }
+      }
+      else if (rbLoadSeasonThumb.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.SeasonBanners != null && m_selectedSeriesForBannerTesting.SeasonBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.SeasonBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.SeasonBanners[_index].LoadThumb())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].BannerThumb;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners for this Poster");
+        }
+      }
+      else if (rbLoadEpisodeBanner.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.EpisodesLoaded && m_selectedSeriesForBannerTesting.Episodes != null && m_selectedSeriesForBannerTesting.Episodes.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.Episodes[_index].Banner.IsLoaded || m_selectedSeriesForBannerTesting.Episodes[_index].Banner.LoadBanner())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.Banner;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners  for this Poster");
+        }
+      }
+      else if (rbLoadEpisodeBannerThumb.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.Episodes != null && m_selectedSeriesForBannerTesting.Episodes.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.Episodes[_index].Banner.IsThumbLoaded || m_selectedSeriesForBannerTesting.Episodes[_index].Banner.LoadThumb())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.BannerThumb;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No Poster banners for this Poster");
+        }
+      }
+
+    }
+
+    private void cmdBannerTestingNext_Click(object sender, EventArgs e)
+    {
+      m_bannerTestingIndex ++;
+      LoadBanner(m_bannerTestingIndex);
+    }
+
+    private void cmdBannerTestingPrev_Click(object sender, EventArgs e)
+    {
+      m_bannerTestingIndex++;
+      LoadBanner(m_bannerTestingIndex);
+    }
   }
 }

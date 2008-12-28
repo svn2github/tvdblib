@@ -680,7 +680,7 @@ namespace TvdbConnector
       return true;
     }
 
-    public bool UpdateAllSeriesWithInterval(Interval _interval, bool _zipped)
+    public bool UpdateAllSeries(Interval _interval, bool _zipped)
     {
       switch (_interval)
       {

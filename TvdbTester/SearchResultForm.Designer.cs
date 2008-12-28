@@ -55,10 +55,10 @@
             this.chName,
             this.chLang});
       this.lvSearchResult.FullRowSelect = true;
-      this.lvSearchResult.Location = new System.Drawing.Point(12, 118);
+      this.lvSearchResult.Location = new System.Drawing.Point(25, 73);
       this.lvSearchResult.MultiSelect = false;
       this.lvSearchResult.Name = "lvSearchResult";
-      this.lvSearchResult.Size = new System.Drawing.Size(568, 156);
+      this.lvSearchResult.Size = new System.Drawing.Size(300, 201);
       this.lvSearchResult.TabIndex = 0;
       this.lvSearchResult.UseCompatibleStateImageBehavior = false;
       this.lvSearchResult.View = System.Windows.Forms.View.Details;
@@ -68,17 +68,17 @@
       // chId
       // 
       this.chId.Text = "Id";
-      this.chId.Width = 61;
+      this.chId.Width = 45;
       // 
       // chName
       // 
       this.chName.Text = "Name";
-      this.chName.Width = 198;
+      this.chName.Width = 179;
       // 
       // chLang
       // 
       this.chLang.Text = "Language";
-      this.chLang.Width = 81;
+      this.chLang.Width = 70;
       // 
       // groupBox1
       // 
@@ -90,7 +90,7 @@
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Location = new System.Drawing.Point(12, 280);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(568, 256);
+      this.groupBox1.Size = new System.Drawing.Size(319, 256);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Details";
@@ -102,13 +102,14 @@
       this.linkImdb.Name = "linkImdb";
       this.linkImdb.Size = new System.Drawing.Size(0, 13);
       this.linkImdb.TabIndex = 3;
+      this.linkImdb.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkImdb_LinkClicked);
       // 
       // txtOverview
       // 
       this.txtOverview.Location = new System.Drawing.Point(67, 83);
       this.txtOverview.Name = "txtOverview";
       this.txtOverview.ReadOnly = true;
-      this.txtOverview.Size = new System.Drawing.Size(495, 163);
+      this.txtOverview.Size = new System.Drawing.Size(242, 163);
       this.txtOverview.TabIndex = 2;
       this.txtOverview.Text = "";
       // 
@@ -117,7 +118,7 @@
       this.txtFirstAired.Location = new System.Drawing.Point(67, 30);
       this.txtFirstAired.Name = "txtFirstAired";
       this.txtFirstAired.ReadOnly = true;
-      this.txtFirstAired.Size = new System.Drawing.Size(495, 20);
+      this.txtFirstAired.Size = new System.Drawing.Size(242, 20);
       this.txtFirstAired.TabIndex = 1;
       // 
       // label3
@@ -149,9 +150,9 @@
       // 
       // cmdChoose
       // 
-      this.cmdChoose.Location = new System.Drawing.Point(12, 542);
+      this.cmdChoose.Location = new System.Drawing.Point(37, 540);
       this.cmdChoose.Name = "cmdChoose";
-      this.cmdChoose.Size = new System.Drawing.Size(271, 23);
+      this.cmdChoose.Size = new System.Drawing.Size(139, 23);
       this.cmdChoose.TabIndex = 3;
       this.cmdChoose.Text = "Choose";
       this.cmdChoose.UseVisualStyleBackColor = true;
@@ -159,9 +160,9 @@
       // 
       // cmdCancel
       // 
-      this.cmdCancel.Location = new System.Drawing.Point(289, 542);
+      this.cmdCancel.Location = new System.Drawing.Point(182, 540);
       this.cmdCancel.Name = "cmdCancel";
-      this.cmdCancel.Size = new System.Drawing.Size(291, 23);
+      this.cmdCancel.Size = new System.Drawing.Size(131, 23);
       this.cmdCancel.TabIndex = 3;
       this.cmdCancel.Text = "Cancel";
       this.cmdCancel.UseVisualStyleBackColor = true;
@@ -174,14 +175,14 @@
       this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
       this.statusStrip1.Location = new System.Drawing.Point(0, 568);
       this.statusStrip1.Name = "statusStrip1";
-      this.statusStrip1.Size = new System.Drawing.Size(586, 18);
+      this.statusStrip1.Size = new System.Drawing.Size(340, 18);
       this.statusStrip1.TabIndex = 4;
       this.statusStrip1.Text = "statusStrip1";
       // 
       // lblStatus
       // 
       this.lblStatus.Name = "lblStatus";
-      this.lblStatus.Size = new System.Drawing.Size(78, 13);
+      this.lblStatus.Size = new System.Drawing.Size(81, 13);
       this.lblStatus.Text = "Search Results";
       this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
       // 
@@ -194,18 +195,19 @@
       this.bcSeriesBanner.Index = 0;
       this.bcSeriesBanner.LoadingBackgroundColor = System.Drawing.Color.Black;
       this.bcSeriesBanner.LoadingImage = global::TvdbTester.Properties.Resources.loader4;
-      this.bcSeriesBanner.Location = new System.Drawing.Point(12, 7);
+      this.bcSeriesBanner.Location = new System.Drawing.Point(25, 12);
       this.bcSeriesBanner.Name = "bcSeriesBanner";
-      this.bcSeriesBanner.Size = new System.Drawing.Size(568, 105);
+      this.bcSeriesBanner.Size = new System.Drawing.Size(300, 55);
       this.bcSeriesBanner.TabIndex = 6;
       this.bcSeriesBanner.UnavailableImage = null;
+      this.bcSeriesBanner.UseThumb = true;
       // 
       // SearchResultForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CausesValidation = false;
-      this.ClientSize = new System.Drawing.Size(586, 586);
+      this.ClientSize = new System.Drawing.Size(340, 586);
       this.Controls.Add(this.bcSeriesBanner);
       this.Controls.Add(this.statusStrip1);
       this.Controls.Add(this.cmdCancel);

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -63,6 +63,7 @@
     <Compile Include="Cache\BinaryCacheProvider.cs" />
     <Compile Include="Cache\XmlCacheProvider.cs" />
     <Compile Include="Data\Banner\TvdbActorBanner.cs" />
+    <Compile Include="Data\Banner\TvdbBannerWithThumb.cs" />
     <Compile Include="Data\TvdbActor.cs" />
     <Compile Include="Data\TvdbData.cs" />
     <Compile Include="Data\Banner\TvdbBanner.cs" />

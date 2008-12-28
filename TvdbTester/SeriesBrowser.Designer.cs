@@ -42,6 +42,8 @@
       this.tabEpisodes = new System.Windows.Forms.TabPage();
       this.lbDirectors = new System.Windows.Forms.ListBox();
       this.saveImageContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.showImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.saveImageToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.lbWriters = new System.Windows.Forms.ListBox();
       this.lbGuestStars = new System.Windows.Forms.ListBox();
@@ -73,6 +75,8 @@
       this.lbEpisodeInformation = new System.Windows.Forms.Label();
       this.tvEpisodes = new System.Windows.Forms.TreeView();
       this.tabSeries = new System.Windows.Forms.TabPage();
+      this.llblImdb = new System.Windows.Forms.LinkLabel();
+      this.llblTvComId = new System.Windows.Forms.LinkLabel();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label38 = new System.Windows.Forms.Label();
       this.label42 = new System.Windows.Forms.Label();
@@ -131,6 +135,10 @@
       this.panel1 = new System.Windows.Forms.Panel();
       this.label24 = new System.Windows.Forms.Label();
       this.panelSeriesOverview = new System.Windows.Forms.Panel();
+      this.rbUpdateMonth = new System.Windows.Forms.RadioButton();
+      this.rbUpdateWeek = new System.Windows.Forms.RadioButton();
+      this.rbUpdateDay = new System.Windows.Forms.RadioButton();
+      this.rbUpdateAutomatic = new System.Windows.Forms.RadioButton();
       this.cbUseZipped = new System.Windows.Forms.CheckBox();
       this.cmdUpdateSeries = new System.Windows.Forms.Button();
       this.cbLoadActors = new System.Windows.Forms.CheckBox();
@@ -138,7 +146,6 @@
       this.cbLoadFull = new System.Windows.Forms.CheckBox();
       this.cbUserFavourites = new System.Windows.Forms.ComboBox();
       this.label39 = new System.Windows.Forms.Label();
-      this.label41 = new System.Windows.Forms.Label();
       this.panel2 = new System.Windows.Forms.Panel();
       this.pnlEpisodeEnabled = new System.Windows.Forms.Panel();
       this.lblTabEpisodes = new System.Windows.Forms.Label();
@@ -149,7 +156,6 @@
       this.label20 = new System.Windows.Forms.Label();
       this.pnlFullscreen = new System.Windows.Forms.Panel();
       this.cmdBack = new System.Windows.Forms.Button();
-      this.showImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.pbFullscreen = new System.Windows.Forms.PictureBox();
       this.raterSeriesYourRating = new Rater();
       this.raterSeriesSiteRating = new Rater();
@@ -160,7 +166,6 @@
       this.bcSeasonBannerWide = new TvdbTester.BannerControl();
       this.coverFlowFanart = new TvdbTester.CoverFlow();
       this.bcActors = new TvdbTester.BannerControl();
-      this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
@@ -193,14 +198,14 @@
       // 
       // txtGetSeries
       // 
-      this.txtGetSeries.Location = new System.Drawing.Point(101, 57);
+      this.txtGetSeries.Location = new System.Drawing.Point(101, 75);
       this.txtGetSeries.Name = "txtGetSeries";
       this.txtGetSeries.Size = new System.Drawing.Size(116, 20);
       this.txtGetSeries.TabIndex = 6;
       // 
       // cmdGetSeries
       // 
-      this.cmdGetSeries.Location = new System.Drawing.Point(227, 54);
+      this.cmdGetSeries.Location = new System.Drawing.Point(227, 72);
       this.cmdGetSeries.Name = "cmdGetSeries";
       this.cmdGetSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdGetSeries.TabIndex = 7;
@@ -210,7 +215,7 @@
       // 
       // txtSeriesToFind
       // 
-      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 28);
+      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 46);
       this.txtSeriesToFind.Name = "txtSeriesToFind";
       this.txtSeriesToFind.Size = new System.Drawing.Size(116, 20);
       this.txtSeriesToFind.TabIndex = 6;
@@ -220,7 +225,7 @@
       // 
       // cmdFindSeries
       // 
-      this.cmdFindSeries.Location = new System.Drawing.Point(227, 26);
+      this.cmdFindSeries.Location = new System.Drawing.Point(227, 44);
       this.cmdFindSeries.Name = "cmdFindSeries";
       this.cmdFindSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdFindSeries.TabIndex = 7;
@@ -232,8 +237,8 @@
       // 
       this.label35.AutoSize = true;
       this.label35.BackColor = System.Drawing.Color.Transparent;
-      this.label35.ForeColor = System.Drawing.Color.Black;
-      this.label35.Location = new System.Drawing.Point(10, 60);
+      this.label35.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.label35.Location = new System.Drawing.Point(10, 78);
       this.label35.Name = "label35";
       this.label35.Size = new System.Drawing.Size(53, 13);
       this.label35.TabIndex = 4;
@@ -243,7 +248,7 @@
       // 
       this.label36.AutoSize = true;
       this.label36.BackColor = System.Drawing.Color.Transparent;
-      this.label36.Location = new System.Drawing.Point(10, 31);
+      this.label36.Location = new System.Drawing.Point(10, 49);
       this.label36.Name = "label36";
       this.label36.Size = new System.Drawing.Size(70, 13);
       this.label36.TabIndex = 4;
@@ -252,9 +257,9 @@
       // cbLanguage
       // 
       this.cbLanguage.FormattingEnabled = true;
-      this.cbLanguage.Location = new System.Drawing.Point(523, 43);
+      this.cbLanguage.Location = new System.Drawing.Point(179, 13);
       this.cbLanguage.Name = "cbLanguage";
-      this.cbLanguage.Size = new System.Drawing.Size(231, 21);
+      this.cbLanguage.Size = new System.Drawing.Size(123, 21);
       this.cbLanguage.TabIndex = 44;
       this.cbLanguage.SelectedIndexChanged += new System.EventHandler(this.cbLanguage_SelectedIndexChanged);
       // 
@@ -262,7 +267,7 @@
       // 
       this.label37.AutoSize = true;
       this.label37.BackColor = System.Drawing.Color.Transparent;
-      this.label37.Location = new System.Drawing.Point(10, 10);
+      this.label37.Location = new System.Drawing.Point(15, 16);
       this.label37.Name = "label37";
       this.label37.Size = new System.Drawing.Size(58, 13);
       this.label37.TabIndex = 4;
@@ -272,7 +277,7 @@
       // 
       this.lblCurrentLanguage.AutoSize = true;
       this.lblCurrentLanguage.BackColor = System.Drawing.Color.Transparent;
-      this.lblCurrentLanguage.Location = new System.Drawing.Point(83, 10);
+      this.lblCurrentLanguage.Location = new System.Drawing.Point(88, 16);
       this.lblCurrentLanguage.Name = "lblCurrentLanguage";
       this.lblCurrentLanguage.Size = new System.Drawing.Size(13, 13);
       this.lblCurrentLanguage.TabIndex = 45;
@@ -334,13 +339,27 @@
             this.copyToClipboardToolStripMenuItem,
             this.saveImageToolStripMenuItem1});
       this.saveImageContext.Name = "saveImageContext";
-      this.saveImageContext.Size = new System.Drawing.Size(172, 92);
+      this.saveImageContext.Size = new System.Drawing.Size(176, 70);
       this.saveImageContext.Opening += new System.ComponentModel.CancelEventHandler(this.saveImageContext_Opening);
+      // 
+      // showImageToolStripMenuItem
+      // 
+      this.showImageToolStripMenuItem.Name = "showImageToolStripMenuItem";
+      this.showImageToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+      this.showImageToolStripMenuItem.Text = "Show Image";
+      this.showImageToolStripMenuItem.Click += new System.EventHandler(this.showImageToolStripMenuItem_Click);
+      // 
+      // copyToClipboardToolStripMenuItem
+      // 
+      this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+      this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+      this.copyToClipboardToolStripMenuItem.Text = "Copy to Clipboard";
+      this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
       // 
       // saveImageToolStripMenuItem1
       // 
       this.saveImageToolStripMenuItem1.Name = "saveImageToolStripMenuItem1";
-      this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
+      this.saveImageToolStripMenuItem1.Size = new System.Drawing.Size(175, 22);
       this.saveImageToolStripMenuItem1.Text = "Save Image";
       this.saveImageToolStripMenuItem1.Click += new System.EventHandler(this.saveImageToolStripMenuItem1_Click);
       // 
@@ -615,6 +634,8 @@
       // tabSeries
       // 
       this.tabSeries.BackColor = System.Drawing.SystemColors.Control;
+      this.tabSeries.Controls.Add(this.llblImdb);
+      this.tabSeries.Controls.Add(this.llblTvComId);
       this.tabSeries.Controls.Add(this.groupBox1);
       this.tabSeries.Controls.Add(this.raterSeriesSiteRating);
       this.tabSeries.Controls.Add(this.cmdForceUpdate);
@@ -661,6 +682,24 @@
       this.tabSeries.Size = new System.Drawing.Size(764, 719);
       this.tabSeries.TabIndex = 0;
       this.tabSeries.Text = "Series";
+      // 
+      // llblImdb
+      // 
+      this.llblImdb.AutoSize = true;
+      this.llblImdb.Location = new System.Drawing.Point(266, 497);
+      this.llblImdb.Name = "llblImdb";
+      this.llblImdb.Size = new System.Drawing.Size(0, 13);
+      this.llblImdb.TabIndex = 51;
+      this.llblImdb.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+      // 
+      // llblTvComId
+      // 
+      this.llblTvComId.AutoSize = true;
+      this.llblTvComId.Location = new System.Drawing.Point(266, 471);
+      this.llblTvComId.Name = "llblTvComId";
+      this.llblTvComId.Size = new System.Drawing.Size(0, 13);
+      this.llblTvComId.TabIndex = 51;
+      this.llblTvComId.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
       // 
       // groupBox1
       // 
@@ -822,7 +861,7 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.txtImdbId.Location = new System.Drawing.Point(128, 494);
       this.txtImdbId.Name = "txtImdbId";
-      this.txtImdbId.Size = new System.Drawing.Size(285, 20);
+      this.txtImdbId.Size = new System.Drawing.Size(122, 20);
       this.txtImdbId.TabIndex = 26;
       // 
       // txtSeriesName
@@ -875,7 +914,7 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.txtTvComId.Location = new System.Drawing.Point(128, 468);
       this.txtTvComId.Name = "txtTvComId";
-      this.txtTvComId.Size = new System.Drawing.Size(285, 20);
+      this.txtTvComId.Size = new System.Drawing.Size(122, 20);
       this.txtTvComId.TabIndex = 33;
       // 
       // txtSeriesId
@@ -1197,6 +1236,10 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.panelSeriesOverview.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
       this.panelSeriesOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.panelSeriesOverview.Controls.Add(this.rbUpdateMonth);
+      this.panelSeriesOverview.Controls.Add(this.rbUpdateWeek);
+      this.panelSeriesOverview.Controls.Add(this.rbUpdateDay);
+      this.panelSeriesOverview.Controls.Add(this.rbUpdateAutomatic);
       this.panelSeriesOverview.Controls.Add(this.cbUseZipped);
       this.panelSeriesOverview.Controls.Add(this.cmdUpdateSeries);
       this.panelSeriesOverview.Controls.Add(this.cbLoadActors);
@@ -1212,19 +1255,62 @@
       this.panelSeriesOverview.Controls.Add(this.lblCurrentLanguage);
       this.panelSeriesOverview.Controls.Add(this.label35);
       this.panelSeriesOverview.Controls.Add(this.label36);
-      this.panelSeriesOverview.Controls.Add(this.label41);
       this.panelSeriesOverview.Controls.Add(this.label37);
       this.panelSeriesOverview.Location = new System.Drawing.Point(16, 6);
       this.panelSeriesOverview.Name = "panelSeriesOverview";
       this.panelSeriesOverview.Size = new System.Drawing.Size(762, 111);
       this.panelSeriesOverview.TabIndex = 49;
       // 
+      // rbUpdateMonth
+      // 
+      this.rbUpdateMonth.AutoSize = true;
+      this.rbUpdateMonth.Location = new System.Drawing.Point(588, 86);
+      this.rbUpdateMonth.Name = "rbUpdateMonth";
+      this.rbUpdateMonth.Size = new System.Drawing.Size(55, 17);
+      this.rbUpdateMonth.TabIndex = 54;
+      this.rbUpdateMonth.TabStop = true;
+      this.rbUpdateMonth.Text = "Month";
+      this.rbUpdateMonth.UseVisualStyleBackColor = true;
+      // 
+      // rbUpdateWeek
+      // 
+      this.rbUpdateWeek.AutoSize = true;
+      this.rbUpdateWeek.Location = new System.Drawing.Point(588, 69);
+      this.rbUpdateWeek.Name = "rbUpdateWeek";
+      this.rbUpdateWeek.Size = new System.Drawing.Size(54, 17);
+      this.rbUpdateWeek.TabIndex = 54;
+      this.rbUpdateWeek.TabStop = true;
+      this.rbUpdateWeek.Text = "Week";
+      this.rbUpdateWeek.UseVisualStyleBackColor = true;
+      // 
+      // rbUpdateDay
+      // 
+      this.rbUpdateDay.AutoSize = true;
+      this.rbUpdateDay.Location = new System.Drawing.Point(588, 52);
+      this.rbUpdateDay.Name = "rbUpdateDay";
+      this.rbUpdateDay.Size = new System.Drawing.Size(44, 17);
+      this.rbUpdateDay.TabIndex = 54;
+      this.rbUpdateDay.TabStop = true;
+      this.rbUpdateDay.Text = "Day";
+      this.rbUpdateDay.UseVisualStyleBackColor = true;
+      // 
+      // rbUpdateAutomatic
+      // 
+      this.rbUpdateAutomatic.AutoSize = true;
+      this.rbUpdateAutomatic.Location = new System.Drawing.Point(588, 36);
+      this.rbUpdateAutomatic.Name = "rbUpdateAutomatic";
+      this.rbUpdateAutomatic.Size = new System.Drawing.Size(72, 17);
+      this.rbUpdateAutomatic.TabIndex = 54;
+      this.rbUpdateAutomatic.TabStop = true;
+      this.rbUpdateAutomatic.Text = "Automatic";
+      this.rbUpdateAutomatic.UseVisualStyleBackColor = true;
+      // 
       // cbUseZipped
       // 
       this.cbUseZipped.AutoSize = true;
       this.cbUseZipped.Checked = true;
       this.cbUseZipped.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.cbUseZipped.Location = new System.Drawing.Point(430, 84);
+      this.cbUseZipped.Location = new System.Drawing.Point(341, 78);
       this.cbUseZipped.Name = "cbUseZipped";
       this.cbUseZipped.Size = new System.Drawing.Size(120, 17);
       this.cbUseZipped.TabIndex = 53;
@@ -1234,11 +1320,11 @@
       // 
       // cmdUpdateSeries
       // 
-      this.cmdUpdateSeries.Location = new System.Drawing.Point(603, 80);
+      this.cmdUpdateSeries.Location = new System.Drawing.Point(691, 36);
       this.cmdUpdateSeries.Name = "cmdUpdateSeries";
-      this.cmdUpdateSeries.Size = new System.Drawing.Size(151, 23);
+      this.cmdUpdateSeries.Size = new System.Drawing.Size(63, 69);
       this.cmdUpdateSeries.TabIndex = 52;
-      this.cmdUpdateSeries.Text = "Update Series Information";
+      this.cmdUpdateSeries.Text = "Update";
       this.cmdUpdateSeries.UseVisualStyleBackColor = true;
       this.cmdUpdateSeries.Click += new System.EventHandler(this.cmdRefreshSeries_Click);
       // 
@@ -1248,7 +1334,7 @@
       this.cbLoadActors.Checked = true;
       this.cbLoadActors.CheckState = System.Windows.Forms.CheckState.Checked;
       this.cbLoadActors.Enabled = false;
-      this.cbLoadActors.Location = new System.Drawing.Point(165, 84);
+      this.cbLoadActors.Location = new System.Drawing.Point(341, 32);
       this.cbLoadActors.Name = "cbLoadActors";
       this.cbLoadActors.Size = new System.Drawing.Size(144, 17);
       this.cbLoadActors.TabIndex = 51;
@@ -1261,7 +1347,7 @@
       this.cbLoadBanner.Checked = true;
       this.cbLoadBanner.CheckState = System.Windows.Forms.CheckState.Checked;
       this.cbLoadBanner.Enabled = false;
-      this.cbLoadBanner.Location = new System.Drawing.Point(317, 84);
+      this.cbLoadBanner.Location = new System.Drawing.Point(341, 55);
       this.cbLoadBanner.Name = "cbLoadBanner";
       this.cbLoadBanner.Size = new System.Drawing.Size(92, 17);
       this.cbLoadBanner.TabIndex = 50;
@@ -1274,7 +1360,7 @@
       this.cbLoadFull.Checked = true;
       this.cbLoadFull.CheckState = System.Windows.Forms.CheckState.Checked;
       this.cbLoadFull.Enabled = false;
-      this.cbLoadFull.Location = new System.Drawing.Point(13, 84);
+      this.cbLoadFull.Location = new System.Drawing.Point(341, 9);
       this.cbLoadFull.Name = "cbLoadFull";
       this.cbLoadFull.Size = new System.Drawing.Size(146, 17);
       this.cbLoadFull.TabIndex = 50;
@@ -1285,9 +1371,9 @@
       // 
       this.cbUserFavourites.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.cbUserFavourites.FormattingEnabled = true;
-      this.cbUserFavourites.Location = new System.Drawing.Point(523, 13);
+      this.cbUserFavourites.Location = new System.Drawing.Point(603, 7);
       this.cbUserFavourites.Name = "cbUserFavourites";
-      this.cbUserFavourites.Size = new System.Drawing.Size(231, 21);
+      this.cbUserFavourites.Size = new System.Drawing.Size(151, 21);
       this.cbUserFavourites.TabIndex = 47;
       this.cbUserFavourites.SelectedIndexChanged += new System.EventHandler(this.cbUserFavourites_SelectedIndexChanged);
       // 
@@ -1296,21 +1382,11 @@
       this.label39.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label39.AutoSize = true;
       this.label39.BackColor = System.Drawing.Color.Transparent;
-      this.label39.Location = new System.Drawing.Point(429, 16);
+      this.label39.Location = new System.Drawing.Point(502, 10);
       this.label39.Name = "label39";
       this.label39.Size = new System.Drawing.Size(84, 13);
       this.label39.TabIndex = 48;
       this.label39.Text = "User Favourites:";
-      // 
-      // label41
-      // 
-      this.label41.AutoSize = true;
-      this.label41.BackColor = System.Drawing.Color.Transparent;
-      this.label41.Location = new System.Drawing.Point(431, 46);
-      this.label41.Name = "label41";
-      this.label41.Size = new System.Drawing.Size(63, 13);
-      this.label41.TabIndex = 4;
-      this.label41.Text = "Languages:";
       // 
       // panel2
       // 
@@ -1388,7 +1464,7 @@
       this.pnlFullscreen.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pnlFullscreen.Location = new System.Drawing.Point(0, 0);
       this.pnlFullscreen.Name = "pnlFullscreen";
-      this.pnlFullscreen.Size = new System.Drawing.Size(792, 874);
+      this.pnlFullscreen.Size = new System.Drawing.Size(792, 779);
       this.pnlFullscreen.TabIndex = 51;
       this.pnlFullscreen.Visible = false;
       // 
@@ -1402,20 +1478,13 @@
       this.cmdBack.UseVisualStyleBackColor = true;
       this.cmdBack.Click += new System.EventHandler(this.cmdBack_Click);
       // 
-      // showImageToolStripMenuItem
-      // 
-      this.showImageToolStripMenuItem.Name = "showImageToolStripMenuItem";
-      this.showImageToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-      this.showImageToolStripMenuItem.Text = "Show Image";
-      this.showImageToolStripMenuItem.Click += new System.EventHandler(this.showImageToolStripMenuItem_Click);
-      // 
       // pbFullscreen
       // 
       this.pbFullscreen.ContextMenuStrip = this.saveImageContext;
       this.pbFullscreen.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pbFullscreen.Location = new System.Drawing.Point(0, 0);
       this.pbFullscreen.Name = "pbFullscreen";
-      this.pbFullscreen.Size = new System.Drawing.Size(792, 874);
+      this.pbFullscreen.Size = new System.Drawing.Size(792, 779);
       this.pbFullscreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
       this.pbFullscreen.TabIndex = 1;
       this.pbFullscreen.TabStop = false;
@@ -1491,6 +1560,7 @@
       this.bcSeriesBanner.Size = new System.Drawing.Size(758, 140);
       this.bcSeriesBanner.TabIndex = 0;
       this.bcSeriesBanner.UnavailableImage = null;
+      this.bcSeriesBanner.UseThumb = false;
       // 
       // posterControlSeries
       // 
@@ -1516,6 +1586,7 @@
       this.bcEpisodeBanner.Size = new System.Drawing.Size(300, 195);
       this.bcEpisodeBanner.TabIndex = 0;
       this.bcEpisodeBanner.UnavailableImage = null;
+      this.bcEpisodeBanner.UseThumb = false;
       // 
       // bcSeasonBanner
       // 
@@ -1533,6 +1604,7 @@
       this.bcSeasonBanner.Size = new System.Drawing.Size(200, 289);
       this.bcSeasonBanner.TabIndex = 0;
       this.bcSeasonBanner.UnavailableImage = null;
+      this.bcSeasonBanner.UseThumb = false;
       // 
       // bcSeasonBannerWide
       // 
@@ -1550,6 +1622,7 @@
       this.bcSeasonBannerWide.Size = new System.Drawing.Size(765, 145);
       this.bcSeasonBannerWide.TabIndex = 0;
       this.bcSeasonBannerWide.UnavailableImage = null;
+      this.bcSeasonBannerWide.UseThumb = false;
       // 
       // coverFlowFanart
       // 
@@ -1582,14 +1655,8 @@
       this.bcActors.Size = new System.Drawing.Size(300, 450);
       this.bcActors.TabIndex = 0;
       this.bcActors.UnavailableImage = global::TvdbTester.Properties.Resources.actors_default;
+      this.bcActors.UseThumb = false;
       this.bcActors.IndexChanged += new TvdbTester.BannerControl.IndexChangedHandler(this.bcActors_IndexChanged);
-      // 
-      // copyToClipboardToolStripMenuItem
-      // 
-      this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-      this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-      this.copyToClipboardToolStripMenuItem.Text = "Copy to Clipboard";
-      this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
       // 
       // SeriesBrowser
       // 
@@ -1597,7 +1664,7 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScroll = true;
       this.BackColor = System.Drawing.SystemColors.Control;
-      this.ClientSize = new System.Drawing.Size(792, 874);
+      this.ClientSize = new System.Drawing.Size(792, 779);
       this.Controls.Add(this.pnlActorsEnabled);
       this.Controls.Add(this.pnlFanartEnabled);
       this.Controls.Add(this.pnlEpisodeEnabled);
@@ -1731,7 +1798,6 @@
     private System.Windows.Forms.TextBox txtEpisodeAbsoluteNumber;
     private System.Windows.Forms.Label label33;
     private System.Windows.Forms.Label label30;
-    private System.Windows.Forms.Label label41;
     private PosterControl posterControlSeries;
     private System.Windows.Forms.Panel panelSeriesBannerFrame;
     private System.Windows.Forms.Panel pnlSeasonBannerWide;
@@ -1780,6 +1846,12 @@
     private System.Windows.Forms.ToolStripMenuItem showImageToolStripMenuItem;
     private System.Windows.Forms.PictureBox pbFullscreen;
     private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
+    private System.Windows.Forms.RadioButton rbUpdateMonth;
+    private System.Windows.Forms.RadioButton rbUpdateWeek;
+    private System.Windows.Forms.RadioButton rbUpdateDay;
+    private System.Windows.Forms.RadioButton rbUpdateAutomatic;
+    private System.Windows.Forms.LinkLabel llblImdb;
+    private System.Windows.Forms.LinkLabel llblTvComId;
   }
 }
 

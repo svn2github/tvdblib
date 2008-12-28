@@ -15,6 +15,7 @@ using TvdbConnector.Data;
 using TvdbConnector.Data.Banner;
 using TvdbTester.Properties;
 using TvdbConnector.Exceptions;
+using System.Diagnostics;
 
 namespace TvdbTester
 {
@@ -328,7 +329,11 @@ namespace TvdbTester
       txtActors.Text = "";
       txtOverview.Text = "";
       txtTvComId.Text = ""; //series.
+      llblTvComId.Text = "";
+      llblTvComId.Links.Clear();
       txtImdbId.Text = "";
+      llblImdb.Text = "";
+      llblImdb.Links.Clear();
       txtZap2itId.Text = "";
       raterSeriesSiteRating.CurrentRating = 0;
 
@@ -404,7 +409,30 @@ namespace TvdbTester
       txtActors.Text = series.ActorsString;
       txtOverview.Text = series.Overview;
       txtTvComId.Text = series.TvDotComId != -99 ? series.TvDotComId.ToString() : ""; //series.
+      if (series.TvDotComId != -99)
+      {
+        String link =  "http://www.tv.com/show/" + series.TvDotComId + "/summary.html";
+        llblTvComId.Text = "Open";
+        llblTvComId.Links.Add(0, link.Length, link);
+      }
+      else
+      {
+        llblTvComId.Links.Clear();
+        llblTvComId.Text = "";
+      }
       txtImdbId.Text = series.ImdbId;
+      if (series.ImdbId != null && !series.ImdbId.Equals(""))
+      {
+        String link = "http://www.imdb.com/title/" + series.ImdbId;
+        llblImdb.Text = "Open";
+        llblImdb.Links.Add(0, link.Length, link);
+      }
+      else
+      {
+        llblImdb.Links.Clear();
+        llblImdb.Text = "";
+      }
+
       txtZap2itId.Text = series.Zap2itId;
       raterSeriesSiteRating.CurrentRating = series.Rating != -99 ? (int)(series.Rating / 10) : 0;
     }
@@ -844,7 +872,7 @@ namespace TvdbTester
     {
       pnlFullscreen.Visible = true;
       pnlFullscreen.BringToFront();
-      pbFullscreen.Image= GetSelectedImage();
+      pbFullscreen.Image = GetSelectedImage();
     }
 
     private void cmdSendSeriesRating_Click(object sender, EventArgs e)
@@ -868,7 +896,14 @@ namespace TvdbTester
 
     private void bcActors_IndexChanged(EventArgs _event)
     {
-      SetActorInfo(m_currentSeries.TvdbActors[bcActors.Index]);
+      if (lbAllActors.SelectedIndex != bcActors.Index)
+      {
+        lbAllActors.SelectedIndex = bcActors.Index;
+      }
+      else
+      {
+        SetActorInfo(m_currentSeries.TvdbActors[bcActors.Index]);
+      }
     }
     private void SetActorInfo(TvdbActor _actor)
     {
@@ -880,7 +915,24 @@ namespace TvdbTester
 
     private void cmdRefreshSeries_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler.UpdateAllSeries(cbUseZipped.Checked);
+      TvdbConnector.Tvdb.Interval updateInterval = Tvdb.Interval.automatic;
+      if (rbUpdateAutomatic.Checked)
+      {
+        updateInterval = Tvdb.Interval.automatic;
+      }
+      else if (rbUpdateDay.Checked)
+      {
+        updateInterval = Tvdb.Interval.day;
+      }
+      else if (rbUpdateWeek.Checked)
+      {
+        updateInterval = Tvdb.Interval.week;
+      }
+      else if (rbUpdateMonth.Checked)
+      {
+        updateInterval = Tvdb.Interval.month;
+      }
+      m_tvdbHandler.UpdateAllSeries(updateInterval, cbUseZipped.Checked);
     }
 
     private void txtSeriesToFind_TextChanged(object sender, EventArgs e)
@@ -928,6 +980,14 @@ namespace TvdbTester
     private void cmdBack_Click(object sender, EventArgs e)
     {
       pnlFullscreen.Visible = false;
+    }
+
+    private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+      if (e.Link.LinkData != null)
+      {
+        Process.Start((String)e.Link.LinkData);
+      }
     }
 
 

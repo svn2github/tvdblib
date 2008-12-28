@@ -15,7 +15,7 @@ namespace TvdbConnector.Data.Banner
   /// More information on http://thetvdb.com/wiki/index.php/Series_Banners
   /// </summary>
   [Serializable]
-  public class TvdbSeriesBanner: TvdbBanner
+  public class TvdbSeriesBanner: TvdbBannerWithThumb
   {
     #region private fields
     private Type m_bannerType;

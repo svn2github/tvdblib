@@ -18,23 +18,18 @@ namespace TvdbConnector.Data.Banner
   /// More information: http://thetvdb.com/wiki/index.php/Fan_Art
   /// </summary>
   [Serializable]
-  public class TvdbFanartBanner : TvdbBanner
+  public class TvdbFanartBanner : TvdbBannerWithThumb
   {
     #region private fields
-    private String m_thumbPath;
     private String m_vignettePath;
-    private Image m_bannerThumb;
     private Image m_vignette;
     private Point m_resolution;
     private List<Color> m_colors;
-    private bool m_thumbLoaded;
     private bool m_vignetteLoaded;
     private Color m_color1;
     private Color m_color2;
     private Color m_color3;
-    private bool m_thumbLoading;
     private bool m_vignetteLoading;
-    private System.Object m_thumbLoadingLock = new System.Object();
     private System.Object m_vignetteLoadingLock = new System.Object();
     #endregion
 
@@ -74,15 +69,6 @@ namespace TvdbConnector.Data.Banner
     }
 
     /// <summary>
-    /// Is the thumbnail currently beeing loaded
-    /// </summary>
-    public bool ThumbLoading
-    {
-      get { return m_thumbLoading; }
-      set { m_thumbLoading = value; }
-    }
-
-    /// <summary>
     /// Vignette Image
     /// </summary>
     public Image VignetteImage
@@ -109,14 +95,7 @@ namespace TvdbConnector.Data.Banner
       set { m_vignettePath = value; }
     }
 
-    /// <summary>
-    /// Path to the fanart thumbnail
-    /// </summary>
-    public String ThumbPath
-    {
-      get { return m_thumbPath; }
-      set { m_thumbPath = value; }
-    }
+
 
     /// <summary>
     /// Color 3 (see Colors property)
@@ -152,15 +131,6 @@ namespace TvdbConnector.Data.Banner
     {
       get { return m_resolution; }
       set { m_resolution = value; }
-    }
-
-    /// <summary>
-    /// Image of the thumbnail
-    /// </summary>
-    public Image BannerThumb
-    {
-      get { return m_bannerThumb; }
-      set { m_bannerThumb = value; }
     }
 
     /// <summary>
@@ -201,7 +171,7 @@ namespace TvdbConnector.Data.Banner
         }
         catch (WebException ex)
         {
-          Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
+          Log.Error("Couldn't load banner thumb" + m_vignettePath, ex);
         }
         m_vignetteLoaded = false;
         m_vignetteLoading = false;
@@ -227,84 +197,6 @@ namespace TvdbConnector.Data.Banner
         m_vignetteLoaded = false;
         return false;
       }
-    }
-
-    /// <summary>
-    /// Load the thumb from tvdb
-    /// </summary>
-    /// <returns></returns>
-    public bool LoadThumb()
-    {
-      return LoadThumb(false);
-    }
-
-
-    /// <summary>
-    /// Load the thumb from tvdb
-    /// </summary>
-    /// <returns></returns>
-    public bool LoadThumb(bool _replaceOld)
-    {
-      bool wasLoaded = m_thumbLoaded;//is the banner already loaded at this point
-      lock (m_thumbLoadingLock)
-      {//if another thread is already loading THIS banner, the lock will block this thread until the other thread
-        //has finished loading
-        if (!wasLoaded && !_replaceOld && m_thumbLoaded)
-        {////the banner has already been loaded from a different thread and we don't want to replace it
-          return false;
-        }
-        m_thumbLoading = true;
-        if (m_thumbPath != null)
-        {
-          try
-          {
-            Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
-
-            if (img != null)
-            {
-              m_bannerThumb = img;
-              m_thumbLoaded = true;
-              m_thumbLoading = false;
-              return true;
-            }
-          }
-          catch (WebException ex)
-          {
-            Log.Error("Couldn't load banner thumb" + m_thumbPath, ex);
-          }
-        }
-        m_thumbLoaded = false;
-        m_thumbLoading = false;
-        return false;
-      }
-    }
-
-    /// <summary>
-    /// Load thumbnail with given image
-    /// </summary>
-    /// <param name="_img"></param>
-    /// <returns></returns>
-    public bool LoadThumb(Image _img)
-    {
-      if (_img != null)
-      {
-        m_bannerThumb = _img;
-        m_thumbLoaded = true;
-        return true;
-      }
-      else
-      {
-        m_thumbLoaded = false;
-        return false;
-      }
-    }
-
-    /// <summary>
-    /// Is the Image of the thumb already loaded
-    /// </summary>
-    public bool IsThumbLoaded
-    {
-      get { return m_thumbLoaded; }
     }
   }
 }

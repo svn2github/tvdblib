@@ -13,7 +13,7 @@ namespace TvdbConnector.Data.Banner
   /// More information at http://thetvdb.com/wiki/index.php/Posters
   /// </summary>
   [Serializable]
-  public class TvdbPosterBanner: TvdbBanner
+  public class TvdbPosterBanner: TvdbBannerWithThumb
   {
     #region private fields
         private Point m_resolution;

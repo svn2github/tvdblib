@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using TvdbConnector.Data;
 using System.Threading;
 using TvdbTester.Properties;
+using TvdbConnector.Data.Banner;
 
 namespace TvdbTester
 {
@@ -233,6 +234,18 @@ namespace TvdbTester
       pbLoading.Visible = false;
     }
 
+    private bool m_useThumbIfPossible;
+
+    /// <summary>
+    /// Will use the thumbnail of the image
+    /// </summary>
+    [Description("Will use the thumbnail of the image if a thumbnail is available")]
+    public bool UseThumb
+    {
+      get { return m_useThumbIfPossible; }
+      set { m_useThumbIfPossible = value; }
+    }
+
     /// <summary>
     /// Do a banner load within it's own thread
     /// </summary>
@@ -245,11 +258,25 @@ namespace TvdbTester
         if (banner.BannerPath != null && !banner.BannerPath.Equals(""))
         {
           int index = m_index;
-          if (!banner.IsLoaded)
+          //the basetype of the banner is TvdbBannerWithThumb, not TvdbBanner (only poster atm)
+          bool hasThumb = banner.GetType().BaseType == typeof(TvdbBannerWithThumb);
+          if (m_useThumbIfPossible && hasThumb)
           {
-            SetImageThreadSafe(null);
-            SetLoadingVisibleThreadSafe(true);
-            banner.LoadBanner();
+            if (!((TvdbBannerWithThumb)banner).IsThumbLoaded)
+            {
+              SetImageThreadSafe(null);
+              SetLoadingVisibleThreadSafe(true);
+              ((TvdbBannerWithThumb)banner).LoadThumb();
+            }
+          }
+          else
+          {
+            if (!banner.IsLoaded)
+            {
+              SetImageThreadSafe(null);
+              SetLoadingVisibleThreadSafe(true);
+              banner.LoadBanner();
+            }
           }
 
           lock (m_latestLoadingThread)
@@ -257,7 +284,12 @@ namespace TvdbTester
             if (Thread.CurrentThread == m_latestLoadingThread)
             {
               //Console.WriteLine("Loading finished of " + banner.Id);
-              if (banner.IsLoaded)
+              if (m_useThumbIfPossible && hasThumb && ((TvdbBannerWithThumb)banner).IsThumbLoaded)
+              {
+                SetLoadingVisibleThreadSafe(false);
+                SetImageThreadSafe(((TvdbBannerWithThumb)banner).BannerThumb);
+              }
+              else if (banner.IsLoaded)
               {//banner was successfully loaded
                 SetLoadingVisibleThreadSafe(false);
                 SetImageThreadSafe(banner.Banner);

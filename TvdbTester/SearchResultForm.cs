@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TvdbConnector.Data;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace TvdbTester
 {
@@ -76,6 +78,11 @@ namespace TvdbTester
         linkImdb.Text = m_selection.ImdbId.Equals("")? "": "http://www.imdb.com/title/" + m_selection.ImdbId;
         txtFirstAired.Text = m_selection.FirstAired.ToShortDateString();
       }
+    }
+
+    private void linkImdb_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+      Process.Start(linkImdb.Text);
     }
 
   }

@@ -151,7 +151,7 @@ namespace TvdbConnector.Data
         try
         {
           Image img = LoadImage(TvdbLinks.CreateBannerLink(m_bannerPath));
-          Thread.Sleep(2000);
+          //Thread.Sleep(2000);
           if (img != null)
           {
             m_banner = img;

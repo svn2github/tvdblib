@@ -13,7 +13,7 @@ namespace TvdbConnector.Data.Banner
   /// further information on http://thetvdb.com/wiki/index.php/Episode_Images
   /// </summary>
   [Serializable]
-  public class TvdbEpisodeBanner: TvdbBanner
+  public class TvdbEpisodeBanner: TvdbBannerWithThumb
   {
     /// <summary>
     /// TvdbEpisodeBanner constructor
