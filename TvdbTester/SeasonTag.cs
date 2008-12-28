@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TvdbConnector.Data.Banner;
+using TvdbLib.Data.Banner;
 
 namespace TvdbTester
 {

@@ -29,12 +29,12 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using TvdbConnector;
-using TvdbConnector.Cache;
-using TvdbConnector.Data;
-using TvdbConnector.Data.Banner;
+using TvdbLib;
+using TvdbLib.Cache;
+using TvdbLib.Data;
+using TvdbLib.Data.Banner;
 using TvdbTester.Properties;
-using TvdbConnector.Exceptions;
+using TvdbLib.Exceptions;
 using System.Diagnostics;
 
 namespace TvdbTester
@@ -935,7 +935,7 @@ namespace TvdbTester
 
     private void cmdRefreshSeries_Click(object sender, EventArgs e)
     {
-      TvdbConnector.Tvdb.Interval updateInterval = Tvdb.Interval.automatic;
+      TvdbLib.Tvdb.Interval updateInterval = Tvdb.Interval.automatic;
       if (rbUpdateAutomatic.Checked)
       {
         updateInterval = Tvdb.Interval.automatic;

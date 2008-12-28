@@ -6,7 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TvdbConnector.Data.Banner;
+using TvdbLib.Data.Banner;
 using TvdbTester.Properties;
 using System.Threading;
 

@@ -6,10 +6,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TvdbConnector.Data;
+using TvdbLib.Data;
 using System.Threading;
 using TvdbTester.Properties;
-using TvdbConnector.Data.Banner;
+using TvdbLib.Data.Banner;
 
 namespace TvdbTester
 {

@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TvdbTester.Properties;
-using TvdbConnector;
-using TvdbConnector.Cache;
-using TvdbConnector.Data;
-using TvdbConnector.Data.Banner;
+using TvdbLib;
+using TvdbLib.Cache;
+using TvdbLib.Data;
+using TvdbLib.Data.Banner;
 
 namespace TvdbTester
 {

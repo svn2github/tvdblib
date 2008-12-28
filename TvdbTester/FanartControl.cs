@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
-using TvdbConnector.Data;
+using TvdbLib.Data;
 using TvdbTester.Properties;
-using TvdbConnector.Data.Banner;
+using TvdbLib.Data.Banner;
 
 namespace TvdbTester
 {
