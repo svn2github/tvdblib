@@ -282,10 +282,10 @@ namespace TvdbTester
         img.Degree = m_mouseDownClosestDegree;
         float size = CalcSize(m_mouseDownClosestDegree);//how 
         PointF p = m_elipse[m_mouseDownClosestDegree];
-        m_imagePositions[0].Rectangle = new Rectangle((int)(p.X - 100 * size),
-                                                      (int)(p.Y - 50 * size),
-                                                      (int)(200.0 * size),
-                                                      (int)(100.0 * size));
+        m_imagePositions[0].Rectangle = new Rectangle((int)(p.X - (m_thumbSize.X/2) * size),
+                                                      (int)(p.Y - (m_thumbSize.Y/2) * size),
+                                                      (int)(m_thumbSize.X * size),
+                                                      (int)(m_thumbSize.Y * size));
 
         //m_imagePositions[0].Position.X = 10;// = (int)m_elipse[m_mouseDownClosestDegree].X;
         //m_imagePositions[0].Position.Y = 

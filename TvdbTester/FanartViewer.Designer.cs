@@ -48,10 +48,10 @@
       // 
       this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this.hScrollBar1.Location = new System.Drawing.Point(13, 245);
+      this.hScrollBar1.Location = new System.Drawing.Point(13, 243);
       this.hScrollBar1.Maximum = 360;
       this.hScrollBar1.Name = "hScrollBar1";
-      this.hScrollBar1.Size = new System.Drawing.Size(516, 29);
+      this.hScrollBar1.Size = new System.Drawing.Size(512, 29);
       this.hScrollBar1.TabIndex = 2;
       this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
       // 
@@ -82,7 +82,7 @@
       this.fanartControl1.NumberOfImages = 8;
       this.fanartControl1.Position = 0;
       this.fanartControl1.SelectedIndex = 0;
-      this.fanartControl1.Size = new System.Drawing.Size(522, 211);
+      this.fanartControl1.Size = new System.Drawing.Size(518, 209);
       this.fanartControl1.TabIndex = 1;
       this.fanartControl1.ThumbSize = new System.Drawing.Point(100, 75);
       this.fanartControl1.ImageClicked += new TvdbTester.FanartControl.ImageClickedEventHandler(this.fanartControl1_ImageClicked);
@@ -91,7 +91,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(532, 626);
+      this.ClientSize = new System.Drawing.Size(528, 624);
       this.Controls.Add(this.bannerControl1);
       this.Controls.Add(this.hScrollBar1);
       this.Controls.Add(this.fanartControl1);
