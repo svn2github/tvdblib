@@ -438,7 +438,7 @@ namespace TvdbTester
       txtTvComId.Text = series.TvDotComId != -99 ? series.TvDotComId.ToString() : ""; //series.
       if (series.TvDotComId != -99)
       {
-        String link =  "http://www.tv.com/show/" + series.TvDotComId + "/summary.html";
+        String link = "http://www.tv.com/show/" + series.TvDotComId + "/summary.html";
         llblTvComId.Text = "Open";
         llblTvComId.Links.Add(0, link.Length, link);
       }
@@ -834,14 +834,7 @@ namespace TvdbTester
 
     private void saveImageContext_Opening(object sender, CancelEventArgs e)
     {
-      if (saveImageContext.SourceControl == pbFullscreen)
-      {
-        showImageToolStripMenuItem.Enabled = false;
-      }
-      else
-      {
-        showImageToolStripMenuItem.Enabled = true;
-      }
+      showImageToolStripMenuItem.Enabled = false;
     }
 
     private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -897,9 +890,14 @@ namespace TvdbTester
 
     private void showImageToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      pnlFullscreen.Visible = true;
-      pnlFullscreen.BringToFront();
-      pbFullscreen.Image = GetSelectedImage();
+      FullscreenForm fsf = new FullscreenForm();
+      fsf.Banner = GetSelectedBanner();
+      fsf.Show();
+    }
+
+    private TvdbBannerWithThumb GetSelectedBanner()
+    {
+      throw new NotImplementedException();
     }
 
     private void cmdSendSeriesRating_Click(object sender, EventArgs e)
@@ -1006,7 +1004,7 @@ namespace TvdbTester
 
     private void cmdBack_Click(object sender, EventArgs e)
     {
-      pnlFullscreen.Visible = false;
+      //pnlFullscreen.Visible = false;
     }
 
     private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

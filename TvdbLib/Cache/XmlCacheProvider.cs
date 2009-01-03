@@ -112,7 +112,7 @@ namespace TvdbLib.Cache
       m_xmlWriter.WriteSeriesContent(_series, root + "\\all.xml");
       TvdbLanguage defaultLang = _series.Language;
 
-      foreach(TvdbLanguage l in _series.GetAvailableLanguages())
+      foreach (TvdbLanguage l in _series.GetAvailableLanguages())
       {
         if (l != defaultLang)
         {
@@ -121,7 +121,7 @@ namespace TvdbLib.Cache
         }
       }
 
-      
+
       if (_series.BannersLoaded)
       {
         m_xmlWriter.WriteSeriesBannerContent(_series.Banners, root + "\\banners.xml");
@@ -141,15 +141,19 @@ namespace TvdbLib.Cache
           if (!file.Directory.Exists) file.Directory.Create();
           b.Banner.Save(file.FullName);
         }
-        if (b.GetType() == typeof(TvdbFanartBanner))
-        {//banner is fanart -> has vignette and thumb
+
+        if (b.GetType().BaseType == typeof(TvdbBannerWithThumb))
+        {//banner has thumb -> store thumb as well
           file = new FileInfo(root + "\\bannerthumb_" + b.Id + ".jpg");
-          if (((TvdbFanartBanner)b).IsThumbLoaded && !file.Exists)
+          if (((TvdbBannerWithThumb)b).IsThumbLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
-            ((TvdbFanartBanner)b).BannerThumb.Save(file.FullName);
+            ((TvdbBannerWithThumb)b).BannerThumb.Save(file.FullName);
           }
+        }
 
+        if (b.GetType() == typeof(TvdbFanartBanner))
+        {//banner is fanart -> has vignette and thumb
           file = new FileInfo(root + "\\bannervignette_" + b.Id + ".jpg");
           if (((TvdbFanartBanner)b).IsVignetteLoaded && !file.Exists)
           {
@@ -164,11 +168,20 @@ namespace TvdbLib.Cache
       {
         foreach (TvdbEpisode e in _series.Episodes)
         {
-          FileInfo file = new FileInfo(root + "\\EpisodeImages\\S" + e.SeasonNumber + "E" + e.EpisodeNumber + ".jpg");
-          if (e.Banner != null && e.Banner.IsLoaded && !file.Exists)
+          if (e.Banner != null)
           {
-            if (!file.Directory.Exists) file.Directory.Create();
-            e.Banner.Banner.Save(file.FullName);
+            FileInfo file = new FileInfo(root + "\\EpisodeImages\\ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + ".jpg");
+            if (e.Banner.IsLoaded && !file.Exists)
+            {
+              if (!file.Directory.Exists) file.Directory.Create();
+              e.Banner.Banner.Save(file.FullName);
+            }
+            file = new FileInfo(root + "\\EpisodeImages\\ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + "_thumb.jpg");
+            if (e.Banner.BannerThumb != null && e.Banner.IsThumbLoaded && !file.Exists)
+            {
+              if (!file.Directory.Exists) file.Directory.Create();
+              e.Banner.BannerThumb.Save(file.FullName);
+            }
           }
         }
       }
@@ -304,7 +317,7 @@ namespace TvdbLib.Cache
       Regex rex = new Regex("S(\\d+)E(\\d+)");
       if (Directory.Exists(seriesRoot + "\\EpisodeImages"))
       {
-        String[] episodeFiles = Directory.GetFiles(seriesRoot + "\\EpisodeImages", "*.jpg");
+        String[] episodeFiles = Directory.GetFiles(seriesRoot + "\\EpisodeImages", "ep_*.jpg");
         foreach (String epImageFile in episodeFiles)
         {
           try
@@ -316,7 +329,14 @@ namespace TvdbLib.Cache
             {
               if (e.SeasonNumber == season && e.EpisodeNumber == episode)
               {
-                e.Banner.LoadBanner(Image.FromFile(epImageFile));
+                if (epImageFile.Contains("thumb"))
+                {
+                  e.Banner.LoadThumb(Image.FromFile(epImageFile));
+                }
+                else
+                {
+                  e.Banner.LoadBanner(Image.FromFile(epImageFile));
+                }
                 break;
               }
             }
@@ -347,9 +367,9 @@ namespace TvdbLib.Cache
             {
               if (banner.Id == bannerId)
               {
-                if (b.Contains("thumb") && banner.GetType() == typeof(TvdbFanartBanner))
+                if (b.Contains("thumb") && banner.GetType().BaseType == typeof(TvdbBannerWithThumb))
                 {
-                  ((TvdbFanartBanner)banner).LoadThumb(Image.FromFile(b));
+                  ((TvdbBannerWithThumb)banner).LoadThumb(Image.FromFile(b));
                 }
                 else if (b.Contains("vignette") && banner.GetType() == typeof(TvdbFanartBanner))
                 {

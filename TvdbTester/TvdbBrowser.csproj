@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{524ED2AB-E2BF-4ABC-9154-C0B949ECF159}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -76,6 +76,12 @@
     <Compile Include="FanartViewer.Designer.cs">
       <DependentUpon>FanartViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="FullscreenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FullscreenForm.Designer.cs">
+      <DependentUpon>FullscreenForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GifImage.cs" />
     <Compile Include="iBar.cs">
       <SubType>UserControl</SubType>
@@ -134,6 +140,9 @@
     <EmbeddedResource Include="FanartViewer.resx">
       <DependentUpon>FanartViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FullscreenForm.resx">
+      <DependentUpon>FullscreenForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="iBar.resx">
       <DependentUpon>iBar.cs</DependentUpon>

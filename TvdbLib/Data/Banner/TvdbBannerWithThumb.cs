@@ -32,6 +32,7 @@ namespace TvdbLib.Data.Banner
   /// 
   /// These thumbnails are at the moment availabe for all banner types except actors
   /// </summary>
+  [Serializable]
   public class TvdbBannerWithThumb: TvdbBanner
   {
     #region private fields

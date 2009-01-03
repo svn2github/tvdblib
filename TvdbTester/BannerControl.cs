@@ -170,11 +170,24 @@ namespace TvdbTester
     {
       get
       {
-        if (m_imageList == null || m_imageList.Count == 0 || !m_imageList[m_index].IsLoaded)
+        if (m_imageList == null || m_imageList.Count == 0)
         {
           return null;
         }
-        return panelImage.BackgroundImage;
+        else
+        {
+          if (m_useThumbIfPossible && m_imageList[m_index].GetType().BaseType == typeof(TvdbBannerWithThumb))
+          {
+            if (((TvdbBannerWithThumb)m_imageList[m_index]).IsThumbLoaded) return ((TvdbBannerWithThumb)m_imageList[m_index]).BannerThumb;
+          }
+          else
+          {
+            if (m_imageList[m_index].IsLoaded) return m_imageList[m_index].Banner;
+          }
+
+          return null;
+        }
+        
       }
     }
 
