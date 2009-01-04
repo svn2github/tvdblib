@@ -134,6 +134,24 @@ namespace TvdbTester
           m_index = value;
           SetBannerImage(m_imageList[value]);
           if (IndexChanged != null) IndexChanged(new EventArgs());
+
+          if (m_index >= m_imageList.Count - 1)
+          {
+            cmdRight.Visible = false;
+          }
+          else
+          {
+            cmdRight.Visible = true;
+          }
+
+          if (m_index <= 0)
+          {
+            cmdLeft.Visible = false;
+          }
+          else
+          {
+            cmdLeft.Visible = true;
+          }
         }
       }
     }
