@@ -219,7 +219,7 @@ namespace TvdbLib.Xml
                   new XElement("FirstAired", e.FirstAired),
                   new XElement("GuestStars", e.GuestStarsString),
                   new XElement("IMDB_ID", e.ImdbId),
-                  new XElement("Language", e.Language.Name),
+                  new XElement("Language", e.Language.Abbriviation),
                   new XElement("Overview", e.Overview),
                   new XElement("ProductionCode", e.ProductionCode),
                   new XElement("Rating", e.Rating.ToString()),

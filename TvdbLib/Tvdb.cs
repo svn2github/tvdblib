@@ -972,8 +972,15 @@ namespace TvdbLib
           if (e.LastUpdated < ue.LastUpdated)
           {
             //download episode which has been updated
-            TvdbEpisode newEpisode = m_downloader.DownloadEpisode(e.Id, e.Language);
-
+            TvdbEpisode newEpisode = null;
+            try
+            {
+              newEpisode = m_downloader.DownloadEpisode(e.Id, e.Language);
+            }
+            catch (TvdbContentNotFoundException ex)
+            {
+              Log.Warn("Couldn't download episode " + e.Id + "(" + e.EpisodeName + ")");
+            }
             //update information of episode with new episodes informations
             if (newEpisode != null)
             {
