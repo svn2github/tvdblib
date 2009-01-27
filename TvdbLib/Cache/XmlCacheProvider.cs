@@ -82,7 +82,7 @@ namespace TvdbLib.Cache
       if (_languageList != null && _languageList.Count > 0)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_xmlWriter.WriteLanguageFile(_languageList, m_rootFolder + "\\languages.xml");
+        m_xmlWriter.WriteLanguageFile(_languageList, m_rootFolder + Path.DirectorySeparatorChar + "languages.xml");
       }
     }
 
@@ -95,7 +95,7 @@ namespace TvdbLib.Cache
       if (_mirrorInfo != null && _mirrorInfo.Count > 0)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_xmlWriter.WriteMirrorFile(_mirrorInfo, m_rootFolder + "\\mirrors.xml");
+        m_xmlWriter.WriteMirrorFile(_mirrorInfo, m_rootFolder + Path.DirectorySeparatorChar + "mirrors.xml");
       }
     }
 
@@ -107,9 +107,9 @@ namespace TvdbLib.Cache
     public void SaveToCache(TvdbSeries _series)
     {
       if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-      String root = m_rootFolder + "\\" + _series.Id;
+      String root = m_rootFolder + Path.DirectorySeparatorChar + _series.Id;
 
-      m_xmlWriter.WriteSeriesContent(_series, root + "\\all.xml");
+      m_xmlWriter.WriteSeriesContent(_series, root + Path.DirectorySeparatorChar +"all.xml");
       TvdbLanguage defaultLang = _series.Language;
 
       foreach (TvdbLanguage l in _series.GetAvailableLanguages())
@@ -117,25 +117,25 @@ namespace TvdbLib.Cache
         if (l != defaultLang)
         {
           _series.SetLanguage(l);
-          m_xmlWriter.WriteSeriesContent(_series, root + "\\" + l.Abbriviation + ".xml");
+          m_xmlWriter.WriteSeriesContent(_series, root + Path.DirectorySeparatorChar + l.Abbriviation + ".xml");
         }
       }
 
 
       if (_series.BannersLoaded)
       {
-        m_xmlWriter.WriteSeriesBannerContent(_series.Banners, root + "\\banners.xml");
+        m_xmlWriter.WriteSeriesBannerContent(_series.Banners, root + Path.DirectorySeparatorChar + "banners.xml");
       }
 
       if (_series.TvdbActorsLoaded)
       {
-        m_xmlWriter.WriteActorFile(_series.TvdbActors, root + "\\actors.xml");
+        m_xmlWriter.WriteActorFile(_series.TvdbActors, root + Path.DirectorySeparatorChar + "actors.xml");
       }
 
       //Save all loaded banners to file
       foreach (TvdbBanner b in _series.Banners)
       {
-        FileInfo file = new FileInfo(root + "\\banner_" + b.Id + ".jpg");
+        FileInfo file = new FileInfo(root + Path.DirectorySeparatorChar + "banner_" + b.Id + ".jpg");
         if (b.IsLoaded && !file.Exists)
         {//banner is cached
           if (!file.Directory.Exists) file.Directory.Create();
@@ -144,7 +144,7 @@ namespace TvdbLib.Cache
 
         if (b.GetType().BaseType == typeof(TvdbBannerWithThumb))
         {//banner has thumb -> store thumb as well
-          file = new FileInfo(root + "\\bannerthumb_" + b.Id + ".jpg");
+          file = new FileInfo(root + Path.DirectorySeparatorChar + "bannerthumb_" + b.Id + ".jpg");
           if (((TvdbBannerWithThumb)b).IsThumbLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
@@ -154,7 +154,7 @@ namespace TvdbLib.Cache
 
         if (b.GetType() == typeof(TvdbFanartBanner))
         {//banner is fanart -> has vignette and thumb
-          file = new FileInfo(root + "\\bannervignette_" + b.Id + ".jpg");
+          file = new FileInfo(root + Path.DirectorySeparatorChar + "bannervignette_" + b.Id + ".jpg");
           if (((TvdbFanartBanner)b).IsVignetteLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
@@ -170,13 +170,13 @@ namespace TvdbLib.Cache
         {
           if (e.Banner != null)
           {
-            FileInfo file = new FileInfo(root + "\\EpisodeImages\\ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + ".jpg");
+            FileInfo file = new FileInfo(root + Path.DirectorySeparatorChar + "EpisodeImages" + Path.DirectorySeparatorChar + "ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + ".jpg");
             if (e.Banner.IsLoaded && !file.Exists)
             {
               if (!file.Directory.Exists) file.Directory.Create();
               e.Banner.Banner.Save(file.FullName);
             }
-            file = new FileInfo(root + "\\EpisodeImages\\ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + "_thumb.jpg");
+            file = new FileInfo(root + Path.DirectorySeparatorChar + "EpisodeImages" + Path.DirectorySeparatorChar + "ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + "_thumb.jpg");
             if (e.Banner.BannerThumb != null && e.Banner.IsThumbLoaded && !file.Exists)
             {
               if (!file.Directory.Exists) file.Directory.Create();
@@ -190,7 +190,7 @@ namespace TvdbLib.Cache
       {
         foreach (TvdbActor a in _series.TvdbActors)
         {
-          FileInfo file = new FileInfo(root + "\\actor_" + a.ActorImage.Id + ".jpg");
+          FileInfo file = new FileInfo(root + Path.DirectorySeparatorChar + "actor_" + a.ActorImage.Id + ".jpg");
           if (a.ActorImage.IsLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
@@ -221,7 +221,7 @@ namespace TvdbLib.Cache
     public List<TvdbLanguage> LoadLanguageListFromCache()
     {
 
-      String file = m_rootFolder + "\\languages.xml";
+      String file = m_rootFolder + Path.DirectorySeparatorChar + "languages.xml";
       if (File.Exists(file))
       {
         return m_xmlReader.ExtractLanguages(File.ReadAllText(file));
@@ -238,7 +238,7 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public List<TvdbMirror> LoadMirrorListFromCache()
     {
-      String file = m_rootFolder + "\\mirrors.xml";
+      String file = m_rootFolder + Path.DirectorySeparatorChar + "mirrors.xml";
       if (File.Exists(file))
       {
         return m_xmlReader.ExtractMirrors(File.ReadAllText(file));
@@ -259,7 +259,7 @@ namespace TvdbLib.Cache
       string[] dirs = Directory.GetDirectories(m_rootFolder);
       foreach (String d in dirs)
       {
-        TvdbSeries series = LoadSeriesFromCache(Int32.Parse(d.Remove(0, d.LastIndexOf("\\") + 1)));
+        TvdbSeries series = LoadSeriesFromCache(Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1)));
         if (series != null) retList.Add(series);
       }
       return retList;
@@ -274,7 +274,7 @@ namespace TvdbLib.Cache
     /// <returns>Series that has been loaded</returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
-      String seriesRoot = m_rootFolder + "\\" + _seriesId;
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
       //todo: handle languages
       TvdbSeries series = new TvdbSeries();
 
@@ -315,9 +315,9 @@ namespace TvdbLib.Cache
       }
 
       Regex rex = new Regex("S(\\d+)E(\\d+)");
-      if (Directory.Exists(seriesRoot + "\\EpisodeImages"))
+      if (Directory.Exists(seriesRoot + Path.DirectorySeparatorChar + "EpisodeImages"))
       {
-        String[] episodeFiles = Directory.GetFiles(seriesRoot + "\\EpisodeImages", "ep_*.jpg");
+        String[] episodeFiles = Directory.GetFiles(seriesRoot + Path.DirectorySeparatorChar + "EpisodeImages", "ep_*.jpg");
         foreach (String epImageFile in episodeFiles)
         {
           try
@@ -351,7 +351,7 @@ namespace TvdbLib.Cache
       #endregion
 
       #region Banner loading
-      String bannerFile = seriesRoot + "\\banners.xml";
+      String bannerFile = seriesRoot + Path.DirectorySeparatorChar + "banners.xml";
       //load cached banners
       if (File.Exists(bannerFile))
       {//banners have been already loaded
@@ -394,7 +394,7 @@ namespace TvdbLib.Cache
 
       #region actor loading
       //load actor info
-      String actorFile = seriesRoot + "\\actors.xml";
+      String actorFile = seriesRoot + Path.DirectorySeparatorChar + "actors.xml";
       if (File.Exists(actorFile))
       {
         List<TvdbActor> actorList = m_xmlReader.ExtractActors(File.ReadAllText(actorFile));
@@ -435,7 +435,7 @@ namespace TvdbLib.Cache
     public TvdbUser LoadUserInfoFromCache(string _userId)
     {
       String seriesRoot = m_rootFolder;
-      String xmlFile = seriesRoot + "\\user_" + _userId + ".xml";
+      String xmlFile = seriesRoot + Path.DirectorySeparatorChar + "user_" + _userId + ".xml";
       if (!File.Exists(xmlFile)) return null;
       String content = File.ReadAllText(xmlFile);
       List<TvdbUser> userList = m_xmlReader.ExtractUser(content);
@@ -458,7 +458,7 @@ namespace TvdbLib.Cache
       if (_user != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_xmlWriter.WriteUserData(_user, m_rootFolder + "\\user_" + _user.UserIdentifier + ".xml");
+        m_xmlWriter.WriteUserData(_user, m_rootFolder + Path.DirectorySeparatorChar + "user_" + _user.UserIdentifier + ".xml");
       }
     }
 
@@ -477,7 +477,7 @@ namespace TvdbLib.Cache
         {
           try
           {
-            int series = Int32.Parse(d.Remove(0, d.LastIndexOf("\\") + 1));
+            int series = Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1));
             retList.Add(series);
           }
           catch (FormatException)
@@ -504,8 +504,8 @@ namespace TvdbLib.Cache
       bool episodesLoaded = false;
       bool bannersLoaded = false;
 
-      String seriesRoot = m_rootFolder + "\\" + _seriesId;
-      String xmlFile = seriesRoot + "\\all.xml";
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      String xmlFile = seriesRoot + Path.DirectorySeparatorChar + "all.xml";
       if (!File.Exists(xmlFile)) return false;
       String content = File.ReadAllText(xmlFile);
 
@@ -514,8 +514,8 @@ namespace TvdbLib.Cache
       {//episodes are not loaded
         episodesLoaded = true;
       }
-      String bannerFile = seriesRoot + "\\banners.xml";
-      String actorFile = seriesRoot + "\\actors.xml";
+      String bannerFile = seriesRoot + Path.DirectorySeparatorChar + "banners.xml";
+      String actorFile = seriesRoot + Path.DirectorySeparatorChar + "actors.xml";
 
       //load cached banners
       if (File.Exists(bannerFile))

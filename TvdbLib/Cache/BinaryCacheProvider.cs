@@ -134,11 +134,11 @@ namespace TvdbLib.Cache
 
     private DateTime LoadLastUpdatedFromCache()
     {
-      if (File.Exists(m_rootFolder + "\\lastUpdated.ser"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\lastUpdated.ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser", FileMode.Open);
           DateTime retValue = (DateTime)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -173,7 +173,7 @@ namespace TvdbLib.Cache
     private void SaveToCache(DateTime _time)
     {
       if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-      m_filestream = new FileStream(m_rootFolder + "\\lastUpdated.ser", FileMode.Create);
+      m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser", FileMode.Create);
       m_formatter.Serialize(m_filestream, _time);
       m_filestream.Close();
     }
@@ -188,7 +188,7 @@ namespace TvdbLib.Cache
       if (_languageList != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_filestream = new FileStream(m_rootFolder + "\\languageInfo.ser", FileMode.Create);
+        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "languageInfo.ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _languageList);
         m_filestream.Close();
       }
@@ -203,7 +203,7 @@ namespace TvdbLib.Cache
       if (_mirrorInfo != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_filestream = new FileStream(m_rootFolder + "\\mirrorInfo.ser", FileMode.Create);
+        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "mirrorInfo.ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _mirrorInfo);
         m_filestream.Close();
       }
@@ -215,11 +215,11 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public List<TvdbLanguage> LoadLanguageListFromCache()
     {
-      if (File.Exists(m_rootFolder + "\\languageInfo.ser"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "languageInfo.ser"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\languageInfo.ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "languageInfo.ser", FileMode.Open);
           List<TvdbLanguage> retValue = (List<TvdbLanguage>)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -242,11 +242,11 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public List<TvdbMirror> LoadMirrorListFromCache()
     {
-      if (File.Exists(m_rootFolder + "\\mirrorInfo.ser"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "mirrorInfo.ser"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\mirrorInfo.ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "mirrorInfo.ser", FileMode.Open);
           List<TvdbMirror> retValue = (List<TvdbMirror>)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -270,11 +270,11 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
-      if (File.Exists(m_rootFolder + "\\series_" + _seriesId + ".ser"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\series_" + _seriesId + ".ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser", FileMode.Open);
           TvdbSeries retValue = (TvdbSeries)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -300,13 +300,13 @@ namespace TvdbLib.Cache
       if (_series != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_filestream = new FileStream(m_rootFolder + "\\series_" + _series.Id + ".ser", FileMode.Create);
+        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
         m_filestream.Close();
 
         SeriesConfiguration cfg = new SeriesConfiguration(_series.Id, _series.EpisodesLoaded,
                                                   _series.BannersLoaded, _series.TvdbActorsLoaded);
-        m_filestream = new FileStream(m_rootFolder + "\\series_" + _series.Id + ".cfg", FileMode.Create);
+        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".cfg", FileMode.Create);
         m_formatter.Serialize(m_filestream, cfg);
         m_filestream.Close();
       }
@@ -321,7 +321,7 @@ namespace TvdbLib.Cache
       if (_user != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
-        m_filestream = new FileStream(m_rootFolder + "\\user_" + _user.UserIdentifier + ".ser", FileMode.Create);
+        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "user_" + _user.UserIdentifier + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _user);
         m_filestream.Close();
       }
@@ -335,7 +335,7 @@ namespace TvdbLib.Cache
     {
       if (Directory.Exists(m_rootFolder))
       {
-        String[] files = Directory.GetFiles(m_rootFolder, "\\series*.ser");
+        String[] files = Directory.GetFiles(m_rootFolder, Path.DirectorySeparatorChar + "series*.ser");
         List<TvdbSeries> retSeries = new List<TvdbSeries>();
         foreach (String f in files)
         {
@@ -367,11 +367,11 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public TvdbUser LoadUserInfoFromCache(String _userId)
     {
-      if (File.Exists(m_rootFolder + "\\user_" + _userId + ".ser"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "user_" + _userId + ".ser"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\user_" + _userId + ".ser", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "user_" + _userId + ".ser", FileMode.Open);
           TvdbUser retValue = (TvdbUser)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -430,11 +430,11 @@ namespace TvdbLib.Cache
     public bool IsCached(int _seriesId, bool _episodesLoaded, 
                          bool _bannersLoaded, bool _actorsLoaded)
     {
-      if (File.Exists(m_rootFolder + "\\series_" + _seriesId + ".cfg"))
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + "\\series_" + _seriesId + ".cfg", FileMode.Open);
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg", FileMode.Open);
           SeriesConfiguration config = (SeriesConfiguration)m_formatter.Deserialize(fs);
           fs.Close();
 
