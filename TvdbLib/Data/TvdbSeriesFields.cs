@@ -277,5 +277,61 @@ namespace TvdbLib.Data
       get { return m_actors; }
       set { m_actors = value; }
     }
+
+    /// <summary>
+    /// Update all fields of the object with the given information
+    /// </summary>
+    /// <param name="_fields"></param>
+    internal void UpdateTvdbFields(TvdbSeriesFields _fields, bool _replaceEpisodes)
+    {
+      //Update series details
+      this.Id = _fields.Id;
+      this.Actors = _fields.Actors;
+      this.AirsDayOfWeek = _fields.AirsDayOfWeek;
+      this.AirsTime = _fields.AirsTime;
+      this.ContentRating = _fields.ContentRating;
+      this.FirstAired = _fields.FirstAired;
+      this.Genre = _fields.Genre;
+      this.ImdbId = _fields.ImdbId;
+      this.Language = _fields.Language;
+      this.Network = _fields.Network;
+      this.Overview = _fields.Overview;
+      this.Rating = _fields.Rating;
+      this.Runtime = _fields.Runtime;
+      this.TvDotComId = _fields.TvDotComId;
+      this.SeriesName = _fields.SeriesName;
+      this.Status = _fields.Status;
+      this.BannerPath = _fields.BannerPath;
+      this.FanartPath = _fields.FanartPath;
+      this.LastUpdated = _fields.LastUpdated;
+      this.Zap2itId = _fields.Zap2itId;
+
+      if (_replaceEpisodes)
+      {
+        if (this.EpisodesLoaded && _fields.EpisodesLoaded)
+        {
+          //check for each episode if episode images have been loaded... 
+          //if yes -> copy image
+          foreach (TvdbEpisode f in _fields.Episodes)
+          {
+            foreach (TvdbEpisode e in this.Episodes)
+            {
+              if (e.Id == f.Id && e.Banner != null && e.Banner.IsLoaded)
+              {
+                f.Banner = e.Banner;
+                break;
+              }
+            }
+          }
+        }
+        this.EpisodesLoaded = _fields.EpisodesLoaded;
+
+        this.Episodes = _fields.Episodes;
+      }
+      else
+      {
+        this.EpisodesLoaded = false;
+      }
+    }
   }
 }

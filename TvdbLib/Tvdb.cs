@@ -62,7 +62,7 @@ namespace TvdbLib
         OverallProgress = _overallProgress;
       }
 
-      public enum UpdateStage { downloading = 0, seriesupdate = 1, episodesupdate = 2, bannerupdate = 3};
+      public enum UpdateStage { downloading = 0, seriesupdate = 1, episodesupdate = 2, bannerupdate = 3 };
       public UpdateStage CurrentUpdateStage { get; set; }
       public String CurrentUpdateDescription { get; set; }
       public int CurrentStageProgress { get; set; }
@@ -753,46 +753,38 @@ namespace TvdbLib
       List<int> updatedBanners = new List<int>();
       foreach (TvdbSeries us in updateSeries)
       {
+        bool found = false;
         foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (us.Id == s.Id)
           {
+            found = true;
             if (s.LastUpdated < us.LastUpdated)
             {//changes occured in series
-              if (UpdateProgressed != null)
-              {//update has started, we're downloading the updated content from tvdb
-                int currProg = 100 / countUpdatedSeries * countSeriesDone;
-                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
-                                                             "Updating series " + us.SeriesName,
-                                                             currProg, 25 + (int)(currProg / 4)));
-              }
-              UpdateSeries(s, us.LastUpdated);
-
+              int progress = 100 / countUpdatedSeries * countSeriesDone;
+              UpdateSeries(s, us.LastUpdated, progress);
             }
             break;
           }
         }
 
-        //Update series that have been already cached but are not in memory
-        foreach (int s in cachedSeries)
+        if (!found)
         {
-          if (us.Id == s)
-          {//changes occured in series
-            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(us.Id);
-            if (series.LastUpdated < us.LastUpdated)
-            {
-              if (UpdateProgressed != null)
-              {//update has started, we're downloading the updated content from tvdb
+          //Update series that have been already cached but are not in memory
+          foreach (int s in cachedSeries)
+          {
+            if (us.Id == s)
+            {//changes occured in series
+              TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(us.Id);
+              if (series.LastUpdated < us.LastUpdated)
+              {
                 int currProg = (int)(100.0 / countUpdatedSeries * countSeriesDone);
-                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
-                                                             "Updating series " + us.SeriesName,
-                                                             currProg, 25 + (int)(currProg / 4)));
+                UpdateSeries(series, us.LastUpdated, currProg);
+                AddSeriesToCache(series);
+                seriesToSave.Add(series);
               }
-              UpdateSeries(series, us.LastUpdated);
-              AddSeriesToCache(series);
-              seriesToSave.Add(series);
+              break;
             }
-            break;
           }
         }
         countSeriesDone++;
@@ -800,41 +792,34 @@ namespace TvdbLib
 
       int countEpisodeUpdates = updateEpisodes.Count; ;
       int countEpisodesDone = 0;
+
       //update all flagged episodes
       foreach (TvdbEpisode ue in updateEpisodes)
       {
+        bool found = false;
         foreach (TvdbSeries s in m_loadedData.SeriesList)
         {
           if (ue.SeriesId == s.Id)
           {
-            if (UpdateProgressed != null)
-            {//update has started, we're downloading the updated content from tvdb
-              int currProg = (int)(100.0 / countEpisodeUpdates * countEpisodesDone);
-              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
-                                                           "Updating episode " + ue.SeriesId + " " + ue.SeasonNumber +
-                                                           "x" + ue.EpisodeNumber + "(id: " + ue.Id + ")",
-                                                           currProg, 50 + (int)(currProg / 4)));
-            }
-            UpdateEpisode(s, ue);
+            found = true;
+            int currProg = (int)(100.0 / countEpisodeUpdates * countEpisodesDone);
+            bool updateDone = UpdateEpisode(s, ue, currProg);
             break;
           }
         }
 
-        foreach (int s in cachedSeries)
+        if (!found)
         {
-          if (ue.SeriesId == s)
-          {//changes occured in series
-            if (UpdateProgressed != null)
-            {//update has started, we're downloading the updated content from tvdb
-              int currProg = (int)(100.0 /  countEpisodeUpdates * countEpisodesDone);
-              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
-                                                           "Updating episode " + ue.SeriesId + " " + ue.SeasonNumber +
-                                                           "x" + ue.EpisodeNumber + "(id: " + ue.Id + ")",
-                                                           currProg, 50 + (int)(currProg / 4)));
+          foreach (int s in cachedSeries)
+          {
+            if (ue.SeriesId == s)
+            {//changes occured in series
+              TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(ue.SeriesId);
+
+              int progress = (int)(100.0 / countEpisodeUpdates * countEpisodesDone);
+              bool updateDone = UpdateEpisode(series, ue, progress);
+              break;
             }
-            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(ue.SeriesId);
-            UpdateEpisode(series, ue);
-            break;
           }
         }
         countEpisodesDone++;
@@ -851,7 +836,7 @@ namespace TvdbLib
           {
             if (UpdateProgressed != null)
             {//update has started, we're downloading the updated content from tvdb
-              int currProg = (int)(100.0 /  countUpdatedBanner * countBannerDone);
+              int currProg = (int)(100.0 / countUpdatedBanner * countBannerDone);
               UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
                                                            "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
                                                            currProg, 75 + (int)(currProg / 4)));
@@ -867,7 +852,7 @@ namespace TvdbLib
           {//changes occured in series
             if (UpdateProgressed != null)
             {//update has started, we're downloading the updated content from tvdb
-              int currProg = (int)(100.0 /  countUpdatedBanner * countBannerDone);
+              int currProg = (int)(100.0 / countUpdatedBanner * countBannerDone);
               UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
                                                            "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
                                                            currProg, 75 + (int)(currProg / 4)));
@@ -950,58 +935,93 @@ namespace TvdbLib
     /// <summary>
     /// Update the series with the episode (Add it to the series if it doesn't already exist or update the episode if the current episode is older than the updated one)
     /// </summary>
-    /// <param name="s"></param>
-    /// <param name="ue"></param>
-    private void UpdateEpisode(TvdbSeries s, TvdbEpisode ue)
+    /// <param name="_series">Series of the updating episode</param>
+    /// <param name="_episode">Episode that is updated</param>
+    /// <param name="_progress">Progress of the update run</param>
+    /// <returns>true if episode has been updated, false if not (e.g. timestamp of updated episode older than
+    ///          timestamp of existing episode</returns> 
+    private bool UpdateEpisode(TvdbSeries _series, TvdbEpisode _episode, int _progress)
     {
-      List<TvdbEpisode> allEpList = new List<TvdbEpisode>();
-      allEpList.AddRange(s.Episodes);
-      foreach (TvdbLanguage l in s.GetAvailableLanguages())
-      {
-        if (s.SeriesTranslations[l].Episodes != null && s.SeriesTranslations[l].Language != s.Language)
-        {
-          allEpList.AddRange(s.SeriesTranslations[l].Episodes);
-        }
-      }
+      bool updateDone = false;
 
-      //check all episodes if the updated episode is in it
-      foreach (TvdbEpisode e in allEpList)
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {
-        if (e.Id == ue.Id)
+        bool found = false;
+        List<TvdbEpisode> eps = kvp.Value.Episodes;
+
+        if (eps != null && eps.Count > 0)
         {
-          if (e.LastUpdated < ue.LastUpdated)
+          //check all episodes if the updated episode is in it
+          foreach (TvdbEpisode e in eps)
           {
-            //download episode which has been updated
-            TvdbEpisode newEpisode = null;
-            try
+            if (e.Id == _episode.Id)
             {
-              newEpisode = m_downloader.DownloadEpisode(e.Id, e.Language);
-            }
-            catch (TvdbContentNotFoundException ex)
-            {
-              Log.Warn("Couldn't download episode " + e.Id + "(" + e.EpisodeName + ")");
-            }
-            //update information of episode with new episodes informations
-            if (newEpisode != null)
-            {
-              newEpisode.LastUpdated = ue.LastUpdated;
+              found = true;
+              if (e.LastUpdated < _episode.LastUpdated)
+              {
+                //download episode which has been updated
+                TvdbEpisode newEpisode = null;
+                try
+                {
+                  newEpisode = m_downloader.DownloadEpisode(e.Id, kvp.Key);
+                }
+                catch (TvdbContentNotFoundException ex)
+                {
+                  Log.Warn("Couldn't download episode " + e.Id + "(" + e.EpisodeName + ")");
+                }
+                //update information of episode with new episodes informations
+                if (newEpisode != null)
+                {
+                  newEpisode.LastUpdated = _episode.LastUpdated;
 
-              e.UpdateEpisodeInfo(newEpisode);
-              Log.Info("Updated Episode " + e.Id + " for series " + e.SeriesId);
+                  e.UpdateEpisodeInfo(newEpisode);
+                  if (UpdateProgressed != null)
+                  {//update has started, we're downloading the updated content from tvdb
+                    UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.episodesupdate,
+                                                                 "Updating episode " + _series.SeriesName + " " + e.SeasonNumber +
+                                                                 "x" + e.EpisodeNumber + "(id: " + _episode.Id + ")",
+                                                                 _progress, 50 + (int)(_progress / 4)));
+                  }
+                  Log.Info("Updated Episode " + e.SeasonNumber + "x" + e.EpisodeNumber + " for series " + _series.SeriesName +
+                           "(id: " + e.Id + ", lang: " + e.Language.Abbriviation + ")");
+                  updateDone = true;
+                }
+              }
+              break;
             }
           }
-          return;
+        }
+
+        if (!found)
+        {
+          //episode hasn't been found
+          //hasn't been found -> add it
+          TvdbEpisode ep = null;
+          try
+          {
+            ep = m_downloader.DownloadEpisode(_episode.Id, kvp.Key);
+          }
+          catch (TvdbContentNotFoundException ex)
+          {
+            Log.Warn("Problem downloading " + _episode.Id + ": " + ex.ToString());
+          }
+          if (ep != null)
+          {
+            AddEpisodeToCache(ep);
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.episodesupdate,
+                                                           "Added episode " + _series.SeriesName + " " + ep.SeasonNumber +
+                                                           "x" + ep.EpisodeNumber + "(id: " + ep.Id + ")",
+                                                           _progress, 50 + (int)(_progress / 4)));
+            }
+            Log.Info("Added Episode " + ep.SeasonNumber + "x" + ep.EpisodeNumber + " for series " + _series.SeriesName +
+                     "(id: " + ep.Id + ", lang: " + ep.Language.Abbriviation + ")");
+            updateDone = true;
+          }
         }
       }
-
-      //episode hasn't been found
-      foreach (TvdbLanguage l in s.GetAvailableLanguages())
-      {
-        //hasn't been found -> add it
-        TvdbEpisode ep = m_downloader.DownloadEpisode(ue.Id, l);
-        AddEpisodeToCache(ep);
-        Log.Info("Added Episode " + ep.Id + " for series " + ep.SeriesId);
-      }
+      return updateDone;
     }
 
 
@@ -1011,15 +1031,37 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_series">Series to update</param>
     /// <param name="_lastUpdated">When was the last update made</param>
-    private void UpdateSeries(TvdbSeries _series, DateTime _lastUpdated)
+    private void UpdateSeries(TvdbSeries _series, DateTime _lastUpdated, int _progress)
     {
       //get series info
-      TvdbSeries newSeries = GetSeries(_series.Id, _series.Language, false, false, false);
-      newSeries.LastUpdated = _lastUpdated;
-      if (newSeries != null)
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {
-        _series.UpdateSeriesInfo(newSeries);
-        Log.Info("Updated Series " + _series.Id);
+        if (kvp.Value.LastUpdated < _lastUpdated)
+        {
+          TvdbSeries newSeries = null;
+          try
+          {
+            newSeries = GetSeries(_series.Id, kvp.Key, false, false, false);
+          }
+          catch (TvdbContentNotFoundException ex)
+          {
+            Log.Warn("Problem downloading series (id: " + _series.Id + "): " + ex.ToString());
+          }
+          if (newSeries != null)
+          {
+            kvp.Value.LastUpdated = _lastUpdated;
+
+            if (UpdateProgressed != null)
+            {//update has started, we're downloading the updated content from tvdb
+              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
+                                                           "Updating series " + _series.SeriesName,
+                                                           _progress, 25 + (int)(_progress / 4)));
+            }
+            kvp.Value.UpdateTvdbFields(newSeries, false);
+            //kvp.Value.Update (newSeries);
+            Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ")");
+          }
+        }
       }
     }
 
