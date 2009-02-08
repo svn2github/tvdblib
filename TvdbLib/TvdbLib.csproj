@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -72,7 +72,7 @@
     <Compile Include="Data\Banner\TvdbPosterBanner.cs" />
     <Compile Include="Data\Banner\TvdbSeasonBanner.cs" />
     <Compile Include="Data\Banner\TvdbSeriesBanner.cs" />
-    <Compile Include="Data\TvdbDownloader.cs" />
+    <Compile Include="TvdbDownloader.cs" />
     <Compile Include="Data\TvdbRating.cs" />
     <Compile Include="Data\TvdbSearchResult.cs" />
     <Compile Include="Data\TvdbSeriesFields.cs" />

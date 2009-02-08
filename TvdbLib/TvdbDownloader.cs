@@ -30,10 +30,11 @@ using TvdbLib.Exceptions;
 using TvdbLib.ICSharpCode.SharpZipLib.Zip;
 using TvdbLib.SharpZipLib.Zip;
 using TvdbLib.Xml;
+using TvdbLib.Data;
 
-namespace TvdbLib.Data
+namespace TvdbLib
 {
-  internal class TvdbDownloader
+  public class TvdbDownloader
   {
     #region private properties
     private String m_apiKey;
@@ -45,7 +46,7 @@ namespace TvdbLib.Data
     /// TvdbDownloader constructor
     /// </summary>
     /// <param name="_apiKey"></param>
-    internal TvdbDownloader(String _apiKey)
+    public TvdbDownloader(String _apiKey)
     {
       m_apiKey = _apiKey;
       m_webClient = new WebClient();//initialise webclient for downloading xml files
@@ -59,7 +60,7 @@ namespace TvdbLib.Data
     /// <param name="_seriesId"></param>
     /// <param name="_language"></param>
     /// <returns></returns>
-    internal List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
+    public List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
     {
       String xml = "";
       String link = "";
@@ -99,7 +100,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <param name="_seriesId"></param>
     /// <returns></returns>
-    internal List<TvdbBanner> DownloadBanners(int _seriesId)
+    public List<TvdbBanner> DownloadBanners(int _seriesId)
     {
       String xml = "";
       String link = "";
@@ -140,7 +141,7 @@ namespace TvdbLib.Data
     /// <param name="_loadActors">load actors</param>
     /// <param name="_loadBanners">load banners</param>
     /// <returns></returns>
-    internal TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, bool _loadActors, bool _loadBanners)
+    public TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, bool _loadActors, bool _loadBanners)
     {
       //download the xml data from this request
       String xml = "";
@@ -216,7 +217,7 @@ namespace TvdbLib.Data
       }
     }
 
-    internal TvdbSeries DownloadSeriesZipped(int _seriesId, TvdbLanguage _language)
+    public TvdbSeries DownloadSeriesZipped(int _seriesId, TvdbLanguage _language)
     {
       //download the xml data from this request
       byte[] xml = null;
@@ -363,7 +364,7 @@ namespace TvdbLib.Data
     /// <param name="_episodeId"></param>
     /// <param name="_language"></param>
     /// <returns></returns>
-    internal TvdbEpisode DownloadEpisode(int _episodeId, TvdbLanguage _language)
+    public TvdbEpisode DownloadEpisode(int _episodeId, TvdbLanguage _language)
     {
       String xml = "";
       String link = "";
@@ -412,7 +413,7 @@ namespace TvdbLib.Data
     /// <param name="_language">language</param>
     /// <param name="_order">order</param>
     /// <returns></returns>
-    internal TvdbEpisode DownloadEpisode(int _seriesId, int _seasonNr, int _episodeNr, String _order, TvdbLanguage _language)
+    public TvdbEpisode DownloadEpisode(int _seriesId, int _seasonNr, int _episodeNr, String _order, TvdbLanguage _language)
     {
       String xml = "";
       String link = "";
@@ -461,7 +462,7 @@ namespace TvdbLib.Data
     /// <param name="_airDate">when did the episode air</param>
     /// <param name="_language">language</param>
     /// <returns>Episode</returns>
-    internal TvdbEpisode DownloadEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
+    public TvdbEpisode DownloadEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
     {
       String xml = "";
       String link = "";
@@ -514,7 +515,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
-    internal TvdbLanguage DownloadUserPreferredLanguage(String _userId)
+    public TvdbLanguage DownloadUserPreferredLanguage(String _userId)
     {
       String xml = "";
       String link = "";
@@ -555,7 +556,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
-    internal List<int> DownloadUserFavoriteList(String _userId)
+    public List<int> DownloadUserFavoriteList(String _userId)
     {
       return DownloadUserFavoriteList(_userId, Util.UserFavouriteAction.none, 0);
     }
@@ -598,6 +599,23 @@ namespace TvdbLib.Data
       List<int> favList = m_xmlHandler.ExtractSeriesFavorites(xml);
       return favList;
     }
+
+    /// <summary>
+    /// Download an Update
+    /// </summary>
+    /// <param name="_updateSeries">updated series to return</param>
+    /// <param name="_updateEpisodes">updated episodes to return</param>
+    /// <param name="_updateBanners">updated banners to return</param>
+    /// <param name="_interval">interval to download (0=day, 1=week, 2=month)</param>
+    /// <param name="_zipped">use zip</param>
+    /// <returns>Time of the update</returns>
+    public DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
+                                   out List<TvdbBanner> _updateBanners, int _interval, 
+                                    bool _zipped)
+    {
+      return DownloadUpdate(out _updateSeries, out _updateEpisodes, out _updateBanners, (Util.UpdateInterval)_interval, _zipped);
+    }
+
     /// <summary>
     /// Download an Update
     /// </summary>
@@ -666,7 +684,7 @@ namespace TvdbLib.Data
     /// Download available languages
     /// </summary>
     /// <returns></returns>
-    internal List<TvdbLanguage> DownloadLanguages()
+    public List<TvdbLanguage> DownloadLanguages()
     {
       String xml = "";
       String link = "";
@@ -702,7 +720,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <param name="_name"></param>
     /// <returns></returns>
-    internal List<TvdbSearchResult> DownloadSearchResults(String _name)
+    public List<TvdbSearchResult> DownloadSearchResults(String _name)
     {
       String xml = "";
       String link = "";
@@ -740,7 +758,7 @@ namespace TvdbLib.Data
     /// <param name="_seriesId"></param>
     /// <param name="_rating"></param>
     /// <returns></returns>
-    internal double RateSeries(String _userId, int _seriesId, int _rating)
+    public double RateSeries(String _userId, int _seriesId, int _rating)
     {
       String xml = "";
       String link = "";
@@ -778,7 +796,7 @@ namespace TvdbLib.Data
     /// <param name="_episodeId"></param>
     /// <param name="_rating"></param>
     /// <returns></returns>
-    internal double RateEpisode(String _userId, int _episodeId, int _rating)
+    public double RateEpisode(String _userId, int _episodeId, int _rating)
     {
       String xml = "";
       String link = "";
@@ -815,7 +833,7 @@ namespace TvdbLib.Data
     /// <param name="_userId"></param>
     /// <param name="_seriesId"></param>
     /// <returns></returns>
-    internal double DownloadSeriesRating(String _userId, int _seriesId)
+    public double DownloadSeriesRating(String _userId, int _seriesId)
     {
       String xml = "";
       String link = "";
@@ -852,7 +870,7 @@ namespace TvdbLib.Data
     /// <param name="_userId">id of the user</param>
     /// <param name="_episodeId">id of the episode</param>
     /// <returns></returns>
-    internal double DownloadEpisodeRating(String _userId, int _episodeId)
+    public double DownloadEpisodeRating(String _userId, int _episodeId)
     {
       String xml = "";
       String link = "";
@@ -888,7 +906,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <param name="_seriesId"></param>
     /// <returns></returns>
-    internal List<TvdbActor> DownloadActors(int _seriesId)
+    public List<TvdbActor> DownloadActors(int _seriesId)
     {
       String xml = "";
       String link = "";
@@ -919,7 +937,7 @@ namespace TvdbLib.Data
       }
     }
 
-    internal List<TvdbMirror> DownloadMirrorList()
+    public List<TvdbMirror> DownloadMirrorList()
     {
       String xml = "";
       String link = "";
@@ -958,7 +976,7 @@ namespace TvdbLib.Data
     /// </summary>
     /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
     /// <returns></returns>
-    internal Dictionary<int, TvdbRating> DownloadAllSeriesRatings(String _userId)
+    public Dictionary<int, TvdbRating> DownloadAllSeriesRatings(String _userId)
     {
       String xml = "";
       String link = "";
@@ -989,7 +1007,7 @@ namespace TvdbLib.Data
       }
     }
 
-    internal Dictionary<int, TvdbRating> DownloadRatingsForSeries(string _userId, int _seriesId)
+    public Dictionary<int, TvdbRating> DownloadRatingsForSeries(string _userId, int _seriesId)
     {
       String xml = "";
       String link = "";
