@@ -401,6 +401,16 @@ namespace TvdbLib.Cache
         return null;
       }
 
+      if (!series.BannerPath.Equals(""))
+      {
+        series.Banners.Add(new TvdbSeriesBanner(series.Id, series.BannerPath, series.Language, TvdbSeriesBanner.Type.graphical));
+      }
+
+      if (!series.FanartPath.Equals(""))
+      {
+        series.Banners.Add(new TvdbFanartBanner(series.Id, series.FanartPath, series.Language));
+      }
+
       Regex rex = new Regex("S(\\d+)E(\\d+)");
       if (Directory.Exists(seriesRoot + Path.DirectorySeparatorChar + "EpisodeImages"))
       {

@@ -396,6 +396,7 @@ namespace TvdbLib
           return null;
         }
         watch.Stop();
+        loadedAdditionalInfo = true;
         Log.Info("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
         series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
       }
@@ -475,7 +476,7 @@ namespace TvdbLib
         //Store a ref to the cacheprovider and series id in each banner, so the banners
         //can be stored/loaded to/from cache
         #region add cache provider/series id
-        if (series.BannersLoaded && series.Banners != null)
+        if (series.Banners != null)
         {
           series.Banners.ForEach(delegate(TvdbBanner b)
           {
@@ -484,7 +485,7 @@ namespace TvdbLib
           });
         }
 
-        if (series.EpisodesLoaded && series.Episodes != null)
+        if (series.Episodes != null)
         {
           series.Episodes.ForEach(delegate(TvdbEpisode e)
           {
@@ -493,7 +494,7 @@ namespace TvdbLib
           });
         }
 
-        if (series.TvdbActorsLoaded && series.TvdbActors != null)
+        if (series.TvdbActors != null)
         {
           series.TvdbActors.ForEach(delegate(TvdbActor a)
           {
