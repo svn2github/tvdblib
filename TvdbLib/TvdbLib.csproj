@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{23C34CF0-4E66-4F02-9EDC-83F292C6005C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\ICacheProvider.cs" />
-    <Compile Include="Tvdb.cs" />
+    <Compile Include="TvdbHandler.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +72,7 @@
     <Compile Include="Data\Banner\TvdbPosterBanner.cs" />
     <Compile Include="Data\Banner\TvdbSeasonBanner.cs" />
     <Compile Include="Data\Banner\TvdbSeriesBanner.cs" />
+    <Compile Include="Exceptions\TvdbCacheNotInitialisedException.cs" />
     <Compile Include="TvdbDownloader.cs" />
     <Compile Include="Data\TvdbRating.cs" />
     <Compile Include="Data\TvdbSearchResult.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="Exceptions\TvdbException.cs" />
     <Compile Include="Exceptions\TvdbInvalidApiKeyException.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="TvdbLinks.cs" />
+    <Compile Include="TvdbLinkCreator.cs" />
     <Compile Include="Data\TvdbMirror.cs" />
     <Compile Include="Exceptions\TvdbNotAvailableException.cs" />
     <Compile Include="Exceptions\TvdbUserNotFoundException.cs" />

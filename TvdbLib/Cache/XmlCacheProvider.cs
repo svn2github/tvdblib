@@ -28,6 +28,8 @@ using TvdbLib.Data.Banner;
 using System.IO;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace TvdbLib.Cache
 {
@@ -40,6 +42,7 @@ namespace TvdbLib.Cache
     TvdbXmlWriter m_xmlWriter;
     TvdbXmlReader m_xmlReader;
     String m_rootFolder;
+    private bool m_initialised = false;
     #endregion
 
     /// <summary>
@@ -51,26 +54,80 @@ namespace TvdbLib.Cache
       m_xmlWriter = new TvdbXmlWriter();
       m_xmlReader = new TvdbXmlReader();
       m_rootFolder = _rootFolder;
-      if (!Directory.Exists(_rootFolder))
-      {
-        Directory.CreateDirectory(_rootFolder);
-      }
+    }
+
+    /// <summary>
+    /// Properly describe the CacheProvider for neat-reasons
+    /// </summary>
+    /// <returns>String describing the cache provider</returns>
+    public override string ToString()
+    {
+      return "XmlCacheProvider (" + m_rootFolder + ")";
     }
 
     #region ICacheProvider Members
 
     /// <summary>
+    /// Is the cache provider initialised
+    /// </summary>
+    public bool Initialised
+    {
+      get { return m_initialised; }
+    }
+
+    /// <summary>
+    /// Initialises the cache, should do the following things
+    /// - initialise connections used for this cache provider (db connections, network shares,...)
+    /// - create folder structure / db tables / ...  if they are not created already
+    /// - if this is the first time the cache has been initialised (built), mark last_updated with the
+    ///   current date
+    /// </summary>
+    /// <returns></returns>
+    public TvdbData InitCache()
+    {
+      try
+      {
+        if (!Directory.Exists(m_rootFolder))
+        {
+          Directory.CreateDirectory(m_rootFolder);
+        }
+
+        TvdbData data = LoadUserDataFromCache();
+        if (data == null)
+        {//the cache has never been initialised before -> do it now
+          data = new TvdbData();
+          data.LanguageList = new List<TvdbLanguage>();
+          data.Mirrors = new List<TvdbMirror>();
+          data.LastUpdated = DateTime.Now;
+
+          SaveToCache(data);
+        }
+        m_initialised = true;
+        return data;
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Couldn't initialise cache: " + ex.ToString());
+        return null;
+      }
+    }
+
+    /// <summary>
     /// Saves all available data to cache
     /// </summary>
     /// <param name="_content"></param>
-    public void SaveAllToCache(TvdbData _content)
+    public void SaveToCache(TvdbData _content)
     {
       SaveToCache(_content.LanguageList);
       SaveToCache(_content.Mirrors);
-      foreach (TvdbSeries s in _content.SeriesList)
-      {
-        SaveToCache(s);
-      }
+
+      //store additional information
+      //- time of last update
+      //- more to come (eventually)
+      XElement xml = new XElement("Data");
+      xml.Add(new XElement("LastUpdated", Util.DotNetToUnix(_content.LastUpdated)));
+      String data = xml.ToString();
+      File.WriteAllText(m_rootFolder + Path.DirectorySeparatorChar + "data.xml", data);
     }
 
     /// <summary>
@@ -109,7 +166,7 @@ namespace TvdbLib.Cache
       if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
       String root = m_rootFolder + Path.DirectorySeparatorChar + _series.Id;
 
-      m_xmlWriter.WriteSeriesContent(_series, root + Path.DirectorySeparatorChar +"all.xml");
+      m_xmlWriter.WriteSeriesContent(_series, root + Path.DirectorySeparatorChar + "all.xml");
       TvdbLanguage defaultLang = _series.Language;
 
       foreach (TvdbLanguage l in _series.GetAvailableLanguages())
@@ -139,7 +196,7 @@ namespace TvdbLib.Cache
         if (b.IsLoaded && !file.Exists)
         {//banner is cached
           if (!file.Directory.Exists) file.Directory.Create();
-          b.Banner.Save(file.FullName);
+          b.BannerImage.Save(file.FullName);
         }
 
         if (b.GetType().BaseType == typeof(TvdbBannerWithThumb))
@@ -148,7 +205,7 @@ namespace TvdbLib.Cache
           if (((TvdbBannerWithThumb)b).IsThumbLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
-            ((TvdbBannerWithThumb)b).BannerThumb.Save(file.FullName);
+            ((TvdbBannerWithThumb)b).ThumbImage.Save(file.FullName);
           }
         }
 
@@ -174,13 +231,13 @@ namespace TvdbLib.Cache
             if (e.Banner.IsLoaded && !file.Exists)
             {
               if (!file.Directory.Exists) file.Directory.Create();
-              e.Banner.Banner.Save(file.FullName);
+              e.Banner.BannerImage.Save(file.FullName);
             }
             file = new FileInfo(root + Path.DirectorySeparatorChar + "EpisodeImages" + Path.DirectorySeparatorChar + "ep_S" + e.SeasonNumber + "E" + e.EpisodeNumber + "_thumb.jpg");
-            if (e.Banner.BannerThumb != null && e.Banner.IsThumbLoaded && !file.Exists)
+            if (e.Banner.ThumbImage != null && e.Banner.IsThumbLoaded && !file.Exists)
             {
               if (!file.Directory.Exists) file.Directory.Create();
-              e.Banner.BannerThumb.Save(file.FullName);
+              e.Banner.ThumbImage.Save(file.FullName);
             }
           }
         }
@@ -194,7 +251,7 @@ namespace TvdbLib.Cache
           if (a.ActorImage.IsLoaded && !file.Exists)
           {
             if (!file.Directory.Exists) file.Directory.Create();
-            a.ActorImage.Banner.Save(file.FullName);
+            a.ActorImage.BannerImage.Save(file.FullName);
           }
         }
       }
@@ -207,11 +264,40 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public TvdbData LoadUserDataFromCache()
     {
-      TvdbData data = new TvdbData();
-      data.LanguageList = LoadLanguageListFromCache();
-      data.Mirrors = LoadMirrorListFromCache();
-      if (data.SeriesList == null) data.SeriesList = new List<TvdbSeries>();
-      return data;
+      String fName = m_rootFolder + Path.DirectorySeparatorChar + "data.xml";
+      if (File.Exists(fName))
+      {
+        String xmlData = File.ReadAllText(fName);
+        XDocument xml = XDocument.Parse(xmlData);
+
+        var info = from dataNode in xml.Descendants("Data")
+                   select new
+                   {
+                     lu = dataNode.Element("LastUpdated").Value
+                   };
+        if (info.Count() == 1)
+        {
+          TvdbData data = new TvdbData();
+          DateTime lastUpdated = new DateTime();
+          try
+          {
+            lastUpdated = Util.UnixToDotNet(info.First().lu);
+          }
+          catch (FormatException ex)
+          {
+            Log.Warn("Couldn't parse date of last update", ex);
+          }
+          data.LastUpdated = lastUpdated;
+          data.LanguageList = LoadLanguageListFromCache();
+          data.Mirrors = LoadMirrorListFromCache();
+          //if (data.SeriesList == null) data.SeriesList = new List<TvdbSeries>();
+          return data;
+        }
+
+      }
+
+      return null;
+
     }
 
     /// <summary>
@@ -271,10 +357,11 @@ namespace TvdbLib.Cache
     /// Load the give series from cache
     /// </summary>
     /// <param name="_seriesId">Id of the series to load</param>
-    /// <returns>Series that has been loaded</returns>
+    /// <returns>Series that has been loaded or null if series doesn't exist</returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
       String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (!Directory.Exists(seriesRoot)) return null;
       //todo: handle languages
       TvdbSeries series = new TvdbSeries();
 
@@ -539,6 +626,104 @@ namespace TvdbLib.Cache
       {
         return false;
       }
+    }
+
+    /// <summary>
+    /// Completely refreshes the cache (all stored information is lost)
+    /// </summary>
+    /// <returns>true if the cache was cleared successfully, 
+    ///          false otherwise (e.g. no write rights,...)</returns>
+    public bool ClearCache()
+    {
+      try
+      {
+        Directory.Delete(m_rootFolder, true);
+        return true;
+      }
+      catch (Exception ex)
+      {
+        Log.Fatal("Couldn't clear the cache, please delete the files in " + m_rootFolder +
+                  " manually, since at this state the cache is most likely inconsistent!", ex);
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Remove a specific series from cache
+    /// </summary>
+    /// <param name="_seriesId">the id of the series</param>
+    /// <returns>true if the series was removed from the cache successfully, 
+    ///          false otherwise (e.g. series not cached)</returns>
+    public bool RemoveFromCache(int _seriesId)
+    {
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesRoot))
+      {
+        try
+        {
+          Directory.Delete(seriesRoot, true);
+          return true;
+        }
+        catch (Exception ex)
+        {
+          Log.Error("Couldn't delete series " + _seriesId + " from cache ", ex);
+          return false;
+        }
+      }
+      else
+      {//the series wasn't cached in the first place
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Save the given image to cache
+    /// </summary>
+    /// <param name="_image">banner to save</param>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">filename (will be the same name used by LoadImageFromCache)</param>
+    public void SaveToCache(Image _image, int _seriesId, string _fileName)
+    {
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesRoot))
+      {
+        if (_image != null)
+        {
+          _image.Save(seriesRoot + Path.DirectorySeparatorChar + _fileName);
+        }
+      }
+      else
+      {
+        Log.Warn("Couldn't save image " + _fileName + " for series " + _seriesId +
+                 " because the series directory doesn't exist yet");
+      }
+    }
+
+    /// <summary>
+    /// Loads the specified image from the cache
+    /// </summary>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_fileName">filename of the image (same one as used by SaveToCache)</param>
+    /// <returns>The loaded image or null if the image wasn't found</returns>
+    public Image LoadImageFromCache(int _seriesId, string _fileName)
+    {
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesRoot))
+      {
+        String fName = seriesRoot + Path.DirectorySeparatorChar + _fileName;
+        if (File.Exists(fName))
+        {
+          try
+          {
+            return Image.FromFile(fName);
+          }
+          catch (Exception ex)
+          {
+            Log.Warn("Couldn't load image " + fName + " for series " + _seriesId, ex);
+          }
+        }
+      }
+      return null;
     }
 
     #endregion

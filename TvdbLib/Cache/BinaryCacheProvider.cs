@@ -31,6 +31,8 @@ namespace TvdbLib.Cache
 {
   /// <summary>
   /// Binary cache provider saves all the cached info into 
+  /// 
+  /// broken at the moment -> use CacheProvider
   /// </summary>
   public class BinaryCacheProvider : ICacheProvider
   {
@@ -127,7 +129,7 @@ namespace TvdbLib.Cache
       List<TvdbMirror> mirrors = LoadMirrorListFromCache();
       List<TvdbLanguage> languages = LoadLanguageListFromCache();
       DateTime lastUpdated = LoadLastUpdatedFromCache();
-      TvdbData data = new TvdbData(new List<TvdbSeries>(), languages, mirrors);
+      TvdbData data = new TvdbData(languages, mirrors);
       data.LastUpdated = lastUpdated;
       return data;
     }
@@ -159,15 +161,11 @@ namespace TvdbLib.Cache
     /// Saves all available data to cache
     /// </summary>
     /// <param name="_content"></param>
-    public void SaveAllToCache(TvdbData _content)
+    public void SaveToCache(TvdbData _content)
     {
       SaveToCache(_content.LanguageList);
       SaveToCache(_content.Mirrors);
       SaveToCache(_content.LastUpdated);
-      foreach (TvdbSeries s in _content.SeriesList)
-      {
-        SaveToCache(s);
-      }
     }
 
     private void SaveToCache(DateTime _time)
@@ -459,6 +457,144 @@ namespace TvdbLib.Cache
       {
         return false;
       }
+    }
+
+    #endregion
+
+    #region ICacheProvider Members
+
+    public bool Initialised
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    public TvdbData InitCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    public bool ClearCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    public bool RemoveFromCache(int _seriesId)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region ICacheProvider Members
+
+
+    public void SaveToCache(System.Drawing.Image _image, int _seriesId, string _fileName)
+    {
+      throw new NotImplementedException();
+    }
+
+    public System.Drawing.Image LoadImageFromCache(int _seriesId, string _fileName)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region ICacheProvider Members
+
+    bool ICacheProvider.Initialised
+    {
+      get { throw new NotImplementedException(); }
+    }
+
+    TvdbData ICacheProvider.InitCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    bool ICacheProvider.ClearCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    bool ICacheProvider.RemoveFromCache(int _seriesId)
+    {
+      throw new NotImplementedException();
+    }
+
+    TvdbData ICacheProvider.LoadUserDataFromCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    List<TvdbLanguage> ICacheProvider.LoadLanguageListFromCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    List<TvdbMirror> ICacheProvider.LoadMirrorListFromCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    List<TvdbSeries> ICacheProvider.LoadAllSeriesFromCache()
+    {
+      throw new NotImplementedException();
+    }
+
+    TvdbSeries ICacheProvider.LoadSeriesFromCache(int _seriesId)
+    {
+      throw new NotImplementedException();
+    }
+
+    TvdbUser ICacheProvider.LoadUserInfoFromCache(string _userId)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(TvdbData _content)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(List<TvdbLanguage> _languageList)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(List<TvdbMirror> _mirrorInfo)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(TvdbSeries _series)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(TvdbUser _user)
+    {
+      throw new NotImplementedException();
+    }
+
+    void ICacheProvider.SaveToCache(System.Drawing.Image _image, int _seriesId, string _fileName)
+    {
+      throw new NotImplementedException();
+    }
+
+    System.Drawing.Image ICacheProvider.LoadImageFromCache(int _seriesId, string _fileName)
+    {
+      throw new NotImplementedException();
+    }
+
+    List<int> ICacheProvider.GetCachedSeries()
+    {
+      throw new NotImplementedException();
+    }
+
+    bool ICacheProvider.IsCached(int _seriesId, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded)
+    {
+      throw new NotImplementedException();
     }
 
     #endregion

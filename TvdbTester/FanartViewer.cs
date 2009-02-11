@@ -16,7 +16,7 @@ namespace TvdbTester
 {
   public partial class FanartViewer : Form
   {
-    private Tvdb m_tvdbHandler;
+    private TvdbHandler m_tvdbHandler;
     TvdbSeries m_series;
     public FanartViewer()
     {
@@ -25,7 +25,7 @@ namespace TvdbTester
 
     private void cmdInit_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler = new Tvdb(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
+      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
       m_series = m_tvdbHandler.GetBasicSeries(72129, TvdbLanguage.DefaultLanguage, true);
       int count = 0;
       fanartControl1.NumberOfImages = m_series.FanartBanners.Count;

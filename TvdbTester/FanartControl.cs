@@ -101,12 +101,12 @@ namespace TvdbTester
         {
           if (((TvdbFanartBanner)Image).IsThumbLoaded)
           {
-            return ((TvdbFanartBanner)Image).BannerThumb;
+            return ((TvdbFanartBanner)Image).ThumbImage;
           }
         }
         else if (Image.IsLoaded)
         {
-          return m_image.Banner;
+          return m_image.BannerImage;
         }
         return Resources.loader4;//todo: dummy image
       }

@@ -530,9 +530,9 @@ namespace TvdbLib.Data
             {
               if (ob.BannerPath.Equals(nb.BannerPath))//I have to check for the banner path since the Update file doesn't include IDs
               {
-                if (ob.Banner != null && ob.IsLoaded)
+                if (ob.BannerImage != null && ob.IsLoaded)
                 {
-                  nb.Banner = ob.Banner;
+                  nb.BannerImage = ob.BannerImage;
                 }
 
                 if (ob.GetType() == typeof(TvdbFanartBanner))
@@ -540,12 +540,12 @@ namespace TvdbLib.Data
                   TvdbFanartBanner newFaBanner = (TvdbFanartBanner)nb;
                   TvdbFanartBanner oldFaBanner = (TvdbFanartBanner)ob;
 
-                  if (oldFaBanner.BannerThumb != null && oldFaBanner.IsThumbLoaded)
+                  if (oldFaBanner.ThumbImage != null && oldFaBanner.IsThumbLoaded)
                   {
-                    newFaBanner.BannerThumb = oldFaBanner.BannerThumb;
+                    newFaBanner.ThumbImage = oldFaBanner.ThumbImage;
                   }
 
-                  if (oldFaBanner.BannerThumb != null && oldFaBanner.IsVignetteLoaded)
+                  if (oldFaBanner.ThumbImage != null && oldFaBanner.IsVignetteLoaded)
                   {
                     newFaBanner.VignetteImage = oldFaBanner.VignetteImage;
                   }

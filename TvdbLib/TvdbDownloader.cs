@@ -34,6 +34,11 @@ using TvdbLib.Data;
 
 namespace TvdbLib
 {
+  /// <summary>
+  /// TvdbDownloader allows simple downloading of all informations stored
+  /// on http://thetvdb.com. Unlike the class Tvdb TvdbDownloader doesn't
+  /// include any logic like caching.
+  /// </summary>
   public class TvdbDownloader
   {
     #region private properties
@@ -66,7 +71,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesEpisodesLink(m_apiKey, _seriesId, _language);
+        link = TvdbLinkCreator.CreateSeriesEpisodesLink(m_apiKey, _seriesId, _language);
         xml = m_webClient.DownloadString(link);
         List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
         return epList;
@@ -106,7 +111,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesBannersLink(m_apiKey, _seriesId);
+        link = TvdbLinkCreator.CreateSeriesBannersLink(m_apiKey, _seriesId);
         xml = m_webClient.DownloadString(link);
         List<TvdbBanner> banners = m_xmlHandler.ExtractBanners(xml);
         return banners;
@@ -148,7 +153,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, _loadEpisodes, false);
+        link = TvdbLinkCreator.CreateSeriesLink(m_apiKey, _seriesId, _language, _loadEpisodes, false);
         xml = m_webClient.DownloadString(link);
 
         //extract all series the xml file contains
@@ -163,19 +168,21 @@ namespace TvdbLib
           {
             //add episode info to series
             List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
-            foreach (TvdbEpisode e in epList)
+            if(epList != null)
             {
-              Util.AddEpisodeToSeries(e, series);
+              series.Episodes = epList;
+              series.EpisodesLoaded = true;
             }
           }
 
           //also load actors
           if (_loadActors)
           {
-            List<TvdbActor> list = DownloadActors(_seriesId);
-            if (list != null)
+            List<TvdbActor> actors = DownloadActors(_seriesId);
+            if (actors != null)
             {
-              series.TvdbActors = list;
+              series.TvdbActorsLoaded = true;
+              series.TvdbActors = actors;
             }
           }
 
@@ -186,6 +193,7 @@ namespace TvdbLib
             if (banners != null)
             {
               series.Banners = banners;
+              series.BannersLoaded = true;
             }
           }
           return series;
@@ -217,6 +225,15 @@ namespace TvdbLib
       }
     }
 
+    /// <summary>
+    /// Download the series in the given language
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_language">language of series</param>
+    /// <exception cref="TvdbInvalidXmlException">The Xml of the downloaded series is invalid</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
+    /// <returns>the series object</returns>
     public TvdbSeries DownloadSeriesZipped(int _seriesId, TvdbLanguage _language)
     {
       //download the xml data from this request
@@ -224,7 +241,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesLinkZipped(m_apiKey, _seriesId, _language);
+        link = TvdbLinkCreator.CreateSeriesLinkZipped(m_apiKey, _seriesId, _language);
         xml = m_webClient.DownloadData(link);
 
         ZipInputStream zip = new ZipInputStream(new MemoryStream(xml));
@@ -262,13 +279,12 @@ namespace TvdbLib
         if (seriesList != null && seriesList.Count == 1)
         {
           TvdbSeries series = seriesList[0];
-          series.EpisodesLoaded = true;
-          series.Episodes = new List<TvdbEpisode>();
           //add episode info to series
           List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(seriesString);
-          foreach (TvdbEpisode e in epList)
+          if (epList != null)
           {
-            Util.AddEpisodeToSeries(e, series);
+            series.Episodes = epList;
+            series.EpisodesLoaded = true;
           }
 
           //also load actors
@@ -322,7 +338,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesLink(m_apiKey, _seriesId, _language, false, false);
+        link = TvdbLinkCreator.CreateSeriesLink(m_apiKey, _seriesId, _language, false, false);
         xml = m_webClient.DownloadString(link);
 
         //extract all series the xml file contains
@@ -370,12 +386,13 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateEpisodeLink(m_apiKey, _episodeId, _language, false);
+        link = TvdbLinkCreator.CreateEpisodeLink(m_apiKey, _episodeId, _language, false);
         xml = m_webClient.DownloadString(link);
         List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
 
-        if (epList.Count == 1)
+        if (epList != null && epList.Count == 1)
         {
+          epList[0].Banner.SeriesId = epList[0].SeriesId;
           return epList[0];
         }
         else
@@ -419,10 +436,10 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateEpisodeLink(m_apiKey, _seriesId, _seasonNr, _episodeNr, _order, _language);
+        link = TvdbLinkCreator.CreateEpisodeLink(m_apiKey, _seriesId, _seasonNr, _episodeNr, _order, _language);
         xml = m_webClient.DownloadString(link);
         List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
-        if (epList.Count == 1)
+        if (epList != null && epList.Count == 1)
         {
           return epList[0];
         }
@@ -468,13 +485,14 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateEpisodeLink(m_apiKey, _seriesId, _airDate, _language);
+        link = TvdbLinkCreator.CreateEpisodeLink(m_apiKey, _seriesId, _airDate, _language);
         xml = m_webClient.DownloadString(link);
         if (!xml.Contains("No Results from SP"))
         {
           List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
-          if (epList.Count == 1)
+          if (epList != null && epList.Count == 1)
           {
+            epList[0].Banner.SeriesId = _seriesId;
             return epList[0];
           }
           else
@@ -521,7 +539,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserLanguageLink(_userId);
+        link = TvdbLinkCreator.CreateUserLanguageLink(_userId);
         xml = m_webClient.DownloadString(link);
       }
       catch (XmlException ex)
@@ -574,7 +592,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserFavouriteLink(_userId, _type, _seriesId);
+        link = TvdbLinkCreator.CreateUserFavouriteLink(_userId, _type, _seriesId);
         xml = m_webClient.DownloadString(link);
       }
       catch (XmlException ex)
@@ -610,7 +628,7 @@ namespace TvdbLib
     /// <param name="_zipped">use zip</param>
     /// <returns>Time of the update</returns>
     public DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
-                                   out List<TvdbBanner> _updateBanners, int _interval, 
+                                   out List<TvdbBanner> _updateBanners, int _interval,
                                     bool _zipped)
     {
       return DownloadUpdate(out _updateSeries, out _updateEpisodes, out _updateBanners, (Util.UpdateInterval)_interval, _zipped);
@@ -633,7 +651,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUpdateLink(m_apiKey, _interval, _zipped);
+        link = TvdbLinkCreator.CreateUpdateLink(m_apiKey, _interval, _zipped);
         if (_zipped)
         {
           byte[] data = m_webClient.DownloadData(link);
@@ -690,7 +708,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateLanguageLink(m_apiKey);
+        link = TvdbLinkCreator.CreateLanguageLink(m_apiKey);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractLanguages(xml);
       }
@@ -726,7 +744,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSearchLink(_name);
+        link = TvdbLinkCreator.CreateSearchLink(_name);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractSeriesSearchResults(xml);
       }
@@ -764,7 +782,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserSeriesRating(_userId, _seriesId, _rating);
+        link = TvdbLinkCreator.CreateUserSeriesRating(_userId, _seriesId, _rating);
         xml = m_webClient.DownloadString(link);
       }
       catch (XmlException ex)
@@ -802,7 +820,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId, _rating);
+        link = TvdbLinkCreator.CreateUserEpisodeRating(_userId, _episodeId, _rating);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractRating(xml);
       }
@@ -839,7 +857,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserSeriesRating(_userId, _seriesId);
+        link = TvdbLinkCreator.CreateUserSeriesRating(_userId, _seriesId);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractRating(xml);
       }
@@ -876,7 +894,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateUserEpisodeRating(_userId, _episodeId);
+        link = TvdbLinkCreator.CreateUserEpisodeRating(_userId, _episodeId);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractRating(xml);
       }
@@ -912,9 +930,12 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateActorLink(_seriesId, m_apiKey);
+        link = TvdbLinkCreator.CreateActorLink(_seriesId, m_apiKey);
         xml = m_webClient.DownloadString(link);
-        return m_xmlHandler.ExtractActors(xml);
+        //add series id to actors
+        List<TvdbActor> actors = m_xmlHandler.ExtractActors(xml);
+
+        return actors;
       }
       catch (XmlException ex)
       {
@@ -937,13 +958,17 @@ namespace TvdbLib
       }
     }
 
+    /// <summary>
+    /// Download list of mirrors -> deprecated since mirroring is done on server-side now
+    /// </summary>
+    /// <returns>bla</returns>
     public List<TvdbMirror> DownloadMirrorList()
     {
       String xml = "";
       String link = "";
       try
       {
-        link = TvdbLinks.CreateMirrorsLink(m_apiKey);
+        link = TvdbLinkCreator.CreateMirrorsLink(m_apiKey);
         xml = m_webClient.DownloadString(link);
         List<TvdbMirror> list = m_xmlHandler.ExtractMirrors(xml);
         return list;
@@ -982,7 +1007,7 @@ namespace TvdbLib
       String link = "";
       try
       {
-        link = TvdbLinks.CreateAllSeriesRatingsLink(m_apiKey, _userId);
+        link = TvdbLinkCreator.CreateAllSeriesRatingsLink(m_apiKey, _userId);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractRatings(xml, TvdbRating.ItemType.Series);
       }
@@ -1007,13 +1032,19 @@ namespace TvdbLib
       }
     }
 
+    /// <summary>
+    /// Download the user rating for the given series (episodes and series itself)
+    /// </summary>
+    /// <param name="_userId">Id of user</param>
+    /// <param name="_seriesId">Id of series</param>
+    /// <returns>Dictionary of all ratings</returns>
     public Dictionary<int, TvdbRating> DownloadRatingsForSeries(string _userId, int _seriesId)
     {
       String xml = "";
       String link = "";
       try
       {
-        link = TvdbLinks.CreateSeriesRatingsLink(m_apiKey, _userId, _seriesId);
+        link = TvdbLinkCreator.CreateSeriesRatingsLink(m_apiKey, _userId, _seriesId);
         xml = m_webClient.DownloadString(link);
         Dictionary<int, TvdbRating> retList = m_xmlHandler.ExtractRatings(xml, TvdbRating.ItemType.Series);
         Dictionary<int, TvdbRating> episodeList = m_xmlHandler.ExtractRatings(xml, TvdbRating.ItemType.Episode);

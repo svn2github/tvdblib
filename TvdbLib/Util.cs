@@ -161,6 +161,14 @@ namespace TvdbLib
     internal static DateTime UnixToDotNet(String _unixTimestamp)
     {
       System.DateTime date = System.DateTime.Parse("1/1/1970");
+      
+      //remove , of float values
+      int index = _unixTimestamp.IndexOf(',');
+      if(index != -1) _unixTimestamp = _unixTimestamp.Remove(index);
+
+      //remove , of float values
+      index = _unixTimestamp.IndexOf('.');
+      if (index != -1) _unixTimestamp = _unixTimestamp.Remove(index);
       return date.AddSeconds(Int32.Parse(_unixTimestamp));
     }
 
@@ -172,7 +180,7 @@ namespace TvdbLib
     internal static String DotNetToUnix(DateTime _date)
     {
       TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
-      return span.TotalSeconds.ToString();
+      return ((int)span.TotalSeconds).ToString();
     }
 
     /// <summary>

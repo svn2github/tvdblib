@@ -65,7 +65,7 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// Image of the thumbnail
     /// </summary>
-    public Image BannerThumb
+    public Image ThumbImage
     {
       get { return m_bannerThumb; }
       set { m_bannerThumb = value; }
@@ -76,7 +76,7 @@ namespace TvdbLib.Data.Banner
     /// Load the thumb from tvdb, if there isn't already a thumb loaded,
     /// (an existing one will NOT be replaced)
     /// </summary>
-    /// <see cref="LoadThumb(bool _replaceOld)"/>
+    /// <see cref="LoadThumb(bool)"/>
     /// <returns>true if the loading completed sccessfully, false otherwise</returns>
     public bool LoadThumb()
     {
@@ -105,8 +105,6 @@ namespace TvdbLib.Data.Banner
          * every banner (except actors) has a cached thumbnail on tvdb... The path to the thumbnail
          * is only given for fanart banners via the api, however every thumbnail path is "_cache/" + image_path
          * so if no path for the thumbnail is given, it is assumed that there is a thumbnail at that location
-         * 
-         * TODO: wait for forum response regarding this matter
          */
         if (m_thumbPath == null && (BannerPath != null || BannerPath.Equals("")))
         {
@@ -117,7 +115,23 @@ namespace TvdbLib.Data.Banner
         {
           try
           {
-            Image img = LoadImage(TvdbLinks.CreateBannerLink(m_thumbPath));
+            Image img = null;
+            String cacheName = CreateCacheName(m_thumbPath, true);
+
+            if (this.CacheProvider != null && this.CacheProvider.Initialised)
+            {//try to load the image from cache first
+              img = this.CacheProvider.LoadImageFromCache(this.SeriesId, cacheName);
+            }
+
+            if (img == null)
+            {
+              img = LoadImage(TvdbLinkCreator.CreateBannerLink(m_thumbPath));
+
+              if (img != null && this.CacheProvider != null && this.CacheProvider.Initialised)
+              {//store the image to cache
+                this.CacheProvider.SaveToCache(img, this.SeriesId, cacheName);
+              }
+            }
 
             if (img != null)
             {

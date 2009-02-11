@@ -33,7 +33,6 @@ namespace TvdbLib
   public class TvdbData
   {
     #region private properties
-    private List<TvdbSeries> m_seriesInfo;
     private List<TvdbLanguage> m_langInfo;
     private List<TvdbMirror> m_mirrorInfo;
     private DateTime m_lastUpdated;
@@ -50,10 +49,9 @@ namespace TvdbLib
     /// <summary>
     /// TvdbData constructor
     /// </summary>
-    public TvdbData(List<TvdbSeries> _seriesInfo, List<TvdbLanguage> _language, List<TvdbMirror> _mirrors)
+    public TvdbData(List<TvdbLanguage> _language, List<TvdbMirror> _mirrors)
       : this()
     {
-      m_seriesInfo = _seriesInfo;
       m_langInfo = _language;
       m_mirrorInfo = _mirrors;
     }
@@ -66,15 +64,6 @@ namespace TvdbLib
     {
       get { return m_lastUpdated; }
       set { m_lastUpdated = value; }
-    }
-
-    /// <summary>
-    /// List of all available Series
-    /// </summary>
-    public List<TvdbSeries> SeriesList
-    {
-      get { return m_seriesInfo; }
-      set { m_seriesInfo = value; }
     }
 
     /// <summary>

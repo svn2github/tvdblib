@@ -387,7 +387,7 @@ namespace TvdbLib.Xml
         ep.Writer = Util.SplitTvdbString(e.Writer);
         ep.AbsoluteNumber = Util.Int32Parse(e.absolute_number);
         ep.BannerPath = e.filename;
-        ep.Banner = ep.BannerPath.Equals("") ? null : new TvdbEpisodeBanner(ep.Id, ep.BannerPath);
+        ep.Banner = new TvdbEpisodeBanner(ep.Id, ep.BannerPath);
         ep.LastUpdated = Util.UnixToDotNet(e.lastupdated);
         ep.SeasonId = Util.Int32Parse(e.seasonid);
         ep.SeriesId = Util.Int32Parse(e.seriesid);

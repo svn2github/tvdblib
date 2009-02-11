@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TvdbLib.Data;
+using System.Drawing;
 
 namespace TvdbLib.Cache
 {
@@ -31,6 +32,36 @@ namespace TvdbLib.Cache
   /// </summary>
   public interface ICacheProvider
   {
+    /// <summary>
+    /// Is the cache provider initialised
+    /// </summary>
+    bool Initialised { get; }
+
+    /// <summary>
+    /// Initialises the cache, should do the following things
+    /// - initialise connections used for this cache provider (db connections, network shares,...)
+    /// - create folder structure / db tables / ...  if they are not created already
+    /// - if this is the first time the cache has been initialised (built), mark last_updated with the
+    ///   current date
+    /// </summary>
+    /// <returns></returns>
+    TvdbData InitCache();
+
+    /// <summary>
+    /// Completely refreshes the cache (all stored information is lost)
+    /// </summary>
+    /// <returns>true if the cache was cleared successfully, 
+    ///          false otherwise (e.g. no write rights,...)</returns>
+    bool ClearCache();
+
+    /// <summary>
+    /// Remove a specific series from cache
+    /// </summary>
+    /// <param name="_seriesId">the id of the series</param>
+    /// <returns>true if the series was removed from the cache successfully, 
+    ///          false otherwise (e.g. series not cached)</returns>
+    bool RemoveFromCache(int _seriesId);
+
     /// <summary>
     /// Loads all cached series from cache -> can take a while
     /// </summary>
@@ -73,7 +104,7 @@ namespace TvdbLib.Cache
     /// Saves all available data to cache
     /// </summary>
     /// <param name="_content">TvdbData object</param>
-    void SaveAllToCache(TvdbData _content);
+    void SaveToCache(TvdbData _content);
 
     /// <summary>
     /// Save the language to cache
@@ -98,6 +129,22 @@ namespace TvdbLib.Cache
     /// </summary>
     /// <param name="_user">TvdbUser object</param>
     void SaveToCache(TvdbUser _user);
+
+    /// <summary>
+    /// Save the given image to cache
+    /// </summary>
+    /// <param name="_image">banner to save</param>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">filename (will be the same name used by LoadImageFromCache)</param>
+    void SaveToCache(Image _image, int _seriesId, String _fileName);
+
+    /// <summary>
+    /// Loads the specified image from the cache
+    /// </summary>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_fileName">filename of the image (same one as used by SaveToCache)</param>
+    /// <returns>The loaded image or null if the image wasn't found</returns>
+    Image LoadImageFromCache(int _seriesId, String _fileName);
 
     /// <summary>
     /// Receives a list of all series that have been cached

@@ -281,7 +281,8 @@ namespace TvdbLib.Data
     /// <summary>
     /// Update all fields of the object with the given information
     /// </summary>
-    /// <param name="_fields"></param>
+    /// <param name="_fields">the fields for the update</param>
+    /// <param name="_replaceEpisodes">Should the episodes be replaced or kept</param>
     internal void UpdateTvdbFields(TvdbSeriesFields _fields, bool _replaceEpisodes)
     {
       //Update series details

@@ -26,6 +26,7 @@ using System.Drawing;
 using System.Net;
 using System.IO;
 using System.Threading;
+using TvdbLib.Cache;
 
 namespace TvdbLib.Data
 {
@@ -58,7 +59,7 @@ namespace TvdbLib.Data
   [Serializable]
   public class TvdbBanner
   {
-    #region private fields
+    #region private/protected fields
     private String m_bannerPath;
     private Image m_banner;
     private bool m_isLoaded;
@@ -68,7 +69,22 @@ namespace TvdbLib.Data
     private System.Object m_bannerLoadingLock = new System.Object();
     private DateTime m_lastUpdated;
     private int m_seriesId;
+    private ICacheProvider m_cacheProvider;
     #endregion
+
+    /// <summary>
+    /// Used to load/save images persistent if we're using a cache provider 
+    /// (should keep memory usage much lower)
+    /// 
+    /// on the other hand we have a back-ref to tvdb (from a data class), which sucks
+    /// 
+    /// todo: think of a better way to handle this
+    /// </summary>
+    public ICacheProvider CacheProvider
+    {
+      get { return m_cacheProvider; }
+      set { m_cacheProvider = value; }
+    }
 
     /// <summary>
     /// Language of the banner
@@ -91,7 +107,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// Image data of the banner
     /// </summary>
-    public Image Banner
+    public Image BannerImage
     {
       get { return m_banner; }
       set { m_banner = value; }
@@ -170,10 +186,25 @@ namespace TvdbLib.Data
         if (m_bannerPath.Equals("")) return false;
         try
         {
-          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_bannerPath));
-          //Thread.Sleep(2000);
+          Image img = null;
+          String cacheName = CreateCacheName(m_bannerPath, false);
+          if (m_cacheProvider != null && m_cacheProvider.Initialised)
+          {//try to load the image from cache first
+            img = m_cacheProvider.LoadImageFromCache(m_seriesId, cacheName);
+          }
+
+          if (img == null)
+          {//couldn't load image from cache -> load it from http://thetvdb.com
+            img = LoadImage(TvdbLinkCreator.CreateBannerLink(m_bannerPath));
+
+            if (img != null && m_cacheProvider != null && m_cacheProvider.Initialised)
+            {//store the image to cache
+              m_cacheProvider.SaveToCache(img, m_seriesId, cacheName);
+            }
+          }
+
           if (img != null)
-          {
+          {//image was successfully loaded
             m_banner = img;
             m_isLoaded = true;
             m_bannerLoading = false;
@@ -190,7 +221,29 @@ namespace TvdbLib.Data
       }
     }
 
-
+    /// <summary>
+    /// Creates the name used to store images in cache
+    /// </summary>
+    /// <param name="_path">Path of the image</param>
+    /// <param name="_thumb">Is the image a thumbnail</param>
+    /// <returns>Name used for caching image</returns>
+    protected String CreateCacheName(String _path, bool _thumb)
+    {
+      if (_path.Contains("_cache/"))
+      {
+        _path = _path.Replace("_cache/", "");
+      }
+      if (_path.Contains("fanart/original/"))
+      {
+        _path = _path.Replace("fanart/original/", "fan-");
+      }
+      else if (_path.Contains("fanart/vignette/"))
+      {
+        _path = _path.Replace("fanart/vignette/", "fan-vig-");
+      }
+      _path = _path.Replace('/', '_');
+      return (_thumb ? "thumb_": "img_") + _path;
+    }
 
     /// <summary>
     /// Loads the banner with the given image

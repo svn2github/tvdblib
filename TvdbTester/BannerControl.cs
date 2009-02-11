@@ -196,11 +196,11 @@ namespace TvdbTester
         {
           if (m_useThumbIfPossible && m_imageList[m_index].GetType().BaseType == typeof(TvdbBannerWithThumb))
           {
-            if (((TvdbBannerWithThumb)m_imageList[m_index]).IsThumbLoaded) return ((TvdbBannerWithThumb)m_imageList[m_index]).BannerThumb;
+            if (((TvdbBannerWithThumb)m_imageList[m_index]).IsThumbLoaded) return ((TvdbBannerWithThumb)m_imageList[m_index]).ThumbImage;
           }
           else
           {
-            if (m_imageList[m_index].IsLoaded) return m_imageList[m_index].Banner;
+            if (m_imageList[m_index].IsLoaded) return m_imageList[m_index].BannerImage;
           }
 
           return null;
@@ -318,12 +318,12 @@ namespace TvdbTester
               if (m_useThumbIfPossible && hasThumb && ((TvdbBannerWithThumb)banner).IsThumbLoaded)
               {
                 SetLoadingVisibleThreadSafe(false);
-                SetImageThreadSafe(((TvdbBannerWithThumb)banner).BannerThumb);
+                SetImageThreadSafe(((TvdbBannerWithThumb)banner).ThumbImage);
               }
               else if (banner.IsLoaded)
               {//banner was successfully loaded
                 SetLoadingVisibleThreadSafe(false);
-                SetImageThreadSafe(banner.Banner);
+                SetImageThreadSafe(banner.BannerImage);
               }
               else
               {//couldn't load the banner

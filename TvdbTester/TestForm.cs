@@ -31,11 +31,12 @@ namespace TvdbTester
       }
     }
 
-    private Tvdb m_tvdbHandler;
+    private TvdbHandler m_tvdbHandler;
 
     private void cmdInit_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler = new Tvdb(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
+      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), Resources.API_KEY);
+      m_tvdbHandler.InitCache();
       List<TvdbLanguage> lang = m_tvdbHandler.Languages;
       cmdTest1.Enabled = true;
       cmdTestZip.Enabled = true;
@@ -217,7 +218,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.FanartBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.FanartBanners[_index].LoadBanner())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].Banner;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].BannerImage;
           }
         }
         else
@@ -231,7 +232,21 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.FanartBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.FanartBanners[_index].LoadThumb())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].BannerThumb;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].ThumbImage;
+          }
+        }
+        else
+        {
+          MessageBox.Show("No fanart for this series");
+        }
+      }
+      else if (rbFanartVignette.Checked)
+      {
+        if (m_selectedSeriesForBannerTesting.FanartBanners != null && m_selectedSeriesForBannerTesting.FanartBanners.Count > _index)
+        {
+          if (m_selectedSeriesForBannerTesting.FanartBanners[_index].IsVignetteLoaded || m_selectedSeriesForBannerTesting.FanartBanners[_index].LoadVignette())
+          {
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.FanartBanners[_index].VignetteImage;
           }
         }
         else
@@ -245,7 +260,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.SeriesBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.SeriesBanners[_index].LoadBanner())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].Banner;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].BannerImage;
           }
         }
         else
@@ -259,7 +274,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.SeriesBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.SeriesBanners[_index].LoadThumb())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].BannerThumb;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeriesBanners[_index].ThumbImage;
           }
         }
         else
@@ -273,7 +288,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.PosterBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.PosterBanners[_index].LoadBanner())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].Banner;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].BannerImage;
           }
         }
         else
@@ -287,7 +302,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.PosterBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.PosterBanners[_index].LoadThumb())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].BannerThumb;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.PosterBanners[_index].ThumbImage;
           }
         }
         else
@@ -301,7 +316,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.SeasonBanners[_index].IsLoaded || m_selectedSeriesForBannerTesting.SeasonBanners[_index].LoadBanner())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].Banner;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].BannerImage;
           }
         }
         else
@@ -315,7 +330,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.SeasonBanners[_index].IsThumbLoaded || m_selectedSeriesForBannerTesting.SeasonBanners[_index].LoadThumb())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].BannerThumb;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.SeasonBanners[_index].ThumbImage;
           }
         }
         else
@@ -329,7 +344,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.Episodes[_index].Banner.IsLoaded || m_selectedSeriesForBannerTesting.Episodes[_index].Banner.LoadBanner())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.Banner;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.BannerImage;
           }
         }
         else
@@ -343,7 +358,7 @@ namespace TvdbTester
         {
           if (m_selectedSeriesForBannerTesting.Episodes[_index].Banner.IsThumbLoaded || m_selectedSeriesForBannerTesting.Episodes[_index].Banner.LoadThumb())
           {
-            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.BannerThumb;
+            pbBannerTesting.Image = m_selectedSeriesForBannerTesting.Episodes[_index].Banner.ThumbImage;
           }
         }
         else

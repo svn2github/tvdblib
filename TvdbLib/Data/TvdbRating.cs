@@ -39,7 +39,15 @@ namespace TvdbLib.Data
     /// <summary>
     /// Enum with all items on thetvdb that can be rated
     /// </summary>
-    public enum ItemType { Series, Episode }
+    public enum ItemType { 
+      /// <summary>
+      /// Item is a series
+      /// </summary>
+      Series, 
+      /// <summary>
+      /// Item is an episode
+      /// </summary>
+      Episode }
 
     /// <summary>
     /// Which item type is this rating for

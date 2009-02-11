@@ -179,7 +179,22 @@ namespace TvdbLib.Data.Banner
         m_vignetteLoading = true;
         try
         {
-          Image img = LoadImage(TvdbLinks.CreateBannerLink(m_vignettePath));
+          Image img = null;
+          String cacheName = CreateCacheName(m_vignettePath, false);
+          if (this.CacheProvider != null && this.CacheProvider.Initialised)
+          {//try to load the image from cache first
+            img = this.CacheProvider.LoadImageFromCache(this.SeriesId, cacheName);
+          }
+
+          if (img == null)
+          {
+            img = LoadImage(TvdbLinkCreator.CreateBannerLink(m_vignettePath));
+
+            if (img != null && this.CacheProvider != null && this.CacheProvider.Initialised)
+            {//store the image to cache
+              this.CacheProvider.SaveToCache(img, this.SeriesId, cacheName);
+            }
+          }
 
           if (img != null)
           {

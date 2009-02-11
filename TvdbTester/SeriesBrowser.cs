@@ -42,7 +42,7 @@ namespace TvdbTester
   public partial class SeriesBrowser : Form
   {
     #region private fields
-    private Tvdb m_tvdbHandler;
+    private TvdbHandler m_tvdbHandler;
     private TvdbLanguage m_currentLanguage;//the currently selected language
     private TvdbSeries m_currentSeries;//the currently loaded series
     #endregion
@@ -136,7 +136,7 @@ namespace TvdbTester
     {
       //m_tvdbHandler = new Tvdb(new BinaryCacheProvider(@"cachefile.bin"), Resources.API_KEY);new XmlCacheProvider("XmlCache")
 
-      m_tvdbHandler = new Tvdb(_provider, Resources.API_KEY);
+      m_tvdbHandler = new TvdbHandler(_provider, Resources.API_KEY);
       m_tvdbHandler.InitCache();
       if (!m_tvdbHandler.IsMirrorInformationCached)
       {
@@ -440,6 +440,7 @@ namespace TvdbTester
       {
         String link = "http://www.tv.com/show/" + series.TvDotComId + "/summary.html";
         llblTvComId.Text = "Open";
+        llblTvComId.Links.Clear();
         llblTvComId.Links.Add(0, link.Length, link);
       }
       else
@@ -452,6 +453,7 @@ namespace TvdbTester
       {
         String link = "http://www.imdb.com/title/" + series.ImdbId;
         llblImdb.Text = "Open";
+        llblImdb.Links.Clear();
         llblImdb.Links.Add(0, link.Length, link);
       }
       else
@@ -940,22 +942,22 @@ namespace TvdbTester
 
     private void cmdRefreshSeries_Click(object sender, EventArgs e)
     {
-      TvdbLib.Tvdb.Interval updateInterval = Tvdb.Interval.automatic;
+      TvdbLib.TvdbHandler.Interval updateInterval = TvdbHandler.Interval.automatic;
       if (rbUpdateAutomatic.Checked)
       {
-        updateInterval = Tvdb.Interval.automatic;
+        updateInterval = TvdbHandler.Interval.automatic;
       }
       else if (rbUpdateDay.Checked)
       {
-        updateInterval = Tvdb.Interval.day;
+        updateInterval = TvdbHandler.Interval.day;
       }
       else if (rbUpdateWeek.Checked)
       {
-        updateInterval = Tvdb.Interval.week;
+        updateInterval = TvdbHandler.Interval.week;
       }
       else if (rbUpdateMonth.Checked)
       {
-        updateInterval = Tvdb.Interval.month;
+        updateInterval = TvdbHandler.Interval.month;
       }
       m_tvdbHandler.UpdateAllSeries(updateInterval, cbUseZipped.Checked);
     }

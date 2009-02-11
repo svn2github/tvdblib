@@ -86,7 +86,7 @@ namespace TvdbTester
         {
           if (3 + i + m_currentIndex >= 0 && i + m_currentIndex <= 0 && i < pbList.Count)
           {//current index is visible
-            SetImageThreadSafe(3 + i, m_items[3 + i + m_currentIndex].BannerThumb);
+            SetImageThreadSafe(3 + i, m_items[3 + i + m_currentIndex].ThumbImage);
           }
         }
       }
@@ -184,7 +184,7 @@ namespace TvdbTester
           if (m_items[imageIndex].IsThumbLoaded)
           {
             pbList[i].SizeMode = PictureBoxSizeMode.Zoom;
-            pbList[i].Image = m_items[imageIndex].BannerThumb;
+            pbList[i].Image = m_items[imageIndex].ThumbImage;
           }
           else if (pbList[i].Image == null)
           {
@@ -265,7 +265,7 @@ namespace TvdbTester
       TvdbFanartBanner banner = m_items[m_currentIndex + 3];
       if (banner.IsLoaded || banner.LoadBanner())
       {
-        pbFull.Image = banner.Banner;
+        pbFull.Image = banner.BannerImage;
       }
       else
       {

@@ -63,7 +63,7 @@ namespace TvdbLib
   ///       |---- updates_<timeframe>.zip
   /// ]]>
   /// </summary>
-  internal class TvdbLinks
+  internal class TvdbLinkCreator
   {
     /// <summary>
     /// Base server where all operations start

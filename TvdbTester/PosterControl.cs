@@ -68,7 +68,7 @@ namespace TvdbTester
         {
           return null;
         }
-        return m_imageList[m_index].Banner;
+        return m_imageList[m_index].BannerImage;
       }
     }
 
@@ -134,7 +134,7 @@ namespace TvdbTester
       if (banner.IsLoaded && index == m_index)
       {//the current index is still (event after downloading the image) the images' index
         SetLoadingVisibleThreadSafe(false);
-        SetImageThreadSafe(CreatePosterBitmap(banner.Banner));
+        SetImageThreadSafe(CreatePosterBitmap(banner.BannerImage));
       }
 
     }
