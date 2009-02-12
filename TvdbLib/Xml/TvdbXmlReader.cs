@@ -937,7 +937,9 @@ namespace TvdbLib.Xml
         TvdbUser user = new TvdbUser();
         user.UserIdentifier = a.Identifier;
         user.UserName = a.Name;
-        user.UserPreferredLanguage = Util.ParseLanguage(a.Preferred.FirstAttribute.NextAttribute.Value);
+        user.UserPreferredLanguage = a.Preferred.HasAttributes ? 
+                                     Util.ParseLanguage(a.Preferred.FirstAttribute.NextAttribute.Value) : 
+                                     TvdbLanguage.DefaultLanguage;
         List<int> favList = new List<int>();
         foreach(String f in a.Favorites.Value.Split(','))
         {

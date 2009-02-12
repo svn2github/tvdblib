@@ -26,6 +26,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using TvdbLib.Data;
+using System.Drawing;
 
 namespace TvdbLib.Cache
 {
@@ -36,8 +37,9 @@ namespace TvdbLib.Cache
   /// </summary>
   public class BinaryCacheProvider : ICacheProvider
   {
+    #region class that holds configuration for each series
     /// <summary>
-    /// Class to store what
+    /// Class to store what parts of the cached series has been loaded
     /// </summary>
     [Serializable]
     internal class SeriesConfiguration
@@ -100,11 +102,13 @@ namespace TvdbLib.Cache
         m_actorsLoaded = _actorsLoaded;
       }
     }
+    #endregion
 
     #region private fields
     private BinaryFormatter m_formatter;//Formatter to serialize/deserialize messages
     private String m_rootFolder;
     private FileStream m_filestream;
+    private bool m_initialised;
     #endregion
 
     /// <summary>
@@ -134,27 +138,9 @@ namespace TvdbLib.Cache
       return data;
     }
 
-    private DateTime LoadLastUpdatedFromCache()
+    public TvdbData InitCache()
     {
-      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser"))
-      {
-        try
-        {
-          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser", FileMode.Open);
-          DateTime retValue = (DateTime)m_formatter.Deserialize(fs);
-          fs.Close();
-          return retValue;
-        }
-        catch (SerializationException)
-        {
-          return DateTime.Now;
-
-        }
-      }
-      else
-      {
-        return DateTime.Now;
-      }
+      throw new NotImplementedException();
     }
 
     /// <summary>
@@ -459,144 +445,152 @@ namespace TvdbLib.Cache
       }
     }
 
-    #endregion
-
-    #region ICacheProvider Members
-
+    /// <summary>
+    /// Is the cache provider initialised
+    /// </summary>
     public bool Initialised
     {
-      get { throw new NotImplementedException(); }
+      get { return m_initialised; }
     }
 
-    public TvdbData InitCache()
-    {
-      throw new NotImplementedException();
-    }
-
+    /// <summary>
+    /// Completely refreshes the cached (all stored information is lost). 
+    /// </summary>
+    /// <returns>true if the cache was cleared successfully, 
+    ///          false otherwise (e.g. no write rights,...)</returns>
     public bool ClearCache()
     {
-      throw new NotImplementedException();
+      //Delete all series info
+      Log.Info("Attempting to delete all series");
+      string[] folders = Directory.GetDirectories(m_rootFolder);
+      foreach (String f in folders)
+      {
+        try
+        {
+          Directory.Delete(f);
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error deleting series " + f + ", please manually delete the " +
+                   "cache folder since it's now inconsistent" , ex);
+          return false;
+        }
+      }
+
+      return true;
     }
 
+    /// <summary>
+    /// Remove a specific series from cache
+    /// </summary>
+    /// <param name="_seriesId">the id of the series</param>
+    /// <returns>true if the series was removed from the cache successfully, 
+    ///          false otherwise (e.g. series not cached)</returns>
     public bool RemoveFromCache(int _seriesId)
     {
-      throw new NotImplementedException();
+      String seriesDir = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesDir))
+      {
+        try
+        {
+          Directory.Delete(seriesDir);
+          return true;
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error deleting series " + _seriesId, ex);
+          return false;
+        }
+      }
+      else
+      {
+        Log.Debug("Series couldn't be deleted because it doesn't exist");
+        return false;
+      }
     }
 
-    #endregion
-
-    #region ICacheProvider Members
-
-
+    /// <summary>
+    /// Save the given image to cache
+    /// </summary>
+    /// <param name="_image">banner to save</param>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">filename (will be the same name used by LoadImageFromCache)</param>
     public void SaveToCache(System.Drawing.Image _image, int _seriesId, string _fileName)
     {
-      throw new NotImplementedException();
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesRoot))
+      {
+        if (_image != null)
+        {
+          _image.Save(seriesRoot + Path.DirectorySeparatorChar + _fileName);
+        }
+      }
+      else
+      {
+        Log.Warn("Couldn't save image " + _fileName + " for series " + _seriesId +
+                 " because the series directory doesn't exist yet");
+      }
     }
 
+
+    /// <summary>
+    /// Loads the specified image from the cache
+    /// </summary>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_fileName">filename of the image (same one as used by SaveToCache)</param>
+    /// <returns>The loaded image or null if the image wasn't found</returns>
     public System.Drawing.Image LoadImageFromCache(int _seriesId, string _fileName)
     {
-      throw new NotImplementedException();
+      String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
+      if (Directory.Exists(seriesRoot))
+      {
+        String fName = seriesRoot + Path.DirectorySeparatorChar + _fileName;
+        if (File.Exists(fName))
+        {
+          try
+          {
+            return Image.FromFile(fName);
+          }
+          catch (Exception ex)
+          {
+            Log.Warn("Couldn't load image " + fName + " for series " + _seriesId, ex);
+          }
+        }
+      }
+      return null;
     }
 
     #endregion
 
-    #region ICacheProvider Members
-
-    bool ICacheProvider.Initialised
+    #region Helpermethods
+    
+    /// <summary>
+    /// Load the time when the cache was updated last
+    /// </summary>
+    /// <returns>DateTime of lsat update</returns>
+    private DateTime LoadLastUpdatedFromCache()
     {
-      get { throw new NotImplementedException(); }
-    }
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser"))
+      {
+        try
+        {
+          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "lastUpdated.ser", FileMode.Open);
+          DateTime retValue = (DateTime)m_formatter.Deserialize(fs);
+          fs.Close();
+          return retValue;
+        }
+        catch (SerializationException)
+        {
+          return DateTime.Now;
 
-    TvdbData ICacheProvider.InitCache()
-    {
-      throw new NotImplementedException();
+        }
+      }
+      else
+      {
+        return DateTime.Now;
+      }
     }
-
-    bool ICacheProvider.ClearCache()
-    {
-      throw new NotImplementedException();
-    }
-
-    bool ICacheProvider.RemoveFromCache(int _seriesId)
-    {
-      throw new NotImplementedException();
-    }
-
-    TvdbData ICacheProvider.LoadUserDataFromCache()
-    {
-      throw new NotImplementedException();
-    }
-
-    List<TvdbLanguage> ICacheProvider.LoadLanguageListFromCache()
-    {
-      throw new NotImplementedException();
-    }
-
-    List<TvdbMirror> ICacheProvider.LoadMirrorListFromCache()
-    {
-      throw new NotImplementedException();
-    }
-
-    List<TvdbSeries> ICacheProvider.LoadAllSeriesFromCache()
-    {
-      throw new NotImplementedException();
-    }
-
-    TvdbSeries ICacheProvider.LoadSeriesFromCache(int _seriesId)
-    {
-      throw new NotImplementedException();
-    }
-
-    TvdbUser ICacheProvider.LoadUserInfoFromCache(string _userId)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(TvdbData _content)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(List<TvdbLanguage> _languageList)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(List<TvdbMirror> _mirrorInfo)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(TvdbSeries _series)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(TvdbUser _user)
-    {
-      throw new NotImplementedException();
-    }
-
-    void ICacheProvider.SaveToCache(System.Drawing.Image _image, int _seriesId, string _fileName)
-    {
-      throw new NotImplementedException();
-    }
-
-    System.Drawing.Image ICacheProvider.LoadImageFromCache(int _seriesId, string _fileName)
-    {
-      throw new NotImplementedException();
-    }
-
-    List<int> ICacheProvider.GetCachedSeries()
-    {
-      throw new NotImplementedException();
-    }
-
-    bool ICacheProvider.IsCached(int _seriesId, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded)
-    {
-      throw new NotImplementedException();
-    }
-
     #endregion
+
   }
 }

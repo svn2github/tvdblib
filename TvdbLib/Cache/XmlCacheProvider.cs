@@ -118,16 +118,19 @@ namespace TvdbLib.Cache
     /// <param name="_content"></param>
     public void SaveToCache(TvdbData _content)
     {
-      SaveToCache(_content.LanguageList);
-      SaveToCache(_content.Mirrors);
+      if (_content != null)
+      {
+        SaveToCache(_content.LanguageList);
+        SaveToCache(_content.Mirrors);
 
-      //store additional information
-      //- time of last update
-      //- more to come (eventually)
-      XElement xml = new XElement("Data");
-      xml.Add(new XElement("LastUpdated", Util.DotNetToUnix(_content.LastUpdated)));
-      String data = xml.ToString();
-      File.WriteAllText(m_rootFolder + Path.DirectorySeparatorChar + "data.xml", data);
+        //store additional information
+        //- time of last update
+        //- more to come (eventually)
+        XElement xml = new XElement("Data");
+        xml.Add(new XElement("LastUpdated", Util.DotNetToUnix(_content.LastUpdated)));
+        String data = xml.ToString();
+        File.WriteAllText(m_rootFolder + Path.DirectorySeparatorChar + "data.xml", data);
+      }
     }
 
     /// <summary>
@@ -645,17 +648,55 @@ namespace TvdbLib.Cache
     ///          false otherwise (e.g. no write rights,...)</returns>
     public bool ClearCache()
     {
-      try
+      //Delete all series info
+      Log.Info("Attempting to delete all series");
+      string[] folders = Directory.GetDirectories(m_rootFolder);
+      foreach (String f in folders)
       {
-        Directory.Delete(m_rootFolder, true);
-        return true;
+        try
+        {
+          Directory.Delete(f, true);
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error deleting series " + f + ", please manually delete the " +
+                   "cache folder since it's now inconsistent", ex);
+          return false;
+        }
       }
-      catch (Exception ex)
+
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "languages.xml"))
       {
-        Log.Fatal("Couldn't clear the cache, please delete the files in " + m_rootFolder +
-                  " manually, since at this state the cache is most likely inconsistent!", ex);
-        return false;
+        Log.Info("Attempting to delete cached languages");
+        try
+        {
+          File.Delete(m_rootFolder + Path.DirectorySeparatorChar + "languages.xml");
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error deleting cached languages, please manually delete the " +
+                   "cache folder since it's now inconsistent", ex);
+          return false;
+        }
       }
+
+      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "data.xml"))
+      {
+        Log.Info("Attempting to delete cache settings");
+        try
+        {
+          File.Delete(m_rootFolder + Path.DirectorySeparatorChar + "data.xml");
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error deleting cached cache settings, please manually delete the " +
+                   "cache folder since it's now inconsistent", ex);
+          return false;
+        }
+      }
+
+      Log.Info("Successfully deleted cache");
+      return true;
     }
 
     /// <summary>

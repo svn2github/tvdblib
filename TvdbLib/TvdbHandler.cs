@@ -307,6 +307,30 @@ namespace TvdbLib
     }
 
     /// <summary>
+    /// Is the handler using caching and is the cache initialised
+    /// </summary>
+    public bool IsCacheInitialised
+    {
+      get { return m_cacheProvider != null && m_cacheProvider.Initialised; }
+    }
+
+
+    /// <summary>
+    /// Completely refreshes the cache (all stored information is lost) -> cache
+    /// must be initialised to call this method
+    /// </summary>
+    /// <returns>true if the cache was cleared successfully, 
+    ///          false otherwise (e.g. no write rights,...)</returns>
+    public bool ClearCache()
+    {
+      if (m_cacheProvider != null && m_cacheProvider.Initialised)
+      {
+        return m_cacheProvider.ClearCache();
+      }
+      else return false;
+    }
+
+    /// <summary>
     /// Search for a seris on tvdb using the name of the series
     /// </summary>
     /// <param name="_name">Name of series</param>
