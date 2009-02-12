@@ -162,5 +162,12 @@ namespace TvdbLib.Cache
     /// <returns>true if the series is cached, false otherwise</returns>
     bool IsCached(int _seriesId, bool _episodesLoaded, bool _bannersLoaded, bool _actorsLoaded);
 
+    /// <summary>
+    /// Removes the specified image from cache (if it has been cached)
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">name of image</param>
+    /// <returns>true if image was removed successfully, false otherwise (e.g. image didn't exist)</returns>
+    bool RemoveImageFromCache(int _seriesId, string _fileName);
   }
 }

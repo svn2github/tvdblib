@@ -777,6 +777,36 @@ namespace TvdbLib.Cache
       return null;
     }
 
+    /// <summary>
+    /// Removes the specified image from cache (if it has been cached)
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">name of image</param>
+    /// <returns>true if image was removed successfully, false otherwise (e.g. image didn't exist)</returns>
+    public bool RemoveImageFromCache(int _seriesId, string _fileName)
+    {
+      String fName = m_rootFolder + Path.DirectorySeparatorChar + _seriesId + 
+                     Path.DirectorySeparatorChar + _fileName;
+
+      if (File.Exists(fName))
+      {//the image is cached
+        try
+        {//trying to delete the file
+          File.Delete(fName);
+          return true;
+        }
+        catch (Exception ex)
+        {//error while deleting the image
+          Log.Warn("Couldn't delete image " + _fileName + " for series " + _seriesId, ex);
+          return false;
+        }
+      }
+      else
+      {//image isn't cached in the first place
+        return false;
+      }
+    }
+
     #endregion
   }
 }

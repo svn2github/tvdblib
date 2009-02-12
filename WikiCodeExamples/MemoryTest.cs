@@ -11,6 +11,7 @@ using TvdbLib.Cache;
 using System.IO;
 using TvdbLib.Data;
 using TvdbLib.Data.Banner;
+using System.Diagnostics;
 
 namespace WikiCodeExamples
 {
@@ -71,6 +72,9 @@ namespace WikiCodeExamples
         if (m_loadedSeries.ContainsKey(seriesId))
         {
           m_loadedSeries.Remove(seriesId);
+          GC.Collect();
+          GC.WaitForPendingFinalizers();
+
           i.BackColor = Color.LightGreen;
         }       
       }
@@ -91,13 +95,16 @@ namespace WikiCodeExamples
           int count = 0;
           s.FanartBanners.ForEach(delegate(TvdbFanartBanner b) { if (b.IsLoaded)count++; });
           loadFanart0ToolStripMenuItem.Text = "Load Fanart (" + count + " of " + s.FanartBanners.Count + ")";
+          unloadFanart0ToolStripMenuItem.Text = "Unload Fanart (" + count + " of " + s.FanartBanners.Count + ")";
+          loadFanart0ToolStripMenuItem.Enabled = true;
+          unloadFanart0ToolStripMenuItem.Enabled = true;
           if (count == s.FanartBanners.Count)
           {
             loadFanart0ToolStripMenuItem.Enabled = false;
           }
-          else
+          if(count == 0)
           {
-            loadFanart0ToolStripMenuItem.Enabled = true;
+            unloadFanart0ToolStripMenuItem.Enabled = false;
           }
           unloadToolStripMenuItem.Enabled = true;
           loadToolStripMenuItem.Enabled = false;
@@ -116,11 +123,31 @@ namespace WikiCodeExamples
       if (lvFavorites.SelectedItems.Count == 1 && m_loadedSeries.ContainsKey((int)lvFavorites.SelectedItems[0].Tag))
       {
         TvdbSeries s = m_loadedSeries[(int)lvFavorites.SelectedItems[0].Tag];
-        foreach (TvdbBanner b in s.FanartBanners)
+        for(int i = 0; i < s.FanartBanners.Count; i++)
         {
-          if (!b.IsLoaded)
+          if (!s.FanartBanners[i].IsLoaded)
           {
-            b.LoadBanner();
+            s.FanartBanners[i].LoadBanner();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return;
+          }
+        }
+      }
+    }
+
+    private void unloadFanart0ToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvFavorites.SelectedItems.Count == 1 && m_loadedSeries.ContainsKey((int)lvFavorites.SelectedItems[0].Tag))
+      {
+        TvdbSeries s = m_loadedSeries[(int)lvFavorites.SelectedItems[0].Tag];
+        for (int i = s.FanartBanners.Count - 1; i >= 0 ; i--)
+        {
+          if (s.FanartBanners[i].IsLoaded)
+          {
+            s.FanartBanners[i].UnloadBanner();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
             return;
           }
         }

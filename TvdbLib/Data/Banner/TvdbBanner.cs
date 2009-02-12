@@ -222,6 +222,52 @@ namespace TvdbLib.Data
     }
 
     /// <summary>
+    /// Unloads the image and saves it to cache
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadBanner()
+    {
+      return UnloadBanner(true);
+    }
+
+    /// <summary>
+    /// Unloads the image
+    /// </summary>
+    /// <param name="_saveToCache">should the image kept in cache</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadBanner(bool _saveToCache)
+    {
+      if (m_bannerLoading)
+      {//banner is currently loading
+        Log.Warn("Can't remove banner while it's loading");
+        return false;
+      }
+      else
+      {
+        try
+        {
+          if (m_isLoaded)
+          {
+            LoadBanner(null);
+          }
+          if (!_saveToCache)
+          {//we don't want the image in cache -> if we already cached it it should be deleted
+            String cacheName = CreateCacheName(m_bannerPath, false);
+            if (m_cacheProvider != null && m_cacheProvider.Initialised)
+            {//try to load the image from cache first
+              m_cacheProvider.RemoveImageFromCache(m_seriesId, cacheName);
+            }
+          }
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error while unloading banner", ex);
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
     /// Creates the name used to store images in cache
     /// </summary>
     /// <param name="_path">Path of the image</param>
@@ -260,6 +306,7 @@ namespace TvdbLib.Data
       }
       else
       {
+        m_banner = null;
         m_isLoaded = false;
         return false;
       }

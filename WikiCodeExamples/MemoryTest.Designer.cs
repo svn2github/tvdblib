@@ -30,14 +30,19 @@
     {
       this.components = new System.ComponentModel.Container();
       this.lvFavorites = new System.Windows.Forms.ListView();
-      this.cmdInit = new System.Windows.Forms.Button();
-      this.cmdClose = new System.Windows.Forms.Button();
-      this.txtUserId = new System.Windows.Forms.TextBox();
       this.cmSeriesListView = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.label1 = new System.Windows.Forms.Label();
       this.loadFanart0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cmdInit = new System.Windows.Forms.Button();
+      this.cmdClose = new System.Windows.Forms.Button();
+      this.txtUserId = new System.Windows.Forms.TextBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.unloadFanart0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.loadPoster0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.unloadPoster0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.loadSeries0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.unloadSeries0ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cmSeriesListView.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -53,6 +58,42 @@
       this.lvFavorites.TabIndex = 0;
       this.lvFavorites.UseCompatibleStateImageBehavior = false;
       this.lvFavorites.View = System.Windows.Forms.View.List;
+      // 
+      // cmSeriesListView
+      // 
+      this.cmSeriesListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadToolStripMenuItem,
+            this.unloadToolStripMenuItem,
+            this.loadFanart0ToolStripMenuItem,
+            this.unloadFanart0ToolStripMenuItem,
+            this.loadPoster0ToolStripMenuItem,
+            this.unloadPoster0ToolStripMenuItem,
+            this.loadSeries0ToolStripMenuItem,
+            this.unloadSeries0ToolStripMenuItem});
+      this.cmSeriesListView.Name = "cmSeriesListView";
+      this.cmSeriesListView.Size = new System.Drawing.Size(171, 202);
+      this.cmSeriesListView.Opening += new System.ComponentModel.CancelEventHandler(this.cmSeriesListView_Opening);
+      // 
+      // loadToolStripMenuItem
+      // 
+      this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+      this.loadToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.loadToolStripMenuItem.Text = "Load";
+      this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
+      // 
+      // unloadToolStripMenuItem
+      // 
+      this.unloadToolStripMenuItem.Name = "unloadToolStripMenuItem";
+      this.unloadToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.unloadToolStripMenuItem.Text = "Unload";
+      this.unloadToolStripMenuItem.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click);
+      // 
+      // loadFanart0ToolStripMenuItem
+      // 
+      this.loadFanart0ToolStripMenuItem.Name = "loadFanart0ToolStripMenuItem";
+      this.loadFanart0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.loadFanart0ToolStripMenuItem.Text = "Load Fanart (0)";
+      this.loadFanart0ToolStripMenuItem.Click += new System.EventHandler(this.loadFanart0ToolStripMenuItem_Click);
       // 
       // cmdInit
       // 
@@ -86,30 +127,6 @@
       this.txtUserId.TabIndex = 2;
       this.txtUserId.Text = "2EF20123489774E9";
       // 
-      // cmSeriesListView
-      // 
-      this.cmSeriesListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadToolStripMenuItem,
-            this.unloadToolStripMenuItem,
-            this.loadFanart0ToolStripMenuItem});
-      this.cmSeriesListView.Name = "cmSeriesListView";
-      this.cmSeriesListView.Size = new System.Drawing.Size(161, 92);
-      this.cmSeriesListView.Opening += new System.ComponentModel.CancelEventHandler(this.cmSeriesListView_Opening);
-      // 
-      // loadToolStripMenuItem
-      // 
-      this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-      this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.loadToolStripMenuItem.Text = "Load";
-      this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
-      // 
-      // unloadToolStripMenuItem
-      // 
-      this.unloadToolStripMenuItem.Name = "unloadToolStripMenuItem";
-      this.unloadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.unloadToolStripMenuItem.Text = "Unload";
-      this.unloadToolStripMenuItem.Click += new System.EventHandler(this.unloadToolStripMenuItem_Click);
-      // 
       // label1
       // 
       this.label1.AutoSize = true;
@@ -120,12 +137,40 @@
       this.label1.TabIndex = 4;
       this.label1.Text = "Memory Tester";
       // 
-      // loadFanart0ToolStripMenuItem
+      // unloadFanart0ToolStripMenuItem
       // 
-      this.loadFanart0ToolStripMenuItem.Name = "loadFanart0ToolStripMenuItem";
-      this.loadFanart0ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-      this.loadFanart0ToolStripMenuItem.Text = "Load Fanart (0)";
-      this.loadFanart0ToolStripMenuItem.Click += new System.EventHandler(this.loadFanart0ToolStripMenuItem_Click);
+      this.unloadFanart0ToolStripMenuItem.Name = "unloadFanart0ToolStripMenuItem";
+      this.unloadFanart0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.unloadFanart0ToolStripMenuItem.Text = "Unload Fanart (0)";
+      this.unloadFanart0ToolStripMenuItem.Click += new System.EventHandler(this.unloadFanart0ToolStripMenuItem_Click);
+      // 
+      // loadPoster0ToolStripMenuItem
+      // 
+      this.loadPoster0ToolStripMenuItem.Enabled = false;
+      this.loadPoster0ToolStripMenuItem.Name = "loadPoster0ToolStripMenuItem";
+      this.loadPoster0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.loadPoster0ToolStripMenuItem.Text = "Load Poster (0)";
+      // 
+      // unloadPoster0ToolStripMenuItem
+      // 
+      this.unloadPoster0ToolStripMenuItem.Enabled = false;
+      this.unloadPoster0ToolStripMenuItem.Name = "unloadPoster0ToolStripMenuItem";
+      this.unloadPoster0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.unloadPoster0ToolStripMenuItem.Text = "Unload Poster (0)";
+      // 
+      // loadSeries0ToolStripMenuItem
+      // 
+      this.loadSeries0ToolStripMenuItem.Enabled = false;
+      this.loadSeries0ToolStripMenuItem.Name = "loadSeries0ToolStripMenuItem";
+      this.loadSeries0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.loadSeries0ToolStripMenuItem.Text = "Load Series (0)";
+      // 
+      // unloadSeries0ToolStripMenuItem
+      // 
+      this.unloadSeries0ToolStripMenuItem.Enabled = false;
+      this.unloadSeries0ToolStripMenuItem.Name = "unloadSeries0ToolStripMenuItem";
+      this.unloadSeries0ToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+      this.unloadSeries0ToolStripMenuItem.Text = "Unload Series (0)";
       // 
       // MemoryTest
       // 
@@ -157,5 +202,10 @@
     private System.Windows.Forms.ToolStripMenuItem unloadToolStripMenuItem;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.ToolStripMenuItem loadFanart0ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem unloadFanart0ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem loadPoster0ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem unloadPoster0ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem loadSeries0ToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem unloadSeries0ToolStripMenuItem;
   }
 }

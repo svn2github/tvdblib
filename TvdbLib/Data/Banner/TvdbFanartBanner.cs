@@ -233,5 +233,51 @@ namespace TvdbLib.Data.Banner
         return false;
       }
     }
+
+    /// <summary>
+    /// Unloads the image and saves it to cache
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadVignette()
+    {
+      return UnloadVignette(true);
+    }
+
+    /// <summary>
+    /// Unloads the image
+    /// </summary>
+    /// <param name="_saveToCache">should the image kept in cache</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadVignette(bool _saveToCache)
+    {
+      if (m_vignetteLoaded)
+      {//banner is currently loading
+        Log.Warn("Can't remove banner while it's loading");
+        return false;
+      }
+      else
+      {
+        try
+        {
+          if (m_vignetteLoaded)
+          {
+            LoadVignette(null);
+          }
+          if (!_saveToCache)
+          {//we don't want the image in cache -> if we already cached it it should be deleted
+            String cacheName = CreateCacheName(m_vignettePath, true);
+            if (this.CacheProvider != null && this.CacheProvider.Initialised)
+            {//try to load the image from cache first
+              this.CacheProvider.RemoveImageFromCache(this.SeriesId, cacheName);
+            }
+          }
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error while unloading banner", ex);
+        }
+        return true;
+      }
+    }
   }
 }

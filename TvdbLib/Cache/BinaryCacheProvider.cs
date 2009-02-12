@@ -27,6 +27,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using TvdbLib.Data;
 using System.Drawing;
+using TvdbLib.Data.Banner;
 
 namespace TvdbLib.Cache
 {
@@ -250,8 +251,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Load the give series from cache
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">id of series to load</param>
+    /// <returns>loaded series, or null if not successful</returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser"))
@@ -284,10 +285,38 @@ namespace TvdbLib.Cache
       if (_series != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
+        
+        //delete all loaded images (since they should be already cached) 
+        foreach(TvdbBanner b in _series.Banners)
+        {
+          if (b.IsLoaded)
+          {//banner is loaded
+            b.UnloadBanner();
+          }
+
+          if (b.GetType() == typeof(TvdbBannerWithThumb))
+          {//thumb is loaded
+            if (((TvdbBannerWithThumb)b).IsThumbLoaded)
+            {
+              ((TvdbBannerWithThumb)b).UnloadThumb();
+            }
+          }
+
+          if (b.GetType() == typeof(TvdbFanartBanner))
+          {//vignette is loaded
+            if (((TvdbFanartBanner)b).IsVignetteLoaded)
+            {
+              ((TvdbFanartBanner)b).UnloadVignette();
+            }
+          }
+        }
+        
+        //serialize series to hdd
         m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
         m_filestream.Close();
 
+        //serialize series config to hdd
         SeriesConfiguration cfg = new SeriesConfiguration(_series.Id, _series.EpisodesLoaded,
                                                   _series.BannersLoaded, _series.TvdbActorsLoaded);
         m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".cfg", FileMode.Create);
@@ -334,6 +363,7 @@ namespace TvdbLib.Cache
             }
             catch (SerializationException)
             {
+              Log.Warn("Couldn't deserialize series " + f);
             }
           }
         }
@@ -558,6 +588,36 @@ namespace TvdbLib.Cache
         }
       }
       return null;
+    }
+
+    /// <summary>
+    /// Removes the specified image from cache (if it has been cached)
+    /// </summary>
+    /// <param name="_seriesId">id of series</param>
+    /// <param name="_fileName">name of image</param>
+    /// <returns>true if image was removed successfully, false otherwise (e.g. image didn't exist)</returns>
+    public bool RemoveImageFromCache(int _seriesId, string _fileName)
+    {
+      String fName = m_rootFolder + Path.DirectorySeparatorChar + _seriesId +
+               Path.DirectorySeparatorChar + _fileName;
+
+      if (File.Exists(fName))
+      {//the image is cached
+        try
+        {//trying to delete the file
+          File.Delete(fName);
+          return true;
+        }
+        catch (Exception ex)
+        {//error while deleting the image
+          Log.Warn("Couldn't delete image " + _fileName + " for series " + _seriesId, ex);
+          return false;
+        }
+      }
+      else
+      {//image isn't cached in the first place
+        return false;
+      }
     }
 
     #endregion

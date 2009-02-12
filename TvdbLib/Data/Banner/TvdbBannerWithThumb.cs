@@ -173,6 +173,52 @@ namespace TvdbLib.Data.Banner
     }
 
     /// <summary>
+    /// Unloads the image and saves it to cache
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadThumb()
+    {
+      return UnloadThumb(true);
+    }
+
+    /// <summary>
+    /// Unloads the image
+    /// </summary>
+    /// <param name="_saveToCache">should the image kept in cache</param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool UnloadThumb(bool _saveToCache)
+    {
+      if (m_thumbLoading)
+      {//banner is currently loading
+        Log.Warn("Can't remove banner while it's loading");
+        return false;
+      }
+      else
+      {
+        try
+        {
+          if (m_thumbLoaded)
+          {
+            LoadThumb(null);
+          }
+          if (!_saveToCache)
+          {//we don't want the image in cache -> if we already cached it it should be deleted
+            String cacheName = CreateCacheName(m_thumbPath, true);
+            if (this.CacheProvider != null && this.CacheProvider.Initialised)
+            {//try to load the image from cache first
+              this.CacheProvider.RemoveImageFromCache(this.SeriesId, cacheName);
+            }
+          }
+        }
+        catch (Exception ex)
+        {
+          Log.Warn("Error while unloading banner", ex);
+        }
+        return true;
+      }
+    }
+
+    /// <summary>
     /// Is the Image of the thumb already loaded
     /// </summary>
     public bool IsThumbLoaded
