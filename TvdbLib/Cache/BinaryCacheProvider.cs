@@ -285,9 +285,11 @@ namespace TvdbLib.Cache
       if (_series != null)
       {
         if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
+
+        #region delete all loaded images (since they should be already cached)
         
-        //delete all loaded images (since they should be already cached) 
-        foreach(TvdbBanner b in _series.Banners)
+        //delete banners
+        foreach (TvdbBanner b in _series.Banners)
         {
           if (b.IsLoaded)
           {//banner is loaded
@@ -310,7 +312,31 @@ namespace TvdbLib.Cache
             }
           }
         }
-        
+
+        //delete Actor Images
+        if (_series.TvdbActorsLoaded)
+        {
+          foreach (TvdbActor a in _series.TvdbActors)
+          {
+            if (a.ActorImage.IsLoaded)
+            {
+              a.ActorImage.UnloadBanner();
+            }
+          }
+        }
+
+        //delete episode images
+        if (_series.EpisodesLoaded)
+        {
+          foreach (TvdbEpisode e in _series.Episodes)
+          {
+            if (e.Banner.IsLoaded)
+            {
+              e.Banner.UnloadBanner();
+            }
+          }
+        }
+        #endregion
         //serialize series to hdd
         m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
@@ -441,7 +467,7 @@ namespace TvdbLib.Cache
     /// <param name="_bannersLoaded">are banners loaded</param>
     /// <param name="_actorsLoaded">are actors loaded</param>
     /// <returns>true if the series is cached, false otherwise</returns>
-    public bool IsCached(int _seriesId, bool _episodesLoaded, 
+    public bool IsCached(int _seriesId, bool _episodesLoaded,
                          bool _bannersLoaded, bool _actorsLoaded)
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"))
@@ -502,7 +528,7 @@ namespace TvdbLib.Cache
         catch (Exception ex)
         {
           Log.Warn("Error deleting series " + f + ", please manually delete the " +
-                   "cache folder since it's now inconsistent" , ex);
+                   "cache folder since it's now inconsistent", ex);
           return false;
         }
       }
@@ -623,7 +649,7 @@ namespace TvdbLib.Cache
     #endregion
 
     #region Helpermethods
-    
+
     /// <summary>
     /// Load the time when the cache was updated last
     /// </summary>
