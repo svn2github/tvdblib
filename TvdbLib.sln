@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvdbLib", "TvdbLib\TvdbLib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvdbBrowser", "TvdbTester\TvdbBrowser.csproj", "{524ED2AB-E2BF-4ABC-9154-C0B949ECF159}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikiCodeExamples", "WikiCodeExamples\WikiCodeExamples.csproj", "{453E208C-C20A-485A-A030-19B5FA7F3ADE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeExamples", "CodeExamples\CodeExamples.csproj", "{453E208C-C20A-485A-A030-19B5FA7F3ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
