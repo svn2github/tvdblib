@@ -472,29 +472,24 @@ namespace TvdbLib.Cache
     /// <returns></returns>
     public List<int> GetCachedSeries()
     {
+      List<int> retList = new List<int>();
       if (Directory.Exists(m_rootFolder))
       {
-        String[] files = Directory.GetFiles(m_rootFolder, "series*.ser");
-        List<int> retSeries = new List<int>();
-        foreach (String f in files)
+        string[] dirs = Directory.GetDirectories(m_rootFolder);
+        foreach (String d in dirs)
         {
-          String id = f.Substring(f.LastIndexOf("_") + 1, f.LastIndexOf(".") - f.LastIndexOf("_") - 1);
           try
           {
-            int intId = Int32.Parse(id);
-            retSeries.Add(intId);
+            int series = Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1));
+            retList.Add(series);
           }
-          catch (Exception)
+          catch (FormatException)
           {
-
+            Log.Error("Couldn't parse " + d + " when loading list of cached series");
           }
         }
-        return retSeries;
       }
-      else
-      {
-        return null;
-      }
+      return retList;
     }
 
     /// <summary>
@@ -510,12 +505,12 @@ namespace TvdbLib.Cache
                          bool _bannersLoaded, bool _actorsLoaded)
     {
       String fName = m_rootFolder + Path.DirectorySeparatorChar + _seriesId +
-                     Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"
-      if (File.Exists())
+                     Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg";
+      if (File.Exists(fName))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg", FileMode.Open);
+          FileStream fs = new FileStream(fName, FileMode.Open);
           SeriesConfiguration config = (SeriesConfiguration)m_formatter.Deserialize(fs);
           fs.Close();
 

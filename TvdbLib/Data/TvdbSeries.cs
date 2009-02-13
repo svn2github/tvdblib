@@ -92,7 +92,8 @@ namespace TvdbLib.Data
       : this()
     {
       AddLanguage(_fields);
-      UpdateTvdbFields(_fields, true);
+      SetLanguage(_fields.Language);
+      //UpdateTvdbFields(_fields, true);
     }
 
     /// <summary>
@@ -106,9 +107,13 @@ namespace TvdbLib.Data
         m_seriesTranslations = new Dictionary<TvdbLanguage, TvdbSeriesFields>();
       }
 
-      if (m_seriesTranslations.Keys.Contains(_fields.Language))
-      {//delete translation if it already exists and overwrite it with a new one
-        m_seriesTranslations.Remove(_fields.Language);
+      //delete translation if it already exists and overwrite it with a new one
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in m_seriesTranslations)
+      {
+        if (kvp.Key.Abbriviation.Equals(_fields.Language.Abbriviation))
+        {
+          m_seriesTranslations.Remove(kvp.Key);
+        }
       }
 
       m_seriesTranslations.Add(_fields.Language, _fields);
@@ -122,58 +127,28 @@ namespace TvdbLib.Data
     /// <returns>true if success, false otherwise</returns>
     public bool SetLanguage(TvdbLanguage _language)
     {
-      if (this.Language != null && _language.Abbriviation.Equals(this.Language.Abbriviation))
-      {//language is already selected
-        return false; 
-      }
-      if (m_seriesTranslations.Keys.Contains(_language))
-      {
-        if (this.Language != null)
-        {//copy changes made to the active language to it's series field
-          m_seriesTranslations[this.Language].UpdateTvdbFields(this, true);
-        }
-        /*
-        if (this.Language != null)
-        {
-          if (m_seriesTranslations.Keys.Contains(this.Language))
-          {//the current language is not added to the dictionary -> add it
-            m_seriesTranslations.Remove(this.Language);
-          }
-
-          TvdbSeriesFields f = new TvdbSeriesFields();
-          f.Id = this.Id;
-          f.Actors = this.Actors;
-          f.AirsDayOfWeek = this.AirsDayOfWeek;
-          f.AirsTime = this.AirsTime;
-          f.ContentRating = this.ContentRating;
-          f.FirstAired = this.FirstAired;
-          f.Genre = this.Genre;
-          f.ImdbId = this.ImdbId;
-          f.Language = this.Language;
-          f.Network = this.Network;
-          f.Overview = this.Overview;
-          f.Rating = this.Rating;
-          f.Runtime = this.Runtime;
-          f.TvDotComId = this.TvDotComId;
-          f.SeriesName = this.SeriesName;
-          f.Status = this.Status;
-          f.BannerPath = this.BannerPath;
-          f.FanartPath = this.FanartPath;
-          f.LastUpdated = this.LastUpdated;
-          f.Zap2itId = this.Zap2itId;
-          f.Episodes = this.Episodes;
-          f.EpisodesLoaded = this.EpisodesLoaded;
-
-          m_seriesTranslations.Add(this.Language, f);
-        }*/
-        this.UpdateTvdbFields(m_seriesTranslations[_language], true);
-        return true;
-      }
-      else
-      {//the translation hasn't been loaded yet
-        return false;
-      }
+      return SetLanguage(_language.Abbriviation);
     }
+
+    /// <summary>
+    /// Set the language of the series to one of the languages that have
+    /// already been loaded
+    /// </summary>
+    /// <param name="_language">The new language abbriviation for this series</param>
+    /// <returns>true if success, false otherwise</returns>
+    public bool SetLanguage(String _language)
+    {
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in m_seriesTranslations)
+      {
+        if (kvp.Key.Abbriviation.Equals(_language))
+        {
+          this.UpdateTvdbFields(kvp.Value, true);
+          return true;
+        }
+      }
+      return false;
+    }
+
 
     /// <summary>
     /// Get all languages that have already been loaded for this series

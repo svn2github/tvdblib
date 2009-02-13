@@ -168,11 +168,19 @@ namespace TvdbLib
           {
             //add episode info to series
             List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
-            if(epList != null)
+            if (epList != null)
             {
-              series.Episodes = epList;
-              series.EpisodesLoaded = true;
+              foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in series.SeriesTranslations)
+              {
+                if (kvp.Key.Abbriviation.Equals(_language.Abbriviation))
+                {
+                  series.SeriesTranslations[kvp.Key].Episodes = epList;
+                  series.SeriesTranslations[kvp.Key].EpisodesLoaded = true;
+                  break;
+                }
+              }
             }
+            series.SetLanguage(_language);
           }
 
           //also load actors
@@ -409,7 +417,7 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbContentNotFoundException("Couldn't download episode " + _episodeId + "(" + _language.Abbriviation +
+          throw new TvdbContentNotFoundException("Couldn't download episode " + _episodeId + "(" + _language +
                                                  "), maybe the episode doesn't exist");
         }
         else

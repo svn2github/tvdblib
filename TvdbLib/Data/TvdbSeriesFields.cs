@@ -326,12 +326,7 @@ namespace TvdbLib.Data
           }
         }
         this.EpisodesLoaded = _fields.EpisodesLoaded;
-
         this.Episodes = _fields.Episodes;
-      }
-      else
-      {
-        this.EpisodesLoaded = false;
       }
     }
   }

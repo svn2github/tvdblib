@@ -388,7 +388,7 @@ namespace TvdbLib
     /// <exception cref="TvdbNotAvailableException">Tvdb is not available</exception>
     /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <param name="_seriesId">id of series</param>
-    /// <param name="_language">language that should be retrieved</param>
+    /// <param name="_language">language abbriviation of the series that should be retrieved</param>
     /// <param name="_loadEpisodes">if true, the full series record will be loaded (series + all episodes), otherwise only the base record will be loaded which contains only series information</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <param name="_loadActors">if true also loads the extended actor information</param>
@@ -421,7 +421,7 @@ namespace TvdbLib
         }
         watch.Stop();
         loadedAdditionalInfo = true;
-        Log.Info("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
+        Log.Info("Loaded series " + _seriesId + " in " + watch.ElapsedMilliseconds + " milliseconds");
         series.IsFavorite = m_userInfo == null ? false : CheckIfSeriesFavorite(_seriesId, m_userInfo.UserFavorites);
       }
       else
@@ -495,7 +495,7 @@ namespace TvdbLib
         }
 
         watch.Stop();
-        Log.Info("Loaded series in " + watch.ElapsedMilliseconds + " milliseconds");
+        Log.Info("Loaded series " + _seriesId + " in " + watch.ElapsedMilliseconds + " milliseconds");
       }
 
       if (m_cacheProvider != null)
@@ -503,7 +503,7 @@ namespace TvdbLib
         //if we've loaded data from online source -> save to cache
         if (m_cacheProvider.Initialised && loadedAdditionalInfo)
         {
-          Log.Info("Store series with " + m_cacheProvider.ToString());
+          Log.Info("Store series " + _seriesId + " with " + m_cacheProvider.ToString());
           m_cacheProvider.SaveToCache(series);
         }
 
@@ -542,7 +542,6 @@ namespace TvdbLib
       }
       return series;
     }
-
 
     /// <summary>
     /// Gets the full series (including episode information and actors) with the given id either from cache 
@@ -592,7 +591,7 @@ namespace TvdbLib
     {
       if (m_cacheProvider != null && m_cacheProvider.Initialised)
       {
-        return m_cacheProvider.IsCached(_seriesId, TvdbLanguage.DefaultLanguage,
+        return m_cacheProvider.IsCached(_seriesId, _language,
                                         _loadEpisodes, _loadBanners, _loadActors);
       }
       return false;
@@ -1017,9 +1016,8 @@ namespace TvdbLib
 
             if (b.IsLoaded)
             {//the banner was previously loaded and is updated -> discard the previous image
-              //todo: if the series is loaded from cache again, the old image will be loaded again
-              //puh?
               b.LoadBanner(null);
+              b.UnloadBanner(false);
             }
 
             Log.Info("Replacing banner " + _banner.Id);
@@ -1050,7 +1048,7 @@ namespace TvdbLib
     private bool UpdateEpisode(TvdbSeries _series, TvdbEpisode _episode, int _progress)
     {
       bool updateDone = false;
-
+      TvdbLanguage currentLanguage = _series.Language;
       foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {
         if (_series.EpisodesLoaded)
@@ -1066,9 +1064,6 @@ namespace TvdbLib
               if (e.Id == _episode.Id)
               {
                 found = true;
-                String s = Util.DotNetToUnix(_episode.LastUpdated);
-                DateTime back = Util.UnixToDotNet(s);
-
                 if (e.LastUpdated < _episode.LastUpdated)
                 {
                   //download episode which has been updated
@@ -1142,6 +1137,7 @@ namespace TvdbLib
           updateDone = false;
         }
       }
+      _series.SetLanguage(currentLanguage);
       return updateDone;
     }
 
@@ -1182,7 +1178,9 @@ namespace TvdbLib
                                                            _progress, 25 + (int)(_progress / 4)));
             }
             newSeries.LastUpdated = _lastUpdated;
-            kvp.Value.UpdateTvdbFields(newSeries, false);//don't replace episodes, since they're 
+
+            //don't replace episodes, since they're
+            kvp.Value.UpdateTvdbFields(newSeries, false); 
             
             //kvp.Value.Update (newSeries);
             Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ")");

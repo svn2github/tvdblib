@@ -122,11 +122,16 @@ namespace TvdbLib
       return link;
     }
 
+    internal static String CreateEpisodeLink(string _apiKey, int _episodeId, String _lang, bool p)
+    {
+      String link = String.Format("{0}/api/{1}/episodes/{2}/{3}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _episodeId, _lang);
+      return link;
+    }
+
+
     internal static String CreateEpisodeLink(string _apiKey, int _episodeId, TvdbLanguage _lang, bool p)
     {
-      String link = String.Format("{0}/api/{1}/episodes/{2}/{3}.xml", ActiveMirror.MirrorPath.ToString().Trim('/'), _apiKey, _episodeId,
-                                  (_lang != null ? _lang.Abbriviation : "en"));
-      return link;
+      return CreateEpisodeLink(_apiKey, _episodeId, (_lang != null ? _lang.Abbriviation : "en"), p);
     }
 
     internal static string CreateEpisodeLink(string _apiKey, int _seriesId, int _seasonNr,

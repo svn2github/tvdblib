@@ -246,7 +246,7 @@ namespace TvdbLib.Xml
       List<TvdbSeriesFields> retList = new List<TvdbSeriesFields>();
       foreach (var s in allSeries)
       {
-        TvdbSeries series = new TvdbSeries();
+        TvdbSeriesFields series = new TvdbSeriesFields();
         series.Id = Util.Int32Parse(s.Id);
         series.Actors = Util.SplitTvdbString(s.Actors);
         series.AirsDayOfWeek = Util.GetDayOfWeek(s.Airs_DayOfWeek);
