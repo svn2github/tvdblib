@@ -122,8 +122,17 @@ namespace TvdbLib.Data
     /// <returns>true if success, false otherwise</returns>
     public bool SetLanguage(TvdbLanguage _language)
     {
+      if (this.Language != null && _language.Abbriviation.Equals(this.Language.Abbriviation))
+      {//language is already selected
+        return false; 
+      }
       if (m_seriesTranslations.Keys.Contains(_language))
       {
+        if (this.Language != null)
+        {//copy changes made to the active language to it's series field
+          m_seriesTranslations[this.Language].UpdateTvdbFields(this, true);
+        }
+        /*
         if (this.Language != null)
         {
           if (m_seriesTranslations.Keys.Contains(this.Language))
@@ -156,7 +165,7 @@ namespace TvdbLib.Data
           f.EpisodesLoaded = this.EpisodesLoaded;
 
           m_seriesTranslations.Add(this.Language, f);
-        }
+        }*/
         this.UpdateTvdbFields(m_seriesTranslations[_language], true);
         return true;
       }

@@ -179,8 +179,13 @@ namespace TvdbLib
     /// <returns>Unix timestamp</returns>
     internal static String DotNetToUnix(DateTime _date)
     {
-      TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
-      return ((int)span.TotalSeconds).ToString();
+      System.TimeSpan span = new System.TimeSpan(System.DateTime.Parse("1/1/1970").Ticks);
+      System.DateTime time = _date.Subtract(span);
+      int t = (int)(time.Ticks / 10000000);
+
+      return t.ToString();
+      //TimeSpan span = (_date - new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime());
+      //return ((int)span.TotalSeconds).ToString();
     }
 
     /// <summary>

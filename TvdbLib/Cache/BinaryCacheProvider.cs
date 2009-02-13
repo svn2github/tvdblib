@@ -463,11 +463,12 @@ namespace TvdbLib.Cache
     /// Check if the series is cached in the given configuration
     /// </summary>
     /// <param name="_seriesId">Id of the series</param>
+    /// <param name="_lang">Language of the series</param>
     /// <param name="_episodesLoaded">are episodes loaded</param>
     /// <param name="_bannersLoaded">are banners loaded</param>
     /// <param name="_actorsLoaded">are actors loaded</param>
     /// <returns>true if the series is cached, false otherwise</returns>
-    public bool IsCached(int _seriesId, bool _episodesLoaded,
+    public bool IsCached(int _seriesId, TvdbLanguage _lang, bool _episodesLoaded,
                          bool _bannersLoaded, bool _actorsLoaded)
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"))

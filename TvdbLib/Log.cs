@@ -35,7 +35,7 @@ namespace TvdbLib
     /// <summary>
     /// The loglevel that is currently used
     /// </summary>
-    internal const LOGLEVEL CURRENT_LEVEL = LOGLEVEL.Info;
+    internal const LOGLEVEL CURRENT_LEVEL = LOGLEVEL.Debug;
 
     /// <summary>
     /// Logs the message at level Debug

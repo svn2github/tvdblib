@@ -392,7 +392,6 @@ namespace TvdbLib
 
         if (epList != null && epList.Count == 1)
         {
-          epList[0].Banner.SeriesId = epList[0].SeriesId;
           return epList[0];
         }
         else

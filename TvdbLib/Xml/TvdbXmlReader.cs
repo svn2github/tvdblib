@@ -214,8 +214,8 @@ namespace TvdbLib.Xml
     /// <returns></returns>
     internal List<TvdbSeriesFields> ExtractSeriesFields(String _data)
     {
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
       XDocument xml = XDocument.Parse(_data);
 
       var allSeries = from series in xml.Descendants("Series")
@@ -270,8 +270,8 @@ namespace TvdbLib.Xml
         if (series.Id != -99) retList.Add(series);
       }
 
-      watch.Stop();
-      Log.Debug("Extracted " + retList.Count + " series in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + retList.Count + " series in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
 
@@ -312,8 +312,8 @@ namespace TvdbLib.Xml
     /// <returns></returns>
     internal List<TvdbEpisode> ExtractEpisodes(String _data)
     {
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
       XDocument xml = XDocument.Parse(_data);
       var allEpisodes = from episode in xml.Descendants("Episode")
                         select new
@@ -351,7 +351,7 @@ namespace TvdbLib.Xml
                           airsbefore_season = episode.Elements("airsbefore_season").Count() == 1
                                             ? episode.Element("airsbefore_season").Value : "-99"
                         };
-      Log.Debug("Parsed xml file in  " + watch.ElapsedMilliseconds + " milliseconds");
+      //Log.Debug("Parsed xml file in  " + watch.ElapsedMilliseconds + " milliseconds");
       List<TvdbEpisode> retList = new List<TvdbEpisode>();
       foreach (var e in allEpisodes)
       {
@@ -395,8 +395,8 @@ namespace TvdbLib.Xml
         if (ep.Id != -99) retList.Add(ep);
       }
 
-      watch.Stop();
-      Log.Debug("Extracted " + retList.Count + " Episodes in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + retList.Count + " Episodes in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
 
     }
@@ -626,8 +626,8 @@ namespace TvdbLib.Xml
     internal List<TvdbBanner> ExtractBannerUpdates(String _data)
     {
       //todo: banner update -> problem is update.xml doesn't contain all information for fanart
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
 
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
@@ -707,8 +707,8 @@ namespace TvdbLib.Xml
       {
         if (e.Id != -99) retList.Add(e);
       }
-      watch.Stop();
-      Log.Debug("Extracted " + retList.Count + " bannerupdates in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + retList.Count + " bannerupdates in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
 
@@ -773,8 +773,8 @@ namespace TvdbLib.Xml
     /// <returns></returns>
     internal List<TvdbBanner> ExtractBanners(String _data)
     {
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
 
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
@@ -847,8 +847,8 @@ namespace TvdbLib.Xml
       {
         if (e.Id != -99) retList.Add(e);
       }
-      watch.Stop();
-      Log.Debug("Extracted " + retList.Count + " banners in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + retList.Count + " banners in " + watch.ElapsedMilliseconds + " milliseconds");
       return retList;
     }
 
@@ -871,8 +871,8 @@ namespace TvdbLib.Xml
     /// <returns>List of actors</returns>
     internal List<TvdbActor> ExtractActors(String _data)
     {
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
 
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
@@ -904,8 +904,8 @@ namespace TvdbLib.Xml
           actorList.Add(actor);
         }
       }
-      watch.Stop();
-      Log.Debug("Extracted " + actorList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + actorList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
       return actorList;
     }
 
@@ -916,9 +916,8 @@ namespace TvdbLib.Xml
     /// <returns></returns>
     internal List<TvdbUser> ExtractUser(String _data)
     {
-      Stopwatch watch = new Stopwatch();
-      watch.Start();
-
+      //Stopwatch watch = new Stopwatch();
+      //watch.Start();
       XDocument xml = XDocument.Parse(_data);
       List<TvdbBanner> retList = new List<TvdbBanner>();
       var allUsers = from episode in xml.Descendants("User")
@@ -952,8 +951,8 @@ namespace TvdbLib.Xml
         user.UserFavorites = favList;
         userList.Add(user);
       }
-      watch.Stop();
-      Log.Debug("Extracted " + userList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
+      //watch.Stop();
+      //Log.Debug("Extracted " + userList.Count + " actors in " + watch.ElapsedMilliseconds + " milliseconds");
       return userList;
     }
 

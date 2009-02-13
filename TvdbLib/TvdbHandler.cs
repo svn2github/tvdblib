@@ -460,6 +460,7 @@ namespace TvdbLib
 
         if (_loadActors && !series.TvdbActorsLoaded)
         {//user wants actors loaded
+          Log.Debug("Additionally loading actors");
           List<TvdbActor> actorList = m_downloader.DownloadActors(_seriesId);
           loadedAdditionalInfo = true;
           if (actorList != null)
@@ -471,6 +472,7 @@ namespace TvdbLib
 
         if (_loadEpisodes && !series.EpisodesLoaded)
         {//user wants the full version but only the basic has been loaded (without episodes
+          Log.Debug("Additionally loading episodes");
           List<TvdbEpisode> epList = m_downloader.DownloadEpisodes(_seriesId, _language);
           loadedAdditionalInfo = true;
           if (epList != null)
@@ -482,6 +484,7 @@ namespace TvdbLib
 
         if (_loadBanners && !series.BannersLoaded)
         {//user wants banners loaded but current series hasn't -> Do it baby
+          Log.Debug("Additionally loading banners");
           List<TvdbBanner> bannerList = m_downloader.DownloadBanners(_seriesId);
           loadedAdditionalInfo = true;
           if (bannerList != null)
@@ -587,7 +590,8 @@ namespace TvdbLib
     {
       if (m_cacheProvider != null && m_cacheProvider.Initialised)
       {
-        return m_cacheProvider.IsCached(_seriesId, _loadEpisodes, _loadBanners, _loadActors);
+        return m_cacheProvider.IsCached(_seriesId, TvdbLanguage.DefaultLanguage,
+                                        _loadEpisodes, _loadBanners, _loadActors);
       }
       return false;
     }
@@ -1057,6 +1061,9 @@ namespace TvdbLib
               if (e.Id == _episode.Id)
               {
                 found = true;
+                String s = Util.DotNetToUnix(_episode.LastUpdated);
+                DateTime back = Util.UnixToDotNet(s);
+
                 if (e.LastUpdated < _episode.LastUpdated)
                 {
                   //download episode which has been updated
@@ -1146,6 +1153,7 @@ namespace TvdbLib
     {
       //get series info
       bool updateDone = false;
+      TvdbLanguage currentLanguage = _series.Language;
       foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {
         if (kvp.Value.LastUpdated < _lastUpdated)
@@ -1162,21 +1170,22 @@ namespace TvdbLib
 
           if (newSeries != null)
           {//download of the series successfull -> do updating
-            kvp.Value.LastUpdated = _lastUpdated;
-
             if (UpdateProgressed != null)
             {//update has started, we're downloading the updated content from tvdb
               UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
                                                            "Updating series " + _series.SeriesName,
                                                            _progress, 25 + (int)(_progress / 4)));
             }
+            newSeries.LastUpdated = _lastUpdated;
             kvp.Value.UpdateTvdbFields(newSeries, false);//don't replace episodes, since they're 
+            
             //kvp.Value.Update (newSeries);
             Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ")");
             updateDone = true;
           }
         }
       }
+      _series.SetLanguage(currentLanguage);//to copy the episode-fields to the base series
       return updateDone;
     }
 
