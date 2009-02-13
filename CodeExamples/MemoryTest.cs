@@ -82,7 +82,7 @@ namespace WikiCodeExamples
 
     private void MemoryTest_FormClosed(object sender, FormClosedEventArgs e)
     {
-      m_tvdbHandler.SaveCache();
+      m_tvdbHandler.CloseCache();
     }
 
     private void cmSeriesListView_Opening(object sender, CancelEventArgs e)

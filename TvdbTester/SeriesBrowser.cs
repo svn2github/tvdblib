@@ -193,7 +193,7 @@ namespace TvdbTester
 
     private void Tester_FormClosing(object sender, FormClosingEventArgs e)
     {
-      if (m_tvdbHandler != null) m_tvdbHandler.SaveCache();
+      if (m_tvdbHandler != null) m_tvdbHandler.CloseCache();
     }
 
     void Tester_MouseWheel(object sender, MouseEventArgs e)

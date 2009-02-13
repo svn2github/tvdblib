@@ -124,7 +124,7 @@ namespace WikiCodeExamples
 
     private void cmdSaveCache_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler.SaveCache();
+      m_tvdbHandler.CloseCache();
     }
 
     #endregion

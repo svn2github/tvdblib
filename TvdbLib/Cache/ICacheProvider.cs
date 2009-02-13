@@ -48,6 +48,12 @@ namespace TvdbLib.Cache
     TvdbData InitCache();
 
     /// <summary>
+    /// Closes the cache (e.g. close open connection, etc.)
+    /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
+    bool CloseCache();
+
+    /// <summary>
     /// Completely refreshes the cache (all stored information is lost)
     /// </summary>
     /// <returns>true if the cache was cleared successfully, 
@@ -101,9 +107,9 @@ namespace TvdbLib.Cache
     TvdbUser LoadUserInfoFromCache(String _userId);
 
     /// <summary>
-    /// Saves all available data to cache
+    /// Saves cache settings
     /// </summary>
-    /// <param name="_content">TvdbData object</param>
+    /// <param name="_content">settings</param>
     void SaveToCache(TvdbData _content);
 
     /// <summary>

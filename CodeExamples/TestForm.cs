@@ -100,7 +100,7 @@ namespace TvdbTester
 
     private void cmdEnd_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler.SaveCache();
+      m_tvdbHandler.CloseCache();
     }
 
     private void cmdGetEpisodes_Click(object sender, EventArgs e)

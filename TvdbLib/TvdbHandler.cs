@@ -500,6 +500,13 @@ namespace TvdbLib
 
       if (m_cacheProvider != null)
       {//we're using a cache provider
+        //if we've loaded data from online source -> save to cache
+        if (m_cacheProvider.Initialised && loadedAdditionalInfo)
+        {
+          Log.Info("Store series with " + m_cacheProvider.ToString());
+          m_cacheProvider.SaveToCache(series);
+        }
+
         //Store a ref to the cacheprovider and series id in each banner, so the banners
         //can be stored/loaded to/from cache
         #region add cache provider/series id
@@ -531,12 +538,7 @@ namespace TvdbLib
         }
         #endregion
 
-        //if we've loaded data from online source -> save to cache
-        if (m_cacheProvider.Initialised && loadedAdditionalInfo)
-        {
-          Log.Info("Store series with " + m_cacheProvider.ToString());
-          m_cacheProvider.SaveToCache(series);
-        }
+
       }
       return series;
     }
@@ -963,6 +965,9 @@ namespace TvdbLib
 
       //set the last updated time to time of this update
       m_loadedData.LastUpdated = updateTime;
+      m_cacheProvider.SaveToCache(m_loadedData);
+
+
       watch.Stop();
       Log.Info("Finished update (" + _interval.ToString() + ") in " + watch.ElapsedMilliseconds + " milliseconds");
 
@@ -1251,14 +1256,15 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Saves all retrieved data into persistant storage cache (depending on cache provider)
+    /// Closes the cache provider (should be called before exiting the application)
     /// </summary>
-    public void SaveCache()
+    public void CloseCache()
     {
       if (m_cacheProvider != null)
       {
         m_cacheProvider.SaveToCache(m_loadedData);
         if (m_userInfo != null) m_cacheProvider.SaveToCache(m_userInfo);
+        m_cacheProvider.CloseCache();
       }
     }
 

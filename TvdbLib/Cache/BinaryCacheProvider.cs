@@ -119,7 +119,6 @@ namespace TvdbLib.Cache
     public BinaryCacheProvider(String _root)
     {
       m_formatter = new BinaryFormatter(); // the formatter that will serialize my object on my stream
-      if (!Directory.Exists(_root)) Directory.CreateDirectory(_root);
       m_rootFolder = _root;
     }
 
@@ -139,15 +138,56 @@ namespace TvdbLib.Cache
       return data;
     }
 
+    /// <summary>
+    /// Initialises the cache, should do the following things
+    /// - initialise connections used for this cache provider (db connections, network shares,...)
+    /// - create folder structure / db tables / ...  if they are not created already
+    /// - if this is the first time the cache has been initialised (built), mark last_updated with the
+    ///   current date
+    /// </summary>
+    /// <returns></returns>
     public TvdbData InitCache()
     {
-      throw new NotImplementedException();
+      try
+      {
+        if (!Directory.Exists(m_rootFolder))
+        {
+          Directory.CreateDirectory(m_rootFolder);
+        }
+
+        TvdbData data = LoadUserDataFromCache();
+        if (data == null)
+        {//the cache has never been initialised before -> do it now
+          data = new TvdbData();
+          data.LanguageList = new List<TvdbLanguage>();
+          data.Mirrors = new List<TvdbMirror>();
+          data.LastUpdated = DateTime.Now;
+
+          SaveToCache(data);
+        }
+        m_initialised = true;
+        return data;
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Couldn't initialise cache: " + ex.ToString());
+        return null;
+      }
     }
 
     /// <summary>
-    /// Saves all available data to cache
+    /// Closes the cache (e.g. close open connection, etc.)
     /// </summary>
-    /// <param name="_content"></param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool CloseCache()
+    {
+      return true;
+    }
+
+    /// <summary>
+    /// Saves cache settings
+    /// </summary>
+    /// <param name="_content">settings</param>
     public void SaveToCache(TvdbData _content)
     {
       SaveToCache(_content.LanguageList);
@@ -255,11 +295,13 @@ namespace TvdbLib.Cache
     /// <returns>loaded series, or null if not successful</returns>
     public TvdbSeries LoadSeriesFromCache(int _seriesId)
     {
-      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser"))
+      String seriesFile = m_rootFolder + Path.DirectorySeparatorChar + _seriesId +
+                          Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser";
+      if (File.Exists(seriesFile))
       {
         try
         {
-          FileStream fs = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".ser", FileMode.Open);
+          FileStream fs = new FileStream(seriesFile, FileMode.Open);
           TvdbSeries retValue = (TvdbSeries)m_formatter.Deserialize(fs);
           fs.Close();
           return retValue;
@@ -284,7 +326,8 @@ namespace TvdbLib.Cache
     {
       if (_series != null)
       {
-        if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
+        String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _series.Id;
+        if (!Directory.Exists(seriesRoot)) Directory.CreateDirectory(seriesRoot);
 
         #region delete all loaded images (since they should be already cached)
         
@@ -295,6 +338,9 @@ namespace TvdbLib.Cache
           {//banner is loaded
             b.UnloadBanner();
           }
+
+          //remove the ref to the cacheprovider
+          b.CacheProvider = null;
 
           if (b.GetType() == typeof(TvdbBannerWithThumb))
           {//thumb is loaded
@@ -322,6 +368,8 @@ namespace TvdbLib.Cache
             {
               a.ActorImage.UnloadBanner();
             }
+            //remove the ref to the cacheprovider
+            a.ActorImage.CacheProvider = null;
           }
         }
 
@@ -334,18 +382,20 @@ namespace TvdbLib.Cache
             {
               e.Banner.UnloadBanner();
             }
+            //remove the ref to the cacheprovider
+            e.Banner.CacheProvider = null;
           }
         }
         #endregion
         //serialize series to hdd
-        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".ser", FileMode.Create);
+        m_filestream = new FileStream(seriesRoot + Path.DirectorySeparatorChar + "series_" + _series.Id + ".ser", FileMode.Create);
         m_formatter.Serialize(m_filestream, _series);
         m_filestream.Close();
 
         //serialize series config to hdd
         SeriesConfiguration cfg = new SeriesConfiguration(_series.Id, _series.EpisodesLoaded,
                                                   _series.BannersLoaded, _series.TvdbActorsLoaded);
-        m_filestream = new FileStream(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _series.Id + ".cfg", FileMode.Create);
+        m_filestream = new FileStream(seriesRoot + Path.DirectorySeparatorChar + "series_" + _series.Id + ".cfg", FileMode.Create);
         m_formatter.Serialize(m_filestream, cfg);
         m_filestream.Close();
       }
@@ -374,26 +424,14 @@ namespace TvdbLib.Cache
     {
       if (Directory.Exists(m_rootFolder))
       {
-        String[] files = Directory.GetFiles(m_rootFolder, Path.DirectorySeparatorChar + "series*.ser");
-        List<TvdbSeries> retSeries = new List<TvdbSeries>();
-        foreach (String f in files)
+        List<TvdbSeries> retList = new List<TvdbSeries>();
+        string[] dirs = Directory.GetDirectories(m_rootFolder);
+        foreach (String d in dirs)
         {
-          if (File.Exists(f))
-          {
-            try
-            {
-              FileStream fs = new FileStream(f, FileMode.Open);
-              TvdbSeries retValue = (TvdbSeries)m_formatter.Deserialize(fs);
-              fs.Close();
-              retSeries.Add(retValue);
-            }
-            catch (SerializationException)
-            {
-              Log.Warn("Couldn't deserialize series " + f);
-            }
-          }
+          TvdbSeries series = LoadSeriesFromCache(Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1)));
+          if (series != null) retList.Add(series);
         }
-        return retSeries;
+        return retList;
       }
       else
       {
@@ -471,7 +509,9 @@ namespace TvdbLib.Cache
     public bool IsCached(int _seriesId, TvdbLanguage _lang, bool _episodesLoaded,
                          bool _bannersLoaded, bool _actorsLoaded)
     {
-      if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"))
+      String fName = m_rootFolder + Path.DirectorySeparatorChar + _seriesId +
+                     Path.DirectorySeparatorChar + "series_" + _seriesId + ".cfg"
+      if (File.Exists())
       {
         try
         {

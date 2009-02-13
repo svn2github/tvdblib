@@ -113,9 +113,18 @@ namespace TvdbLib.Cache
     }
 
     /// <summary>
-    /// Saves all available data to cache
+    /// Closes the cache (e.g. close open connection, etc.)
     /// </summary>
-    /// <param name="_content"></param>
+    /// <returns>true if successful, false otherwise</returns>
+    public bool CloseCache()
+    {
+      return true;
+    }
+
+    /// <summary>
+    /// Saves cache settings
+    /// </summary>
+    /// <param name="_content">settings</param>
     public void SaveToCache(TvdbData _content)
     {
       if (_content != null)
