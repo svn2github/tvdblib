@@ -1,0 +1,61 @@
+﻿<project schemaVersion="1.6.0.7">
+    <assemblies>
+        <assembly assemblyPath="..\TvdbLib\bin\Debug\TvdbLib.dll" xmlCommentsPath="..\TvdbLib\bin\Debug\TvdbLib.xml" commentsOnly="False" />
+    </assemblies>
+    <namespaceSummaries>
+        <namespaceSummaryItem name="" isDocumented="False" />
+        <namespaceSummaryItem name="TvdbLib" isDocumented="True">TvdbLib: A library to handle the API from http://thetvdb.com</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.Cache" isDocumented="True">Caching is used to store the loaded information from http://thetvdb.com persistently</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.Data" isDocumented="True">Data classes to represent the information that can be accessed via http://thetvdb.com</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.Data.Banner" isDocumented="True">Data classes that represent all different images that can be accessed via http://thetvdb.com</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.Exceptions" isDocumented="True">Different Exceptions that can occur when using the library</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.ICSharpCode.SharpZipLib.Zip" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib.Checksums" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib.Encryption" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib.Zip" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+        <namespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression.Streams" isDocumented="True">ZIP Namespace =&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</namespaceSummaryItem>
+    </namespaceSummaries>
+    <ProjectSummary />
+    <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <HtmlHelp1xCompilerPath path="" />
+    <HtmlHelp2xCompilerPath path="" />
+    <OutputPath>.\Help\</OutputPath>
+    <SandcastlePath path="" />
+    <WorkingPath path="" />
+    <CleanIntermediates>True</CleanIntermediates>
+    <KeepLogFile>True</KeepLogFile>
+    <BuildLogFile path="" />
+    <HelpFileFormat>HtmlHelp1x</HelpFileFormat>
+    <CppCommentsFixup>False</CppCommentsFixup>
+    <FrameworkVersion>3.5</FrameworkVersion>
+    <IndentHtml>False</IndentHtml>
+    <Preliminary>False</Preliminary>
+    <RootNamespaceContainer>False</RootNamespaceContainer>
+    <RootNamespaceTitle />
+    <HelpTitle>Documentation of TvdbLib</HelpTitle>
+    <HtmlHelpName>Documentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <CopyrightHref>http://code.google.com/p/tvdblib/wiki/Copyright</CopyrightHref>
+    <CopyrightText>Copyright (C) 2008  Benjamin Gmeiner, BSc.</CopyrightText>
+    <FeedbackEMailAddress>mail.bgmeiner@gmail.com</FeedbackEMailAddress>
+    <FeedbackEMailLinkText>mailto: mail.bgmeiner@gmail.com</FeedbackEMailLinkText>
+    <HeaderText />
+    <FooterText />
+    <ProjectLinkType>Local</ProjectLinkType>
+    <SdkLinkType>Msdn</SdkLinkType>
+    <SdkLinkTarget>Blank</SdkLinkTarget>
+    <PresentationStyle>Prototype</PresentationStyle>
+    <NamingMethod>Guid</NamingMethod>
+    <SyntaxFilters>Standard</SyntaxFilters>
+    <ShowFeedbackControl>False</ShowFeedbackControl>
+    <BinaryTOC>True</BinaryTOC>
+    <IncludeFavorites>False</IncludeFavorites>
+    <CollectionTocStyle>Hierarchical</CollectionTocStyle>
+    <IncludeStopWordList>True</IncludeStopWordList>
+    <PlugInNamespaces>ms.vsipcc+, ms.vsexpresscc+</PlugInNamespaces>
+    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <ContentPlacement>AboveNamespaces</ContentPlacement>
+</project>

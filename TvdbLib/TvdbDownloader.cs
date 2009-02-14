@@ -176,11 +176,12 @@ namespace TvdbLib
                 {
                   series.SeriesTranslations[kvp.Key].Episodes = epList;
                   series.SeriesTranslations[kvp.Key].EpisodesLoaded = true;
+                  series.SetLanguage(_language);
                   break;
                 }
               }
             }
-            series.SetLanguage(_language);
+            
           }
 
           //also load actors
@@ -291,8 +292,16 @@ namespace TvdbLib
           List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(seriesString);
           if (epList != null)
           {
-            series.Episodes = epList;
-            series.EpisodesLoaded = true;
+            foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in series.SeriesTranslations)
+            {
+              if (kvp.Key.Abbriviation.Equals(_language.Abbriviation))
+              {
+                series.SeriesTranslations[kvp.Key].Episodes = epList;
+                series.SeriesTranslations[kvp.Key].EpisodesLoaded = true;
+                series.SetLanguage(_language);
+                break;
+              }
+            }
           }
 
           //also load actors
