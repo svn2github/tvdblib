@@ -81,15 +81,15 @@ namespace TvdbLib
         /// <summary>
         /// we're currently downloading the update files from http://thetvdb.com
         /// </summary>
-        downloading = 0, 
+        downloading = 0,
         /// <summary>
         /// we're currently processing the updated series
         /// </summary>
-        seriesupdate = 1, 
+        seriesupdate = 1,
         /// <summary>
         /// we're currently processing the updated episodes
         /// </summary>
-        episodesupdate = 2, 
+        episodesupdate = 2,
         /// <summary>
         /// we're currently processing the updated banner
         /// </summary>
@@ -937,7 +937,15 @@ namespace TvdbLib
                                                            "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
                                                            currProg, 75 + (int)(currProg / 4)));
             }
-            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
+            TvdbSeries series = null;
+            if (seriesToSave.ContainsKey(s))
+            {
+              series = seriesToSave[s];
+            }
+            else
+            {
+              series = m_cacheProvider.LoadSeriesFromCache(b.SeriesId);
+            }
             if (UpdateBanner(series, b))
             {
               updatedBannerIds.Add(b.Id);
@@ -988,6 +996,8 @@ namespace TvdbLib
     {
       if (!_series.BannersLoaded)
       {//banners for this series havn't been loaded -> don't update banners
+        Log.Debug("Not handling banner " + _banner.BannerPath + " because series " + _series.Id
+                  + " doesn't have banners loaded");
         return false;
       }
 
@@ -998,6 +1008,22 @@ namespace TvdbLib
           if (b.LastUpdated < _banner.LastUpdated)
           {//update time of local banner is longer ago than update time of current update
             b.LastUpdated = _banner.LastUpdated;
+            if (b.IsLoaded)
+            {//the banner was previously loaded and is updated -> discard the previous image
+              b.LoadBanner(null);
+            }
+             b.UnloadBanner(false);
+            if(_banner.GetType() ==  typeof(TvdbBannerWithThumb))
+            {
+              TvdbBannerWithThumb thumb = (TvdbBannerWithThumb)b;
+              if (thumb.IsThumbLoaded)
+              {
+                thumb.LoadThumb(null);
+              }
+              thumb.UnloadThumb(false);
+            }
+
+
             if (_banner.GetType() == typeof(TvdbFanartBanner))
             {//update fanart specific content
               TvdbFanartBanner fanart = (TvdbFanartBanner)b;
@@ -1007,17 +1033,13 @@ namespace TvdbLib
               {
                 fanart.LoadThumb(null);
               }
+              fanart.UnloadThumb(false);
 
               if (fanart.IsVignetteLoaded)
               {
                 fanart.LoadVignette(null);
               }
-            }
-
-            if (b.IsLoaded)
-            {//the banner was previously loaded and is updated -> discard the previous image
-              b.LoadBanner(null);
-              b.UnloadBanner(false);
+              fanart.UnloadVignette();
             }
 
             Log.Info("Replacing banner " + _banner.Id);
@@ -1180,8 +1202,8 @@ namespace TvdbLib
             newSeries.LastUpdated = _lastUpdated;
 
             //don't replace episodes, since they're
-            kvp.Value.UpdateTvdbFields(newSeries, false); 
-            
+            kvp.Value.UpdateTvdbFields(newSeries, false);
+
             //kvp.Value.Update (newSeries);
             Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ")");
             updateDone = true;

@@ -324,7 +324,7 @@ namespace TvdbLib.Xml
                           DVD_chapter = episode.Element("DVD_chapter").Value,
                           DVD_discid = episode.Element("DVD_discid").Value,
                           DVD_episodenumber = episode.Element("DVD_episodenumber").Value,
-                          DVD_season = episode.Elements("DVD_season").Count() == 1 
+                          DVD_season = episode.Elements("DVD_season").Count() == 1
                                        ? episode.Element("DVD_season").Value : episode.Element("DVD_Season").Value,
                           Director = episode.Element("Director").Value,
                           EpisodeName = episode.Element("EpisodeName").Value,
@@ -650,7 +650,7 @@ namespace TvdbLib.Xml
 
       foreach (TvdbBanner e in allEpisodes)
       {
-        if (e.Id != -99) retList.Add(e);
+        retList.Add(e);
       }
 
       //Extract the season banners
@@ -669,7 +669,7 @@ namespace TvdbLib.Xml
 
       foreach (TvdbBanner e in allBanners)
       {
-        if (e.Id != -99) retList.Add(e);
+        retList.Add(e);
       }
 
       //Extract the series banners
@@ -687,7 +687,7 @@ namespace TvdbLib.Xml
 
       foreach (TvdbBanner e in allBanners2)
       {
-        if (e.Id != -99) retList.Add(e);
+        retList.Add(e);
       }
 
       //Extract the poster banners
@@ -705,7 +705,7 @@ namespace TvdbLib.Xml
 
       foreach (TvdbPosterBanner e in allPosters)
       {
-        if (e.Id != -99) retList.Add(e);
+        retList.Add(e);
       }
       //watch.Stop();
       //Log.Debug("Extracted " + retList.Count + " bannerupdates in " + watch.ElapsedMilliseconds + " milliseconds");
@@ -936,14 +936,14 @@ namespace TvdbLib.Xml
         TvdbUser user = new TvdbUser();
         user.UserIdentifier = a.Identifier;
         user.UserName = a.Name;
-        user.UserPreferredLanguage = a.Preferred.HasAttributes ? 
-                                     Util.ParseLanguage(a.Preferred.FirstAttribute.NextAttribute.Value) : 
+        user.UserPreferredLanguage = a.Preferred.HasAttributes ?
+                                     Util.ParseLanguage(a.Preferred.FirstAttribute.NextAttribute.Value) :
                                      TvdbLanguage.DefaultLanguage;
         List<int> favList = new List<int>();
-        foreach(String f in a.Favorites.Value.Split(','))
+        foreach (String f in a.Favorites.Value.Split(','))
         {
           int val;
-          if(Int32.TryParse(f, out val))
+          if (Int32.TryParse(f, out val))
           {
             favList.Add(val);
           }
@@ -999,12 +999,12 @@ namespace TvdbLib.Xml
       }
 
       var allRatings = from episode in xml.Descendants(itemType)
-                        select new
-                        {
-                          SeriesId = Util.Int32Parse(episode.Element(idDefinition).Value),
-                          UserRating = Util.Int32Parse(episode.Element("UserRating").Value),
-                          CommunityRating = Util.DoubleParse(episode.Element("CommunityRating").Value)
-                        };
+                       select new
+                       {
+                         SeriesId = Util.Int32Parse(episode.Element(idDefinition).Value),
+                         UserRating = Util.Int32Parse(episode.Element("UserRating").Value),
+                         CommunityRating = Util.DoubleParse(episode.Element("CommunityRating").Value)
+                       };
 
       Dictionary<int, TvdbRating> retList = new Dictionary<int, TvdbRating>();
       foreach (var r in allRatings)
