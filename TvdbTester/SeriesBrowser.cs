@@ -959,7 +959,9 @@ namespace TvdbTester
       {
         updateInterval = TvdbHandler.Interval.month;
       }
-      m_tvdbHandler.UpdateAllSeries(updateInterval, cbUseZipped.Checked);
+      UpdateForm frm = new UpdateForm(m_tvdbHandler, updateInterval, cbUseZipped.Checked);
+      frm.ShowDialog();
+      
     }
 
     private void txtSeriesToFind_TextChanged(object sender, EventArgs e)

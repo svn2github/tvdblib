@@ -319,8 +319,6 @@ namespace TvdbLib.Cache
 
       #region load series in all available languages
       String[] seriesLanguages = Directory.GetFiles(seriesRoot, "*.xml");
-      TvdbLanguage defaultLanguage = null; ;
-
       foreach (String l in seriesLanguages)
       {
         if (!l.EndsWith("actors.xml") && !l.EndsWith("banners.xml"))

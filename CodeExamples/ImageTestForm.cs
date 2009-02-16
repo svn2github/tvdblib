@@ -25,10 +25,23 @@ namespace WikiCodeExamples
 
     private void cmdInit_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "");
+      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "E8D8A47528D5B5AD");
       m_tvdbHandler.InitCache();
       cmdEnd.Enabled = true;
+      cmdLoadSeries.Enabled = true;
   }
+
+    private void cmdLoadSeries_Click(object sender, EventArgs e)
+    {
+      TvdbSeries s = m_tvdbHandler.GetSeries(Int32.Parse(txtSeriesIdForBanners.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
+    
+      foreach(TvdbBanner b in s.SeriesBanners)
+      {
+        ListViewItem item = new ListViewItem(b.BannerPath);
+        item.Tag = b;
+        lvSeriesBanners.Items.Add(item);
+      }
+    }
 
     private void cmdEnd_Click(object sender, EventArgs e)
     {
@@ -221,5 +234,12 @@ namespace WikiCodeExamples
         MessageBox.Show("Couldn't load series");
       }
     }
+
+    private void cmdLoadSeriesBanner_Click(object sender, EventArgs e)
+    {
+
+    }
+
+
   }
 }

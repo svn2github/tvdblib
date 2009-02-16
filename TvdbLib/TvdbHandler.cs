@@ -93,7 +93,11 @@ namespace TvdbLib
         /// <summary>
         /// we're currently processing the updated banner
         /// </summary>
-        bannerupdate = 3
+        bannerupdate = 3,
+        /// <summary>
+        /// the updating itself has finished, do cleanup work
+        /// </summary>
+        finishupdate = 4
       };
 
       /// <summary>
@@ -731,6 +735,8 @@ namespace TvdbLib
       }
     }
 
+    #region updating
+
     /// <summary>
     /// Update all the series (not using zip) with the updated information
     /// </summary>
@@ -842,6 +848,11 @@ namespace TvdbLib
       List<TvdbSeries> updateSeries;
       List<TvdbEpisode> updateEpisodes;
       List<TvdbBanner> updateBanners;
+
+      List<int> updatedSeriesIds = new List<int>();
+      List<int> updatedEpisodeIds = new List<int>();
+      List<int> updatedBannerIds = new List<int>();
+
       DateTime updateTime = m_downloader.DownloadUpdate(out updateSeries, out updateEpisodes, out updateBanners, _interval, _zipped);
       List<int> cachedSeries = m_cacheProvider.GetCachedSeries();
 
@@ -858,9 +869,9 @@ namespace TvdbLib
 
       int countUpdatedSeries = updateSeries.Count;
       int countSeriesDone = 0;
-      List<int> updatedSeriesIds = new List<int>();
-      List<int> updatedEpisodeIds = new List<int>();
-      List<int> updatedBannerIds = new List<int>();
+      int lastProgress = 0;//send progress event at least every 1 percent
+      String updateText = "";
+
       foreach (TvdbSeries us in updateSeries)
       {
         //Update series that have been already cached
@@ -870,10 +881,12 @@ namespace TvdbLib
           {//changes occured in series
             TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(us.Id);
             int currProg = (int)(100.0 / countUpdatedSeries * countSeriesDone);
-            if (UpdateSeries(series, us.LastUpdated, currProg))
+
+            bool updated = UpdateSeries(series, us.LastUpdated, currProg);
+            if (updated)
             {//the series has been updated
               updatedSeriesIds.Add(us.Id);
-
+              updateText = "Updated series " + series.SeriesName + "(" + series.Id + ")";
               //store the updated series to cache
               //todo: better to save it immediately? the way it is now it consumes more
               //memory because the series is kept in memory until the update finishes.
@@ -881,6 +894,18 @@ namespace TvdbLib
               //don't have to load it again
               if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
             }
+
+            if (updated || currProg > lastProgress)
+            {//the series has been updated OR the last event was fired at least one percent ago
+
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
+                                                             updateText, currProg, 25 + (int)(currProg / 4)));
+              }
+              lastProgress = currProg;
+            }
+
             break;
           }
         }
@@ -889,6 +914,7 @@ namespace TvdbLib
 
       int countEpisodeUpdates = updateEpisodes.Count; ;
       int countEpisodesDone = 0;
+      lastProgress = 0;
 
       //update all flagged episodes
       foreach (TvdbEpisode ue in updateEpisodes)
@@ -907,12 +933,22 @@ namespace TvdbLib
               series = m_cacheProvider.LoadSeriesFromCache(ue.SeriesId);
             }
 
-
             int progress = (int)(100.0 / countEpisodeUpdates * countEpisodesDone);
-            if (UpdateEpisode(series, ue, progress))
+            String text = "";
+            bool updated = UpdateEpisode(series, ue, progress, out text);
+            if (updated)
             {//The episode was updated or added
               updatedEpisodeIds.Add(ue.Id);
               if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
+              updateText = text;
+            }
+            if (updated || progress > lastProgress)
+            {
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.episodesupdate,
+                                                             updateText, progress, 50 + (int)(progress / 4)));
+              }
             }
             break;
           }
@@ -922,6 +958,8 @@ namespace TvdbLib
 
       int countUpdatedBanner = updateBanners.Count;
       int countBannerDone = 0;
+      lastProgress = 0;
+
       // todo: update banner information here -> wait for forum response regarding 
       // missing banner id within updates (atm. I'm matching banners via path)
       foreach (TvdbBanner b in updateBanners)
@@ -929,14 +967,8 @@ namespace TvdbLib
         foreach (int s in cachedSeries)
         {
           if (b.SeriesId == s)
-          {//changes occured in series
-            if (UpdateProgressed != null)
-            {//update has started, we're downloading the updated content from tvdb
-              int currProg = (int)(100.0 / countUpdatedBanner * countBannerDone);
-              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
-                                                           "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
-                                                           currProg, 75 + (int)(currProg / 4)));
-            }
+          {//banner for this series has changed
+            int currProg = (int)(100.0 / countUpdatedBanner * countBannerDone);
             TvdbSeries series = null;
             if (seriesToSave.ContainsKey(s))
             {
@@ -946,15 +978,34 @@ namespace TvdbLib
             {
               series = m_cacheProvider.LoadSeriesFromCache(b.SeriesId);
             }
-            if (UpdateBanner(series, b))
+            bool updated = UpdateBanner(series, b);
+            if (updated)
             {
               updatedBannerIds.Add(b.Id);
               if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
+            }
+
+            if (updated || currProg > lastProgress)
+            {
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.bannerupdate,
+                                                             "Updating banner " + b.BannerPath + "(id=" + b.Id + ")",
+                                                             currProg, 75 + (int)(currProg / 4)));
+              }
             }
             break;
           }
         }
         countBannerDone++;
+      }
+
+      if (UpdateProgressed != null)
+      {
+        UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.finishupdate,
+                                                     "Update finished, saving loaded series to cache",
+                                                     100, 100));
       }
 
       Log.Info("Saving all series to cache that have been modified during the update (" + seriesToSave.Count + ")");
@@ -986,6 +1037,7 @@ namespace TvdbLib
 
     }
 
+    #region updating of banners, episodes and series
     /// <summary>
     /// Update the series with the banner
     /// </summary>
@@ -1008,12 +1060,15 @@ namespace TvdbLib
           if (b.LastUpdated < _banner.LastUpdated)
           {//update time of local banner is longer ago than update time of current update
             b.LastUpdated = _banner.LastUpdated;
+            b.CacheProvider = m_cacheProvider;
+            b.SeriesId = _series.Id;
+            
             if (b.IsLoaded)
             {//the banner was previously loaded and is updated -> discard the previous image
               b.LoadBanner(null);
             }
-             b.UnloadBanner(false);
-            if(_banner.GetType() ==  typeof(TvdbBannerWithThumb))
+            b.UnloadBanner(false);
+            if (_banner.GetType() == typeof(TvdbBannerWithThumb))
             {
               TvdbBannerWithThumb thumb = (TvdbBannerWithThumb)b;
               if (thumb.IsThumbLoaded)
@@ -1065,11 +1120,13 @@ namespace TvdbLib
     /// <param name="_series">Series of the updating episode</param>
     /// <param name="_episode">Episode that is updated</param>
     /// <param name="_progress">Progress of the update run</param>
+    /// <param name="_text">Description of the current update</param>
     /// <returns>true if episode has been updated, false if not (e.g. timestamp of updated episode older than
     ///          timestamp of existing episode</returns> 
-    private bool UpdateEpisode(TvdbSeries _series, TvdbEpisode _episode, int _progress)
+    private bool UpdateEpisode(TvdbSeries _series, TvdbEpisode _episode, int _progress, out String _text)
     {
       bool updateDone = false;
+      _text = "";
       TvdbLanguage currentLanguage = _series.Language;
       foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {
@@ -1104,13 +1161,14 @@ namespace TvdbLib
                     newEpisode.LastUpdated = _episode.LastUpdated;
 
                     e.UpdateEpisodeInfo(newEpisode);
-                    if (UpdateProgressed != null)
-                    {//update has started, we're downloading the updated content from tvdb
-                      UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.episodesupdate,
-                                                                   "Updating episode " + _series.SeriesName + " " + e.SeasonNumber +
-                                                                   "x" + e.EpisodeNumber + "(id: " + _episode.Id + ")",
-                                                                   _progress, 50 + (int)(_progress / 4)));
-                    }
+                    e.Banner.CacheProvider = m_cacheProvider;
+                    e.Banner.SeriesId = _series.Id;
+
+                    e.Banner.UnloadBanner(false);
+                    e.Banner.UnloadThumb(false);
+
+                    _text = "Added/Updated episode " + _series.SeriesName + " " + e.SeasonNumber +
+                            "x" + e.EpisodeNumber + "(id: " + e.Id + ")";
                     Log.Info("Updated Episode " + e.SeasonNumber + "x" + e.EpisodeNumber + " for series " + _series.SeriesName +
                              "(id: " + e.Id + ", lang: " + e.Language.Abbriviation + ")");
                     updateDone = true;
@@ -1139,14 +1197,9 @@ namespace TvdbLib
               kvp.Value.Episodes.Add(ep);
               //todo: sort here!!!! -> create episode comparer
               //kvp.Value.Episodes.Sort(new Comparison<TvdbEpisode>(v
+              _text = "Added/Updated episode " + _series.SeriesName + " " + ep.SeasonNumber +
+                      "x" + ep.EpisodeNumber + "(id: " + ep.Id + ")";
 
-              if (UpdateProgressed != null)
-              {//update has started, we're downloading the updated content from tvdb
-                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.episodesupdate,
-                                                             "Added episode " + _series.SeriesName + " " + ep.SeasonNumber +
-                                                             "x" + ep.EpisodeNumber + "(id: " + ep.Id + ")",
-                                                             _progress, 50 + (int)(_progress / 4)));
-              }
               Log.Info("Added Episode " + ep.SeasonNumber + "x" + ep.EpisodeNumber + " for series " + _series.SeriesName +
                        "(id: " + ep.Id + ", lang: " + ep.Language.Abbriviation + ")");
               updateDone = true;
@@ -1184,7 +1237,7 @@ namespace TvdbLib
           TvdbSeries newSeries = null;
           try
           {//try to get the series
-            newSeries = GetSeries(_series.Id, kvp.Key, false, false, false);
+            newSeries = m_downloader.DownloadSeries(_series.Id, kvp.Key, false, false, false);
           }
           catch (TvdbContentNotFoundException ex)
           {//couldn't download the series
@@ -1193,19 +1246,14 @@ namespace TvdbLib
 
           if (newSeries != null)
           {//download of the series successfull -> do updating
-            if (UpdateProgressed != null)
-            {//update has started, we're downloading the updated content from tvdb
-              UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
-                                                           "Updating series " + _series.SeriesName,
-                                                           _progress, 25 + (int)(_progress / 4)));
-            }
             newSeries.LastUpdated = _lastUpdated;
 
-            //don't replace episodes, since they're
+            //don't replace episodes, since we're only loading basic series
             kvp.Value.UpdateTvdbFields(newSeries, false);
 
             //kvp.Value.Update (newSeries);
-            Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ")");
+            Log.Info("Updated Series " + _series.SeriesName + " (id: " + _series.Id + ", " +
+                     kvp.Key.Abbriviation + ")");
             updateDone = true;
           }
         }
@@ -1213,8 +1261,8 @@ namespace TvdbLib
       _series.SetLanguage(currentLanguage);//to copy the episode-fields to the base series
       return updateDone;
     }
-
-
+    #endregion
+    #endregion
     /// <summary>
     /// Returns list of all available Languages on tvdb
     /// </summary>
