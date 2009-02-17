@@ -81,6 +81,15 @@ namespace TvdbLib.Data
     #endregion
 
     /// <summary>
+    /// Returns a short description of the episode (e.g. 1x20 Episodename)
+    /// </summary>
+    /// <returns>short description of the episode</returns>
+    public override string ToString()
+    {
+      return m_seriesName + "[" + m_language.Abbriviation + "]";;
+    }
+
+    /// <summary>
     /// List of episodes for this translation
     /// </summary>
     public List<TvdbEpisode> Episodes

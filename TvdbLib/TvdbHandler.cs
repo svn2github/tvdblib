@@ -870,7 +870,7 @@ namespace TvdbLib
       int countUpdatedSeries = updateSeries.Count;
       int countSeriesDone = 0;
       int lastProgress = 0;//send progress event at least every 1 percent
-      String updateText = "";
+      String updateText = "Updating series";
 
       foreach (TvdbSeries us in updateSeries)
       {
@@ -915,7 +915,7 @@ namespace TvdbLib
       int countEpisodeUpdates = updateEpisodes.Count; ;
       int countEpisodesDone = 0;
       lastProgress = 0;
-
+      updateText = "Updating episodes";
       //update all flagged episodes
       foreach (TvdbEpisode ue in updateEpisodes)
       {
@@ -959,7 +959,7 @@ namespace TvdbLib
       int countUpdatedBanner = updateBanners.Count;
       int countBannerDone = 0;
       lastProgress = 0;
-
+      updateText = "Updating banners";
       // todo: update banner information here -> wait for forum response regarding 
       // missing banner id within updates (atm. I'm matching banners via path)
       foreach (TvdbBanner b in updateBanners)

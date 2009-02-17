@@ -129,6 +129,15 @@ namespace TvdbLib.Data
 
     }
 
+    /// <summary>
+    /// Returns a short description of the episode (e.g. 1x20 Episodename)
+    /// </summary>
+    /// <returns>short description of the episode</returns>
+    public override String ToString()
+    {
+      return m_seasonNumber + "x" + m_episodeNumber + (m_episodeName != null ? " " + m_episodeName : "");
+    }
+
     #region specials
 
     /// <summary>
