@@ -47,6 +47,8 @@ namespace TvdbLib
     private TvdbUser m_userInfo;
     private TvdbDownloader m_downloader;
     private TvdbData m_loadedData;
+    private bool m_abortUpdate = false;
+    private bool m_abortUpdateSaveChanges = false;
     #endregion
 
     #region events
@@ -831,6 +833,23 @@ namespace TvdbLib
       }
     }
 
+    /// <summary>
+    /// Aborts the currently running Update
+    /// </summary>
+    /// <param name="_saveChangesMade">if true, all changes that have already been 
+    ///             made will be saved to cache, if not they will be discarded</param>
+    public void AbortUpdate(bool _saveChangesMade)
+    {
+      m_abortUpdate = true;
+      m_abortUpdateSaveChanges = _saveChangesMade;
+    }
+
+    /// <summary>
+    /// Make the update
+    /// </summary>
+    /// <param name="_interval">interval of update</param>
+    /// <param name="_zipped">zipped downloading yes/no</param>
+    /// <returns>true if successful, false otherwise</returns>
     private bool MakeUpdate(Util.UpdateInterval _interval, bool _zipped)
     {
       Log.Info("Started update (" + _interval.ToString() + ")");
@@ -840,7 +859,8 @@ namespace TvdbLib
       if (UpdateProgressed != null)
       {//update has started, we're downloading the updated content from tvdb
         UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.downloading,
-                                                     "Downloading " + (_zipped ? " zipped " : " unzipped") + " updated content",
+                                                     "Downloading " + (_zipped ? " zipped " : " unzipped") +
+                                                     " updated content (" + _interval.ToString() + ")",
                                                      0, 0));
       }
 
@@ -874,6 +894,7 @@ namespace TvdbLib
 
       foreach (TvdbSeries us in updateSeries)
       {
+        if (m_abortUpdate) break;//the update has been aborted
         //Update series that have been already cached
         foreach (int s in cachedSeries)
         {
@@ -888,10 +909,6 @@ namespace TvdbLib
               updatedSeriesIds.Add(us.Id);
               updateText = "Updated series " + series.SeriesName + "(" + series.Id + ")";
               //store the updated series to cache
-              //todo: better to save it immediately? the way it is now it consumes more
-              //memory because the series is kept in memory until the update finishes.
-              //the advantage is that if episodes of the series are updated as well, we
-              //don't have to load it again
               if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
             }
 
@@ -919,6 +936,8 @@ namespace TvdbLib
       //update all flagged episodes
       foreach (TvdbEpisode ue in updateEpisodes)
       {
+        if (m_abortUpdate) break;//the update has been aborted
+
         foreach (int s in cachedSeries)
         {
           if (ue.SeriesId == s)
@@ -964,6 +983,8 @@ namespace TvdbLib
       // missing banner id within updates (atm. I'm matching banners via path)
       foreach (TvdbBanner b in updateBanners)
       {
+        if (m_abortUpdate) break;//the update has been aborted
+
         foreach (int s in cachedSeries)
         {
           if (b.SeriesId == s)
@@ -1001,37 +1022,64 @@ namespace TvdbLib
         countBannerDone++;
       }
 
-      if (UpdateProgressed != null)
-      {
-        UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.finishupdate,
-                                                     "Update finished, saving loaded series to cache",
-                                                     100, 100));
-      }
-
-      Log.Info("Saving all series to cache that have been modified during the update (" + seriesToSave.Count + ")");
-      foreach (KeyValuePair<int, TvdbSeries> kvp in seriesToSave)
-      {//Save all series to cache that have been modified during the update
-        try
+      if (!m_abortUpdate)
+      {//update has finished successfully
+        if (UpdateProgressed != null)
         {
-          m_cacheProvider.SaveToCache(kvp.Value);
-        }
-        catch (Exception ex)
-        {
-          Log.Warn("Couldn't save " + kvp.Key + " to cache: " + ex.ToString());
+          UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.finishupdate,
+                                                       "Update finished, saving loaded information to cache",
+                                                       100, 100));
         }
       }
+      else
+      {//the update has been aborted
+        if (UpdateProgressed != null)
+        {
+          UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.finishupdate,
+                                                       "Update aborted by user, " +
+                                                       (m_abortUpdateSaveChanges ? " saving " : " not saving ") +
+                                                       "already loaded information to cache",
+                                                       100, 100));
+        }
+      }
 
-      //set the last updated time to time of this update
-      m_loadedData.LastUpdated = updateTime;
-      m_cacheProvider.SaveToCache(m_loadedData);
+      if (!m_abortUpdate || m_abortUpdateSaveChanges)
+      {//store the information we downloaded to cache
+        Log.Info("Saving all series to cache that have been modified during the update (" + seriesToSave.Count + ")");
+        foreach (KeyValuePair<int, TvdbSeries> kvp in seriesToSave)
+        {//Save all series to cache that have been modified during the update
+          try
+          {
+            m_cacheProvider.SaveToCache(kvp.Value);
+          }
+          catch (Exception ex)
+          {
+            Log.Warn("Couldn't save " + kvp.Key + " to cache: " + ex.ToString());
+          }
+        }
+      }
 
+      if (!m_abortUpdate)
+      {//update finished and wasn't aborted
+        //set the last updated time to time of this update
+        m_loadedData.LastUpdated = updateTime;
+        m_cacheProvider.SaveToCache(m_loadedData);
+      }
 
       watch.Stop();
-      Log.Info("Finished update (" + _interval.ToString() + ") in " + watch.ElapsedMilliseconds + " milliseconds");
 
+      Log.Info("Finished update (" + _interval.ToString() + ") in " + watch.ElapsedMilliseconds + " milliseconds");
       if (UpdateFinished != null)
       {
-        UpdateFinished(new UpdateFinishedEventArgs(startUpdate, DateTime.Now, updatedSeriesIds, updatedEpisodeIds, updatedBannerIds));
+        if (!m_abortUpdate || m_abortUpdateSaveChanges)
+        {//we either updated everything successfully or we at least saved the changes made before the update completed
+          UpdateFinished(new UpdateFinishedEventArgs(startUpdate, DateTime.Now, updatedSeriesIds, updatedEpisodeIds, updatedBannerIds));
+        }
+        else
+        {//we didn't update anything because the update was aborted
+          UpdateFinished(new UpdateFinishedEventArgs(startUpdate, DateTime.Now, new List<int>(), new List<int>(), new List<int>()));
+
+        }
       }
       return true;
 
@@ -1062,7 +1110,7 @@ namespace TvdbLib
             b.LastUpdated = _banner.LastUpdated;
             b.CacheProvider = m_cacheProvider;
             b.SeriesId = _series.Id;
-            
+
             if (b.IsLoaded)
             {//the banner was previously loaded and is updated -> discard the previous image
               b.LoadBanner(null);
@@ -1263,6 +1311,7 @@ namespace TvdbLib
     }
     #endregion
     #endregion
+
     /// <summary>
     /// Returns list of all available Languages on tvdb
     /// </summary>

@@ -33,7 +33,7 @@ namespace TvdbLib.Data.Banner
   /// These thumbnails are at the moment availabe for all banner types except actors
   /// </summary>
   [Serializable]
-  public class TvdbBannerWithThumb: TvdbBanner
+  public class TvdbBannerWithThumb : TvdbBanner
   {
     #region private fields
     private String m_thumbPath;
@@ -201,7 +201,7 @@ namespace TvdbLib.Data.Banner
           {
             LoadThumb(null);
           }
-          if (!_saveToCache)
+          if (!_saveToCache && m_thumbPath != null && !m_thumbPath.Equals(""))
           {//we don't want the image in cache -> if we already cached it it should be deleted
             String cacheName = CreateCacheName(m_thumbPath, true);
             if (this.CacheProvider != null && this.CacheProvider.Initialised)
