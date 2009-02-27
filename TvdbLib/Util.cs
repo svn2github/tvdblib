@@ -36,7 +36,7 @@ namespace TvdbLib
     /// Update interval
     /// </summary>
     internal enum UpdateInterval { day = 0, week = 1, month = 2 };
-    
+
     /// <summary>
     /// Type when handling user favorites
     /// </summary>
@@ -44,8 +44,8 @@ namespace TvdbLib
 
     #region private fields
     private static List<TvdbLanguage> m_languageList;
-    private static NumberFormatInfo m_formatProvider; 
-       
+    private static NumberFormatInfo m_formatProvider;
+
     #endregion
 
     /// <summary>
@@ -65,14 +65,16 @@ namespace TvdbLib
     /// <returns></returns>
     internal static int Int32Parse(String _number)
     {
-      try
+      //check this or we have a badass performance problem because everytime we have
+      //an empty field an exception would be thrown
+      if (_number.Equals("")) return -99;
+
+      int result;
+      if (Int32.TryParse(_number, out result))
       {
-        //check this or we have a badass performance problem because everytime we have
-        //an empty field an exception would be thrown
-        if (_number.Equals("")) return -99;
-        return Int32.Parse(_number);
+        return result;
       }
-      catch (FormatException)
+      else
       {
         return -99;
       }
@@ -98,7 +100,15 @@ namespace TvdbLib
         if (_number.Equals("")) return -99;
         _number = _number.Replace(',', '.');
 
-        return Double.Parse(_number, m_formatProvider);
+        double result;
+        if (Double.TryParse(_number,NumberStyles.Float, m_formatProvider, out result))
+        {
+          return result;
+        }
+        else
+        {
+          return -99;
+        }
       }
       catch (FormatException)
       {
@@ -161,15 +171,25 @@ namespace TvdbLib
     internal static DateTime UnixToDotNet(String _unixTimestamp)
     {
       System.DateTime date = System.DateTime.Parse("1/1/1970");
-      
+
       //remove , of float values
       int index = _unixTimestamp.IndexOf(',');
-      if(index != -1) _unixTimestamp = _unixTimestamp.Remove(index);
+      if (index != -1) _unixTimestamp = _unixTimestamp.Remove(index);
 
       //remove , of float values
       index = _unixTimestamp.IndexOf('.');
       if (index != -1) _unixTimestamp = _unixTimestamp.Remove(index);
-      return date.AddSeconds(Int32.Parse(_unixTimestamp));
+
+      int seconds;
+      if(Int32.TryParse(_unixTimestamp, out seconds))
+      {
+        return date.AddSeconds(seconds);
+      }
+      else
+      {
+        Log.Warn("Couldn't convert " + _unixTimestamp + " to DateTime");
+        return new DateTime();
+      }      
     }
 
     /// <summary>
@@ -242,7 +262,14 @@ namespace TvdbLib
       for (int i = 0; i < colorList.Count; i++)
       {
         String[] color = colorList[i].Split(',');
-        retList.Add(Color.FromArgb(Int32.Parse(color[0]), Int32.Parse(color[1]), Int32.Parse(color[2])));
+        int red;
+        int green;
+        int blue;
+        if (Int32.TryParse(color[0], out red) && Int32.TryParse(color[1], out green) && 
+            Int32.TryParse(color[2], out blue))
+        {
+          retList.Add(Color.FromArgb(red, green, blue));
+        }
       }
       return null;
       //throw new NotImplementedException();
@@ -256,7 +283,17 @@ namespace TvdbLib
     internal static Point ParseResolution(String _text)
     {
       String[] res = _text.Split('x');
-      return new Point(Int32.Parse(res[0]), Int32.Parse(res[1]));
+      int x;
+      int y;
+      if (Int32.TryParse(res[0], out x) && Int32.TryParse(res[1], out y))
+      {
+        return new Point(x, y);
+      }
+      else
+      {
+        Log.Warn("Couldn't parse resolution" + _text);
+        return new Point();
+      }
       //throw new NotImplementedException();
     }
 

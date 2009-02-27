@@ -297,8 +297,16 @@ namespace TvdbLib.Cache
       string[] dirs = Directory.GetDirectories(m_rootFolder);
       foreach (String d in dirs)
       {
-        TvdbSeries series = LoadSeriesFromCache(Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1)));
-        if (series != null) retList.Add(series);
+        int seriesId;
+        if (Int32.TryParse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1), out seriesId))
+        {
+          TvdbSeries series = LoadSeriesFromCache(seriesId);
+          if (series != null) retList.Add(series);
+        }
+        else
+        {
+          Log.Error("Couldn't parse " + d + " when loading series from cache");
+        }
       }
       return retList;
     }
@@ -522,12 +530,12 @@ namespace TvdbLib.Cache
         string[] dirs = Directory.GetDirectories(m_rootFolder);
         foreach (String d in dirs)
         {
-          try
+          int seriesId;
+          if (Int32.TryParse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1), out seriesId))
           {
-            int series = Int32.Parse(d.Remove(0, d.LastIndexOf(Path.DirectorySeparatorChar) + 1));
-            retList.Add(series);
+            retList.Add(seriesId);
           }
-          catch (FormatException)
+          else
           {
             Log.Error("Couldn't parse " + d + " when loading list of cached series");
           }
