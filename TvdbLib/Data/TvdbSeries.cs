@@ -346,9 +346,9 @@ namespace TvdbLib.Data
     /// <returns>List of episodes for the given season</returns>
     public List<TvdbEpisode> GetEpisodes(int _season)
     {
+      List<TvdbEpisode> retList = new List<TvdbEpisode>();
       if (Episodes != null && Episodes.Count > 0 && EpisodesLoaded)
       {
-        List<TvdbEpisode> retList = new List<TvdbEpisode>();
         foreach (TvdbEpisode e in Episodes)
         {
           if (e.SeasonNumber == _season)
@@ -356,12 +356,8 @@ namespace TvdbLib.Data
             retList.Add(e);
           }
         }
-        return retList;
       }
-      else
-      {
-        return null;
-      }
+      return retList;
     }
 
     /// <summary>
