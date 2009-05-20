@@ -788,7 +788,7 @@ namespace TvdbLib
       {//todo: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
         Log.Warn("The last update occured longer than a month ago, to avoid data inconsistency, all cached series "
                  + "and episode informations is downloaded again");
-        //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
+        MakeUpdate(Util.UpdateInterval.month, _zipped);
       }
 
       return true;
