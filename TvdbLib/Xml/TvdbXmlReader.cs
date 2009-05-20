@@ -319,8 +319,10 @@ namespace TvdbLib.Xml
                         select new
                         {
                           Id = episode.Element("id").Value,
-                          Combined_episodenumber = episode.Element("Combined_episodenumber").Value,
-                          Combined_season = episode.Element("Combined_season").Value,
+                          Combined_episodenumber = episode.Elements("Combined_episodenumber").Count() == 1
+                                                 ? episode.Element("Combined_episodenumber").Value : "0",
+                          Combined_season = episode.Elements("Combined_season").Count() == 1
+                                          ? episode.Element("Combined_season").Value : "0",
                           DVD_chapter = episode.Element("DVD_chapter").Value,
                           DVD_discid = episode.Element("DVD_discid").Value,
                           DVD_episodenumber = episode.Element("DVD_episodenumber").Value,

@@ -24,6 +24,7 @@ namespace TvdbTester
       m_tvdbHandler = _handler;
       m_interval = _interval;
       m_useZip = _useZip;
+      cmdApply.Enabled = false;
       m_tvdbHandler.UpdateProgressed += new TvdbHandler.UpdateProgressDelegate(m_tvdbHandler_UpdateProgressed);
       m_tvdbHandler.UpdateFinished += new TvdbHandler.UpdateFinishedDelegate(m_tvdbHandler_UpdateFinished);
       m_updateThread = new Thread(new ThreadStart(DoUpdating));
@@ -68,6 +69,7 @@ namespace TvdbTester
           }
 
           txtUpdateProgress.Text = b.ToString();
+          cmdApply.Enabled = true;
         }
         catch (Exception ex)
         {
@@ -123,7 +125,12 @@ namespace TvdbTester
 
     private void cmdApply_Click(object sender, EventArgs e)
     {
+      this.DialogResult = DialogResult.OK;
+    }
 
+    private void cmdCancel_Click(object sender, EventArgs e)
+    {
+      m_tvdbHandler.AbortUpdate(true);
     }
   }
 }

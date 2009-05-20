@@ -47,18 +47,20 @@
       // 
       // txtUpdateProgress
       // 
-      this.txtUpdateProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      this.txtUpdateProgress.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                  | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.txtUpdateProgress.Location = new System.Drawing.Point(11, 74);
       this.txtUpdateProgress.Multiline = true;
       this.txtUpdateProgress.Name = "txtUpdateProgress";
       this.txtUpdateProgress.ReadOnly = true;
-      this.txtUpdateProgress.Size = new System.Drawing.Size(268, 40);
+      this.txtUpdateProgress.Size = new System.Drawing.Size(269, 117);
       this.txtUpdateProgress.TabIndex = 1;
       // 
       // cmdApply
       // 
-      this.cmdApply.Location = new System.Drawing.Point(11, 134);
+      this.cmdApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.cmdApply.Location = new System.Drawing.Point(11, 211);
       this.cmdApply.Name = "cmdApply";
       this.cmdApply.Size = new System.Drawing.Size(121, 23);
       this.cmdApply.TabIndex = 2;
@@ -68,16 +70,20 @@
       // 
       // cmdCancel
       // 
+      this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.cmdCancel.Enabled = false;
-      this.cmdCancel.Location = new System.Drawing.Point(153, 134);
+      this.cmdCancel.Location = new System.Drawing.Point(154, 211);
       this.cmdCancel.Name = "cmdCancel";
       this.cmdCancel.Size = new System.Drawing.Size(126, 23);
       this.cmdCancel.TabIndex = 2;
       this.cmdCancel.Text = "Cancel";
       this.cmdCancel.UseVisualStyleBackColor = true;
+      this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
       // 
       // ibUpdateProgress
       // 
+      this.ibUpdateProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
       this.ibUpdateProgress.BarBackgroundDark = System.Drawing.Color.FromArgb(((int)(((byte)(199)))), ((int)(((byte)(200)))), ((int)(((byte)(201)))));
       this.ibUpdateProgress.BarBackgroundLight = System.Drawing.Color.WhiteSmoke;
       this.ibUpdateProgress.BarBorderColor = System.Drawing.Color.DarkGray;
@@ -98,7 +104,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(293, 169);
+      this.ClientSize = new System.Drawing.Size(294, 246);
       this.Controls.Add(this.ibUpdateProgress);
       this.Controls.Add(this.cmdCancel);
       this.Controls.Add(this.cmdApply);
