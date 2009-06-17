@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using TvdbTester;
 
 namespace WikiCodeExamples
 {
@@ -15,7 +16,7 @@ namespace WikiCodeExamples
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new ImageTestForm());
+      Application.Run(new TestForm());
     }
   }
 }

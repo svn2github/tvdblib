@@ -34,7 +34,7 @@ namespace TvdbTester
 
     private void cmdInit_Click(object sender, EventArgs e)
     {
-      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "");
+        m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "");
       m_tvdbHandler.InitCache();
       List<TvdbLanguage> lang = m_tvdbHandler.Languages;
       cmdTest1.Enabled = true;

@@ -433,7 +433,7 @@ namespace TvdbLib
       else
       {//some (if not all) information has already been loaded from tvdb at some point -> fill the missing details and return the series
 
-        if (!_language.Abbriviation.Equals(series.Language.Abbriviation))
+        if (_language != series.Language)
         {//user wants a different language than the one that has been loaded
           if (series.GetAvailableLanguages().Contains(_language))
           {
@@ -449,6 +449,7 @@ namespace TvdbLib
               if (epList != null)
               {
                 newFields.Episodes = epList;
+                newFields.EpisodesLoaded = true;
               }
             }
             if (newFields != null)
@@ -606,7 +607,7 @@ namespace TvdbLib
 
 
     /// <summary>
-    /// Retrieve the episode with the given id in the given language
+    /// Retrieve the episode with the given id in the given language. 
     /// 
     /// Note that the episode is always downloaded from thetvdb since it would
     /// be practical to load each and every cached series to look for the 
@@ -621,7 +622,8 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Retrieve the episode with the given parameters
+    /// Retrieve the episode with the given parameters. This function will find
+    /// episodes that are already cached.
     /// </summary>
     /// <param name="_seriesId">id of the series</param>
     /// <param name="_seasonNr">season number of the episode</param>
@@ -632,26 +634,39 @@ namespace TvdbLib
     public TvdbEpisode GetEpisode(int _seriesId, int _seasonNr, int _episodeNr,
                                   TvdbEpisode.EpisodeOrdering _order, TvdbLanguage _language)
     {
-      String order = null;
-      switch (_order)
+      TvdbEpisode episode = null;
+      if (m_cacheProvider != null && m_cacheProvider.Initialised)
       {
-        case TvdbEpisode.EpisodeOrdering.AbsoluteOrder:
-          order = "absolut";
-          break;
-        case TvdbEpisode.EpisodeOrdering.DefaultOrder:
-          order = "default";
-          break;
-        case TvdbEpisode.EpisodeOrdering.DvdOrder:
-          order = "dvd";
-          break;
+        if (m_cacheProvider.IsCached(_seriesId, _language, true, false, false))
+        {
+          TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(_seriesId);
+          if (series.Language != _language)
+          {
+            series.SetLanguage(_language);
+          }
+
+          foreach (TvdbEpisode e in series.Episodes)
+          {
+            if (e.EpisodeNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.DefaultOrder ||
+                e.DvdEpisodeNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.DvdOrder ||
+                e.AbsoluteNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.AbsoluteOrder)
+            {//We found the episode that matches the episode number according to the given ordering
+              episode = e;
+            }
+          }
+        }
       }
 
-      TvdbEpisode episode = m_downloader.DownloadEpisode(_seriesId, _seasonNr, _episodeNr, order, _language);
+      if (episode == null)
+      {//we havn't found the episode -> download it
+        episode = m_downloader.DownloadEpisode(_seriesId, _seasonNr, _episodeNr, _order, _language);
+      }
+
       return episode;
     }
 
     /// <summary>
-    /// Retrieve the episode with the given parameters
+    /// Retrieve the episode with the given parameters.
     /// </summary>
     /// <param name="_seriesId">id of the series</param>
     /// <param name="_airDate">When did the episode air</param>
@@ -660,8 +675,32 @@ namespace TvdbLib
     /// <returns>The retrieved episode</returns>
     public TvdbEpisode GetEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
     {
-      TvdbEpisode ep = m_downloader.DownloadEpisode(_seriesId, _airDate, _language);
-      return ep;
+      TvdbEpisode episode = null;
+      if (m_cacheProvider != null && m_cacheProvider.Initialised)
+      {
+        if (m_cacheProvider.IsCached(_seriesId, _language, true, false, false))
+        {
+          TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(_seriesId);
+          if (series.Language != _language)
+          {
+            series.SetLanguage(_language);
+          }
+
+          foreach (TvdbEpisode e in series.Episodes)
+          {
+            if (e.FirstAired.Year == _airDate.Year && e.FirstAired.Month == _airDate.Month && e.FirstAired.Day == _airDate.Day)
+            {//We found the episode that first aired at the given day
+              episode = e;
+            }
+          }
+        }
+      }
+
+      if (episode == null)
+      {//we havn't found the episode -> download it
+        episode = m_downloader.DownloadEpisode(_seriesId, _airDate, _language);
+      }
+      return episode;
     }
 
     /// <summary>

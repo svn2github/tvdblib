@@ -111,5 +111,51 @@ namespace TvdbLib.Data
       return m_name + "(" + m_abbriviation + ")";
       //return base.ToString();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_compare"></param>
+    /// <returns></returns>
+    public override bool Equals(object _compare)
+    {
+      if (_compare != null && _compare.GetType() == typeof(TvdbLanguage) &&
+          this.Abbriviation.Equals(((TvdbLanguage)_compare).Abbriviation))
+      {
+        return true;
+      }
+      return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+      return base.GetHashCode();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static bool operator ==(TvdbLanguage a, TvdbLanguage b)
+    {
+      return a.Equals(b);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static bool operator !=(TvdbLanguage a, TvdbLanguage b)
+    {
+      return !a.Equals(b);
+    }
   }
 }

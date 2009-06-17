@@ -318,7 +318,7 @@ namespace TvdbLib.Data
 
       if (_replaceEpisodes)
       {
-        if (this.EpisodesLoaded && _fields.EpisodesLoaded)
+        if (this.Episodes != null && _fields.EpisodesLoaded)
         {
           //check for each episode if episode images have been loaded... 
           //if yes -> copy image

@@ -60,11 +60,16 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download the episodes
+    /// Download the episodes for the given series
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_language"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">the id of the series</param>
+    /// <param name="_language">the language in which the episodes should be downloaded</param>
+    /// <returns>An episode object or null if no episodes could be found</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<TvdbEpisode> DownloadEpisodes(int _seriesId, TvdbLanguage _language)
     {
       String xml = "";
@@ -101,10 +106,16 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download the banners
+    /// <para>Download all available banners (only a list of available banners, not the actual images!)for the specified series.</para>
+    /// <para>You can load the actual images by calling LoadBanner() (or LoadThumb(), LoadVignette()) on the banner object</para>
     /// </summary>
     /// <param name="_seriesId"></param>
     /// <returns></returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<TvdbBanner> DownloadBanners(int _seriesId)
     {
       String xml = "";
@@ -138,14 +149,19 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download series from tvdb
+    /// <para>Download series from tvdb (specified by series id and language)</para>
     /// </summary>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language of series</param>
     /// <param name="_loadEpisodes">load episodes</param>
     /// <param name="_loadActors">load actors</param>
     /// <param name="_loadBanners">load banners</param>
-    /// <returns></returns>
+    /// <returns>The series object or null if the series couldn't be found</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbSeries DownloadSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes, bool _loadActors, bool _loadBanners)
     {
       //download the xml data from this request
@@ -239,7 +255,9 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_seriesId">id of series</param>
     /// <param name="_language">language of series</param>
-    /// <exception cref="TvdbInvalidXmlException">The Xml of the downloaded series is invalid</exception>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
     /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
     /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     /// <returns>the series object</returns>
@@ -397,6 +415,11 @@ namespace TvdbLib
     /// <param name="_episodeId"></param>
     /// <param name="_language"></param>
     /// <returns></returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public TvdbEpisode DownloadEpisode(int _episodeId, TvdbLanguage _language)
     {
       String xml = "";
@@ -438,21 +461,42 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download the episode specified from http://thetvdb.com
+    /// <para>Download the episode (specified by series id, season number, episode number, language and episode order) from http://thetvdb.com.</para>
+    /// <para>It is possible to retrieve episodes by aired order (aka default order), DVD order and absolute order. For a detailled description of these
+    /// options see: http://thetvdb.com/wiki/index.php/Category:Episodes</para>
     /// </summary>
     /// <param name="_seriesId">series id</param>
     /// <param name="_seasonNr">season nr</param>
     /// <param name="_episodeNr">episode nr</param>
     /// <param name="_language">language</param>
     /// <param name="_order">order</param>
-    /// <returns></returns>
-    public TvdbEpisode DownloadEpisode(int _seriesId, int _seasonNr, int _episodeNr, String _order, TvdbLanguage _language)
+    /// <returns>The episode object or null if the episode could't be found</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
+    public TvdbEpisode DownloadEpisode(int _seriesId, int _seasonNr, int _episodeNr, TvdbEpisode.EpisodeOrdering _order, TvdbLanguage _language)
     {
       String xml = "";
       String link = "";
+      String order = null;
+      switch (_order)
+      {
+        case TvdbEpisode.EpisodeOrdering.AbsoluteOrder:
+          order = "absolut";
+          break;
+        case TvdbEpisode.EpisodeOrdering.DefaultOrder:
+          order = "default";
+          break;
+        case TvdbEpisode.EpisodeOrdering.DvdOrder:
+          order = "dvd";
+          break;
+      }
+
       try
       {
-        link = TvdbLinkCreator.CreateEpisodeLink(m_apiKey, _seriesId, _seasonNr, _episodeNr, _order, _language);
+        link = TvdbLinkCreator.CreateEpisodeLink(m_apiKey, _seriesId, _seasonNr, _episodeNr, order, _language);
         xml = m_webClient.DownloadString(link);
         List<TvdbEpisode> epList = m_xmlHandler.ExtractEpisodes(xml);
         if (epList != null && epList.Count == 1)
@@ -476,7 +520,7 @@ namespace TvdbLib
         {
           throw new TvdbContentNotFoundException("Couldn't download episode " + _seriesId + "/" +
                                                  _order + "/" + _seasonNr + "/" + _episodeNr + "/" + _language.Abbriviation +
-                                                 ", maybe the episode doesn't exist");
+                                                 ", maybe the episode or the ordering doesn't exist");
         }
         else
         {
@@ -495,6 +539,11 @@ namespace TvdbLib
     /// <param name="_airDate">when did the episode air</param>
     /// <param name="_language">language</param>
     /// <returns>Episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public TvdbEpisode DownloadEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
     {
       String xml = "";
@@ -545,10 +594,15 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download the preferred language of the user
+    /// Download the preferred language of the user.
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbLanguage DownloadUserPreferredLanguage(String _userId)
     {
       String xml = "";
@@ -568,8 +622,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve preferred languae for user " + _userId +
-                                               ", you may use an invalid api key");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to retrieve preferred language for user " + _userId +
+                                               ", are you sure this is the correct user id?");
         }
         else
         {
@@ -590,6 +644,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_userId"></param>
     /// <returns></returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> DownloadUserFavoriteList(String _userId)
     {
       return DownloadUserFavoriteList(_userId, Util.UserFavouriteAction.none, 0);
@@ -602,6 +661,11 @@ namespace TvdbLib
     /// <param name="_type"></param>
     /// <param name="_seriesId"></param>
     /// <returns></returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     internal List<int> DownloadUserFavoriteList(String _userId, Util.UserFavouriteAction _type, int _seriesId)
     {
       String xml = "";
@@ -621,8 +685,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve favorite list for user " + _userId +
-                                               ", you may use an invalid api key");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to retrieve favorite list for user " + _userId +
+                                               ", are you sure this is the correct user id?");
         }
         else
         {
@@ -659,6 +723,11 @@ namespace TvdbLib
     /// <param name="_interval">interval to download</param>
     /// <param name="_zipped">use zip</param>
     /// <returns>Time of the update</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
                                      out List<TvdbBanner> _updateBanners, Util.UpdateInterval _interval, bool _zipped)
     {
@@ -715,9 +784,14 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download available languages
+    /// Download list available languages.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A list of TvdbLanguage objects</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public List<TvdbLanguage> DownloadLanguages()
     {
       String xml = "";
@@ -750,10 +824,15 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download search results
+    /// Download search results for a series search
     /// </summary>
-    /// <param name="_name"></param>
-    /// <returns></returns>
+    /// <param name="_name">name of the series</param>
+    /// <returns>List of possible matches for the search</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public List<TvdbSearchResult> DownloadSearchResults(String _name)
     {
       String xml = "";
@@ -788,10 +867,15 @@ namespace TvdbLib
     /// <summary>
     /// Make the request for rating a series
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <param name="_seriesId"></param>
-    /// <param name="_rating"></param>
-    /// <returns></returns>
+    /// <param name="_userId">The id of the user</param>
+    /// <param name="_seriesId">The id of the series</param>
+    /// <param name="_rating">The rating for this series</param>
+    /// <returns>A double value with the current rating for this series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public double RateSeries(String _userId, int _seriesId, int _rating)
     {
       String xml = "";
@@ -811,8 +895,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate series " + _seriesId +
-                                               ", you may use an invalid api key");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to rate series " + _seriesId +
+                                               ", you may use an invalid user id.");
         }
         else
         {
@@ -826,10 +910,15 @@ namespace TvdbLib
     /// <summary>
     /// Make the request for rating an episode
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <param name="_episodeId"></param>
-    /// <param name="_rating"></param>
-    /// <returns></returns>
+    /// <param name="_userId">The id of the user</param>
+    /// <param name="_episodeId">The id of the episode</param>
+    /// <param name="_rating">The rating for this series</param>
+    /// <returns>A double value with the current rating for this series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public double RateEpisode(String _userId, int _episodeId, int _rating)
     {
       String xml = "";
@@ -850,8 +939,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to rate episode " + _episodeId +
-                                               ", you may use an invalid api key  or the episode doesn't exists");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to rate episode " + _episodeId +
+                                               ", you may use an invalid user id or the episode doesn't exists");
         }
         else
         {
@@ -862,11 +951,16 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download the series rating without doing a rating
+    /// Download the series rating without rating the item.
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_userId">id of user</param>
+    /// <param name="_seriesId">id of series</param>
+    /// <returns>Current rating for the series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public double DownloadSeriesRating(String _userId, int _seriesId)
     {
       String xml = "";
@@ -887,8 +981,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _seriesId +
-                                               ", you may use an invalid api key or the series doesn't exists");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _seriesId +
+                                               ", you may use an invalid user id or the series doesn't exists");
         }
         else
         {
@@ -903,7 +997,12 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_userId">id of the user</param>
     /// <param name="_episodeId">id of the episode</param>
-    /// <returns></returns>
+    /// <returns>Current rating of this episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public double DownloadEpisodeRating(String _userId, int _episodeId)
     {
       String xml = "";
@@ -924,8 +1023,8 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _episodeId +
-                                               ", you may use an invalid api key  or the episode doesn't exists");
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to retrieve rating of series " + _episodeId +
+                                               ", you may use an invalid user id or the episode doesn't exists");
         }
         else
         {
@@ -978,6 +1077,7 @@ namespace TvdbLib
     /// Download list of mirrors -> deprecated since mirroring is done on server-side now
     /// </summary>
     /// <returns>bla</returns>
+    [Obsolete("deprecated since mirroring is done on server-side now")]
     public List<TvdbMirror> DownloadMirrorList()
     {
       String xml = "";
@@ -1015,8 +1115,12 @@ namespace TvdbLib
     /// <summary>
     /// Gets all series this user has already ratet
     /// </summary>
-    /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
-    /// <returns></returns>
+    /// <returns>All series ratings the user has made so far</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public Dictionary<int, TvdbRating> DownloadAllSeriesRatings(String _userId)
     {
       String xml = "";
@@ -1054,6 +1158,11 @@ namespace TvdbLib
     /// <param name="_userId">Id of user</param>
     /// <param name="_seriesId">Id of series</param>
     /// <returns>Dictionary of all ratings</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public Dictionary<int, TvdbRating> DownloadRatingsForSeries(string _userId, int _seriesId)
     {
       String xml = "";
@@ -1087,7 +1196,7 @@ namespace TvdbLib
         Log.Warn("Request not successfull", ex);
         if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
         {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve rating of all series " +
+          throw new TvdbUserNotFoundException("Couldn't connect to Thetvdb.com to retrieve rating of all series " +
                                                ", you may use an invalid api key");
         }
         else

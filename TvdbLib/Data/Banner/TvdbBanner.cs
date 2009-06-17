@@ -325,7 +325,6 @@ namespace TvdbLib.Data
         byte[] imgData = client.DownloadData(_path);
         MemoryStream ms = new MemoryStream(imgData);
         Image img = Image.FromStream(ms, true, true);
-
         return img;
       }
       catch (Exception ex)
