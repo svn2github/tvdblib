@@ -400,6 +400,11 @@ namespace TvdbLib
     /// <param name="_loadActors">if true also loads the extended actor information</param>
     /// <param name="_useZip">If this series is not already cached and the series has to be downloaded, the zipped version will be downloaded</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbSeries GetSeries(int _seriesId, TvdbLanguage _language, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners, bool _useZip)
     {
@@ -562,6 +567,11 @@ namespace TvdbLib
     /// <param name="_language">language that should be retrieved</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbSeries GetFullSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
     {
       return GetSeries(_seriesId, _language, true, true, _loadBanners);
@@ -579,6 +589,11 @@ namespace TvdbLib
     /// <param name="_language">language that should be retrieved</param>
     /// <param name="_loadBanners">if true also loads the paths to the banners</param>
     /// <returns>Instance of TvdbSeries containing all gained information</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbSeries GetBasicSeries(int _seriesId, TvdbLanguage _language, bool _loadBanners)
     {
       return GetSeries(_seriesId, _language, false, false, _loadBanners);
@@ -616,6 +631,11 @@ namespace TvdbLib
     /// <param name="_episodeId">id of the episode</param>
     /// <param name="_language">languageof the episode</param>
     /// <returns>The retrieved episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public TvdbEpisode GetEpisode(int _episodeId, TvdbLanguage _language)
     {
       return m_downloader.DownloadEpisode(_episodeId, _language);
@@ -631,6 +651,11 @@ namespace TvdbLib
     /// <param name="_language">language of the episode</param>
     /// <param name="_order">The sorting order that should be user when downloading the episode</param>
     /// <returns>The retrieved episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public TvdbEpisode GetEpisode(int _seriesId, int _seasonNr, int _episodeNr,
                                   TvdbEpisode.EpisodeOrdering _order, TvdbLanguage _language)
     {
@@ -673,6 +698,11 @@ namespace TvdbLib
     /// <param name="_language">language of the episode</param>
     /// <exception cref="TvdbInvalidApiKeyException">The given api key is not valid</exception>
     /// <returns>The retrieved episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public TvdbEpisode GetEpisode(int _seriesId, DateTime _airDate, TvdbLanguage _language)
     {
       TvdbEpisode episode = null;
@@ -726,56 +756,6 @@ namespace TvdbLib
       }
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public bool UpdateTvdbMirrors()
-    {
-      List<TvdbMirror> list = m_downloader.DownloadMirrorList();
-      if (list != null && list.Count > 0)
-      {
-        m_mirrorInfo = list;
-        TvdbLinkCreator.m_mirrorList = list;
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
-
-    ///<summary>
-    /// Returns a list of available mirrors
-    ///</summary>
-    public List<TvdbMirror> MirrorList
-    {
-      get
-      {
-        return m_mirrorInfo;
-      }
-
-    }
-
-    /// <summary>
-    /// Is the information on available tvdb mirrors already cached
-    /// </summary>
-    public bool IsMirrorInformationCached
-    {
-      get
-      {
-        if (m_loadedData.Mirrors != null && m_loadedData.Mirrors.Count > 0)
-        {
-          return true;
-        }
-        else
-        {
-          return false;
-        }
-      }
-    }
-
     #region updating
 
     /// <summary>
@@ -792,9 +772,12 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_zipped">download zipped file?</param>
     /// <exception cref="TvdbCacheNotInitialisedException">In order to update, the cache has to be initialised</exception>
-    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
-    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     /// <returns>true if the update was successful, false otherwise</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public bool UpdateAllSeries(bool _zipped)
     {
       if (m_loadedData == null)
@@ -839,6 +822,12 @@ namespace TvdbLib
     /// <param name="_zipped">download zipped file?</param>
     /// <param name="_interval">Specifies the interval of the update (day, week, month)</param>
     /// <returns>true if the update was successful, false otherwise</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
+    /// <exception cref="TvdbCacheNotInitialisedException">In order to update, the cache has to be initialised</exception>
     public bool UpdateAllSeries(Interval _interval, bool _zipped)
     {
       switch (_interval)
@@ -1506,6 +1495,11 @@ namespace TvdbLib
     /// user information has to be set, otherwise TvdbUserNotFoundException is thrown
     /// </summary>
     /// <returns>preferred language of user</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public TvdbLanguage GetPreferredLanguage()
     {
       if (m_userInfo != null)
@@ -1557,6 +1551,11 @@ namespace TvdbLib
     /// Gets a list of IDs of the favorite series of the user
     /// </summary>
     /// <returns>id list of favorite series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> GetUserFavouritesList()
     {
       if (m_userInfo != null)
@@ -1576,6 +1575,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_lang">Which language should be used</param>
     /// <returns>List of favorite series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<TvdbSeries> GetUserFavorites(TvdbLanguage _lang)
     {
       if (m_userInfo != null)
@@ -1626,6 +1630,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_seriesId">series to add to the favorites</param>
     /// <returns>new list with all favorites</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> AddSeriesToFavorites(int _seriesId)
     {
       if (m_userInfo != null)
@@ -1649,6 +1658,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_series">series to add to the favorites</param>
     /// <returns>new list with all favorites</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> AddSeriesToFavorites(TvdbSeries _series)
     {
       if (_series == null) return null;
@@ -1661,6 +1675,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_seriesId">series to remove from the favorites</param>
     /// <returns>new list with all favorites</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> RemoveSeriesFromFavorites(int _seriesId)
     {
       if (m_userInfo != null)
@@ -1684,6 +1703,11 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_series">series to remove from the favorites</param>
     /// <returns>new list with all favorites</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
     public List<int> RemoveSeriesFromFavorites(TvdbSeries _series)
     {
       return RemoveSeriesFromFavorites(_series.Id);
@@ -1693,9 +1717,14 @@ namespace TvdbLib
     /// <summary>
     /// Rate the given series
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_rating"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">series id</param>
+    /// <param name="_rating">The rating we want to give for this series</param>
+    /// <returns>Current rating of the series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public double RateSeries(int _seriesId, int _rating)
     {
       if (m_userInfo != null)
@@ -1715,10 +1744,15 @@ namespace TvdbLib
     /// <summary>
     /// Rate the given episode
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <param name="_rating"></param>
-    /// <returns></returns>
-    public double RateEpisode(int _seriesId, int _rating)
+    /// <param name="_episodeId">Episode Id</param>
+    /// <param name="_rating">Rating we want to give for episode</param>
+    /// <returns>Current rating of episode</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
+    public double RateEpisode(int _episodeId, int _rating)
     {
       if (m_userInfo != null)
       {
@@ -1726,7 +1760,7 @@ namespace TvdbLib
         {
           throw new ArgumentOutOfRangeException("rating must be an integer between 0 and 10");
         }
-        return m_downloader.RateEpisode(m_userInfo.UserIdentifier, _seriesId, _rating);
+        return m_downloader.RateEpisode(m_userInfo.UserIdentifier, _episodeId, _rating);
       }
       else
       {
@@ -1739,6 +1773,11 @@ namespace TvdbLib
     /// </summary>
     /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
     /// <returns>A list of all rated series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public Dictionary<int, TvdbRating> GetRatedSeries()
     {
       if (m_userInfo != null)
@@ -1756,6 +1795,11 @@ namespace TvdbLib
     /// </summary>
     /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
     /// <returns>A list of all ratings for the series</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbUserNotFoundException">The user doesn't exist</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public Dictionary<int, TvdbRating> GetRatingsForSeries(int _seriesId)
     {
       if (m_userInfo != null)

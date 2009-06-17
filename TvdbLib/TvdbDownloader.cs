@@ -707,6 +707,11 @@ namespace TvdbLib
     /// <param name="_interval">interval to download (0=day, 1=week, 2=month)</param>
     /// <param name="_zipped">use zip</param>
     /// <returns>Time of the update</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
                                    out List<TvdbBanner> _updateBanners, int _interval,
                                     bool _zipped)
@@ -726,7 +731,7 @@ namespace TvdbLib
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
-    /// <exception cref="TvdbContentNotFoundException">The episode/series/banner couldn't be located on the tvdb server.</exception>
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
     /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
                                      out List<TvdbBanner> _updateBanners, Util.UpdateInterval _interval, bool _zipped)
