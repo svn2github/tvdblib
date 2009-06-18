@@ -198,6 +198,7 @@ namespace TvdbLib.Xml
                   new XElement("Status", _series.Status),
                   new XElement("banner", _series.BannerPath != null ? _series.BannerPath : ""),
                   new XElement("fanart", _series.FanartPath != null ? _series.FanartPath : ""),
+                  new XElement("poster", _series.PosterPath != null ? _series.PosterPath : ""),
                   new XElement("lastupdated", Util.DotNetToUnix(_series.LastUpdated)),
                   new XElement("zap2it_id", _series.Zap2itId))
              );

@@ -39,6 +39,26 @@ namespace TvdbLib.Data.Banner
         private Point m_resolution;
     #endregion
 
+        /// <summary>
+    /// TvdbPosterBanner constructor
+    /// </summary>
+    /// <param name="_id">Id of fanart banner</param>
+    /// <param name="_lang">Language for this banner</param>
+    /// <param name="_path">Path of image for this banner</param>
+    public TvdbPosterBanner(int _id, String _path, TvdbLanguage _lang):this()
+    {
+      this.Id = _id;
+      this.BannerPath = _path;
+      this.Language = _lang;
+    }
+    /// <summary>
+    /// TvdbPosterBanner constructor
+    /// </summary>
+    public TvdbPosterBanner()
+    {
+
+    }
+
     /// <summary>
     /// Resolution of the Poster banner
     /// </summary>

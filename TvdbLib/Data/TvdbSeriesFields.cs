@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TvdbLib.Data.Comparer;
 
 namespace TvdbLib.Data
 {
@@ -73,10 +74,10 @@ namespace TvdbLib.Data
     private String m_status;
     private String m_bannerPath;
     private String m_fanartPath;
+    private String m_posterPath;
     private DateTime m_lastUpdated;
     private String m_zap2itId;
     private bool m_episodesLoaded;
-
     private List<TvdbEpisode> m_episodes = null;
     #endregion
 
@@ -96,6 +97,45 @@ namespace TvdbLib.Data
     {
       get { return m_episodes; }
       set { m_episodes = value; }
+    }
+
+    /// <summary>
+    /// <para>Gets the episodes for the given season in the given order (aired or dvd). Absolute is also possible but makes no sense since
+    /// there are no seasons with absoulte ordering. Use GetEpisodesAbsoluteOrder() instead.</para>
+    /// 
+    /// <para>For more information on episode ordering <see href="http://thetvdb.com/wiki/index.php/Category:Episodes">thetvdb wiki</see></para>
+    /// </summary>
+    /// <returns>List of episodes</returns>
+    public List<TvdbEpisode> GetEpisodes(int _season, TvdbEpisode.EpisodeOrdering _order)
+    {
+      List<TvdbEpisode> episodes = new List<TvdbEpisode>();
+      m_episodes.ForEach(delegate(TvdbEpisode e) { if (e.SeasonNumber == _season) episodes.Add(e); });
+
+      switch (_order)
+      {
+        case TvdbEpisode.EpisodeOrdering.DefaultOrder:
+          episodes.Sort(new EpisodeComparerAired());
+          break;
+        case TvdbEpisode.EpisodeOrdering.DvdOrder:
+          episodes.Sort(new EpisodeComparerDvd());
+          break;
+        case TvdbEpisode.EpisodeOrdering.AbsoluteOrder:
+          episodes.Sort(new EpisodeComparerAbsolute());
+          break;
+      }
+      return episodes;
+    }
+
+    /// <summary>
+    /// Returns all episodes in the absolute order
+    /// </summary>
+    /// <returns>List of episodes</returns>
+    public List<TvdbEpisode> GetEpisodesAbsoluteOrder()
+    {
+      List<TvdbEpisode> episodes = new List<TvdbEpisode>();
+      m_episodes.ForEach(delegate(TvdbEpisode e) { episodes.Add(e); });
+      episodes.Sort(new EpisodeComparerAbsolute());
+      return episodes;
     }
 
     /// <summary>
@@ -186,6 +226,15 @@ namespace TvdbLib.Data
     {
       get { return m_bannerPath; }
       set { m_bannerPath = value; }
+    }
+
+    /// <summary>
+    /// Path to the primary poster
+    /// </summary>
+    public String PosterPath
+    {
+      get { return m_posterPath; }
+      set { m_posterPath = value; }
     }
 
     /// <summary>
@@ -313,6 +362,7 @@ namespace TvdbLib.Data
       this.Status = _fields.Status;
       this.BannerPath = _fields.BannerPath;
       this.FanartPath = _fields.FanartPath;
+      this.PosterPath = _fields.PosterPath;
       this.LastUpdated = _fields.LastUpdated;
       this.Zap2itId = _fields.Zap2itId;
 

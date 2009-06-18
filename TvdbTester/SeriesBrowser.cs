@@ -96,23 +96,30 @@ namespace TvdbTester
           screen.Top = (this.Top) + (this.Height / 2) - (screen.Height / 2);
           DialogResult res = screen.ShowDialog();
 
-          ICacheProvider p = null;
-          if (screen.CacheProvider == typeof(XmlCacheProvider))
+          if (res == DialogResult.OK)
           {
-            p = new XmlCacheProvider(screen.RootFolder);
-          }
-          else if (screen.CacheProvider == typeof(BinaryCacheProvider))
-          {
-            p = new BinaryCacheProvider(screen.RootFolder);
-          }
+            ICacheProvider p = null;
+            if (screen.CacheProvider == typeof(XmlCacheProvider))
+            {
+              p = new XmlCacheProvider(screen.RootFolder);
+            }
+            else if (screen.CacheProvider == typeof(BinaryCacheProvider))
+            {
+              p = new BinaryCacheProvider(screen.RootFolder);
+            }
 
-          if (res == DialogResult.Cancel)
-          {
-            InitialiseForm(null, p);
+            if (screen.UseUserIdentifier)
+            {
+              InitialiseForm(screen.UserIdentifier, p);
+            }
+            else
+            {
+              InitialiseForm(null, p);
+            }
           }
           else
-          {
-            InitialiseForm(screen.UserIdentifier, p);
+          {//user clicked on exit -> use no userid and no caching
+            InitialiseForm(null, null);
           }
         }
         catch (TvdbNotAvailableException)

@@ -29,6 +29,7 @@ using TvdbLib.Data.Banner;
 using TvdbLib.Xml;
 using System.Diagnostics;
 using TvdbLib.Exceptions;
+using TvdbLib.Data.Comparer;
 
 namespace TvdbLib
 {
@@ -1271,8 +1272,8 @@ namespace TvdbLib
             if (ep != null)
             {
               kvp.Value.Episodes.Add(ep);
-              //todo: sort here!!!! -> create episode comparer
-              //kvp.Value.Episodes.Sort(new Comparison<TvdbEpisode>(v
+              //sort the episodes according to default (aired) order
+              kvp.Value.Episodes.Sort(new EpisodeComparerAired());
               _text = "Added/Updated episode " + _series.SeriesName + " " + ep.SeasonNumber +
                       "x" + ep.EpisodeNumber + "(id: " + ep.Id + ")";
 
@@ -1284,7 +1285,7 @@ namespace TvdbLib
         }
         else
         {
-          Log.Debug("Not adding episode " + _episode.Id + ", because series " + _series.SeriesName + " hasn't loaded episodes");
+          Log.Debug("Not handling episode " + _episode.Id + ", because series " + _series.SeriesName + " hasn't loaded episodes");
           updateDone = false;
         }
       }

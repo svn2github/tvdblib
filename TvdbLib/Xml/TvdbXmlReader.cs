@@ -176,6 +176,11 @@ namespace TvdbLib.Xml
         {
           series.Banners.Add(new TvdbFanartBanner(series.Id, series.FanartPath, series.Language));
         }
+
+        if (!series.PosterPath.Equals(""))
+        {
+          series.Banners.Add(new TvdbPosterBanner(series.Id, series.PosterPath, series.Language));
+        }
         retList.Add(series);
       }
       return retList;
@@ -241,6 +246,7 @@ namespace TvdbLib.Xml
                         Status = series.Element("Status").Value,
                         banner = series.Element("banner").Value,
                         fanart = series.Element("fanart").Value,
+                        poster = series.Element("poster").Value,
                         lastupdated = series.Element("lastupdated").Value,
                         zap2it_id = series.Element("zap2it_id").Value
                       };
@@ -267,6 +273,7 @@ namespace TvdbLib.Xml
         series.Status = s.Status;
         series.BannerPath = s.banner;
         series.FanartPath = s.fanart;
+        series.PosterPath = s.poster;
         series.LastUpdated = Util.UnixToDotNet(s.lastupdated);
         series.Zap2itId = s.zap2it_id;
         if (series.Id != -99) retList.Add(series);

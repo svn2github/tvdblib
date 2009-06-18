@@ -34,7 +34,7 @@ namespace TvdbTester
 
     private void cmdInit_Click(object sender, EventArgs e)
     {
-        m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "");
+      m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), "49E28C3EB13EB1CF");
       m_tvdbHandler.InitCache();
       List<TvdbLanguage> lang = m_tvdbHandler.Languages;
       cmdTest1.Enabled = true;
@@ -108,8 +108,8 @@ namespace TvdbTester
       int sId = Int32.Parse(txtSeriesId2.Text);
       int season = Int32.Parse(txtSeason.Text);
       int episode = Int32.Parse(txtEpisode.Text);
-      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, season, episode, 
-                                               (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem, 
+      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, season, episode,
+                                               (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem,
                                                TvdbLanguage.DefaultLanguage);
 
       lvSeries.Items.Clear();
@@ -131,7 +131,7 @@ namespace TvdbTester
         lvSeries.Items.Clear();
         foreach (KeyValuePair<int, TvdbRating> r in ratingList)
         {
-         
+
           lvSeries.Items.Add(CreateItem(r.Key.ToString(), "Community: " + r.Value.CommunityRating + ", User: " + r.Value.UserRating));
         }
       }
@@ -188,6 +188,34 @@ namespace TvdbTester
       {
         MessageBox.Show("Nothing found");
       }
-    }    
+    }
+
+    private void cmdShowEpisodesInGivenOrder_Click(object sender, EventArgs e)
+    {
+      TvdbSeries s = m_tvdbHandler.GetSeries(Int32.Parse(txtSeriesIdEpisodeOrdering.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
+
+      if (rbAired.Checked)
+      {
+        List<TvdbEpisode> eps = s.GetEpisodes(1, TvdbEpisode.EpisodeOrdering.DefaultOrder);
+        lvSeries.Items.Clear();
+        eps.ForEach(delegate(TvdbEpisode ep) { lvSeries.Items.Add(CreateItem(ep.EpisodeNumber.ToString() + "(" + ep.DvdEpisodeNumber + ")", ep.EpisodeName)); });
+      }
+      else if (rbDvd.Checked)
+      {
+        List<TvdbEpisode> eps = s.GetEpisodes(1, TvdbEpisode.EpisodeOrdering.DvdOrder);
+        lvSeries.Items.Clear();
+        eps.ForEach(delegate(TvdbEpisode ep) { lvSeries.Items.Add(CreateItem(ep.DvdEpisodeNumber.ToString() + "(" + ep.EpisodeNumber + ")", ep.EpisodeName)); });
+      }
+
+    }
+
+    private void cmdShowEpisodesAbsoluteOrdering_Click(object sender, EventArgs e)
+    {
+      TvdbSeries s = m_tvdbHandler.GetSeries(Int32.Parse(txtSeriesIdEpisodeOrdering.Text), TvdbLanguage.DefaultLanguage, true, true, true, true);
+      List<TvdbEpisode> eps = s.GetEpisodesAbsoluteOrder();
+      lvSeries.Items.Clear();
+      eps.ForEach(delegate(TvdbEpisode ep) { lvSeries.Items.Add(CreateItem(ep.AbsoluteNumber + "(S" + ep.SeasonNumber + "E" + ep.EpisodeNumber + ")", ep.EpisodeName)); });
+
+    }
   }
 }

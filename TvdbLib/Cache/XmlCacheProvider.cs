@@ -321,7 +321,6 @@ namespace TvdbLib.Cache
     {
       String seriesRoot = m_rootFolder + Path.DirectorySeparatorChar + _seriesId;
       if (!Directory.Exists(seriesRoot)) return null;
-      //todo: handle languages
       TvdbSeries series = new TvdbSeries();
 
       #region load series in all available languages

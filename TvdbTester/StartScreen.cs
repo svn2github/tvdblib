@@ -42,6 +42,13 @@ namespace TvdbTester
       set { m_userIdentifier = value; }
     }
 
+    private bool m_useUserIdentifier;
+    public bool UseUserIdentifier
+    {
+      get { return m_useUserIdentifier; }
+      set { m_useUserIdentifier = value; }
+    }
+
     private String m_rootFolder;
     public String RootFolder
     {
@@ -69,9 +76,11 @@ namespace TvdbTester
         {
           File.WriteAllText("tvdbUser.txt", txtUserIdentifier.Text);
         }
+
+        m_userIdentifier = txtUserIdentifier.Text;
+        m_rootFolder = txtRootFolder.Text;
+        m_useUserIdentifier = true;
         this.DialogResult = DialogResult.OK;
-        UserIdentifier = txtUserIdentifier.Text;
-        this.Close();
       }
     }
 
@@ -104,6 +113,18 @@ namespace TvdbTester
           m_cacheProvider = typeof(BinaryCacheProvider);
           break;
       }
+    }
+
+    private void cmdUseWithoutId_Click(object sender, EventArgs e)
+    {
+      m_rootFolder = txtRootFolder.Text;
+      m_useUserIdentifier = false;
+      this.DialogResult = DialogResult.OK;
+    }
+
+    private void richTextBox1_LinkClicked(object sender, LinkClickedEventArgs e)
+    {
+      System.Diagnostics.Process.Start(e.LinkText);
     }
   }
 }

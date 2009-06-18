@@ -106,6 +106,7 @@
       this.richTextBox1.Size = new System.Drawing.Size(356, 94);
       this.richTextBox1.TabIndex = 5;
       this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+      this.richTextBox1.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
       this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
       // 
       // statusStrip1
@@ -132,6 +133,7 @@
       this.cmdUseWithoutId.TabIndex = 7;
       this.cmdUseWithoutId.Text = "Use Without Id";
       this.cmdUseWithoutId.UseVisualStyleBackColor = true;
+      this.cmdUseWithoutId.Click += new System.EventHandler(this.cmdUseWithoutId_Click);
       // 
       // label3
       // 
@@ -151,6 +153,7 @@
       this.richTextBox2.Size = new System.Drawing.Size(356, 103);
       this.richTextBox2.TabIndex = 5;
       this.richTextBox2.Text = resources.GetString("richTextBox2.Text");
+      this.richTextBox2.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox1_LinkClicked);
       this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
       // 
       // cbCacheProvider
