@@ -42,6 +42,7 @@ namespace TvdbLib.Data.Banner
   {
     #region private fields
     private String m_vignettePath;
+    private bool m_containsSeriesName;
     private Image m_vignette;
     private Point m_resolution;
     private List<Color> m_colors;
@@ -118,7 +119,14 @@ namespace TvdbLib.Data.Banner
       set { m_vignettePath = value; }
     }
 
-
+    /// <summary>
+    /// Does the image contain the series name
+    /// </summary>
+    public bool ContainsSeriesName
+    {
+      get { return m_containsSeriesName; }
+      set { m_containsSeriesName = value; }
+    }
 
     /// <summary>
     /// Color 3 (see Colors property)

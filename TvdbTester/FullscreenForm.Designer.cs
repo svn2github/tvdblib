@@ -28,40 +28,36 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.bcFullScreen = new TvdbTester.BannerControl();
+      this.pbImage = new System.Windows.Forms.PictureBox();
+      ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
       this.SuspendLayout();
       // 
-      // bcFullScreen
+      // pbImage
       // 
-      this.bcFullScreen.BannerImage = null;
-      this.bcFullScreen.BannerImages = null;
-      this.bcFullScreen.DefaultImage = null;
-      this.bcFullScreen.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.bcFullScreen.ImageSizeMode = System.Windows.Forms.ImageLayout.Zoom;
-      this.bcFullScreen.Index = 0;
-      this.bcFullScreen.LoadingBackgroundColor = System.Drawing.Color.Transparent;
-      this.bcFullScreen.LoadingImage = null;
-      this.bcFullScreen.Location = new System.Drawing.Point(0, 0);
-      this.bcFullScreen.Name = "bcFullScreen";
-      this.bcFullScreen.Size = new System.Drawing.Size(644, 581);
-      this.bcFullScreen.TabIndex = 0;
-      this.bcFullScreen.UnavailableImage = null;
-      this.bcFullScreen.UseThumb = false;
+      this.pbImage.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.pbImage.Location = new System.Drawing.Point(0, 0);
+      this.pbImage.Name = "pbImage";
+      this.pbImage.Size = new System.Drawing.Size(644, 581);
+      this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.pbImage.TabIndex = 0;
+      this.pbImage.TabStop = false;
       // 
       // FullscreenForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(644, 581);
-      this.Controls.Add(this.bcFullScreen);
+      this.Controls.Add(this.pbImage);
       this.Name = "FullscreenForm";
       this.Text = "FullscreenForm";
+      ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private BannerControl bcFullScreen;
+    private System.Windows.Forms.PictureBox pbImage;
+
   }
 }

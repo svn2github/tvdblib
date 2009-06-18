@@ -17,15 +17,16 @@ namespace TvdbTester
     {
       InitializeComponent();
     }
-    public TvdbBanner Banner
+    public Image Banner
     {
       set
       {
-        bcFullScreen.BannerImage = value;
+        pbImage.Image = value;
+        this.Size = new Size(value.Width, value.Height + 24);
       }
       get
       {
-        return bcFullScreen.BannerImage;
+        return pbImage.Image;
       }
     }
   }

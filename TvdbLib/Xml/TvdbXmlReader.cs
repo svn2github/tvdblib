@@ -26,6 +26,7 @@ using System.Xml.Linq;
 using TvdbLib.Data;
 using TvdbLib.Data.Banner;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace TvdbLib.Xml
 {
@@ -783,70 +784,82 @@ namespace TvdbLib.Xml
       List<TvdbBanner> retList = new List<TvdbBanner>();
 
       //Extract the fanart banners
-      var allEpisodes = from episode in xml.Descendants("Banner")
-                        where episode.Element("BannerType").Value.Equals("fanart")
-                        select new TvdbFanartBanner
-                        {
-                          Id = Util.Int32Parse(episode.Element("id").Value),
-                          BannerPath = episode.Element("BannerPath").Value,
-                          VignettePath = episode.Element("VignettePath").Value,
-                          ThumbPath = episode.Element("ThumbnailPath").Value,
-                          Resolution = Util.ParseResolution(episode.Element("BannerType2").Value),
-                          Colors = Util.ParseColors(episode.Element("Colors").Value),
-                          Language = Util.ParseLanguage(episode.Element("Language").Value)
-                        };
+      var allFanartBanners =  from banner in xml.Descendants("Banner")
+                              where banner.Element("BannerType").Value.Equals("fanart")
+                              select new TvdbFanartBanner
+                              {
+                                Id = banner.Element("id") != null ? Util.Int32Parse(banner.Element("id").Value) : -99,
+                                BannerPath = banner.Element("BannerPath") != null ? banner.Element("BannerPath").Value : "",
+                                VignettePath = banner.Element("id") != null ? banner.Element("VignettePath").Value : "",
+                                ThumbPath = banner.Element("ThumbnailPath") != null ? banner.Element("ThumbnailPath").Value : "",
+                                Resolution = banner.Element("BannerType2") != null ? 
+                                             Util.ParseResolution(banner.Element("BannerType2").Value) : new Point(),
+                                Colors = banner.Element("Colors") != null ? Util.ParseColors(banner.Element("Colors").Value) : null,
+                                Language = banner.Element("Language") != null ? 
+                                           Util.ParseLanguage(banner.Element("Language").Value) : TvdbLanguage.DefaultLanguage,
+                                ContainsSeriesName = banner.Element("SeriesName") != null ?
+                                                     Util.ParseBoolean(banner.Element("SeriesName").Value) : false,
+                                LastUpdated = banner.Element("LastUpdated") != null ? 
+                                              Util.UnixToDotNet(banner.Element("LastUpdated").Value) : DateTime.Now
+                              };
 
-      foreach (TvdbBanner e in allEpisodes)
+      foreach (TvdbBanner e in allFanartBanners)
       {
         if (e.Id != -99) retList.Add(e);
       }
 
       //Extract the season banners
-      var allBanners = from banner in xml.Descendants("Banner")
-                       where banner.Element("BannerType").Value.Equals("season")
-                       select new TvdbSeasonBanner
-                       {
-                         Id = Util.Int32Parse(banner.Element("id").Value),
-                         BannerPath = banner.Element("BannerPath").Value,
-                         Season = Util.Int32Parse(banner.Element("Season").Value),
-                         BannerType = Util.ParseSeasonBannerType(banner.Element("BannerType2").Value),
-                         Language = Util.ParseLanguage(banner.Element("Language").Value)
-                       };
+      var allSeasonBanners = from banner in xml.Descendants("Banner")
+                             where banner.Element("BannerType").Value.Equals("season")
+                             select new TvdbSeasonBanner
+                             {
+                               Id = Util.Int32Parse(banner.Element("id").Value),
+                               BannerPath = banner.Element("BannerPath").Value,
+                               Season = Util.Int32Parse(banner.Element("Season").Value),
+                               BannerType = Util.ParseSeasonBannerType(banner.Element("BannerType2").Value),
+                               Language = Util.ParseLanguage(banner.Element("Language").Value),
+                               LastUpdated = banner.Element("LastUpdated") != null ?
+                                             Util.UnixToDotNet(banner.Element("LastUpdated").Value) : DateTime.Now
+                             };
 
-      foreach (TvdbBanner e in allBanners)
+      foreach (TvdbBanner e in allSeasonBanners)
       {
         if (e.Id != -99) retList.Add(e);
       }
 
       //Extract the series banners
-      var allBanners2 = from banner in xml.Descendants("Banner")
-                        where banner.Element("BannerType").Value.Equals("series")
-                        select new TvdbSeriesBanner
-                        {
-                          Id = Util.Int32Parse(banner.Element("id").Value),
-                          BannerPath = banner.Element("BannerPath").Value,
-                          BannerType = Util.ParseSeriesBannerType(banner.Element("BannerType2").Value),
-                          Language = Util.ParseLanguage(banner.Element("Language").Value)
-                        };
+      var allSeriesBanners =  from banner in xml.Descendants("Banner")
+                              where banner.Element("BannerType").Value.Equals("series")
+                              select new TvdbSeriesBanner
+                              {
+                                Id = Util.Int32Parse(banner.Element("id").Value),
+                                BannerPath = banner.Element("BannerPath").Value,
+                                BannerType = Util.ParseSeriesBannerType(banner.Element("BannerType2").Value),
+                                Language = Util.ParseLanguage(banner.Element("Language").Value),
+                                LastUpdated = banner.Element("LastUpdated") != null ?
+                                              Util.UnixToDotNet(banner.Element("LastUpdated").Value) : DateTime.Now
+                              };
 
-      foreach (TvdbBanner e in allBanners2)
+      foreach (TvdbBanner e in allSeriesBanners)
       {
         if (e.Id != -99) retList.Add(e);
       }
 
       //Extract the poster banners
-      var allPosters = from banner in xml.Descendants("Banner")
-                       where banner.Element("BannerType").Value.Equals("poster")
-                       select new TvdbPosterBanner
-                       {
+      var allPosterBanners = from banner in xml.Descendants("Banner")
+                             where banner.Element("BannerType").Value.Equals("poster")
+                             select new TvdbPosterBanner
+                             {
 
-                         Id = Util.Int32Parse(banner.Element("id").Value),
-                         BannerPath = banner.Element("BannerPath").Value,
-                         Resolution = Util.ParseResolution(banner.Element("BannerType2").Value),
-                         Language = Util.ParseLanguage(banner.Element("Language").Value)
-                       };
+                               Id = Util.Int32Parse(banner.Element("id").Value),
+                               BannerPath = banner.Element("BannerPath").Value,
+                               Resolution = Util.ParseResolution(banner.Element("BannerType2").Value),
+                               Language = Util.ParseLanguage(banner.Element("Language").Value),
+                               LastUpdated = banner.Element("LastUpdated") != null ?
+                                             Util.UnixToDotNet(banner.Element("LastUpdated").Value) : DateTime.Now
+                             };
 
-      foreach (TvdbPosterBanner e in allPosters)
+      foreach (TvdbPosterBanner e in allPosterBanners)
       {
         if (e.Id != -99) retList.Add(e);
       }

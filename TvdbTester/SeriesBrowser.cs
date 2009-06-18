@@ -832,7 +832,7 @@ namespace TvdbTester
 
     private void saveImageContext_Opening(object sender, CancelEventArgs e)
     {
-      showImageToolStripMenuItem.Enabled = false;
+      showImageToolStripMenuItem.Enabled = true;
     }
 
     private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -889,13 +889,8 @@ namespace TvdbTester
     private void showImageToolStripMenuItem_Click(object sender, EventArgs e)
     {
       FullscreenForm fsf = new FullscreenForm();
-      fsf.Banner = GetSelectedBanner();
+      fsf.Banner = GetSelectedImage();
       fsf.Show();
-    }
-
-    private TvdbBannerWithThumb GetSelectedBanner()
-    {
-      throw new NotImplementedException();
     }
 
     private void cmdSendSeriesRating_Click(object sender, EventArgs e)

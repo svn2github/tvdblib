@@ -25,6 +25,7 @@ namespace TvdbTester
       m_interval = _interval;
       m_useZip = _useZip;
       cmdApply.Enabled = false;
+      cmdAbortUpdate.Enabled = true;
       m_tvdbHandler.UpdateProgressed += new TvdbHandler.UpdateProgressDelegate(m_tvdbHandler_UpdateProgressed);
       m_tvdbHandler.UpdateFinished += new TvdbHandler.UpdateFinishedDelegate(m_tvdbHandler_UpdateFinished);
       m_updateThread = new Thread(new ThreadStart(DoUpdating));
@@ -55,14 +56,14 @@ namespace TvdbTester
           StringBuilder b = new StringBuilder();
           b.AppendLine("Update finished in " + (_event.UpdateFinished - _event.UpdateStarted).TotalSeconds + " seconds");
           b.AppendLine("Updated the following (" + _event.UpdatedSeries.Count + ") series");
-          b.AppendLine("=========================================================");
+          b.AppendLine("==============================");
           foreach (int s in _event.UpdatedSeries)
           {
             b.AppendLine(s.ToString());
           }
           b.AppendLine("");
           b.AppendLine("Updated the following (" + _event.UpdatedEpisodes.Count + ") episodes");
-          b.AppendLine("=========================================================");
+          b.AppendLine("==============================");
           foreach (int e in _event.UpdatedEpisodes)
           {
             b.AppendLine(e.ToString());
@@ -130,9 +131,10 @@ namespace TvdbTester
       this.DialogResult = DialogResult.OK;
     }
 
-    private void cmdCancel_Click(object sender, EventArgs e)
+    private void cmdAbortUpdate_Click(object sender, EventArgs e)
     {
       m_tvdbHandler.AbortUpdate(true);
+      cmdAbortUpdate.Enabled = false;
     }
   }
 }

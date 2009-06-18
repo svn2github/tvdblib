@@ -276,11 +276,12 @@ namespace TvdbLib.Xml
       foreach (TvdbBanner b in _bannerList)
       {
         XElement banner = new XElement("Banner");
+        banner.Add(new XElement("id", b.Id));
+        banner.Add(new XElement("BannerPath", b.BannerPath));
+        banner.Add(new XElement("LastUpdated", Util.DotNetToUnix(b.LastUpdated)));
         if (b.GetType() == typeof(TvdbSeriesBanner))
         {
           TvdbSeriesBanner sb = (TvdbSeriesBanner)b;
-          banner.Add(new XElement("id", sb.Id));
-          banner.Add(new XElement("BannerPath", sb.BannerPath));
           banner.Add(new XElement("BannerType", "series"));
           banner.Add(new XElement("BannerType2", sb.BannerType));
           banner.Add(new XElement("Language", sb.Language.Abbriviation));
@@ -288,8 +289,6 @@ namespace TvdbLib.Xml
         else if (b.GetType() == typeof(TvdbFanartBanner))
         {
           TvdbFanartBanner fb = (TvdbFanartBanner)b;
-          banner.Add(new XElement("id", fb.Id));
-          banner.Add(new XElement("BannerPath", fb.BannerPath));
           banner.Add(new XElement("BannerType", "fanart"));
           banner.Add(new XElement("BannerType2", fb.Resolution.X + "x" + fb.Resolution.Y));
           if (fb.Colors != null && fb.Colors.Count == 0)
@@ -314,12 +313,11 @@ namespace TvdbLib.Xml
           banner.Add(new XElement("VignettePath", fb.VignettePath));
           banner.Add(new XElement("ThumbnailPath", fb.ThumbPath));
           banner.Add(new XElement("Language", fb.Language.Abbriviation));
+          banner.Add(new XElement("SeriesName", fb.ContainsSeriesName.ToString()));
         }
         else if (b.GetType() == typeof(TvdbSeasonBanner))
         {
           TvdbSeasonBanner sb = (TvdbSeasonBanner)b;
-          banner.Add(new XElement("id", sb.Id));
-          banner.Add(new XElement("BannerPath", sb.BannerPath));
           banner.Add(new XElement("BannerType", "season"));
           banner.Add(new XElement("BannerType2", sb.BannerType));
           banner.Add(new XElement("Language", sb.Language.Abbriviation));
@@ -328,8 +326,6 @@ namespace TvdbLib.Xml
         else if (b.GetType() == typeof(TvdbPosterBanner))
         {
           TvdbPosterBanner pb = (TvdbPosterBanner)b;
-          banner.Add(new XElement("id", pb.Id));
-          banner.Add(new XElement("BannerPath", pb.BannerPath));
           banner.Add(new XElement("BannerType", "poster"));
           banner.Add(new XElement("BannerType2", pb.Resolution.X + "x" + pb.Resolution.Y));
           banner.Add(new XElement("Language", pb.Language.Abbriviation));

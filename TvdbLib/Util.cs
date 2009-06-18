@@ -298,6 +298,25 @@ namespace TvdbLib
     }
 
     /// <summary>
+    /// Parse a boolean value from thetvdb xml files
+    /// </summary>
+    /// <param name="_boolean">Boolean value to parse</param>
+    /// <returns></returns>
+    internal static bool ParseBoolean(String _boolean)
+    {
+      bool value = false;
+      if (Boolean.TryParse(_boolean, out value))
+      {
+        return value;
+      }
+      else
+      {
+        Log.Warn("Couldn't parse bool value of string " + _boolean);
+        return false;
+      }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     /// <param name="_type"></param>
@@ -346,5 +365,7 @@ namespace TvdbLib
         if (!_series.EpisodesLoaded) _series.EpisodesLoaded = true;
       }
     }
+
+
   }
 }
