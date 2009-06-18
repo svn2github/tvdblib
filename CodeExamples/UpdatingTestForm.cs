@@ -10,6 +10,7 @@ using TvdbLib;
 using TvdbLib.Cache;
 using TvdbLib.Data;
 using TvdbTester;
+using System.IO;
 
 namespace WikiCodeExamples
 {
@@ -43,7 +44,7 @@ namespace WikiCodeExamples
       {
         provider = new BinaryCacheProvider(txtCacheLocation.Text);
       }
-      m_tvdbHandler = new TvdbHandler(provider, txtApiKey.Text);
+      m_tvdbHandler = new TvdbHandler(provider,  File.ReadAllText("api_key.txt"));
       m_tvdbHandler.UserInfo = new TvdbLib.Data.TvdbUser("DieBagger", txtUserId.Text);
       m_tvdbHandler.InitCache();
       txtLastUpdated.Text = m_tvdbHandler.GetLastUpdate().ToString();
@@ -324,7 +325,7 @@ namespace WikiCodeExamples
       //store all series in a list so we won't lose the reference
       foreach (int s in m_tvdbHandler.GetCachedSeries())
       {
-        if (GetBefore(s) != null)
+        if (GetBefore(s) == null)
         {
           m_beforeUpdateList.Add(m_tvdbHandler.GetSeries(s, TvdbLanguage.DefaultLanguage, true, true, true));
         }
@@ -433,12 +434,6 @@ namespace WikiCodeExamples
       lvSeriesDetails.Items.Add(CreateItem("language", _before != null ? _before.Language.ToString() : "",
                                            _after != null ? _after.Language.ToString() : "",
                                            _current != null ? _current.Language.ToString() : ""));
-
-      //network
-      lvSeriesDetails.Items.Add(CreateItem("network", _before != null ? _before.LastUpdated.ToString() : "",
-                                           _after != null ? _after.LastUpdated.ToString() : "",
-                                           _current != null ? _current.LastUpdated.ToString() : ""));
-
 
       //rating
       lvSeriesDetails.Items.Add(CreateItem("rating", _before != null ? _before.Rating.ToString() : "",
