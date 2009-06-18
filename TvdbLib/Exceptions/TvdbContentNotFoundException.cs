@@ -30,7 +30,7 @@ namespace TvdbLib.Exceptions
         /// <summary>
     /// TvdbInvalidAPIKeyException constructor
     /// </summary>
-    /// <param name="_text"></param>
+    /// <param name="_text">Message</param>
     public TvdbContentNotFoundException(String _text)
       : base(_text)
     {

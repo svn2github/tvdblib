@@ -83,10 +83,11 @@ namespace TvdbTester
     delegate void UpdateFormThreadSafeDelegate(TvdbHandler.UpdateProgressEventArgs _event);
     void UpdateFormThreadSafe(TvdbHandler.UpdateProgressEventArgs _event)
     {
-      if (!InvokeRequired)
+      try
       {
-        try
+        if (!InvokeRequired)
         {
+
           switch (_event.CurrentUpdateStage)
           {
             case TvdbHandler.UpdateProgressEventArgs.UpdateStage.downloading:
@@ -108,14 +109,15 @@ namespace TvdbTester
 
           ibUpdateProgress.BarFillProcent = _event.CurrentStageProgress;
           txtUpdateProgress.Text = _event.CurrentUpdateDescription;
+
         }
-        catch (Exception ex)
-        {
-          Console.WriteLine(ex.ToString());
-        }
+        else
+          Invoke(new UpdateFormThreadSafeDelegate(UpdateFormThreadSafe), new object[] { _event });
       }
-      else
-        Invoke(new UpdateFormThreadSafeDelegate(UpdateFormThreadSafe), new object[] { _event });
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.ToString());
+      }
     }
 
     void m_tvdbHandler_UpdateProgressed(TvdbHandler.UpdateProgressEventArgs _event)

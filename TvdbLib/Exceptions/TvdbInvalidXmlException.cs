@@ -30,7 +30,7 @@ namespace TvdbLib.Exceptions
 		/// <summary>
 		/// TvdbInvalidXmlException constructor
 		/// </summary>
-		/// <param name="_text"></param>
+		/// <param name="_text">Message</param>
 		public TvdbInvalidXmlException(String _text): base(_text)
 		{
 			

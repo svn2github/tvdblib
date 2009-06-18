@@ -115,7 +115,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// BinaryCacheProvider constructor
     /// </summary>
-    /// <param name="_root"></param>
+    /// <param name="_root">The root folder where the cached data should be stored</param>
     public BinaryCacheProvider(String _root)
     {
       m_formatter = new BinaryFormatter(); // the formatter that will serialize my object on my stream
@@ -127,13 +127,12 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Load the cached data
     /// </summary>
-    /// <returns></returns>
+    /// <returns>TvdbData object</returns>
     public TvdbData LoadUserDataFromCache()
     {
-      List<TvdbMirror> mirrors = LoadMirrorListFromCache();
       List<TvdbLanguage> languages = LoadLanguageListFromCache();
       DateTime lastUpdated = LoadLastUpdatedFromCache();
-      TvdbData data = new TvdbData(languages, mirrors);
+      TvdbData data = new TvdbData(languages);
       data.LastUpdated = lastUpdated;
       return data;
     }
@@ -145,7 +144,7 @@ namespace TvdbLib.Cache
     /// - if this is the first time the cache has been initialised (built), mark last_updated with the
     ///   current date
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Tvdb Data object</returns>
     public TvdbData InitCache()
     {
       try
@@ -160,7 +159,6 @@ namespace TvdbLib.Cache
         {//the cache has never been initialised before -> do it now
           data = new TvdbData();
           data.LanguageList = new List<TvdbLanguage>();
-          data.Mirrors = new List<TvdbMirror>();
           data.LastUpdated = DateTime.Now;
 
           SaveToCache(data);
@@ -191,10 +189,13 @@ namespace TvdbLib.Cache
     public void SaveToCache(TvdbData _content)
     {
       SaveToCache(_content.LanguageList);
-      SaveToCache(_content.Mirrors);
       SaveToCache(_content.LastUpdated);
     }
 
+    /// <summary>
+    /// Saves the time of the last update to cache
+    /// </summary>
+    /// <param name="_time">time of last update</param>
     private void SaveToCache(DateTime _time)
     {
       if (!Directory.Exists(m_rootFolder)) Directory.CreateDirectory(m_rootFolder);
@@ -207,7 +208,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Save the language to cache
     /// </summary>
-    /// <param name="_languageList"></param>
+    /// <param name="_languageList">List of languages</param>
     public void SaveToCache(List<TvdbLanguage> _languageList)
     {
       if (_languageList != null)
@@ -222,7 +223,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Save the mirror info to cache
     /// </summary>
-    /// <param name="_mirrorInfo"></param>
+    /// <param name="_mirrorInfo">list of mirrors</param>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     public void SaveToCache(List<TvdbMirror> _mirrorInfo)
     {
       if (_mirrorInfo != null)
@@ -237,7 +239,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Loads the available languages from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of available languages</returns>
     public List<TvdbLanguage> LoadLanguageListFromCache()
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "languageInfo.ser"))
@@ -264,7 +266,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Load the available mirrors from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of available mirrors</returns>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     public List<TvdbMirror> LoadMirrorListFromCache()
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "mirrorInfo.ser"))
@@ -321,7 +324,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Saves the series to cache
     /// </summary>
-    /// <param name="_series"></param>
+    /// <param name="_series">Tvdb series</param>
     public void SaveToCache(TvdbSeries _series)
     {
       if (_series != null)
@@ -404,7 +407,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Saves the user data to cache
     /// </summary>
-    /// <param name="_user"></param>
+    /// <param name="_user">TvdbUser</param>
     public void SaveToCache(TvdbUser _user)
     {
       if (_user != null)
@@ -419,7 +422,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Loads all series from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List that contains all series object that had been previously cached</returns>
     public List<TvdbSeries> LoadAllSeriesFromCache()
     {
       if (Directory.Exists(m_rootFolder))
@@ -449,8 +452,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Load the userinfo from the cache
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <returns></returns>
+    /// <param name="_userId">Id of user</param>
+    /// <returns>TvdbUser object</returns>
     public TvdbUser LoadUserInfoFromCache(String _userId)
     {
       if (File.Exists(m_rootFolder + Path.DirectorySeparatorChar + "user_" + _userId + ".ser"))
@@ -477,7 +480,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Receives a list of all series that have been cached
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Ids of series that are already cached</returns>
     public List<int> GetCachedSeries()
     {
       List<int> retList = new List<int>();

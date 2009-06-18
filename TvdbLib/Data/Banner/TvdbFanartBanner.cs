@@ -64,6 +64,9 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// TvdbFanartBanner constructor
     /// </summary>
+    /// <param name="_id">Id of fanart banner</param>
+    /// <param name="_lang">Language for this banner</param>
+    /// <param name="_path">Path of image for this banner</param>
     public TvdbFanartBanner(int _id, String _path, TvdbLanguage _lang)
     {
       this.Id = _id;
@@ -156,7 +159,7 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// Load the vignette from tvdb
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if successful, false otherwise</returns>
     public bool LoadVignette()
     {
       return LoadVignette(false);
@@ -165,7 +168,7 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// Load the vignette from tvdb
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if successful, false otherwise</returns>
     public bool LoadVignette(bool _replaceOld)
     {
       bool wasLoaded = m_vignetteLoaded;//is the banner already loaded at this point
@@ -217,8 +220,8 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// Load vignette with given image
     /// </summary>
-    /// <param name="_img"></param>
-    /// <returns></returns>
+    /// <param name="_img">Image object that should be used for this banner</param>
+    /// <returns>True if successful, false otherwise</returns>
     public bool LoadVignette(Image _img)
     {
       if (_img != null)

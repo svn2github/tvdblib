@@ -294,8 +294,8 @@ namespace TvdbLib.Data
     /// <summary>
     /// Loads the banner with the given image
     /// </summary>
-    /// <param name="_img"></param>
-    /// <returns></returns>
+    /// <param name="_img">Image object that should be used for this banner</param>
+    /// <returns>True if successful, false otherwise</returns>
     public bool LoadBanner(Image _img)
     {
       if (_img != null)
@@ -315,8 +315,8 @@ namespace TvdbLib.Data
     /// <summary>
     /// Loads the image from the given path
     /// </summary>
-    /// <param name="_path"></param>
-    /// <returns></returns>
+    /// <param name="_path">Path of image that should be used for this banner</param>
+    /// <returns>True if successful, false otherwise</returns>
     protected Image LoadImage(String _path)
     {
       try

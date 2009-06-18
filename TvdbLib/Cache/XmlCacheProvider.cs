@@ -82,7 +82,7 @@ namespace TvdbLib.Cache
     /// - if this is the first time the cache has been initialised (built), mark last_updated with the
     ///   current date
     /// </summary>
-    /// <returns></returns>
+    /// <returns>TvdbData object</returns>
     public TvdbData InitCache()
     {
       try
@@ -97,7 +97,6 @@ namespace TvdbLib.Cache
         {//the cache has never been initialised before -> do it now
           data = new TvdbData();
           data.LanguageList = new List<TvdbLanguage>();
-          data.Mirrors = new List<TvdbMirror>();
           data.LastUpdated = DateTime.Now;
 
           SaveToCache(data);
@@ -130,7 +129,6 @@ namespace TvdbLib.Cache
       if (_content != null)
       {
         SaveToCache(_content.LanguageList);
-        SaveToCache(_content.Mirrors);
 
         //store additional information
         //- time of last update
@@ -145,7 +143,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Save the language to cache
     /// </summary>
-    /// <param name="_languageList"></param>
+    /// <param name="_languageList">List of languages that are available on http://thetvdb.com</param>
     public void SaveToCache(List<TvdbLanguage> _languageList)
     {
       if (_languageList != null && _languageList.Count > 0)
@@ -158,7 +156,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Save the mirror info to cache
     /// </summary>
-    /// <param name="_mirrorInfo"></param>
+    /// <param name="_mirrorInfo">Mirrors</param>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     public void SaveToCache(List<TvdbMirror> _mirrorInfo)
     {
       if (_mirrorInfo != null && _mirrorInfo.Count > 0)
@@ -213,7 +212,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Loads the settings data from cache 
     /// </summary>
-    /// <returns></returns>
+    /// <returns>The loaded TvdbData object</returns>
     public TvdbData LoadUserDataFromCache()
     {
       String fName = m_rootFolder + Path.DirectorySeparatorChar + "data.xml";
@@ -241,7 +240,6 @@ namespace TvdbLib.Cache
           }
           data.LastUpdated = lastUpdated;
           data.LanguageList = LoadLanguageListFromCache();
-          data.Mirrors = LoadMirrorListFromCache();
           //if (data.SeriesList == null) data.SeriesList = new List<TvdbSeries>();
           return data;
         }
@@ -255,7 +253,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Loads the available languages from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of available languages</returns>
     public List<TvdbLanguage> LoadLanguageListFromCache()
     {
 
@@ -273,7 +271,8 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Load the available mirrors from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of mirrors</returns>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     public List<TvdbMirror> LoadMirrorListFromCache()
     {
       String file = m_rootFolder + Path.DirectorySeparatorChar + "mirrors.xml";
@@ -290,7 +289,7 @@ namespace TvdbLib.Cache
     /// <summary>
     /// Loads all series from cache
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A list of TvdbSeries objects from cache or null</returns>
     public List<TvdbSeries> LoadAllSeriesFromCache()
     {
       List<TvdbSeries> retList = new List<TvdbSeries>();

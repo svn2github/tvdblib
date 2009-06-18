@@ -50,7 +50,7 @@ namespace TvdbLib
     /// <summary>
     /// TvdbDownloader constructor
     /// </summary>
-    /// <param name="_apiKey"></param>
+    /// <param name="_apiKey">The api key used for downloading data from thetvdb -> see http://thetvdb.com/wiki/index.php/Programmers_API</param>
     public TvdbDownloader(String _apiKey)
     {
       m_apiKey = _apiKey;
@@ -109,8 +109,8 @@ namespace TvdbLib
     /// <para>Download all available banners (only a list of available banners, not the actual images!)for the specified series.</para>
     /// <para>You can load the actual images by calling LoadBanner() (or LoadThumb(), LoadVignette()) on the banner object</para>
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">Id of series</param>
+    /// <returns>List of all banners for the given series</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
@@ -412,9 +412,9 @@ namespace TvdbLib
     /// <summary>
     /// Download the given episode from tvdb
     /// </summary>
-    /// <param name="_episodeId"></param>
-    /// <param name="_language"></param>
-    /// <returns></returns>
+    /// <param name="_episodeId">Id of episode</param>
+    /// <param name="_language">Language in which the episode should be downloaded</param>
+    /// <returns>The episode object</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
@@ -596,8 +596,8 @@ namespace TvdbLib
     /// <summary>
     /// Download the preferred language of the user.
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <returns></returns>
+    /// <param name="_userId">Id of user</param>
+    /// <returns>The preferred language for this user as set on http://thetvdb.com</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
@@ -642,8 +642,8 @@ namespace TvdbLib
     /// <summary>
     /// Download the user favorite list
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <returns></returns>
+    /// <param name="_userId">Id of user (register at http://thetvdb.com to get a user id)</param>
+    /// <returns>Favorite list for specified user</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
@@ -657,10 +657,10 @@ namespace TvdbLib
     /// <summary>
     /// Download the user favorite list
     /// </summary>
-    /// <param name="_userId"></param>
-    /// <param name="_type"></param>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_userId">Id of user</param>
+    /// <param name="_type">Type of action</param>
+    /// <param name="_seriesId">id of series</param>
+    /// <returns>List of user favorites</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
     ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
     ///                                           or http://forums.thetvdb.com/</para></exception>  
@@ -1042,8 +1042,8 @@ namespace TvdbLib
     /// <summary>
     /// Download the list of actors
     /// </summary>
-    /// <param name="_seriesId"></param>
-    /// <returns></returns>
+    /// <param name="_seriesId">Id of series</param>
+    /// <returns>List of actors for the given series</returns>
     public List<TvdbActor> DownloadActors(int _seriesId)
     {
       String xml = "";
@@ -1077,45 +1077,6 @@ namespace TvdbLib
         }
       }
     }
-
-    /// <summary>
-    /// Download list of mirrors -> deprecated since mirroring is done on server-side now
-    /// </summary>
-    /// <returns>bla</returns>
-    [Obsolete("deprecated since mirroring is done on server-side now")]
-    public List<TvdbMirror> DownloadMirrorList()
-    {
-      String xml = "";
-      String link = "";
-      try
-      {
-        link = TvdbLinkCreator.CreateMirrorsLink(m_apiKey);
-        xml = m_webClient.DownloadString(link);
-        List<TvdbMirror> list = m_xmlHandler.ExtractMirrors(xml);
-        return list;
-      }
-      catch (XmlException ex)
-      {
-        Log.Error("Error parsing the xml file " + link + "\n\n" + xml, ex);
-        throw new TvdbInvalidXmlException("Error parsing the xml file " + link + "\n\n" + xml);
-      }
-      catch (WebException ex)
-      {
-        Log.Warn("Couldn't download mirror list from thetvdb.com", ex);
-        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
-        {
-          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve mirror list" +
-                                               ", you may use an invalid api key");
-        }
-        else
-        {
-          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve mirror list" +
-                                              ", check your internet connection and the status of http://thetvdb.com");
-        }
-      }
-    }
-
-
 
     /// <summary>
     /// Gets all series this user has already ratet

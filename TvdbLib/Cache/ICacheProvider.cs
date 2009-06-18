@@ -44,7 +44,7 @@ namespace TvdbLib.Cache
     /// - if this is the first time the cache has been initialised (built), mark last_updated with the
     ///   current date
     /// </summary>
-    /// <returns></returns>
+    /// <returns>TvdbData object</returns>
     TvdbData InitCache();
 
     /// <summary>
@@ -81,12 +81,6 @@ namespace TvdbLib.Cache
     List<TvdbLanguage> LoadLanguageListFromCache();
 
     /// <summary>
-    /// Load the available mirrors from cache
-    /// </summary>
-    /// <returns>A list of TvdbMirror objects from cache or null</returns>
-    List<TvdbMirror> LoadMirrorListFromCache();
-
-    /// <summary>
     /// Loads all series from cache
     /// </summary>
     /// <returns>A list of TvdbSeries objects from cache or null</returns>
@@ -117,12 +111,6 @@ namespace TvdbLib.Cache
     /// </summary>
     /// <param name="_languageList">List of languages that are available on http://thetvdb.com</param>
     void SaveToCache(List<TvdbLanguage> _languageList);
-
-    /// <summary>
-    /// Save the mirror info to cache
-    /// </summary>
-    /// <param name="_mirrorInfo">List of mirrors of http://thetvdb.com</param>
-    void SaveToCache(List<TvdbMirror> _mirrorInfo);
 
     /// <summary>
     /// Saves the series to cache

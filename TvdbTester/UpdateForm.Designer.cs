@@ -71,7 +71,7 @@
       // cmdCancel
       // 
       this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.cmdCancel.Enabled = false;
+      this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
       this.cmdCancel.Location = new System.Drawing.Point(154, 211);
       this.cmdCancel.Name = "cmdCancel";
       this.cmdCancel.Size = new System.Drawing.Size(126, 23);
@@ -104,12 +104,16 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.CancelButton = this.cmdCancel;
       this.ClientSize = new System.Drawing.Size(294, 246);
       this.Controls.Add(this.ibUpdateProgress);
       this.Controls.Add(this.cmdCancel);
       this.Controls.Add(this.cmdApply);
       this.Controls.Add(this.txtUpdateProgress);
       this.Controls.Add(this.lblUpdateStage);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "UpdateForm";
       this.Text = "UpdateForm";
       this.ResumeLayout(false);

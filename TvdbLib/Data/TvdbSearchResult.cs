@@ -43,7 +43,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// TvdbSearchResult constructor
     /// </summary>
-    /// <param name="_id"></param>
+    /// <param name="_id">Id of series</param>
     public TvdbSearchResult(int _id)
     {
       m_id = _id;

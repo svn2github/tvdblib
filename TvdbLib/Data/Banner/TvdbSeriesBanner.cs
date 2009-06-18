@@ -73,10 +73,10 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// TvdbSeriesBanner constructor
     /// </summary>
-    /// <param name="_id"></param>
-    /// <param name="_path"></param>
-    /// <param name="_lang"></param>
-    /// <param name="_type"></param>
+    /// <param name="_id">Id of banner</param>
+    /// <param name="_path">Path of banner image</param>
+    /// <param name="_lang">Language of this banner</param>
+    /// <param name="_type">Banner type (text, graphical, blank, none)</param>
     public TvdbSeriesBanner(int _id, String _path, TvdbLanguage _lang, Type _type)
     {
       this.BannerPath = _path;

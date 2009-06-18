@@ -34,7 +34,6 @@ namespace TvdbLib
   {
     #region private properties
     private List<TvdbLanguage> m_langInfo;
-    private List<TvdbMirror> m_mirrorInfo;
     private DateTime m_lastUpdated;
     #endregion
 
@@ -49,11 +48,11 @@ namespace TvdbLib
     /// <summary>
     /// TvdbData constructor
     /// </summary>
-    public TvdbData(List<TvdbLanguage> _language, List<TvdbMirror> _mirrors)
+    /// <param name="_language">List of available languages</param>
+    public TvdbData(List<TvdbLanguage> _language)
       : this()
     {
       m_langInfo = _language;
-      m_mirrorInfo = _mirrors;
     }
 
     /// <summary>
@@ -78,16 +77,5 @@ namespace TvdbLib
         Util.LanguageList = value;
       }
     }
-
-    /// <summary>
-    /// List of all available mirrors
-    /// </summary>
-    public List<TvdbMirror> Mirrors
-    {
-      get { return m_mirrorInfo; }
-      set { m_mirrorInfo = value; }
-    }
-
-
   }
 }

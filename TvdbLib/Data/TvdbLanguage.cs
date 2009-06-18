@@ -65,9 +65,9 @@ namespace TvdbLib.Data
     /// <summary>
     /// TvdbLanguage constructor
     /// </summary>
-    /// <param name="_id"></param>
-    /// <param name="_name"></param>
-    /// <param name="_abbr"></param>
+    /// <param name="_id">Id of language</param>
+    /// <param name="_name">Name of language (e.g. English)</param>
+    /// <param name="_abbr">Abbriviation of language (e.g. en)</param>
     public TvdbLanguage(int _id, String _name, String _abbr)
     {
       m_id = _id;
@@ -105,7 +105,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// Returns String that describes the language in the format "Name (Abbriviation)"
     /// </summary>
-    /// <returns></returns>
+    /// <returns>String representing this object (e.g. "English (en)")</returns>
     public override string ToString()
     {
       return m_name + "(" + m_abbriviation + ")";
@@ -113,10 +113,11 @@ namespace TvdbLib.Data
     }
 
     /// <summary>
-    /// 
+    /// Overrides the equals Method to ensure a valid comparison of two language objects. The
+    /// comparison currently matches abbriviation only.
     /// </summary>
-    /// <param name="_compare"></param>
-    /// <returns></returns>
+    /// <param name="_compare">object to compare with</param>
+    /// <returns>True if the two language objects are the same, false otherwise</returns>
     public override bool Equals(object _compare)
     {
       if (_compare != null && _compare.GetType() == typeof(TvdbLanguage) &&
@@ -128,31 +129,33 @@ namespace TvdbLib.Data
     }
 
     /// <summary>
-    /// 
+    /// Returns a hash code of the object
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Hash code</returns>
     public override int GetHashCode()
     {
       return base.GetHashCode();
     }
 
     /// <summary>
-    /// 
+    /// Overrides the equality operator to ensure a valid comparison of two language objects. The
+    /// comparison currently matches abbriviation only.
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <returns></returns>
+    /// <param name="a">First language object</param>
+    /// <param name="b">Second language object</param>
+    /// <returns>True if the two language objects are the same, false otherwise</returns>
     public static bool operator ==(TvdbLanguage a, TvdbLanguage b)
     {
       return a.Equals(b);
     }
 
     /// <summary>
-    /// 
+    /// Overrides the inequality operator to ensure a valid comparison of two language objects. The
+    /// comparison currently matches abbriviation only.
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <returns></returns>
+    /// <param name="a">First language object</param>
+    /// <param name="b">Second language object</param>
+    /// <returns>True if the two language objects are the same, false otherwise</returns>
     public static bool operator !=(TvdbLanguage a, TvdbLanguage b)
     {
       return !a.Equals(b);

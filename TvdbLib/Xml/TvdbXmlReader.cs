@@ -99,6 +99,7 @@ namespace TvdbLib.Xml
     /// </summary>
     /// <param name="_data"></param>
     /// <returns></returns>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     internal List<TvdbMirror> ExtractMirrors(String _data)
     {
       XDocument xml = XDocument.Parse(_data);

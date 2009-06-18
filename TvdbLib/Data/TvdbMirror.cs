@@ -38,6 +38,7 @@ namespace TvdbLib.Data
   /// ]]>
   /// </summary>
   [Serializable]
+  [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
   public class TvdbMirror
   {
     #region private properties

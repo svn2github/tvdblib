@@ -24,7 +24,7 @@ namespace TvdbTester
       private int m_index;
       private Rectangle m_rectangle;//position of image;
       private TvdbBanner m_image;//image to draw
-      private TvdbBanner m_framedImage;
+      //private TvdbBanner m_framedImage;
       private bool m_isLoading = false;
 
       private int m_degree;
@@ -464,7 +464,7 @@ namespace TvdbTester
       }
 
       return;
-      rect.Inflate(-5, -5);
+      /*rect.Inflate(-5, -5);
       prev = PointFromEllipse(m_elipseRect, 0);
       for (int i = 1; i < 360; i++)
       {
@@ -505,7 +505,7 @@ namespace TvdbTester
                       m_elipse[m_mouseDownClosestDegree].X - 5,
                       m_elipse[m_mouseDownClosestDegree].Y - 5, 10, 10);
       }
-
+      */
 
     }
 
@@ -530,7 +530,7 @@ namespace TvdbTester
     private Point m_mouseDownCoordinates;
     private int m_mouseDownClosestDegree = -99;
     private bool m_mouseClick;//mouseclick occured (no mousemove between mouse-down and mouse-up)
-    private int m_distance;
+    private int m_distance = 0;
 
     private void FanartControl_MouseUp(object sender, MouseEventArgs e)
     {

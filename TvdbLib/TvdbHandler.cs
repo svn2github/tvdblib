@@ -41,7 +41,6 @@ namespace TvdbLib
   public class TvdbHandler
   {
     #region private fields
-    private List<TvdbMirror> m_mirrorInfo;
     private ICacheProvider m_cacheProvider;
     private String m_apiKey;
     private TvdbUser m_userInfo;
@@ -253,13 +252,14 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Creates a new Tvdb handler
+    /// <para>Creates a new Tvdb handler</para>
+    /// <para>The tvdb handler is used not only for downloading data from thetvdb but also to cache the downloaded data to a persistent storage,
+    ///       handle user specific tasks and keep the downloaded data consistent with the online data (via the updates api)</para>
     /// </summary>
-    /// <param name="_apiKey"></param>
+    /// <param name="_apiKey">The api key used for downloading data from thetvdb -> see http://thetvdb.com/wiki/index.php/Programmers_API</param>
     public TvdbHandler(String _apiKey)
     {
       m_apiKey = _apiKey; //store api key
-      TvdbLinkCreator.ActiveMirror = new TvdbMirror(0, new Uri(TvdbLinkCreator.BASE_SERVER), 7);
       m_downloader = new TvdbDownloader(m_apiKey);
       m_cacheProvider = null;
     }
@@ -1375,6 +1375,7 @@ namespace TvdbLib
     /// <summary>
     /// Reloads all language definitions from tvdb
     /// </summary>
+    /// <returns>true if successful, false otherwise</returns>
     public bool ReloadLanguages()
     {
       List<TvdbLanguage> list = m_downloader.DownloadLanguages();
@@ -1443,24 +1444,49 @@ namespace TvdbLib
     /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
     /// <param name="_series">Series to reload</param>
+    /// <returns>The new TvdbSeries object</returns>
+    [Obsolete("Deprecated, use ForceReload(TvdbSeries _series) instead")]
     public TvdbSeries ForceUpdate(TvdbSeries _series)
     {
-      return ForceUpdate(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
-
-
+      return ForceReload(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
     }
+
     /// <summary>
-    /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// Forces a complete reload of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// </summary>
+    /// <param name="_series">Series to reload</param>
+    /// <returns>The new TvdbSeries object</returns>
+    public TvdbSeries ForceReload(TvdbSeries _series)
+    {
+      return ForceReload(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
+    }
+
+        /// <summary>
+    /// Forces a complete reload of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
     /// <param name="_series">Series to update</param>
     /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
     /// <param name="_loadActors">Should actors be loaded as well</param>
     /// <param name="_loadBanners">Should banners be loaded as well</param>
-    /// <returns></returns>
+    /// <returns>The new TvdbSeries object</returns>
+    [Obsolete("Deprecated, use ForceReload(TvdbSeries _series, bool _loadEpisodes, bool _loadActors, bool _loadBanners) instead")]
     public TvdbSeries ForceUpdate(TvdbSeries _series, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
+      return ForceReload(_series, _loadEpisodes, _loadActors, _loadBanners);
+    }
 
+    /// <summary>
+    /// Forces a complete reload of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// </summary>
+    /// <param name="_series">Series to update</param>
+    /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
+    /// <param name="_loadActors">Should actors be loaded as well</param>
+    /// <param name="_loadBanners">Should banners be loaded as well</param>
+    /// <returns>The new TvdbSeries object</returns>
+    public TvdbSeries ForceReload(TvdbSeries _series, bool _loadEpisodes,
+                                bool _loadActors, bool _loadBanners)
+    {
       if (_series != null)
       {
         TvdbSeries newSeries = m_downloader.DownloadSeries(_series.Id, _series.Language, _loadEpisodes,
@@ -1793,6 +1819,7 @@ namespace TvdbLib
     /// <summary>
     /// Gets all series this user has already ratet
     /// </summary>
+    /// <param name="_seriesId">Id of series</param>
     /// <exception cref="TvdbUserNotFoundException">Thrown when no user is set</exception>
     /// <returns>A list of all ratings for the series</returns>
     /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>

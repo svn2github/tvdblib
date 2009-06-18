@@ -89,6 +89,7 @@ namespace TvdbLib.Xml
     /// </summary>
     /// <param name="_mirrors">List of mirrors to store</param>
     /// <returns>xml content</returns>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     internal String CreateMirrorList(List<TvdbMirror> _mirrors)
     {
       XElement xml = new XElement("Mirrors");
@@ -109,6 +110,7 @@ namespace TvdbLib.Xml
     /// <param name="_mirrors">List of mirrors to store</param>
     /// <param name="_path">Path on disk</param>
     /// <returns>true if the file could be stored, false otherwise</returns>
+    [Obsolete("Not used any more, however if won't delete the class since it could be useful at some point")]
     internal bool WriteMirrorFile(List<TvdbMirror> _mirrors, String _path)
     {
       String fileContent = CreateMirrorList(_mirrors);

@@ -14,6 +14,7 @@ namespace TvdbLib.Exceptions
     /// <summary>
     /// TvdbCacheNotInitialisedException constructor
     /// </summary>
+    /// <param name="_msg">Message</param>
     public TvdbCacheNotInitialisedException(String _msg)
       : base(_msg)
     {

@@ -33,7 +33,7 @@ namespace TvdbLib.Exceptions
     /// <summary>
     /// TvdbNotAvailableException constructor
     /// </summary>
-    /// <param name="_text"></param>
+    /// <param name="_text">Message</param>
     public TvdbNotAvailableException(String _text)
       : base(_text)
     {

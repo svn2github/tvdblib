@@ -47,6 +47,8 @@ namespace TvdbLib.Data.Banner
     /// <summary>
     /// TvdbEpisodeBanner constructor
     /// </summary>
+    /// <param name="_bannerPath">Path of banner</param>
+    /// <param name="_id">Id of episode banner</param>
     public TvdbEpisodeBanner(int _id, String _bannerPath):this()
     {
       Id = _id;

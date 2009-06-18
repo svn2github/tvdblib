@@ -108,13 +108,17 @@ namespace TvdbLib.Data
       }
 
       //delete translation if it already exists and overwrite it with a new one
-      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in m_seriesTranslations)
+      if (m_seriesTranslations.ContainsKey(_fields.Language))
       {
-        if (kvp.Key.Abbriviation.Equals(_fields.Language.Abbriviation))
+        m_seriesTranslations.Remove(_fields.Language);
+      }
+      /*foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in m_seriesTranslations)
+      {
+        if (kvp.Key == _fields.Language)
         {
           m_seriesTranslations.Remove(kvp.Key);
         }
-      }
+      }*/
 
       m_seriesTranslations.Add(_fields.Language, _fields);
     }
@@ -153,7 +157,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// Get all languages that have already been loaded for this series
     /// </summary>
-    /// <returns></returns>
+    /// <returns>List of all translations that are loaded for this series</returns>
     public List<TvdbLanguage> GetAvailableLanguages()
     {
       if (m_seriesTranslations != null)
@@ -420,7 +424,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// returns SeriesName (SeriesId)
     /// </summary>
-    /// <returns></returns>
+    /// <returns>String representing this series</returns>
     public override string ToString()
     {
       return SeriesName + "(" + Id + ")";
@@ -430,8 +434,8 @@ namespace TvdbLib.Data
     /// <summary>
     /// Uptdate the info of the current series with the updated one
     /// </summary>
-    /// <param name="_series"></param>
-    public void UpdateSeriesInfo(TvdbSeries _series)
+    /// <param name="_series">TvdbSeries object</param>
+    protected void UpdateSeriesInfo(TvdbSeries _series)
     {
       this.Actors = _series.Actors;
       this.AirsDayOfWeek = _series.AirsDayOfWeek;

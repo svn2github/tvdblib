@@ -682,7 +682,7 @@ namespace TvdbTester
       TvdbSeries series = null;
       try
       {
-        series = m_tvdbHandler.ForceUpdate(m_currentSeries, cbLoadFull.Checked,
+        series = m_tvdbHandler.ForceReload(m_currentSeries, cbLoadFull.Checked,
                                                     cbLoadActors.Checked, cbLoadBanner.Checked);
       }
       catch (TvdbInvalidApiKeyException ex)

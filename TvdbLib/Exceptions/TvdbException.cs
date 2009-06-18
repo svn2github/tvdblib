@@ -28,12 +28,12 @@ namespace TvdbLib.Exceptions
   /// <summary>
   /// Base excpetion for tvdblib 
   /// </summary>
-  public class TvdbException: Exception
+  public class TvdbException : Exception
   {
-        /// <summary>
+    /// <summary>
     /// TvdbException constructor
     /// </summary>
-    /// <param name="_text"></param>
+    /// <param name="_text">Message</param>
     public TvdbException(String _text)
       : base(_text)
     {
