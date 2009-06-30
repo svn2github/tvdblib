@@ -673,11 +673,12 @@ namespace TvdbLib
 
           foreach (TvdbEpisode e in series.Episodes)
           {
-            if (e.EpisodeNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.DefaultOrder ||
-                e.DvdEpisodeNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.DvdOrder ||
+            if (e.EpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DefaultOrder ||
+                e.DvdEpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DvdOrder ||
                 e.AbsoluteNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.AbsoluteOrder)
             {//We found the episode that matches the episode number according to the given ordering
               episode = e;
+              break;
             }
           }
         }

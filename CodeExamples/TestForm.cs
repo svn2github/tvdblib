@@ -12,6 +12,7 @@ using TvdbLib.Data;
 using TvdbLib.Data.Banner;
 using TvdbLib.SharpZipLib.Zip;
 using System.IO;
+using TvdbLib.Exceptions;
 
 namespace TvdbTester
 {
@@ -108,19 +109,28 @@ namespace TvdbTester
       int sId = Int32.Parse(txtSeriesId2.Text);
       int season = Int32.Parse(txtSeason.Text);
       int episode = Int32.Parse(txtEpisode.Text);
-      TvdbEpisode ep = m_tvdbHandler.GetEpisode(sId, season, episode,
-                                               (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem,
-                                               TvdbLanguage.DefaultLanguage);
-
       lvSeries.Items.Clear();
-      lvSeries.Items.Add(CreateItem("Series Id", ep.SeriesId.ToString()));
-      lvSeries.Items.Add(CreateItem("Episode Id", ep.Id.ToString()));
-      lvSeries.Items.Add(CreateItem("Name", ep.EpisodeName));
-      lvSeries.Items.Add(CreateItem("Gueststars", ep.GuestStarsString));
-      lvSeries.Items.Add(CreateItem("Directors", ep.DirectorsString));
-      lvSeries.Items.Add(CreateItem("Writer", ep.WriterString));
-      lvSeries.Items.Add(CreateItem("Overview", ep.Overview));
-      lvSeries.Items.Add(CreateItem("Imdb Id", ep.ImdbId));
+      TvdbEpisode ep;
+      try
+      {
+        ep = m_tvdbHandler.GetEpisode(sId, season, episode,
+                                                 (TvdbEpisode.EpisodeOrdering)cbOrdering.SelectedItem,
+                                                 TvdbLanguage.DefaultLanguage);
+        lvSeries.Items.Add(CreateItem("Series Id", ep.SeriesId.ToString()));
+        lvSeries.Items.Add(CreateItem("Episode Id", ep.Id.ToString()));
+        lvSeries.Items.Add(CreateItem("Name", ep.EpisodeName));
+        lvSeries.Items.Add(CreateItem("Gueststars", ep.GuestStarsString));
+        lvSeries.Items.Add(CreateItem("Directors", ep.DirectorsString));
+        lvSeries.Items.Add(CreateItem("Writer", ep.WriterString));
+        lvSeries.Items.Add(CreateItem("Overview", ep.Overview));
+        lvSeries.Items.Add(CreateItem("Imdb Id", ep.ImdbId));
+
+      }
+      catch (TvdbContentNotFoundException ex)
+      {
+        MessageBox.Show("Couldn't find the specified episode");
+      }
+
     }
 
     private void cmdGetAllSeriesRatings_Click(object sender, EventArgs e)
