@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder Utilities" version="1.8.0.2" projectFile="D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\tvdblib_doku.shfbproj" started="18.06.2009 11:14:05">
+<shfbBuild product="Sandcastle Help File Builder Utilities" version="1.8.0.2" projectFile="D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\tvdblib_doku.shfbproj" started="18.06.2009 21:48:02">
 <buildStep step="Initializing">
 </buildStep>
 <buildStep step="FindingTools">
@@ -21,7 +21,7 @@ Copying XML comments files
 </buildStep>
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
-    Last step completed in 00:00:00.0156
+    Last step completed in 00:00:00.1875
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
@@ -34,11 +34,11 @@ GenerateRefInfo:
   MrefBuilder (v2.4.10520.1)
   Copyright c Microsoft 2006
   Info: Loaded 1 assemblies for reflection and 1 dependency assemblies.
-  Info: Wrote information on 12 namespaces, 77 types, and 798 members
+  Info: Wrote information on 12 namespaces, 77 types, and 803 members
   XslTransform (v2.4.10520.1)
   Copyright c Microsoft 2005-2006
   Info: Applying XSL transformation 'D:\Program Files\Coding\Sandcastle\ProductionTransforms\MergeDuplicates.xsl'.
-    Last step completed in 00:00:03.5938
+    Last step completed in 00:00:07.1406
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
@@ -49,7 +49,7 @@ Applying visibility properties to reflection information file
     25 attribute nodes removed
     0 explicit interface implementations removed
     2 local and base class EII elements removed
-    Last step completed in 00:00:00.0938
+    Last step completed in 00:00:00.1406
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
@@ -62,7 +62,7 @@ TransformManifest:
   XslTransform (v2.4.10520.1)
   Copyright c Microsoft 2005-2006
   Info: Applying XSL transformation 'D:\Program Files\Coding\Sandcastle\ProductionTransforms\ReflectionToManifest.xsl'.
-    Last step completed in 00:00:03.8438
+    Last step completed in 00:00:03.5781
 </buildStep>
 <buildStep step="ModifyHelpTopicFilenames">
 Modifying help topic filenames in reflection information file
@@ -177,7 +177,7 @@ D:\Program Files\Coding\Sandcastle\Presentation\vs2005\scripts\script_manifold.j
 D:\Program Files\Coding\Sandcastle\Presentation\vs2005\scripts\SplitScreen.js -&gt; D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\Output\scripts\SplitScreen.js
 D:\Program Files\Coding\Sandcastle\Presentation\vs2005\styles\Presentation.css -&gt; D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\Output\styles\Presentation.css
 D:\Program Files\Coding\Sandcastle\Presentation\vs2005\styles\Whidbey\presentation.css -&gt; D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\Output\styles\Whidbey\presentation.css
-    Last step completed in 00:00:00.8438
+    Last step completed in 00:00:01.7500
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
@@ -186,18 +186,18 @@ No additional content to copy
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
-    Last step completed in 00:00:00.0938
+    Last step completed in 00:00:00.1094
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.0313
+    Last step completed in 00:00:00.0469
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\sandcastle.config
     No additional help attributes defined.  The 'HTML Help 2 Attributes' component was not added.
-    Last step completed in 00:00:00.0313
+    Last step completed in 00:00:00.2813
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
@@ -210,7 +210,7 @@ BuildReferenceTopics:
   Info: CopyFromIndexComponent: Instantiating component.
   Info: CopyFromIndexComponent: Searching for files that match '*.xml'.
   Info: CopyFromIndexComponent: Searching for files that match 'reflection.xml'.
-  Info: CopyFromIndexComponent: Indexed 171266 elements in 107 files.
+  Info: CopyFromIndexComponent: Indexed 171273 elements in 107 files.
   Info: CopyFromIndexComponent: Loaded 0 copy components.
   Info: CopyFromIndexComponent: Instantiating component.
   Info: CopyFromIndexComponent: Loaded 0 copy components.
@@ -235,7 +235,7 @@ BuildReferenceTopics:
   Info: CopyFromIndexComponent: Instantiating component.
   Info: CopyFromIndexComponent: Searching for files that match 'D:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\en\*.xml'.
   Info: CopyFromIndexComponent: Searching for files that match 'D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\TvdbLib.xml'.
-  Info: CopyFromIndexComponent: Indexed 81562 elements in 50 files.
+  Info: CopyFromIndexComponent: Indexed 81572 elements in 50 files.
   Info: CopyFromIndexComponent: Loaded 0 copy components.
   Info: ForEachComponent: Instantiating component.
   Info: ForEachComponent: Loading subcomponents.
@@ -310,7 +310,7 @@ BuildReferenceTopics:
   Info: ResolveReferenceLinksComponent2: Creating MSDN URL resolver.
   Info: ResolveReferenceLinksComponent2: Searching directory 'D:\Program Files\Coding\Sandcastle\Data\Reflection' for targets files of the form '*.xml'.
   Info: ResolveReferenceLinksComponent2: Searching directory 'D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working' for targets files of the form 'reflection.xml'.
-  Info: ResolveReferenceLinksComponent2: Loaded 171266 reference targets.
+  Info: ResolveReferenceLinksComponent2: Loaded 171273 reference targets.
   Info: SaveComponent: Instantiating component.
   Info: BuildAssembler: Building topic N:TvdbLib
   Info: BuildAssembler: Building topic T:TvdbLib.TvdbData
@@ -496,14 +496,11 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.LoadMirrorListFromCache
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.LoadSeriesFromCache(System.Int32)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.LoadUserDataFromCache
-  Warn: ShowMissingComponent: Missing &lt;returns&gt; documentation for M:TvdbLib.Cache.XmlCacheProvider.LoadUserDataFromCache
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.LoadUserInfoFromCache(System.String)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.RemoveFromCache(System.Int32)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.RemoveImageFromCache(System.Int32,System.String)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(System.Collections.Generic.List{TvdbLib.Data.TvdbLanguage})
-  Warn: ShowMissingComponent: Missing &lt;param name=&quot;_languageList&quot;/&gt; documentation for M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(System.Collections.Generic.List{TvdbLib.Data.TvdbLanguage})
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(System.Collections.Generic.List{TvdbLib.Data.TvdbMirror})
-  Warn: ShowMissingComponent: Missing &lt;param name=&quot;_mirrorInfo&quot;/&gt; documentation for M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(System.Collections.Generic.List{TvdbLib.Data.TvdbMirror})
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(System.Drawing.Image,System.Int32,System.String)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(TvdbLib.Data.TvdbSeries)
   Info: BuildAssembler: Building topic M:TvdbLib.Cache.XmlCacheProvider.SaveToCache(TvdbLib.Data.TvdbUser)
@@ -646,6 +643,7 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic AllMembers.T:TvdbLib.Data.TvdbSeries
   Info: BuildAssembler: Building topic Methods.T:TvdbLib.Data.TvdbSeries
   Info: BuildAssembler: Building topic Properties.T:TvdbLib.Data.TvdbSeries
+  Info: BuildAssembler: Building topic Overload:TvdbLib.Data.TvdbSeries.GetEpisodes
   Info: BuildAssembler: Building topic Overload:TvdbLib.Data.TvdbSeries.SetLanguage
   Info: BuildAssembler: Building topic M:TvdbLib.Data.TvdbSeries.#ctor
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeries.ActorsString
@@ -683,12 +681,17 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.FanartPath
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.FirstAired
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Genre
+  Info: BuildAssembler: Building topic M:TvdbLib.Data.TvdbSeriesFields.GetEpisodes(System.Int32,TvdbLib.Data.TvdbEpisode.EpisodeOrdering)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;_season&quot;/&gt; documentation for M:TvdbLib.Data.TvdbSeriesFields.GetEpisodes(System.Int32,TvdbLib.Data.TvdbEpisode.EpisodeOrdering)
+  Warn: ShowMissingComponent: Missing &lt;param name=&quot;_order&quot;/&gt; documentation for M:TvdbLib.Data.TvdbSeriesFields.GetEpisodes(System.Int32,TvdbLib.Data.TvdbEpisode.EpisodeOrdering)
+  Info: BuildAssembler: Building topic M:TvdbLib.Data.TvdbSeriesFields.GetEpisodesAbsoluteOrder
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Id
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.ImdbId
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Language
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.LastUpdated
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Network
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Overview
+  Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.PosterPath
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Rating
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.Runtime
   Info: BuildAssembler: Building topic P:TvdbLib.Data.TvdbSeriesFields.SeriesName
@@ -765,6 +768,7 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.Color2
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.Color3
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.Colors
+  Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.ContainsSeriesName
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.IsVignetteLoaded
   Info: BuildAssembler: Building topic M:TvdbLib.Data.Banner.TvdbFanartBanner.LoadVignette
   Info: BuildAssembler: Building topic M:TvdbLib.Data.Banner.TvdbFanartBanner.LoadVignette(System.Boolean)
@@ -778,15 +782,15 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbFanartBanner.VignettePath
   Info: BuildAssembler: Building topic T:TvdbLib.Data.Banner.TvdbPosterBanner
   Info: BuildAssembler: Building topic AllMembers.T:TvdbLib.Data.Banner.TvdbPosterBanner
-  Info: ShowMissingComponent: Auto-documenting constructor M:TvdbLib.Data.Banner.TvdbPosterBanner.#ctor
   Info: BuildAssembler: Building topic Methods.T:TvdbLib.Data.Banner.TvdbPosterBanner
   Info: BuildAssembler: Building topic Properties.T:TvdbLib.Data.Banner.TvdbPosterBanner
   Info: BuildAssembler: Building topic Overload:TvdbLib.Data.Banner.TvdbPosterBanner.LoadBanner
   Info: BuildAssembler: Building topic Overload:TvdbLib.Data.Banner.TvdbPosterBanner.UnloadBanner
   Info: BuildAssembler: Building topic Overload:TvdbLib.Data.Banner.TvdbPosterBanner.LoadThumb
   Info: BuildAssembler: Building topic Overload:TvdbLib.Data.Banner.TvdbPosterBanner.UnloadThumb
+  Info: BuildAssembler: Building topic Overload:TvdbLib.Data.Banner.TvdbPosterBanner.#ctor
   Info: BuildAssembler: Building topic M:TvdbLib.Data.Banner.TvdbPosterBanner.#ctor
-  Info: ShowMissingComponent: Auto-documenting constructor M:TvdbLib.Data.Banner.TvdbPosterBanner.#ctor
+  Info: BuildAssembler: Building topic M:TvdbLib.Data.Banner.TvdbPosterBanner.#ctor(System.Int32,System.String,TvdbLib.Data.TvdbLanguage)
   Info: BuildAssembler: Building topic P:TvdbLib.Data.Banner.TvdbPosterBanner.Resolution
   Info: BuildAssembler: Building topic T:TvdbLib.Data.Banner.TvdbSeasonBanner
   Info: BuildAssembler: Building topic AllMembers.T:TvdbLib.Data.Banner.TvdbSeasonBanner
@@ -1439,8 +1443,8 @@ BuildReferenceTopics:
   Info: BuildAssembler: Building topic M:TvdbLib.SharpZipLib.Zip.Compression.Streams.StreamManipulator.Reset
   Info: BuildAssembler: Building topic M:TvdbLib.SharpZipLib.Zip.Compression.Streams.StreamManipulator.SetInput(System.Byte[],System.Int32,System.Int32)
   Info: BuildAssembler: Building topic M:TvdbLib.SharpZipLib.Zip.Compression.Streams.StreamManipulator.SkipToByteBoundary
-  Info: Processed 1090 topics
-    Last step completed in 00:02:43.3594
+  Info: Processed 1097 topics
+    Last step completed in 00:02:41.9375
 </buildStep>
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
@@ -1449,7 +1453,7 @@ GenerateIntermediateTOC:
   XslTransform (v2.4.10520.1)
   Copyright c Microsoft 2005-2006
   Info: Applying XSL transformation 'D:\Program Files\Coding\Sandcastle\ProductionTransforms\CreateVSToc.xsl'.
-    Last step completed in 00:00:00.9844
+    Last step completed in 00:00:02.2188
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for Help 1.x and/or website...
@@ -1459,11 +1463,11 @@ Copyright c 2008-2009, Eric Woodruff, All Rights Reserved
 E-Mail: Eric@EWoodruff.us
 
 Using LCID '1033', code page '65001', encoding charset 'UTF-8'.
-Processed 1090 HTML files
+Processed 1097 HTML files
 Sorting keywords and generating See Also indices
 Saving Help 1.x keyword index to D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\TvdbLib Documentation.hhk
 Saving Help 1.x table of contents to D:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\TvdbLib Documentation.hhc
-    Last step completed in 00:00:02.9219
+    Last step completed in 00:00:02.8594
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1.x table of contents file...
@@ -1479,7 +1483,7 @@ Generating HTML Help 1.x index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1.x project file...
-    Last step completed in 00:00:00.0469
+    Last step completed in 00:00:00.2500
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1.x file...
@@ -1497,11 +1501,11 @@ Build1xHelpFile:
   
   Compile time: 0 minutes, 15 seconds
   
-  1,092	Topics
+  1,099	Topics
   
-  13,782	Local links
+  13,876	Local links
   
-  7,935	Internet links
+  7,974	Internet links
   
   0	Graphics
   
@@ -1509,11 +1513,11 @@ Build1xHelpFile:
   
   
   
-  Created d:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\Output\TvdbLib Documentation.chm, 1,937,027 bytes
+  Created d:\[- Work -]\[- External Projects -]\tvdblib\Svn\trunk\Sandcastle\Help\Working\Output\TvdbLib Documentation.chm, 1,948,551 bytes
   
-  Compression decreased file by 13,090,394 bytes.
+  Compression decreased file by 13,170,745 bytes.
   
-    Last step completed in 00:00:17.5469
+    Last step completed in 00:00:17.6250
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
@@ -1521,7 +1525,7 @@ Removing intermediate files...
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 06.18.2009 11:17 .  Total time: 00:03:14,0781
+Build completed successfully at 06.18.2009 09:51 .  Total time: 00:03:18,9375
 
 </buildStep>
 </shfbBuild>

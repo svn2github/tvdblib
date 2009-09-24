@@ -179,7 +179,10 @@ namespace TvdbTester
         {
           foreach (TvdbSeries s in favList)
           {
-            cbUserFavourites.Items.Add(s);
+            if (s != null)
+            {
+              cbUserFavourites.Items.Add(s);
+            }
           }
         }
       }
@@ -538,7 +541,7 @@ namespace TvdbTester
       txtEpisodeDVDNumber.Text = _episode.DvdEpisodeNumber != -99 ? _episode.DvdEpisodeNumber.ToString() : "";
       txtEpisodeDVDChapter.Text = _episode.DvdChapter != -99 ? _episode.DvdChapter.ToString() : "";
       txtEpisodeAbsoluteNumber.Text = _episode.AbsoluteNumber != -99 ? _episode.AbsoluteNumber.ToString() : "";
-      txtImdbId.Text = _episode.ImdbId;
+      txtEpisodeImdbID.Text = _episode.ImdbId;
 
     }
 
@@ -644,7 +647,7 @@ namespace TvdbTester
     {
       if (!txtSeriesToFind.Text.Equals(""))
       {
-        List<TvdbSearchResult> list = m_tvdbHandler.SearchSeries(txtSeriesToFind.Text);
+        List<TvdbSearchResult> list = m_tvdbHandler.SearchSeries(txtSeriesToFind.Text, m_currentLanguage);
         if (list != null && list.Count > 0)
         {
           SearchResultForm form = new SearchResultForm(list);

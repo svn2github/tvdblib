@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TvdbLib.Data.Banner;
+using TvdbLib.Data;
 
 namespace TvdbLib.Data
 {

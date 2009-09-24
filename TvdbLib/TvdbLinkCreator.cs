@@ -140,9 +140,9 @@ namespace TvdbLib
       return link;
     }
 
-    internal static String CreateSearchLink(String _searchString)
+    internal static String CreateSearchLink(String _searchString, TvdbLanguage _language)
     {
-      String link = String.Format("{0}/api/GetSeries.php?seriesname={1}", BASE_SERVER.Trim('/'), _searchString);
+      String link = String.Format("{0}/api/GetSeries.php?seriesname={1}&language={2}", BASE_SERVER.Trim('/'), _searchString, _language.Abbriviation);
       return link;
     }
 

@@ -338,13 +338,26 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Search for a seris on tvdb using the name of the series
+    /// Search for a seris on tvdb using the name of the series using the default language (english)
     /// </summary>
     /// <param name="_name">Name of series</param>
-    /// <returns>List of possible hits (containing only very basic information (id, name,....) TODO: finish</returns>
+    /// <returns>List of possible hits (containing only very basic information (id, name,....)</returns>
     public List<TvdbSearchResult> SearchSeries(String _name)
     {
       List<TvdbSearchResult> retSeries = m_downloader.DownloadSearchResults(_name);
+
+      return retSeries;
+    }
+
+    /// <summary>
+    /// Search for a seris on tvdb using the name of the series
+    /// </summary>
+    /// <param name="_name">Name of series</param>
+    /// <param name="_language">Language to search in</param>
+    /// <returns>List of possible hits (containing only very basic information (id, name,....)</returns>
+    public List<TvdbSearchResult> SearchSeries(String _name, TvdbLanguage _language)
+    {
+      List<TvdbSearchResult> retSeries = m_downloader.DownloadSearchResults(_name, _language);
 
       return retSeries;
     }

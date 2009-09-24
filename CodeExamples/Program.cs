@@ -16,7 +16,7 @@ namespace WikiCodeExamples
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new UpdatingTestForm());
+      Application.Run(new TestForm());
     }
   }
 }

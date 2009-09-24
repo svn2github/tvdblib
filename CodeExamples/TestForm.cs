@@ -37,6 +37,10 @@ namespace TvdbTester
     {
       m_tvdbHandler = new TvdbHandler(new XmlCacheProvider("C:\\test"), File.ReadAllText("api_key.txt"));
       m_tvdbHandler.InitCache();
+      //m_tvdbHandler.ClearCache();
+      //m_tvdbHandler.GetBasicSeries(73545, TvdbLanguage.DefaultLanguage, false);
+      //TvdbSeries s = m_tvdbHandler.GetSeries(73545, TvdbLanguage.DefaultLanguage, true, true, true);
+
       List<TvdbLanguage> lang = m_tvdbHandler.Languages;
       cmdTest1.Enabled = true;
       cmdTestZip.Enabled = true;

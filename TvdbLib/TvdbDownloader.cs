@@ -484,7 +484,7 @@ namespace TvdbLib
       switch (_order)
       {
         case TvdbEpisode.EpisodeOrdering.AbsoluteOrder:
-          order = "absolut";
+          order = "absolute";
           break;
         case TvdbEpisode.EpisodeOrdering.DefaultOrder:
           order = "default";
@@ -829,7 +829,7 @@ namespace TvdbLib
     }
 
     /// <summary>
-    /// Download search results for a series search
+    /// Download search results for a series search in the default language (english)
     /// </summary>
     /// <param name="_name">name of the series</param>
     /// <returns>List of possible matches for the search</returns>
@@ -840,11 +840,27 @@ namespace TvdbLib
     /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public List<TvdbSearchResult> DownloadSearchResults(String _name)
     {
+      return DownloadSearchResults(_name, TvdbLanguage.DefaultLanguage);
+    }
+
+    /// <summary>
+    /// Download search results for a series search
+    /// </summary>
+    /// <param name="_name">name of the series</param>
+    /// <param name="_language">language of the search</param>
+    /// <returns>List of possible matches for the search</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
+    public List<TvdbSearchResult> DownloadSearchResults(String _name, TvdbLanguage _language)
+    {
       String xml = "";
       String link = "";
       try
       {
-        link = TvdbLinkCreator.CreateSearchLink(_name);
+        link = TvdbLinkCreator.CreateSearchLink(_name, _language);
         xml = m_webClient.DownloadString(link);
         return m_xmlHandler.ExtractSeriesSearchResults(xml);
       }
