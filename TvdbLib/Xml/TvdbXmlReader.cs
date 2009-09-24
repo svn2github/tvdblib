@@ -244,9 +244,9 @@ namespace TvdbLib.Xml
                         SeriesID = series.Element("SeriesID").Value,
                         SeriesName = series.Element("SeriesName").Value,
                         Status = series.Element("Status").Value,
-                        banner = series.Element("banner").Value,
-                        fanart = series.Element("fanart").Value,
-                        poster = series.Element("poster").Value,
+                        banner = series.Elements("banner").Count() == 1 ? series.Element("banner").Value : "",
+                        fanart = series.Elements("fanart").Count() == 1 ? series.Element("fanart").Value : "",
+                        poster = series.Elements("poster").Count() == 1 ? series.Element("poster").Value : "",
                         lastupdated = series.Element("lastupdated").Value,
                         zap2it_id = series.Element("zap2it_id").Value
                       };
