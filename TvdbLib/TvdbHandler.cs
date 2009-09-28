@@ -684,14 +684,17 @@ namespace TvdbLib
             series.SetLanguage(_language);
           }
 
-          foreach (TvdbEpisode e in series.Episodes)
+          if (series.Episodes != null)
           {
-            if (e.EpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DefaultOrder ||
-                e.DvdEpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DvdOrder ||
-                e.AbsoluteNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.AbsoluteOrder)
-            {//We found the episode that matches the episode number according to the given ordering
-              episode = e;
-              break;
+            foreach (TvdbEpisode e in series.Episodes)
+            {
+              if (e.EpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DefaultOrder ||
+                  e.DvdEpisodeNumber == _episodeNr && e.SeasonNumber == _seasonNr && _order == TvdbEpisode.EpisodeOrdering.DvdOrder ||
+                  e.AbsoluteNumber == _episodeNr && _order == TvdbEpisode.EpisodeOrdering.AbsoluteOrder)
+              {//We found the episode that matches the episode number according to the given ordering
+                episode = e;
+                break;
+              }
             }
           }
         }
@@ -736,6 +739,7 @@ namespace TvdbLib
             if (e.FirstAired.Year == _airDate.Year && e.FirstAired.Month == _airDate.Month && e.FirstAired.Day == _airDate.Day)
             {//We found the episode that first aired at the given day
               episode = e;
+              break;
             }
           }
         }
