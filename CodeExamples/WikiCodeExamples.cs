@@ -60,7 +60,7 @@ namespace WikiCodeExamples
         WriteToConsole("Name: " + s.SeriesName);
         WriteToConsole("Overview: " + s.Overview);
         WriteToConsole("Day of Week: " + s.AirsDayOfWeek);
-        WriteToConsole("Airs Time: " + s.AirsTime.ToShortTimeString());
+        WriteToConsole("Airs Time: " + s.AirsTime);
         WriteToConsole("Banner Path: " + s.BannerPath);
         WriteToConsole("Content Rating: " + s.ContentRating);
         WriteToConsole("Fanart Path: " + s.FanartPath);

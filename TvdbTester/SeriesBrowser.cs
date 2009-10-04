@@ -435,7 +435,7 @@ namespace TvdbTester
       txtGenre.Text = series.GenreString;
       txtFirstAired.Text = series.FirstAired != null ? series.FirstAired.ToShortDateString() : "";
       txtAirsWeekday.Text = series.AirsDayOfWeek != null ? series.AirsDayOfWeek.ToString() : "";
-      txtAirstime.Text = series.AirsTime.ToShortTimeString();
+      txtAirstime.Text = series.AirsTime;
       txtNetwork.Text = series.Network;
       txtRuntime.Text = series.Runtime != -99 ? series.Runtime.ToString() : "";
       txtRating.Text = series.Rating != -99 ? series.Rating.ToString() : "";

@@ -367,5 +367,16 @@ namespace TvdbLib
     }
 
 
+      /// <summary>
+      /// Parse a datetime value from thetvdb
+      /// </summary>
+      /// <param name="p"></param>
+      /// <returns></returns>
+    internal static DateTime ParseDateTime(string _date)
+    {
+        DateTime retVal;
+        DateTime.TryParse(_date, out retVal);
+        return retVal;
+    }
   }
 }

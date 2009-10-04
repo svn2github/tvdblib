@@ -258,9 +258,9 @@ namespace TvdbLib.Xml
         series.Id = Util.Int32Parse(s.Id);
         series.Actors = Util.SplitTvdbString(s.Actors);
         series.AirsDayOfWeek = Util.GetDayOfWeek(s.Airs_DayOfWeek);
-        series.AirsTime = s.Airs_Time.Equals("") ? new DateTime(1, 1, 1) : DateTime.Parse(s.Airs_Time.Replace(".", ":"));
+        series.AirsTime = s.Airs_Time;
         series.ContentRating = s.ContentRating;
-        series.FirstAired = s.FirstAired.Equals("") ? new DateTime() : DateTime.Parse(s.FirstAired);
+        series.FirstAired = Util.ParseDateTime(s.FirstAired);
         series.Genre = Util.SplitTvdbString(s.Genre);
         series.ImdbId = s.IMDB_ID;
         series.Language = Util.ParseLanguage(s.Language);

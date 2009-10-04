@@ -60,7 +60,7 @@ namespace TvdbLib.Data
     private String m_seriesName;
     private List<String> m_actors;
     private DayOfWeek? m_airsDayOfWeek;
-    private DateTime m_airsTime;
+    private String m_airsTime;
     private String m_contentRating;
     private DateTime m_firstAired;
     private List<String> m_genre;
@@ -312,7 +312,7 @@ namespace TvdbLib.Data
     /// <summary>
     /// At which time does the series air
     /// </summary>
-    public DateTime AirsTime
+    public String AirsTime
     {
       get { return m_airsTime; }
       set { m_airsTime = value; }
