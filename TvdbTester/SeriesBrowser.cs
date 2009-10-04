@@ -469,7 +469,7 @@ namespace TvdbTester
       }
 
       txtZap2itId.Text = series.Zap2itId;
-      raterSeriesSiteRating.CurrentRating = series.Rating != -99 ? (int)(series.Rating / 10) : 0;
+      raterSeriesSiteRating.CurrentRating = series.Rating != -99 ? (int)series.Rating : 0;
     }
 
     private void FillFullSeriesDetails(TvdbSeries _series)
