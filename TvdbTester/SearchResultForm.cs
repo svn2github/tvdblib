@@ -30,6 +30,10 @@ namespace TvdbTester
         item.Tag = r;
         lvSearchResult.Items.Add(item);
       }
+      if (lvSearchResult.Items.Count > 0)
+      {
+        lvSearchResult.Items[0].Selected = true;
+      }
     }
 
     private void cmdChoose_Click(object sender, EventArgs e)

@@ -272,6 +272,32 @@ namespace TvdbLib
       return link;
     }
 
+    /// <summary>
+    /// Creates a link to retrieve a series by external id (currently only imdb id supported)
+    /// 
+    /// http://forums.thetvdb.com/viewtopic.php?f=8&t=3724&start=0
+    /// </summary>
+    /// <param name="_apiKey">api key</param>
+    /// <param name="_site">type of external site</param>
+    /// <param name="_id">id on the site</param>
+    /// <returns></returns>
+    internal static String CreateGetSeriesByIdLink(String _apiKey, TvdbLibInfo.ExternalId _site, String _id)
+    {
+      String siteString = "";
+      switch(_site)
+      {
+        case TvdbLibInfo.ExternalId.ImdbId:
+          siteString = "imdbid";
+          break;
+        default:
+          return "";//unknown site
+      }
+
+      String link = String.Format("{0}/api/GetSeriesByRemoteID.php?{1}={2}", BASE_SERVER, siteString, _id);
+      return link;
+      //http://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt0411008
+    }
+
 
   }
 }

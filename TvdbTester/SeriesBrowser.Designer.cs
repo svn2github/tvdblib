@@ -163,6 +163,9 @@
       this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
       this.pnlActorsEnabled = new System.Windows.Forms.Panel();
       this.label20 = new System.Windows.Forms.Label();
+      this.cmdLoadByImdbId = new System.Windows.Forms.Button();
+      this.txtImdbSearchId = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.tabEpisodes.SuspendLayout();
       this.saveImageContext.SuspendLayout();
       this.pnlSeasonBanner.SuspendLayout();
@@ -193,14 +196,14 @@
       // 
       // txtGetSeries
       // 
-      this.txtGetSeries.Location = new System.Drawing.Point(101, 75);
+      this.txtGetSeries.Location = new System.Drawing.Point(101, 58);
       this.txtGetSeries.Name = "txtGetSeries";
       this.txtGetSeries.Size = new System.Drawing.Size(116, 20);
       this.txtGetSeries.TabIndex = 6;
       // 
       // cmdGetSeries
       // 
-      this.cmdGetSeries.Location = new System.Drawing.Point(227, 72);
+      this.cmdGetSeries.Location = new System.Drawing.Point(227, 55);
       this.cmdGetSeries.Name = "cmdGetSeries";
       this.cmdGetSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdGetSeries.TabIndex = 7;
@@ -210,7 +213,7 @@
       // 
       // txtSeriesToFind
       // 
-      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 46);
+      this.txtSeriesToFind.Location = new System.Drawing.Point(101, 33);
       this.txtSeriesToFind.Name = "txtSeriesToFind";
       this.txtSeriesToFind.Size = new System.Drawing.Size(116, 20);
       this.txtSeriesToFind.TabIndex = 6;
@@ -220,7 +223,7 @@
       // 
       // cmdFindSeries
       // 
-      this.cmdFindSeries.Location = new System.Drawing.Point(227, 44);
+      this.cmdFindSeries.Location = new System.Drawing.Point(227, 31);
       this.cmdFindSeries.Name = "cmdFindSeries";
       this.cmdFindSeries.Size = new System.Drawing.Size(75, 23);
       this.cmdFindSeries.TabIndex = 7;
@@ -233,7 +236,7 @@
       this.label35.AutoSize = true;
       this.label35.BackColor = System.Drawing.Color.Transparent;
       this.label35.ForeColor = System.Drawing.SystemColors.ControlText;
-      this.label35.Location = new System.Drawing.Point(10, 78);
+      this.label35.Location = new System.Drawing.Point(10, 61);
       this.label35.Name = "label35";
       this.label35.Size = new System.Drawing.Size(53, 13);
       this.label35.TabIndex = 4;
@@ -243,7 +246,7 @@
       // 
       this.label36.AutoSize = true;
       this.label36.BackColor = System.Drawing.Color.Transparent;
-      this.label36.Location = new System.Drawing.Point(10, 49);
+      this.label36.Location = new System.Drawing.Point(10, 36);
       this.label36.Name = "label36";
       this.label36.Size = new System.Drawing.Size(70, 13);
       this.label36.TabIndex = 4;
@@ -252,7 +255,7 @@
       // cbLanguage
       // 
       this.cbLanguage.FormattingEnabled = true;
-      this.cbLanguage.Location = new System.Drawing.Point(179, 13);
+      this.cbLanguage.Location = new System.Drawing.Point(179, 7);
       this.cbLanguage.Name = "cbLanguage";
       this.cbLanguage.Size = new System.Drawing.Size(123, 21);
       this.cbLanguage.TabIndex = 44;
@@ -262,7 +265,7 @@
       // 
       this.label37.AutoSize = true;
       this.label37.BackColor = System.Drawing.Color.Transparent;
-      this.label37.Location = new System.Drawing.Point(15, 16);
+      this.label37.Location = new System.Drawing.Point(15, 10);
       this.label37.Name = "label37";
       this.label37.Size = new System.Drawing.Size(58, 13);
       this.label37.TabIndex = 4;
@@ -272,7 +275,7 @@
       // 
       this.lblCurrentLanguage.AutoSize = true;
       this.lblCurrentLanguage.BackColor = System.Drawing.Color.Transparent;
-      this.lblCurrentLanguage.Location = new System.Drawing.Point(88, 16);
+      this.lblCurrentLanguage.Location = new System.Drawing.Point(88, 10);
       this.lblCurrentLanguage.Name = "lblCurrentLanguage";
       this.lblCurrentLanguage.Size = new System.Drawing.Size(13, 13);
       this.lblCurrentLanguage.TabIndex = 45;
@@ -1402,6 +1405,9 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.panelSeriesOverview.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
       this.panelSeriesOverview.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+      this.panelSeriesOverview.Controls.Add(this.cmdLoadByImdbId);
+      this.panelSeriesOverview.Controls.Add(this.txtImdbSearchId);
+      this.panelSeriesOverview.Controls.Add(this.label2);
       this.panelSeriesOverview.Controls.Add(this.rbUpdateMonth);
       this.panelSeriesOverview.Controls.Add(this.rbUpdateWeek);
       this.panelSeriesOverview.Controls.Add(this.rbUpdateDay);
@@ -1621,13 +1627,41 @@
       this.label20.TabIndex = 0;
       this.label20.Text = "Actors";
       // 
+      // cmdLoadByImdbId
+      // 
+      this.cmdLoadByImdbId.Location = new System.Drawing.Point(227, 81);
+      this.cmdLoadByImdbId.Name = "cmdLoadByImdbId";
+      this.cmdLoadByImdbId.Size = new System.Drawing.Size(75, 23);
+      this.cmdLoadByImdbId.TabIndex = 57;
+      this.cmdLoadByImdbId.Text = "Load";
+      this.cmdLoadByImdbId.UseVisualStyleBackColor = true;
+      this.cmdLoadByImdbId.Click += new System.EventHandler(this.cmdLoadByImdbId_Click);
+      // 
+      // txtImdbSearchId
+      // 
+      this.txtImdbSearchId.Location = new System.Drawing.Point(101, 84);
+      this.txtImdbSearchId.Name = "txtImdbSearchId";
+      this.txtImdbSearchId.Size = new System.Drawing.Size(116, 20);
+      this.txtImdbSearchId.TabIndex = 56;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.BackColor = System.Drawing.Color.Transparent;
+      this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.label2.Location = new System.Drawing.Point(10, 87);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(47, 13);
+      this.label2.TabIndex = 55;
+      this.label2.Text = "Imdb ID:";
+      // 
       // SeriesBrowser
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoScroll = true;
       this.BackColor = System.Drawing.SystemColors.Control;
-      this.ClientSize = new System.Drawing.Size(792, 884);
+      this.ClientSize = new System.Drawing.Size(792, 874);
       this.Controls.Add(this.pnlActorsEnabled);
       this.Controls.Add(this.pnlFanartEnabled);
       this.Controls.Add(this.pnlEpisodeEnabled);
@@ -1809,6 +1843,9 @@
     private System.Windows.Forms.RadioButton rbUpdateAutomatic;
     private System.Windows.Forms.LinkLabel llblImdb;
     private System.Windows.Forms.LinkLabel llblTvComId;
+    private System.Windows.Forms.Button cmdLoadByImdbId;
+    private System.Windows.Forms.TextBox txtImdbSearchId;
+    private System.Windows.Forms.Label label2;
   }
 }
 

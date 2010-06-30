@@ -42,6 +42,9 @@ namespace TvdbLib
     /// </summary>
     internal enum UserFavouriteAction { none, add, remove }
 
+
+
+
     #region private fields
     private static List<TvdbLanguage> m_languageList;
     private static NumberFormatInfo m_formatProvider;

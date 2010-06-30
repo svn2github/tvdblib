@@ -57,19 +57,24 @@ namespace TvdbTester
       this.label4 = new System.Windows.Forms.Label();
       this.txtSeriesEpisodeAiredId = new System.Windows.Forms.TextBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.rbAired = new System.Windows.Forms.RadioButton();
-      this.rbDvd = new System.Windows.Forms.RadioButton();
-      this.textBox1 = new System.Windows.Forms.TextBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.cmdShowEpisodesInGivenOrder = new System.Windows.Forms.Button();
-      this.txtSeriesIdEpisodeOrdering = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
       this.cmdShowEpisodesAbsoluteOrdering = new System.Windows.Forms.Button();
+      this.cmdShowEpisodesInGivenOrder = new System.Windows.Forms.Button();
+      this.label6 = new System.Windows.Forms.Label();
+      this.label5 = new System.Windows.Forms.Label();
+      this.textBox1 = new System.Windows.Forms.TextBox();
+      this.txtSeriesIdEpisodeOrdering = new System.Windows.Forms.TextBox();
+      this.rbDvd = new System.Windows.Forms.RadioButton();
+      this.rbAired = new System.Windows.Forms.RadioButton();
       this.bcSeriesBanner = new TvdbTester.BannerControl();
       this.bcActors = new TvdbTester.BannerControl();
+      this.groupBox3 = new System.Windows.Forms.GroupBox();
+      this.comboBox1 = new System.Windows.Forms.ComboBox();
+      this.txtExternalId = new System.Windows.Forms.TextBox();
+      this.cmdTestGetSeriesByExternalId = new System.Windows.Forms.Button();
       this.Episodes.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
+      this.groupBox3.SuspendLayout();
       this.SuspendLayout();
       // 
       // cmdTest1
@@ -343,43 +348,15 @@ namespace TvdbTester
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Episode Ordering";
       // 
-      // rbAired
+      // cmdShowEpisodesAbsoluteOrdering
       // 
-      this.rbAired.AutoSize = true;
-      this.rbAired.Checked = true;
-      this.rbAired.Location = new System.Drawing.Point(11, 44);
-      this.rbAired.Name = "rbAired";
-      this.rbAired.Size = new System.Drawing.Size(49, 17);
-      this.rbAired.TabIndex = 14;
-      this.rbAired.TabStop = true;
-      this.rbAired.Text = "Aired";
-      this.rbAired.UseVisualStyleBackColor = true;
-      // 
-      // rbDvd
-      // 
-      this.rbDvd.AutoSize = true;
-      this.rbDvd.Location = new System.Drawing.Point(81, 44);
-      this.rbDvd.Name = "rbDvd";
-      this.rbDvd.Size = new System.Drawing.Size(45, 17);
-      this.rbDvd.TabIndex = 14;
-      this.rbDvd.Text = "Dvd";
-      this.rbDvd.UseVisualStyleBackColor = true;
-      // 
-      // textBox1
-      // 
-      this.textBox1.Location = new System.Drawing.Point(186, 43);
-      this.textBox1.Name = "textBox1";
-      this.textBox1.Size = new System.Drawing.Size(51, 20);
-      this.textBox1.TabIndex = 15;
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(139, 46);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(46, 13);
-      this.label5.TabIndex = 16;
-      this.label5.Text = "Season:";
+      this.cmdShowEpisodesAbsoluteOrdering.Location = new System.Drawing.Point(6, 93);
+      this.cmdShowEpisodesAbsoluteOrdering.Name = "cmdShowEpisodesAbsoluteOrdering";
+      this.cmdShowEpisodesAbsoluteOrdering.Size = new System.Drawing.Size(231, 23);
+      this.cmdShowEpisodesAbsoluteOrdering.TabIndex = 18;
+      this.cmdShowEpisodesAbsoluteOrdering.Text = "Show Absolute Episodes";
+      this.cmdShowEpisodesAbsoluteOrdering.UseVisualStyleBackColor = true;
+      this.cmdShowEpisodesAbsoluteOrdering.Click += new System.EventHandler(this.cmdShowEpisodesAbsoluteOrdering_Click);
       // 
       // cmdShowEpisodesInGivenOrder
       // 
@@ -391,14 +368,6 @@ namespace TvdbTester
       this.cmdShowEpisodesInGivenOrder.UseVisualStyleBackColor = true;
       this.cmdShowEpisodesInGivenOrder.Click += new System.EventHandler(this.cmdShowEpisodesInGivenOrder_Click);
       // 
-      // txtSeriesIdEpisodeOrdering
-      // 
-      this.txtSeriesIdEpisodeOrdering.Location = new System.Drawing.Point(126, 18);
-      this.txtSeriesIdEpisodeOrdering.Name = "txtSeriesIdEpisodeOrdering";
-      this.txtSeriesIdEpisodeOrdering.Size = new System.Drawing.Size(111, 20);
-      this.txtSeriesIdEpisodeOrdering.TabIndex = 7;
-      this.txtSeriesIdEpisodeOrdering.Text = "78874";
-      // 
       // label6
       // 
       this.label6.AutoSize = true;
@@ -408,15 +377,51 @@ namespace TvdbTester
       this.label6.TabIndex = 13;
       this.label6.Text = "Series Id";
       // 
-      // cmdShowEpisodesAbsoluteOrdering
+      // label5
       // 
-      this.cmdShowEpisodesAbsoluteOrdering.Location = new System.Drawing.Point(6, 93);
-      this.cmdShowEpisodesAbsoluteOrdering.Name = "cmdShowEpisodesAbsoluteOrdering";
-      this.cmdShowEpisodesAbsoluteOrdering.Size = new System.Drawing.Size(231, 23);
-      this.cmdShowEpisodesAbsoluteOrdering.TabIndex = 18;
-      this.cmdShowEpisodesAbsoluteOrdering.Text = "Show Absolute Episodes";
-      this.cmdShowEpisodesAbsoluteOrdering.UseVisualStyleBackColor = true;
-      this.cmdShowEpisodesAbsoluteOrdering.Click += new System.EventHandler(this.cmdShowEpisodesAbsoluteOrdering_Click);
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(139, 46);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(46, 13);
+      this.label5.TabIndex = 16;
+      this.label5.Text = "Season:";
+      // 
+      // textBox1
+      // 
+      this.textBox1.Location = new System.Drawing.Point(186, 43);
+      this.textBox1.Name = "textBox1";
+      this.textBox1.Size = new System.Drawing.Size(51, 20);
+      this.textBox1.TabIndex = 15;
+      // 
+      // txtSeriesIdEpisodeOrdering
+      // 
+      this.txtSeriesIdEpisodeOrdering.Location = new System.Drawing.Point(126, 18);
+      this.txtSeriesIdEpisodeOrdering.Name = "txtSeriesIdEpisodeOrdering";
+      this.txtSeriesIdEpisodeOrdering.Size = new System.Drawing.Size(111, 20);
+      this.txtSeriesIdEpisodeOrdering.TabIndex = 7;
+      this.txtSeriesIdEpisodeOrdering.Text = "78874";
+      // 
+      // rbDvd
+      // 
+      this.rbDvd.AutoSize = true;
+      this.rbDvd.Location = new System.Drawing.Point(81, 44);
+      this.rbDvd.Name = "rbDvd";
+      this.rbDvd.Size = new System.Drawing.Size(45, 17);
+      this.rbDvd.TabIndex = 14;
+      this.rbDvd.Text = "Dvd";
+      this.rbDvd.UseVisualStyleBackColor = true;
+      // 
+      // rbAired
+      // 
+      this.rbAired.AutoSize = true;
+      this.rbAired.Checked = true;
+      this.rbAired.Location = new System.Drawing.Point(11, 44);
+      this.rbAired.Name = "rbAired";
+      this.rbAired.Size = new System.Drawing.Size(49, 17);
+      this.rbAired.TabIndex = 14;
+      this.rbAired.TabStop = true;
+      this.rbAired.Text = "Aired";
+      this.rbAired.UseVisualStyleBackColor = true;
       // 
       // bcSeriesBanner
       // 
@@ -452,11 +457,52 @@ namespace TvdbTester
       this.bcActors.UnavailableImage = null;
       this.bcActors.UseThumb = false;
       // 
+      // groupBox3
+      // 
+      this.groupBox3.Controls.Add(this.cmdTestGetSeriesByExternalId);
+      this.groupBox3.Controls.Add(this.txtExternalId);
+      this.groupBox3.Controls.Add(this.comboBox1);
+      this.groupBox3.Location = new System.Drawing.Point(6, 276);
+      this.groupBox3.Name = "groupBox3";
+      this.groupBox3.Size = new System.Drawing.Size(247, 109);
+      this.groupBox3.TabIndex = 16;
+      this.groupBox3.TabStop = false;
+      this.groupBox3.Text = "External IDs";
+      // 
+      // comboBox1
+      // 
+      this.comboBox1.FormattingEnabled = true;
+      this.comboBox1.Items.AddRange(new object[] {
+            "ImdbId"});
+      this.comboBox1.Location = new System.Drawing.Point(5, 19);
+      this.comboBox1.Name = "comboBox1";
+      this.comboBox1.Size = new System.Drawing.Size(231, 21);
+      this.comboBox1.TabIndex = 0;
+      // 
+      // txtExternalId
+      // 
+      this.txtExternalId.Location = new System.Drawing.Point(6, 47);
+      this.txtExternalId.Name = "txtExternalId";
+      this.txtExternalId.Size = new System.Drawing.Size(230, 20);
+      this.txtExternalId.TabIndex = 1;
+      this.txtExternalId.Text = "tt0411008";
+      // 
+      // cmdTestGetSeriesByExternalId
+      // 
+      this.cmdTestGetSeriesByExternalId.Location = new System.Drawing.Point(6, 73);
+      this.cmdTestGetSeriesByExternalId.Name = "cmdTestGetSeriesByExternalId";
+      this.cmdTestGetSeriesByExternalId.Size = new System.Drawing.Size(230, 23);
+      this.cmdTestGetSeriesByExternalId.TabIndex = 2;
+      this.cmdTestGetSeriesByExternalId.Text = "Test External Id";
+      this.cmdTestGetSeriesByExternalId.UseVisualStyleBackColor = true;
+      this.cmdTestGetSeriesByExternalId.Click += new System.EventHandler(this.cmdTestGetSeriesByExternalId_Click);
+      // 
       // TestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(960, 782);
+      this.Controls.Add(this.groupBox3);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.cmdGetRatingsForSeries);
@@ -481,6 +527,8 @@ namespace TvdbTester
       this.groupBox1.PerformLayout();
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
+      this.groupBox3.ResumeLayout(false);
+      this.groupBox3.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -526,5 +574,9 @@ namespace TvdbTester
     private System.Windows.Forms.Button cmdShowEpisodesAbsoluteOrdering;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.TextBox txtSeriesIdEpisodeOrdering;
+    private System.Windows.Forms.GroupBox groupBox3;
+    private System.Windows.Forms.TextBox txtExternalId;
+    private System.Windows.Forms.ComboBox comboBox1;
+    private System.Windows.Forms.Button cmdTestGetSeriesByExternalId;
   }
 }

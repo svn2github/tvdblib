@@ -367,6 +367,55 @@ namespace TvdbLib
       }
     }
 
+    public TvdbSearchResult DownloadSerieByExternalId(TvdbLibInfo.ExternalId _site, String _id)
+    {
+      //download the xml data from this request
+      String xml = "";
+      String link = "";
+      try
+      {
+        link = TvdbLinkCreator.CreateGetSeriesByIdLink(m_apiKey, _site, _id);
+        xml = m_webClient.DownloadString(link);
+
+        //extract all series the xml file contains
+        List<TvdbSearchResult> seriesList = m_xmlHandler.ExtractSeriesSearchResults(xml);
+
+        //if a request is made on a series id, one and only one result
+        //should be returned, otherwise there obviously was an error
+        if (seriesList != null && seriesList.Count == 1)
+        {
+          TvdbSearchResult series = seriesList[0];
+
+          return series;
+        }
+        else
+        {
+          Log.Warn("More than one series returned when trying to retrieve series by id " + _id);
+          return null;
+        }
+      }
+      catch (XmlException ex)
+      {
+        Log.Error("Error parsing the xml file " + link + "\n\n" + xml, ex);
+        throw new TvdbInvalidXmlException("Error parsing the xml file " + link + "\n\n" + xml);
+      }
+      catch (WebException ex)
+      {
+        Log.Warn("Request not successfull", ex);
+        if (ex.Message.Equals("The remote server returned an error: (404) Not Found."))
+        {
+          throw new TvdbInvalidApiKeyException("Couldn't connect to Thetvdb.com to retrieve " + _id +
+                                               ", you may use an invalid api key  or the series doesn't exists");
+        }
+        else
+        {
+          throw new TvdbNotAvailableException("Couldn't connect to Thetvdb.com to retrieve " + _id +
+                                              ", check your internet connection and the status of http://thetvdb.com");
+        }
+      }
+
+    }
+
     internal TvdbSeriesFields DownloadSeriesFields(int _seriesId, TvdbLanguage _language)
     {
       String xml = "";

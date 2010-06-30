@@ -231,5 +231,11 @@ namespace TvdbTester
       eps.ForEach(delegate(TvdbEpisode ep) { lvSeries.Items.Add(CreateItem(ep.AbsoluteNumber + "(S" + ep.SeasonNumber + "E" + ep.EpisodeNumber + ")", ep.EpisodeName)); });
 
     }
+
+    private void cmdTestGetSeriesByExternalId_Click(object sender, EventArgs e)
+    {
+      TvdbDownloader downloader = new TvdbDownloader(File.ReadAllText("api_key.txt"));
+      TvdbSearchResult s = downloader.DownloadSerieByExternalId(TvdbLibInfo.ExternalId.ImdbId, txtExternalId.Text);
+    }
   }
 }

@@ -363,6 +363,19 @@ namespace TvdbLib
     }
 
     /// <summary>
+    /// Searches for a series by the id of an external provider
+    /// </summary>
+    /// <param name="_externalSite">external provider</param>
+    /// <param name="_id">id of the series</param>
+    /// <returns>The tvdb series that corresponds to the external id</returns>
+    public TvdbSearchResult GetSeriesByRemoteId(TvdbLibInfo.ExternalId _externalSite, String _id)
+    {
+      TvdbSearchResult retSeries = m_downloader.DownloadSerieByExternalId(_externalSite, _id);
+
+      return retSeries;
+    }
+
+    /// <summary>
     /// Gets the series with the given id either from cache (if it has already been loaded) or from 
     /// the selected tvdb mirror.
     /// 

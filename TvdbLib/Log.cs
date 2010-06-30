@@ -25,17 +25,43 @@ using System.Text;
 
 namespace TvdbLib
 {
-  internal class Log
+  /// <summary>
+  /// Logs internal messages
+  /// </summary>
+  public static class Log
   {
     /// <summary>
     /// Loglevel
     /// </summary>
-    internal enum LOGLEVEL { Debug = 0, Info = 1, Warn = 2, Error = 3, Fatal = 4 }
+    public enum LOGLEVEL
+    {
+      /// <summary>Logs debug messages</summary>
+      Debug = 0,
+
+      /// <summary>Logs info messages</summary>
+      Info = 1,
+
+      /// <summary>Logs warn messages</summary>
+      Warn = 2,
+
+      /// <summary>Logs error messages</summary>
+      Error = 3,
+
+      /// <summary>Logs fatal messages</summary>
+      Fatal = 4
+    }
+
+    private static LOGLEVEL m_currentLogLevel = LOGLEVEL.Warn;
+
 
     /// <summary>
-    /// The loglevel that is currently used
+    /// The loglevel that is currently used (default = warn)
     /// </summary>
-    internal const LOGLEVEL CURRENT_LEVEL = LOGLEVEL.Debug;
+    public static LOGLEVEL LogLevel
+    {
+      get { return m_currentLogLevel; }
+      set { m_currentLogLevel = value; }
+    }
 
     /// <summary>
     /// Logs the message at level Debug
@@ -43,7 +69,7 @@ namespace TvdbLib
     /// <param name="_logMessage">Message to log</param>
     internal static void Debug(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Debug);
+      WriteLogMessage(_logMessage, LOGLEVEL.Debug);
     }
 
     /// <summary>
@@ -53,7 +79,7 @@ namespace TvdbLib
     /// <param name="_ex">Exception to log</param>
     internal static void Debug(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
+      WriteLogMessage(_logMessage + _ex.ToString(), LOGLEVEL.Debug);
     }
 
     /// <summary>
@@ -62,7 +88,7 @@ namespace TvdbLib
     /// <param name="_logMessage">Message to log</param>
     internal static void Info(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Info);
+      WriteLogMessage(_logMessage, LOGLEVEL.Info);
     }
 
     /// <summary>
@@ -72,7 +98,7 @@ namespace TvdbLib
     /// <param name="_ex">Exception to log</param>
     internal static void Info(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Info);
+      WriteLogMessage(_logMessage + _ex.ToString(), LOGLEVEL.Info);
     }
 
     /// <summary>
@@ -81,7 +107,7 @@ namespace TvdbLib
     /// <param name="_logMessage">Message to log</param>
     internal static void Warn(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Warn);
+      WriteLogMessage(_logMessage, LOGLEVEL.Warn);
     }
 
     /// <summary>
@@ -91,7 +117,7 @@ namespace TvdbLib
     /// <param name="_ex">Exception to log</param>
     internal static void Warn(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Warn);
+      WriteLogMessage(_logMessage + _ex.ToString(), LOGLEVEL.Warn);
     }
 
     /// <summary>
@@ -100,7 +126,7 @@ namespace TvdbLib
     /// <param name="_logMessage">Message to log</param>
     internal static void Error(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Error);
+      WriteLogMessage(_logMessage, LOGLEVEL.Error);
     }
 
     /// <summary>
@@ -110,7 +136,7 @@ namespace TvdbLib
     /// <param name="_ex">Exception to log</param>
     internal static void Error(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Error);
+      WriteLogMessage(_logMessage + _ex.ToString(), LOGLEVEL.Error);
     }
 
     /// <summary>
@@ -119,7 +145,7 @@ namespace TvdbLib
     /// <param name="_logMessage">Message to log</param>
     internal static void Fatal(String _logMessage)
     {
-      Debug(_logMessage, LOGLEVEL.Fatal);
+      WriteLogMessage(_logMessage, LOGLEVEL.Fatal);
     }
 
     /// <summary>
@@ -129,7 +155,7 @@ namespace TvdbLib
     /// <param name="_ex">Exception to log</param>
     internal static void Fatal(String _logMessage, Exception _ex)
     {
-      Debug(_logMessage + _ex.ToString(), LOGLEVEL.Fatal);
+      WriteLogMessage(_logMessage + _ex.ToString(), LOGLEVEL.Fatal);
     }
 
     /// <summary>
@@ -137,9 +163,9 @@ namespace TvdbLib
     /// </summary>
     /// <param name="_logMessage">Message to log</param>
     /// <param name="_level">Level to log</param>
-    internal static void Debug(String _logMessage, LOGLEVEL _level)
+    internal static void WriteLogMessage(String _logMessage, LOGLEVEL _level)
     {
-      if (_level >= CURRENT_LEVEL)
+      if (_level >= m_currentLogLevel)
       {
         switch (_level)
         {

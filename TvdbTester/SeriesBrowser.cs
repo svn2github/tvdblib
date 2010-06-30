@@ -1020,6 +1020,32 @@ namespace TvdbTester
       }
     }
 
+    private void cmdLoadByImdbId_Click(object sender, EventArgs e)
+    {
+      if (!txtImdbSearchId.Text.Equals(""))
+      {
+        TvdbSearchResult result = m_tvdbHandler.GetSeriesByRemoteId(TvdbLibInfo.ExternalId.ImdbId, txtImdbSearchId.Text);
+        if (result != null)
+        {
+          List<TvdbSearchResult> list = new List<TvdbSearchResult>();
+          list.Add(result);
+          SearchResultForm form = new SearchResultForm(list);
+          form.StartPosition = FormStartPosition.Manual;
+          form.Left = this.Left + this.Width / 2 - form.Width / 2;
+          form.Top = this.Top + this.Height / 2 - form.Height / 2;
+          DialogResult res = form.ShowDialog();
+          if (res == DialogResult.OK)
+          {
+            LoadSeries(form.Selection.Id);
+          }
+        }
+        else
+        {
+          MessageBox.Show("No results for this series");
+        }
+      }
+    }
+
 
   }
 }
