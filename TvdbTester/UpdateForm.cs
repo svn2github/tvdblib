@@ -14,11 +14,11 @@ namespace TvdbTester
   public partial class UpdateForm : Form
   {
     TvdbHandler m_tvdbHandler;
-    TvdbHandler.Interval m_interval;
+    Interval m_interval;
     bool m_useZip;
     Thread m_updateThread;
 
-    public UpdateForm(TvdbHandler _handler, TvdbHandler.Interval _interval, bool _useZip)
+    public UpdateForm(TvdbHandler _handler, Interval _interval, bool _useZip)
     {
       InitializeComponent();
       m_tvdbHandler = _handler;
@@ -36,14 +36,12 @@ namespace TvdbTester
 
     private void DoUpdating()
     {
-      m_tvdbHandler.UpdateAllSeries(m_interval, m_useZip);
+      m_tvdbHandler.UpdateAllSeries(m_interval, m_useZip, true);
     }
 
     void m_tvdbHandler_UpdateFinished(TvdbHandler.UpdateFinishedEventArgs _event)
     {
-
       UpdateFormFinishedThreadSafe(_event);
-      //throw new NotImplementedException();
     }
 
     delegate void UpdateFormFinishedThreadSafeDelegate(TvdbHandler.UpdateFinishedEventArgs _event);

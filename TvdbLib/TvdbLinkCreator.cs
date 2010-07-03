@@ -133,7 +133,7 @@ namespace TvdbLib
       return link;
     }
 
-    internal static String CreateUpdateLink(string _apiKey, Util.UpdateInterval _interval, bool _zipped)
+    internal static String CreateUpdateLink(string _apiKey, Interval _interval, bool _zipped)
     {
       String link = String.Format("{0}/api/{1}/updates/updates_{2}{3}", BASE_SERVER, _apiKey,
                                   _interval, (_zipped ? ".zip" : ".xml"));
@@ -281,12 +281,12 @@ namespace TvdbLib
     /// <param name="_site">type of external site</param>
     /// <param name="_id">id on the site</param>
     /// <returns></returns>
-    internal static String CreateGetSeriesByIdLink(String _apiKey, TvdbLibInfo.ExternalId _site, String _id)
+    internal static String CreateGetSeriesByIdLink(String _apiKey, ExternalId _site, String _id)
     {
       String siteString = "";
       switch(_site)
       {
-        case TvdbLibInfo.ExternalId.ImdbId:
+        case ExternalId.ImdbId:
           siteString = "imdbid";
           break;
         default:

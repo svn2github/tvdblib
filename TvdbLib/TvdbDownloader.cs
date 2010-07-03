@@ -367,7 +367,18 @@ namespace TvdbLib
       }
     }
 
-    public TvdbSearchResult DownloadSerieByExternalId(TvdbLibInfo.ExternalId _site, String _id)
+    /// <summary>
+    /// Download a series search for the id of an external site
+    /// </summary>
+    /// <param name="_site">The site that provides the external id</param>
+    /// <param name="_id">The id that identifies the series on the external site</param>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">The tvdb database is unavailable</exception>
+    /// <returns>the series object that corresponds to the given site and id</returns>
+    public TvdbSearchResult DownloadSeriesSearchByExternalId(ExternalId _site, String _id)
     {
       //download the xml data from this request
       String xml = "";
@@ -415,6 +426,8 @@ namespace TvdbLib
       }
 
     }
+
+
 
     internal TvdbSeriesFields DownloadSeriesFields(int _seriesId, TvdbLanguage _language)
     {
@@ -765,7 +778,7 @@ namespace TvdbLib
                                    out List<TvdbBanner> _updateBanners, int _interval,
                                     bool _zipped)
     {
-      return DownloadUpdate(out _updateSeries, out _updateEpisodes, out _updateBanners, (Util.UpdateInterval)_interval, _zipped);
+      return DownloadUpdate(out _updateSeries, out _updateEpisodes, out _updateBanners, (Interval)_interval, _zipped);
     }
 
     /// <summary>
@@ -783,7 +796,7 @@ namespace TvdbLib
     /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
     /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
-                                     out List<TvdbBanner> _updateBanners, Util.UpdateInterval _interval, bool _zipped)
+                                     out List<TvdbBanner> _updateBanners, Interval _interval, bool _zipped)
     {
 
       String xml = "";

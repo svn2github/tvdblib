@@ -196,28 +196,7 @@ namespace TvdbLib
     public event UpdateFinishedDelegate UpdateFinished;
     #endregion
 
-    /// <summary>
-    /// Update interval
-    /// </summary>
-    public enum Interval
-    {
-      /// <summary>
-      /// updated content since the last day
-      /// </summary>
-      day = 0,
-      /// <summary>
-      /// updated content since the last week
-      /// </summary>
-      week = 1,
-      /// <summary>
-      /// updated content since the last month
-      /// </summary>
-      month = 2,
-      /// <summary>
-      /// the interval is determined automatically
-      /// </summary>
-      automatic = 3
-    };
+
 
     /// <summary>
     /// UserInfo for this tvdb handler
@@ -368,9 +347,9 @@ namespace TvdbLib
     /// <param name="_externalSite">external provider</param>
     /// <param name="_id">id of the series</param>
     /// <returns>The tvdb series that corresponds to the external id</returns>
-    public TvdbSearchResult GetSeriesByRemoteId(TvdbLibInfo.ExternalId _externalSite, String _id)
+    public TvdbSearchResult GetSeriesByRemoteId(ExternalId _externalSite, String _id)
     {
-      TvdbSearchResult retSeries = m_downloader.DownloadSerieByExternalId(_externalSite, _id);
+      TvdbSearchResult retSeries = m_downloader.DownloadSeriesSearchByExternalId(_externalSite, _id);
 
       return retSeries;
     }
@@ -812,40 +791,7 @@ namespace TvdbLib
     /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
     public bool UpdateAllSeries(bool _zipped)
     {
-      if (m_loadedData == null)
-      {//the cache hasn't been initialised yet
-        throw new TvdbCacheNotInitialisedException("In order to update the series, "
-                                                   + "the cache has to be initialisee");
-      }
-
-      //MakeUpdate(Util.UpdateInterval.month);
-      //return true;
-      TimeSpan timespanLastUpdate = (DateTime.Now - m_loadedData.LastUpdated);
-      //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
-      if (timespanLastUpdate < new TimeSpan(1, 0, 0, 0))
-      {//last update is less than a day ago -> make a daily update
-        //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.day));
-        MakeUpdate(Util.UpdateInterval.day, _zipped);
-      }
-      else if (timespanLastUpdate < new TimeSpan(7, 0, 0, 0))
-      {//last update is less than a week ago -> make a weekly update
-        //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.week));
-        MakeUpdate(Util.UpdateInterval.week, _zipped);
-      }
-      else if (timespanLastUpdate < new TimeSpan(31, 0, 0, 0) ||
-                m_loadedData.LastUpdated == new DateTime())//lastUpdated not available -> make longest possible upgrade
-      {//last update is less than a month ago -> make a monthly update
-        //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.month));
-        MakeUpdate(Util.UpdateInterval.month, _zipped);
-      }
-      else
-      {//todo: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
-        Log.Warn("The last update occured longer than a month ago, to avoid data inconsistency, all cached series "
-                 + "and episode informations is downloaded again");
-        MakeUpdate(Util.UpdateInterval.month, _zipped);
-      }
-
-      return true;
+      return UpdateAllSeries(Interval.automatic, _zipped);
     }
 
     /// <summary>
@@ -862,19 +808,80 @@ namespace TvdbLib
     /// <exception cref="TvdbCacheNotInitialisedException">In order to update, the cache has to be initialised</exception>
     public bool UpdateAllSeries(Interval _interval, bool _zipped)
     {
-      switch (_interval)
-      {
-        case Interval.day:
-          return MakeUpdate(Util.UpdateInterval.day, _zipped);
-        case Interval.week:
-          return MakeUpdate(Util.UpdateInterval.week, _zipped);
-        case Interval.month:
-          return MakeUpdate(Util.UpdateInterval.month, _zipped);
-        case Interval.automatic:
-          return UpdateAllSeries(_zipped);
-        default:
-          return false;
+      if (m_loadedData == null)
+      {//the cache hasn't been initialised yet
+        throw new TvdbCacheNotInitialisedException("In order to update the series, "
+                                                   + "the cache has to be initialisee");
       }
+
+
+
+      if (_interval == Interval.automatic)
+      {
+        //MakeUpdate(Util.UpdateInterval.month);
+        //return true;
+        TimeSpan timespanLastUpdate = (DateTime.Now - m_loadedData.LastUpdated);
+        //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, TvdbLinks.UpdateInterval.day));
+        if (timespanLastUpdate < new TimeSpan(1, 0, 0, 0))
+        {//last update is less than a day ago -> make a daily update
+          //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.day));
+          return UpdateAllSeries(Interval.day, _zipped, false);
+        }
+        else if (timespanLastUpdate < new TimeSpan(7, 0, 0, 0))
+        {//last update is less than a week ago -> make a weekly update
+          //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.week));
+          return UpdateAllSeries(Interval.week, _zipped, false);
+        }
+        else if (timespanLastUpdate < new TimeSpan(31, 0, 0, 0) ||
+                  m_loadedData.LastUpdated == new DateTime())//lastUpdated not available -> make longest possible upgrade
+        {//last update is less than a month ago -> make a monthly update
+          //MakeUpdate(TvdbLinks.CreateUpdateLink(m_apiKey, Util.UpdateInterval.month));
+          return UpdateAllSeries(Interval.month, _zipped, true);
+        }
+        else
+        {//todo: Make a full update -> full update deosn't make sense... (do a complete re-scan?)
+          Log.Warn("The last update occured longer than a month ago, to avoid data inconsistency, all cached series "
+                   + "and episode informations is downloaded again");
+          return UpdateAllSeries(Interval.month, _zipped, true);
+        }
+      }
+      else if (_interval == Interval.day)
+      {
+        return UpdateAllSeries(_interval, _zipped, false);
+      }
+      else if (_interval == Interval.week)
+      {
+        return UpdateAllSeries(_interval, _zipped, false);
+      }
+      else if (_interval == Interval.month)
+      {
+        return UpdateAllSeries(_interval, _zipped, true);
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Update all the series with the updated information
+    /// </summary>
+    /// <param name="_zipped">download zipped file?</param>
+    /// <param name="_interval">Specifies the interval of the update (day, week, month)</param>
+    /// <param name="_reloadOldContent">If yes, will reload all series that haven't been updated longer than the update period (which means
+    ///                                 that only a reload can guarantee that the data is up to date. Should only be used when the data hasn't
+    ///                                 been updated for over a month (otherwise use monthly updates)</param>
+    /// <returns>true if the update was successful, false otherwise</returns>
+    /// <exception cref="TvdbInvalidXmlException"><para>Exception is thrown when there was an error parsing the xml files. </para>
+    ///                                           <para>Feel free to post a detailed description of this issue on http://code.google.com/p/tvdblib 
+    ///                                           or http://forums.thetvdb.com/</para></exception>  
+    /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
+    /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
+    /// <exception cref="TvdbCacheNotInitialisedException">In order to update, the cache has to be initialised</exception>
+    public bool UpdateAllSeries(Interval _interval, bool _zipped, bool _reloadOldContent)
+    {
+      MakeUpdate(_interval, _zipped, _reloadOldContent);
+      return true;
     }
 
     /// <summary>
@@ -910,7 +917,7 @@ namespace TvdbLib
     /// <param name="_interval">interval of update</param>
     /// <param name="_zipped">zipped downloading yes/no</param>
     /// <returns>true if successful, false otherwise</returns>
-    private bool MakeUpdate(Util.UpdateInterval _interval, bool _zipped)
+    private bool MakeUpdate(Interval _interval, bool _zipped, bool _reloadOldContent)
     {
       Log.Info("Started update (" + _interval.ToString() + ")");
       Stopwatch watch = new Stopwatch();
@@ -952,6 +959,88 @@ namespace TvdbLib
       int lastProgress = 0;//send progress event at least every 1 percent
       String updateText = "Updating series";
 
+      if (_reloadOldContent)
+      {
+        //if the last time an item (series or episode) was updated is longer ago than the timespan
+        //we downloaded updates for, it's neccessary to completely reload the object to ensure that
+        //the data is up to date.
+
+        DateTime lastupdated = GetLastUpdate();
+
+        TimeSpan span = new TimeSpan();
+        switch (_interval)
+        {
+          case Interval.day:
+            span = span.Add(new TimeSpan(1, 0, 0, 0));
+            break;
+          case Interval.week:
+            span = span.Add(new TimeSpan(7, 0, 0, 0));
+            break;
+          case Interval.month:
+            span = span.Add(new TimeSpan(30, 0, 0, 0));
+            break;
+        }
+
+
+
+        if (lastupdated < DateTime.Now - span)
+        {//the last update of the cache is longer ago than the timespan we make the update for
+          List<int> allSeriesIds = m_cacheProvider.GetCachedSeries();
+          foreach (int s in allSeriesIds)
+          {
+            //TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(s);
+
+            TvdbSeries series = null;
+            if (seriesToSave.ContainsKey(s))
+            {
+              series = seriesToSave[s];
+            }
+            else
+            {
+              series = m_cacheProvider.LoadSeriesFromCache(s);
+            }
+
+
+            //ForceReload(series, false);
+            if (series.LastUpdated > DateTime.Now - span)
+            {
+              //the series object is up to date, but some episodes might not be
+              foreach (TvdbEpisode e in series.Episodes)
+              {
+                if (e.LastUpdated < DateTime.Now - span)
+                {
+                  if (Util.FindEpisodeInList(e.Id, updateEpisodes) == null)
+                  {//The episode is not in the updates.xml file
+                    TvdbEpisode newEp = new TvdbEpisode();
+                    newEp.Id = e.Id;
+                    newEp.LastUpdated = DateTime.Now;
+                    updateEpisodes.Add(newEp);
+                  }
+                  if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
+
+                }
+              }
+            }
+            else
+            {//the series hasn't been updated recently -> we need to do a complete re-download
+              ForceReload(series, false);//redownload series and save it to cache
+              countUpdatedSeries++;
+              countSeriesDone++;
+              int currProg = (int)(100.0 / countUpdatedSeries * countSeriesDone);
+              updatedSeriesIds.Add(series.Id);
+              updateText = "Reloaded series " + series.SeriesName + "(" + series.Id + ")";
+
+              if (UpdateProgressed != null)
+              {//update has started, we're downloading the updated content from tvdb
+                UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
+                                                             updateText, currProg, 25 + (int)(currProg / 4)));
+              }
+              //if (!seriesToSave.ContainsKey(series.Id)) seriesToSave.Add(series.Id, series);
+            }
+          }
+        }
+      }
+
       foreach (TvdbSeries us in updateSeries)
       {
         if (m_abortUpdate) break;//the update has been aborted
@@ -960,7 +1049,16 @@ namespace TvdbLib
         {
           if (us.Id == s)
           {//changes occured in series
-            TvdbSeries series = m_cacheProvider.LoadSeriesFromCache(us.Id);
+            TvdbSeries series = null;
+            if (seriesToSave.ContainsKey(s))
+            {
+              series = seriesToSave[s];
+            }
+            else
+            {
+              series = m_cacheProvider.LoadSeriesFromCache(s);
+            }
+
             int currProg = (int)(100.0 / countUpdatedSeries * countSeriesDone);
 
             bool updated = UpdateSeries(series, us.LastUpdated, currProg);
@@ -974,7 +1072,6 @@ namespace TvdbLib
 
             if (updated || currProg > lastProgress)
             {//the series has been updated OR the last event was fired at least one percent ago
-
               if (UpdateProgressed != null)
               {//update has started, we're downloading the updated content from tvdb
                 UpdateProgressed(new UpdateProgressEventArgs(UpdateProgressEventArgs.UpdateStage.seriesupdate,
@@ -1143,6 +1240,12 @@ namespace TvdbLib
       }
       return true;
 
+    }
+
+
+    private void ReloadEpisode(TvdbSeries series, TvdbEpisode e)
+    {
+      throw new NotImplementedException();
     }
 
     #region updating of banners, episodes and series
@@ -1473,17 +1576,6 @@ namespace TvdbLib
 
 
     /// <summary>
-    /// Forces a complete update of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
-    /// </summary>
-    /// <param name="_series">Series to reload</param>
-    /// <returns>The new TvdbSeries object</returns>
-    [Obsolete("Deprecated, use ForceReload(TvdbSeries _series) instead")]
-    public TvdbSeries ForceUpdate(TvdbSeries _series)
-    {
-      return ForceReload(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
-    }
-
-    /// <summary>
     /// Forces a complete reload of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
     /// <param name="_series">Series to reload</param>
@@ -1493,19 +1585,15 @@ namespace TvdbLib
       return ForceReload(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded);
     }
 
-        /// <summary>
-    /// Forces a complete reload of the series. All information that has already been loaded (including loaded images!) will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// <summary>
+    /// Forces a complete reload of the series. All information that has already been loaded will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
     /// </summary>
-    /// <param name="_series">Series to update</param>
-    /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
-    /// <param name="_loadActors">Should actors be loaded as well</param>
-    /// <param name="_loadBanners">Should banners be loaded as well</param>
+    /// <param name="_series">Series to reload</param> 
+    /// <param name="_deleteArtwork">If yes, also deletes previously loaded images</param>
     /// <returns>The new TvdbSeries object</returns>
-    [Obsolete("Deprecated, use ForceReload(TvdbSeries _series, bool _loadEpisodes, bool _loadActors, bool _loadBanners) instead")]
-    public TvdbSeries ForceUpdate(TvdbSeries _series, bool _loadEpisodes,
-                                bool _loadActors, bool _loadBanners)
+    public TvdbSeries ForceReload(TvdbSeries _series, bool _deleteArtwork)
     {
-      return ForceReload(_series, _loadEpisodes, _loadActors, _loadBanners);
+      return ForceReload(_series, _series.EpisodesLoaded, _series.TvdbActorsLoaded, _series.BannersLoaded, _deleteArtwork);
     }
 
     /// <summary>
@@ -1519,6 +1607,22 @@ namespace TvdbLib
     public TvdbSeries ForceReload(TvdbSeries _series, bool _loadEpisodes,
                                 bool _loadActors, bool _loadBanners)
     {
+      return ForceReload(_series, _loadEpisodes, _loadActors, _loadBanners, true);
+    }
+
+
+    /// <summary>
+    /// Forces a complete reload of the series. All information that has already been loaded will be deleted and reloaded from tvdb -> if you only want to update the series, use the "MakeUpdate" method
+    /// </summary>
+    /// <param name="_series">Series to update</param>
+    /// <param name="_loadEpisodes">Should episodes be loaded as well</param>
+    /// <param name="_loadActors">Should actors be loaded as well</param>
+    /// <param name="_loadBanners">Should banners be loaded as well</param>
+    /// <param name="_deleteArtwork">If yes, also deletes previously loaded images</param>
+    /// <returns>The new TvdbSeries object</returns>
+    public TvdbSeries ForceReload(TvdbSeries _series, bool _loadEpisodes,
+                                bool _loadActors, bool _loadBanners, bool _replaceArtwork)
+    {
       if (_series != null)
       {
         TvdbSeries newSeries = m_downloader.DownloadSeries(_series.Id, _series.Language, _loadEpisodes,
@@ -1528,7 +1632,7 @@ namespace TvdbLib
         {
           if (m_cacheProvider != null && m_cacheProvider.Initialised)
           {//remove old series from cache and store the reloaded one
-            m_cacheProvider.RemoveFromCache(_series.Id);
+            if (_replaceArtwork) m_cacheProvider.RemoveFromCache(_series.Id);//removes all info (including images)
             m_cacheProvider.SaveToCache(newSeries);
           }
 

@@ -30,13 +30,45 @@ using TvdbLib.Data.Banner;
 
 namespace TvdbLib
 {
-  internal class Util
+  #region enums
+  /// <summary>
+  /// ID's of external sites
+  /// </summary>
+  public enum ExternalId
   {
     /// <summary>
-    /// Update interval
+    /// Id for the popular movie/tv site www.imdb.com
     /// </summary>
-    internal enum UpdateInterval { day = 0, week = 1, month = 2 };
+    ImdbId = 0
+  }
 
+  #endregion
+
+  /// <summary>
+  /// Update interval
+  /// </summary>
+  public enum Interval
+  {
+    /// <summary>
+    /// updated content since the last day
+    /// </summary>
+    day = 0,
+    /// <summary>
+    /// updated content since the last week
+    /// </summary>
+    week = 1,
+    /// <summary>
+    /// updated content since the last month
+    /// </summary>
+    month = 2,
+    /// <summary>
+    /// the interval is determined automatically
+    /// </summary>
+    automatic = 3
+  };
+
+  internal class Util
+  {
     /// <summary>
     /// Type when handling user favorites
     /// </summary>
@@ -373,13 +405,49 @@ namespace TvdbLib
       /// <summary>
       /// Parse a datetime value from thetvdb
       /// </summary>
-      /// <param name="p"></param>
-      /// <returns></returns>
+      /// <param name="_date">The date string that needs parsing</param>
+      /// <returns>DateTime object of the parsed date</returns>
     internal static DateTime ParseDateTime(string _date)
     {
         DateTime retVal;
         DateTime.TryParse(_date, out retVal);
         return retVal;
+    }
+
+    /// <summary>
+    /// Tries to find an episode by a given id from a list of episodes
+    /// </summary>
+    /// <param name="_episodeId">Id of the episode we're looking for</param>
+    /// <param name="_episodeList">List of episodes</param>
+    /// <returns>The first found TvdbEpisode object or null if nothing was found</returns>
+    internal static TvdbEpisode FindEpisodeInList(int _episodeId, List<TvdbEpisode> _episodeList)
+    {
+      foreach (TvdbEpisode e in _episodeList)
+      {
+        if (e.Id == _episodeId)
+        {//found episode
+          return e;
+        }
+      }
+      return null;//no episode found
+    }
+
+    /// <summary>
+    /// Tries to find a series by a given id from a list of series
+    /// </summary>
+    /// <param name="_seriesId">Id of the series we're looking for</param>
+    /// <param name="_seriesList">List of series objects</param>
+    /// <returns>The first found TvdbSeries object or null if nothing was found</returns>
+    internal static TvdbSeries FindSeriesInList(int _seriesId, List<TvdbSeries> _seriesList)
+    {
+      foreach (TvdbSeries s in _seriesList)
+      {
+        if (s.Id == _seriesId)
+        {//series found
+          return s;
+        }
+      }
+      return null;//no series found
     }
   }
 }

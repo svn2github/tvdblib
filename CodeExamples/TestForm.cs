@@ -235,7 +235,7 @@ namespace TvdbTester
     private void cmdTestGetSeriesByExternalId_Click(object sender, EventArgs e)
     {
       TvdbDownloader downloader = new TvdbDownloader(File.ReadAllText("api_key.txt"));
-      TvdbSearchResult s = downloader.DownloadSerieByExternalId(TvdbLibInfo.ExternalId.ImdbId, txtExternalId.Text);
+      TvdbSearchResult s = downloader.DownloadSeriesSearchByExternalId(ExternalId.ImdbId, txtExternalId.Text);
     }
   }
 }

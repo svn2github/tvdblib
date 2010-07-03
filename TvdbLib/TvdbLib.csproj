@@ -113,7 +113,6 @@
     <Compile Include="Exceptions\TvdbException.cs" />
     <Compile Include="Exceptions\TvdbInvalidApiKeyException.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="TvdbLibInfo.cs" />
     <Compile Include="TvdbLinkCreator.cs" />
     <Compile Include="Data\TvdbMirror.cs" />
     <Compile Include="Exceptions\TvdbNotAvailableException.cs" />

@@ -943,22 +943,22 @@ namespace TvdbTester
 
     private void cmdRefreshSeries_Click(object sender, EventArgs e)
     {
-      TvdbLib.TvdbHandler.Interval updateInterval = TvdbHandler.Interval.automatic;
+      Interval updateInterval = Interval.automatic;
       if (rbUpdateAutomatic.Checked)
       {
-        updateInterval = TvdbHandler.Interval.automatic;
+        updateInterval = Interval.automatic;
       }
       else if (rbUpdateDay.Checked)
       {
-        updateInterval = TvdbHandler.Interval.day;
+        updateInterval = Interval.day;
       }
       else if (rbUpdateWeek.Checked)
       {
-        updateInterval = TvdbHandler.Interval.week;
+        updateInterval = Interval.week;
       }
       else if (rbUpdateMonth.Checked)
       {
-        updateInterval = TvdbHandler.Interval.month;
+        updateInterval = Interval.month;
       }
       UpdateForm frm = new UpdateForm(m_tvdbHandler, updateInterval, cbUseZipped.Checked);
       frm.ShowDialog();
@@ -1024,7 +1024,7 @@ namespace TvdbTester
     {
       if (!txtImdbSearchId.Text.Equals(""))
       {
-        TvdbSearchResult result = m_tvdbHandler.GetSeriesByRemoteId(TvdbLibInfo.ExternalId.ImdbId, txtImdbSearchId.Text);
+        TvdbSearchResult result = m_tvdbHandler.GetSeriesByRemoteId(ExternalId.ImdbId, txtImdbSearchId.Text);
         if (result != null)
         {
           List<TvdbSearchResult> list = new List<TvdbSearchResult>();

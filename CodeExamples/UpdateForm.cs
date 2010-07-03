@@ -14,11 +14,11 @@ namespace TvdbTester
   public partial class UpdateForm : Form
   {
     TvdbHandler m_tvdbHandler;
-    TvdbHandler.Interval m_interval;
+    Interval m_interval;
     bool m_useZip;
     Thread m_updateThread;
 
-    public UpdateForm(TvdbHandler _handler, TvdbHandler.Interval _interval, bool _useZip)
+    public UpdateForm(TvdbHandler _handler, Interval _interval, bool _useZip)
     {
       InitializeComponent();
       m_tvdbHandler = _handler;
