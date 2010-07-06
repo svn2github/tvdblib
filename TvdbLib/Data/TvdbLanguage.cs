@@ -128,6 +128,8 @@ namespace TvdbLib.Data
       return false;
     }
 
+    
+
     /// <summary>
     /// Returns a hash code of the object
     /// </summary>
@@ -146,7 +148,9 @@ namespace TvdbLib.Data
     /// <returns>True if the two language objects are the same, false otherwise</returns>
     public static bool operator ==(TvdbLanguage a, TvdbLanguage b)
     {
-      return a.Equals(b);
+      if (((object)a) == null || ((object)b) == null) return false; 
+      if (a.Abbriviation.Equals(b.Abbriviation)) return true;
+      return false;
     }
 
     /// <summary>
@@ -158,7 +162,11 @@ namespace TvdbLib.Data
     /// <returns>True if the two language objects are the same, false otherwise</returns>
     public static bool operator !=(TvdbLanguage a, TvdbLanguage b)
     {
-      return !a.Equals(b);
+      if (((object)a) == null && ((object)b) == null) return false; 
+      if (((object)a) == null || ((object)b) == null) return true; 
+
+      if (!a.Abbriviation.Equals(b.Abbriviation)) return true;
+      return false;
     }
   }
 }

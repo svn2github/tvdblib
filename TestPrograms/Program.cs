@@ -15,7 +15,7 @@ namespace TestPrograms
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new WikiCodeExamples());
+      Application.Run(new TestMain());
     }
   }
 }

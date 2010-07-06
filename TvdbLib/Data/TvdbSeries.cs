@@ -76,9 +76,6 @@ namespace TvdbLib.Data
     /// </summary>
     public TvdbSeries()
     {
-      this.Episodes = new List<TvdbEpisode>();
-      this.EpisodesLoaded = false;
-
       m_banners = new List<TvdbBanner>();
       m_bannersLoaded = false;
       m_tvdbActorsLoaded = false;
@@ -95,6 +92,24 @@ namespace TvdbLib.Data
       AddLanguage(_fields);
       SetLanguage(_fields.Language);
       //UpdateTvdbFields(_fields, true);
+    }
+
+
+    internal void SetEpisodes(List<TvdbEpisode> _episodes)
+    {
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in m_seriesTranslations)
+      {
+        if (kvp.Key.Abbriviation.Equals(this.Language.Abbriviation))
+        {
+          kvp.Value.EpisodesLoaded = true;
+          kvp.Value.Episodes.Clear();
+          kvp.Value.Episodes.AddRange(_episodes);
+        }
+      }
+
+      this.EpisodesLoaded = true;
+      this.Episodes.Clear();
+      this.Episodes.AddRange(_episodes);
     }
 
     /// <summary>
@@ -480,7 +495,8 @@ namespace TvdbLib.Data
           }
         }
 
-        this.Episodes = _series.Episodes;
+        this.Episodes.Clear();
+        this.Episodes.AddRange(_series.Episodes);
       }
 
       if (_series.TvdbActorsLoaded)
@@ -542,5 +558,7 @@ namespace TvdbLib.Data
         this.Banners = _series.Banners;
       }
     }
+
+
   }
 }

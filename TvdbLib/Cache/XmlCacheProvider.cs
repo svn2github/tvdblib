@@ -189,13 +189,12 @@ namespace TvdbLib.Cache
         Log.Warn("Couldn't delete old cache files", ex);
       }
 
-      foreach (TvdbLanguage l in _series.GetAvailableLanguages())
+      TvdbLanguage currentLanguage = _series.Language;
+      foreach (KeyValuePair<TvdbLanguage, TvdbSeriesFields> kvp in _series.SeriesTranslations)
       {//write all languages to file
-        String fName = root + Path.DirectorySeparatorChar + l.Abbriviation +
-                       (_series.EpisodesLoaded ? "_full" : "") + ".xml";
-        _series.SetLanguage(l);
-        m_xmlWriter.WriteSeriesContent(_series, fName);
-
+        String fName = root + Path.DirectorySeparatorChar + kvp.Key.Abbriviation +
+                       (kvp.Value.EpisodesLoaded ? "_full" : "") + ".xml";
+        m_xmlWriter.WriteSeriesContent(new TvdbSeries(kvp.Value), fName);
       }
 
       if (_series.BannersLoaded)
@@ -339,7 +338,8 @@ namespace TvdbLib.Cache
             {
               List<TvdbEpisode> epList = m_xmlReader.ExtractEpisodes(content);
               s.EpisodesLoaded = true;
-              s.Episodes = epList;
+              s.Episodes.Clear();
+              s.Episodes.AddRange(epList);
             }
             series.AddLanguage(s);
           }
@@ -360,6 +360,11 @@ namespace TvdbLib.Cache
       if (!series.BannerPath.Equals(""))
       {
         series.Banners.Add(new TvdbSeriesBanner(series.Id, series.BannerPath, series.Language, TvdbSeriesBanner.Type.graphical));
+      }
+
+      if (!series.PosterPath.Equals(""))
+      {
+        series.Banners.Add(new TvdbPosterBanner(series.Id, series.PosterPath, series.Language));
       }
 
       if (!series.FanartPath.Equals(""))

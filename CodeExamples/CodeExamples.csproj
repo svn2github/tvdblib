@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{453E208C-C20A-485A-A030-19B5FA7F3ADE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WikiCodeExamples</RootNamespace>
+    <RootNamespace>TestPrograms</RootNamespace>
     <AssemblyName>WikiCodeExamples</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -88,63 +88,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BannerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="BannerControl.Designer.cs">
-      <DependentUpon>BannerControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="iBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="iBar.Designer.cs">
-      <DependentUpon>iBar.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ImageTestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ImageTestForm.Designer.cs">
-      <DependentUpon>ImageTestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MemoryTest.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MemoryTest.Designer.cs">
-      <DependentUpon>MemoryTest.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BannerControl.resx">
-      <DependentUpon>BannerControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="iBar.resx">
-      <DependentUpon>iBar.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ImageTestForm.resx">
-      <DependentUpon>ImageTestForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MemoryTest.resx">
-      <DependentUpon>MemoryTest.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestForm.resx">
-      <DependentUpon>TestForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UpdateForm.resx">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UpdatingTestForm.resx">
-      <DependentUpon>UpdatingTestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WikiCodeExamples.resx">
@@ -164,24 +112,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="TestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestForm.Designer.cs">
-      <DependentUpon>TestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UpdateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UpdateForm.Designer.cs">
-      <DependentUpon>UpdateForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UpdatingTestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UpdatingTestForm.Designer.cs">
-      <DependentUpon>UpdatingTestForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WikiCodeExamples.cs">
       <SubType>Form</SubType>

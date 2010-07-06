@@ -495,8 +495,7 @@ namespace TvdbLib
           loadedAdditionalInfo = true;
           if (epList != null)
           {
-            series.EpisodesLoaded = true;
-            series.Episodes = epList;
+            series.SetEpisodes(epList);
           }
         }
 

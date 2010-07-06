@@ -82,6 +82,15 @@ namespace TvdbLib.Data
     #endregion
 
     /// <summary>
+    /// TvdbSeriesFields constructor
+    /// </summary>
+    public TvdbSeriesFields()
+    {
+      m_episodes = new List<TvdbEpisode>();
+      m_episodesLoaded = false;
+    }
+
+    /// <summary>
     /// Returns a short description of the episode (e.g. 1x20 Episodename)
     /// </summary>
     /// <returns>short description of the episode</returns>
@@ -385,7 +394,8 @@ namespace TvdbLib.Data
           }
         }
         this.EpisodesLoaded = _fields.EpisodesLoaded;
-        this.Episodes = _fields.Episodes;
+        this.Episodes.Clear();
+        this.Episodes.AddRange(_fields.Episodes);
       }
     }
   }

@@ -1,4 +1,4 @@
-﻿namespace WikiCodeExamples
+﻿namespace TestPrograms
 {
   partial class WikiCodeExamples
   {

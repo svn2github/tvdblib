@@ -11,7 +11,7 @@ using TvdbLib.Data;
 using System.IO;
 using TvdbLib.Cache;
 
-namespace WikiCodeExamples
+namespace TestPrograms
 {
   public partial class WikiCodeExamples : Form
   {
