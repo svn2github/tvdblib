@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using TvdbTester;
 
 namespace TestPrograms
 {
@@ -30,7 +31,7 @@ namespace TestPrograms
 
     private void cmdShowMainTest_Click(object sender, EventArgs e)
     {
-      TestMain mainForm = new TestMain();
+      GeneralTestForm mainForm = new GeneralTestForm();
       mainForm.Show();
     }
 

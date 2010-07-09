@@ -486,6 +486,7 @@ namespace TvdbLib.Data
     internal void UpdateEpisodeInfo(TvdbEpisode _episode)
     {
       this.LastUpdated = _episode.LastUpdated;
+      this.BannerPath = _episode.BannerPath;
       this.Banner = _episode.Banner;
       this.AbsoluteNumber = _episode.AbsoluteNumber;
       this.CombinedEpisodeNumber = _episode.CombinedEpisodeNumber;

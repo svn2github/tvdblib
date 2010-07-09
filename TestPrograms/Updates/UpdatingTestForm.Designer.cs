@@ -50,7 +50,7 @@
       this.label5 = new System.Windows.Forms.Label();
       this.txtLastUpdated = new System.Windows.Forms.TextBox();
       this.cmdUpdate = new System.Windows.Forms.Button();
-      this.checkBox1 = new System.Windows.Forms.CheckBox();
+      this.cbDownloadCurrentVersion = new System.Windows.Forms.CheckBox();
       this.rbUpdateMonth = new System.Windows.Forms.RadioButton();
       this.rbUpdateWeek = new System.Windows.Forms.RadioButton();
       this.rbUpdateDay = new System.Windows.Forms.RadioButton();
@@ -74,6 +74,8 @@
       this.deleteRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.revertToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compareBetweenTheseVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.chSeriesiD = new System.Windows.Forms.ColumnHeader();
+      this.chSeriesName = new System.Windows.Forms.ColumnHeader();
       this.groupBox1.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox2.SuspendLayout();
@@ -271,17 +273,17 @@
       this.cmdUpdate.UseVisualStyleBackColor = true;
       this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
       // 
-      // checkBox1
+      // cbDownloadCurrentVersion
       // 
-      this.checkBox1.AutoSize = true;
-      this.checkBox1.Checked = true;
-      this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBox1.Location = new System.Drawing.Point(15, 42);
-      this.checkBox1.Name = "checkBox1";
-      this.checkBox1.Size = new System.Drawing.Size(169, 17);
-      this.checkBox1.TabIndex = 13;
-      this.checkBox1.Text = "Download current version also";
-      this.checkBox1.UseVisualStyleBackColor = true;
+      this.cbDownloadCurrentVersion.AutoSize = true;
+      this.cbDownloadCurrentVersion.Checked = true;
+      this.cbDownloadCurrentVersion.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.cbDownloadCurrentVersion.Location = new System.Drawing.Point(15, 42);
+      this.cbDownloadCurrentVersion.Name = "cbDownloadCurrentVersion";
+      this.cbDownloadCurrentVersion.Size = new System.Drawing.Size(169, 17);
+      this.cbDownloadCurrentVersion.TabIndex = 13;
+      this.cbDownloadCurrentVersion.Text = "Download current version also";
+      this.cbDownloadCurrentVersion.UseVisualStyleBackColor = true;
       // 
       // rbUpdateMonth
       // 
@@ -337,10 +339,14 @@
       // 
       // lvCachedSeries
       // 
-      this.lvCachedSeries.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+      this.lvCachedSeries.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chSeriesiD,
+            this.chSeriesName});
+      this.lvCachedSeries.FullRowSelect = true;
+      this.lvCachedSeries.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
       this.lvCachedSeries.Location = new System.Drawing.Point(15, 65);
       this.lvCachedSeries.Name = "lvCachedSeries";
-      this.lvCachedSeries.Size = new System.Drawing.Size(169, 329);
+      this.lvCachedSeries.Size = new System.Drawing.Size(169, 543);
       this.lvCachedSeries.TabIndex = 60;
       this.lvCachedSeries.UseCompatibleStateImageBehavior = false;
       this.lvCachedSeries.View = System.Windows.Forms.View.Details;
@@ -364,7 +370,7 @@
       // 
       // txtBefore
       // 
-      this.txtBefore.Location = new System.Drawing.Point(187, 449);
+      this.txtBefore.Location = new System.Drawing.Point(191, 449);
       this.txtBefore.Name = "txtBefore";
       this.txtBefore.Size = new System.Drawing.Size(242, 159);
       this.txtBefore.TabIndex = 61;
@@ -491,14 +497,14 @@
       // deleteRevisionToolStripMenuItem
       // 
       this.deleteRevisionToolStripMenuItem.Name = "deleteRevisionToolStripMenuItem";
-      this.deleteRevisionToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+      this.deleteRevisionToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
       this.deleteRevisionToolStripMenuItem.Text = "Delete Revision";
       this.deleteRevisionToolStripMenuItem.Click += new System.EventHandler(this.deleteRevisionToolStripMenuItem_Click);
       // 
       // revertToThisRevisionToolStripMenuItem
       // 
       this.revertToThisRevisionToolStripMenuItem.Name = "revertToThisRevisionToolStripMenuItem";
-      this.revertToThisRevisionToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+      this.revertToThisRevisionToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
       this.revertToThisRevisionToolStripMenuItem.Text = "Revert to this Revision";
       this.revertToThisRevisionToolStripMenuItem.Click += new System.EventHandler(this.revertToThisRevisionToolStripMenuItem_Click);
       // 
@@ -508,13 +514,23 @@
       this.compareBetweenTheseVersionsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
       this.compareBetweenTheseVersionsToolStripMenuItem.Text = "Compare these versions";
       // 
+      // chSeriesiD
+      // 
+      this.chSeriesiD.Text = "ID";
+      this.chSeriesiD.Width = 49;
+      // 
+      // chSeriesName
+      // 
+      this.chSeriesName.Text = "Name";
+      this.chSeriesName.Width = 116;
+      // 
       // UpdatingTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(977, 817);
-      this.Controls.Add(this.txtBefore);
       this.Controls.Add(this.groupBox4);
+      this.Controls.Add(this.txtBefore);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.label7);
       this.Controls.Add(this.label6);
@@ -524,7 +540,7 @@
       this.Controls.Add(this.txtCurrent);
       this.Controls.Add(this.lvCachedSeries);
       this.Controls.Add(this.cmdBack);
-      this.Controls.Add(this.checkBox1);
+      this.Controls.Add(this.cbDownloadCurrentVersion);
       this.Controls.Add(this.txtLastUpdated);
       this.Controls.Add(this.txtCacheLocation);
       this.Controls.Add(this.label5);
@@ -571,7 +587,7 @@
     private System.Windows.Forms.Button cmdShowUpdateLog;
     private System.Windows.Forms.Button cmdCompareValuesDetailed;
     private System.Windows.Forms.Button cmdComareValues;
-    private System.Windows.Forms.CheckBox checkBox1;
+    private System.Windows.Forms.CheckBox cbDownloadCurrentVersion;
     private System.Windows.Forms.RadioButton rbUpdateMonth;
     private System.Windows.Forms.RadioButton rbUpdateWeek;
     private System.Windows.Forms.RadioButton rbUpdateDay;
@@ -595,5 +611,7 @@
     private System.Windows.Forms.ToolStripMenuItem deleteRevisionToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem revertToThisRevisionToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem compareBetweenTheseVersionsToolStripMenuItem;
+    private System.Windows.Forms.ColumnHeader chSeriesiD;
+    private System.Windows.Forms.ColumnHeader chSeriesName;
   }
 }

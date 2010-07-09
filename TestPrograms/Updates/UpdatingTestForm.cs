@@ -65,7 +65,7 @@ namespace TestPrograms
       }
 
       m_tvdbHandler = new TvdbHandler(provider, File.ReadAllText("api_key.txt"));
-     // m_tvdbHandler.UserInfo = new TvdbLib.Data.TvdbUser("DieBagger", txtUserId.Text);
+      // m_tvdbHandler.UserInfo = new TvdbLib.Data.TvdbUser("DieBagger", txtUserId.Text);
       m_tvdbHandler.InitCache();
       txtLastUpdated.Text = m_tvdbHandler.GetLastUpdate().ToString();
 
@@ -74,6 +74,7 @@ namespace TestPrograms
       cached.ForEach(delegate(int s)
       {
         ListViewItem item = new ListViewItem(s.ToString());
+        item.SubItems.Add("");
         item.Tag = s;
         lvCachedSeries.Items.Add(item);
       });
@@ -93,7 +94,22 @@ namespace TestPrograms
           before = m_tvdbHandler.GetSeries((int)lvCachedSeries.SelectedItems[0].Tag, TvdbLanguage.DefaultLanguage, true, true, true);
           if (!m_beforeUpdateList.Contains(before)) m_beforeUpdateList.Add(before);
         }
-        FillSeriesDetails(before, after, null);
+
+        lvCachedSeries.SelectedItems[0].SubItems[1].Text = before.SeriesName;
+
+        TvdbSeries current = null;
+        if (cbDownloadCurrentVersion.Checked)
+        {
+          current = GetCurrent(before.Id);
+
+          if (current == null)
+          {
+            current = m_tvdbDownloader.DownloadSeries(before.Id, before.Language, true, true, true);
+            m_currentVersionList.Add(current);
+          }
+        }
+
+        FillSeriesDetails(before, after, current);
       }
     }
 
@@ -254,24 +270,102 @@ namespace TestPrograms
       TvdbEpisode current = GetEpisode(_current, _id);
       item.SubItems.Add(current != null ? current.SeasonNumber + "x" + current.EpisodeNumber + " " + current.EpisodeName : "");
       item.Tag = 1;//episode
-      if (CheckEpisodeChanged(before, after, current))
-      {
+      int epChanged = CheckEpisodeChanged(before, after, current);
+      if (epChanged == 1)
+      {//has been updated
         item.BackColor = Color.Orange;
       }
+      else if (epChanged == 2)
+      {//episode is different from the current version
+        item.BackColor = Color.Red;
+      }
+
       return item;
     }
 
-    private bool CheckEpisodeChanged(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
+    private int CheckEpisodeChanged(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
     {
-      if (_before != null && _after != null)
+      if (_before != null && _after != null && _current != null)
       {
-        if (m_updatedEpisodes.Contains(_before.Id))
+        if (EpsiodeChanged(_after, _current))
         {
-          return true;
+          return 2;
+        }
+        else
+        {
+          return 0;
         }
       }
-      return false;
+
+      if (_before == null && _after == null) return 2;//episode is available but hasn't been added to our cache yet
+
+      if (_current == null)
+      {//current version hasn't been loaded
+        if (_before != null && _after != null)
+        {//episode has been updated
+          return 1;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+
+      if (_after == null)
+      {
+        if (EpsiodeChanged(_before, _current))
+        {
+          return 2;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+
+      return 0;
     }
+
+    /// <summary>
+    /// Returns true if episodes are different
+    /// </summary>
+    /// <param name="_ep1"></param>
+    /// <param name="_ep2"></param>
+    /// <returns></returns>
+    private bool EpsiodeChanged(TvdbEpisode _ep1, TvdbEpisode _ep2)
+    {
+      bool episodeChanged = false;
+      if (!_ep1.AbsoluteNumber.Equals(_ep2.AbsoluteNumber)) episodeChanged = true;
+      if (!_ep1.AirsAfterSeason.Equals(_ep2.AirsAfterSeason)) episodeChanged = true;
+      if (!_ep1.AirsBeforeEpisode.Equals(_ep2.AirsBeforeEpisode)) episodeChanged = true;
+      if (!_ep1.AirsBeforeSeason.Equals(_ep2.AirsBeforeSeason)) episodeChanged = true;
+      if (!_ep1.BannerPath.Equals(_ep2.BannerPath)) episodeChanged = true;
+      if (!_ep1.CombinedEpisodeNumber.Equals(_ep2.CombinedEpisodeNumber)) episodeChanged = true;
+      if (!_ep1.CombinedSeason.Equals(_ep2.CombinedSeason)) episodeChanged = true;
+      if (!_ep1.DirectorsString.Equals(_ep2.DirectorsString)) episodeChanged = true;
+      if (!_ep1.DvdChapter.Equals(_ep2.DvdChapter)) episodeChanged = true;
+      if (!_ep1.DvdDiscId.Equals(_ep2.DvdDiscId)) episodeChanged = true;
+      if (!_ep1.DvdEpisodeNumber.Equals(_ep2.DvdEpisodeNumber)) episodeChanged = true;
+      if (!_ep1.DvdSeason.Equals(_ep2.DvdSeason)) episodeChanged = true;
+      if (!_ep1.EpisodeName.Equals(_ep2.EpisodeName)) episodeChanged = true;
+      if (!_ep1.EpisodeNumber.Equals(_ep2.EpisodeNumber)) episodeChanged = true;
+      if (!_ep1.FirstAired.Equals(_ep2.FirstAired)) episodeChanged = true;
+      if (!_ep1.GuestStarsString.Equals(_ep2.GuestStarsString)) episodeChanged = true;
+      if (!_ep1.Id.Equals(_ep2.Id)) episodeChanged = true;
+      if (!_ep1.ImdbId.Equals(_ep2.ImdbId)) episodeChanged = true;
+      if (!_ep1.IsSpecial.Equals(_ep2.IsSpecial)) episodeChanged = true;
+      //if (!_ep1.LastUpdated.Equals(_ep2.LastUpdated)) episodeChanged = true;
+      if (!_ep1.Overview.Equals(_ep2.Overview)) episodeChanged = true;
+      if (!_ep1.ProductionCode.Equals(_ep2.ProductionCode)) episodeChanged = true;
+      //if (!_ep1.Rating.Equals(_ep2.Rating)) episodeChanged = true;
+      if (!_ep1.SeasonId.Equals(_ep2.SeasonId)) episodeChanged = true;
+      if (!_ep1.SeasonNumber.Equals(_ep2.SeasonNumber)) episodeChanged = true;
+      if (!_ep1.SeriesId.Equals(_ep2.SeriesId)) episodeChanged = true;
+      if (!_ep1.WriterString.Equals(_ep2.WriterString)) episodeChanged = true;
+
+      return episodeChanged;
+    }
+
 
     private TvdbEpisode GetEpisode(TvdbSeries _series, int _id)
     {
@@ -292,6 +386,11 @@ namespace TestPrograms
       if (!_before.Equals("") && !_after.Equals("") && !_before.Equals(_after))
       {
         item.BackColor = Color.Orange;
+      }
+
+      if ((!_after.Equals("") && !_after.Equals(_current)) || (_after.Equals("") && !_before.Equals(_current)))
+      {
+        item.BackColor = Color.Red;
       }
 
       item.Tag = 0; //series
@@ -395,7 +494,7 @@ namespace TestPrograms
         int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
         TvdbSeries before = GetBefore((int)lvSeriesDetails.Tag);
         TvdbSeries after = GetAfter((int)lvSeriesDetails.Tag);
-        TvdbSeries current = GetAfter((int)lvSeriesDetails.Tag);
+        TvdbSeries current = GetCurrent((int)lvSeriesDetails.Tag);
 
         FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
       }
@@ -497,6 +596,21 @@ namespace TestPrograms
                                            _after != null ? _after.AbsoluteNumber.ToString() : "",
                                            _current != null ? _current.AbsoluteNumber.ToString() : ""));
 
+      //CombinedEpisodeNumber
+      lvSeriesDetails.Items.Add(CreateItem("CombinedEpisodeNumber", _before != null ? _before.CombinedEpisodeNumber.ToString() : "",
+                                           _after != null ? _after.CombinedEpisodeNumber.ToString() : "",
+                                           _current != null ? _current.CombinedEpisodeNumber.ToString() : ""));
+
+      //CombinedSeason
+      lvSeriesDetails.Items.Add(CreateItem("CombinedSeason", _before != null ? _before.CombinedSeason.ToString() : "",
+                                           _after != null ? _after.CombinedSeason.ToString() : "",
+                                           _current != null ? _current.CombinedSeason.ToString() : ""));
+
+      //AbsoluteNumber
+      lvSeriesDetails.Items.Add(CreateItem("AbsoluteNumber", _before != null ? _before.AbsoluteNumber.ToString() : "",
+                                           _after != null ? _after.AbsoluteNumber.ToString() : "",
+                                           _current != null ? _current.AbsoluteNumber.ToString() : ""));
+
       //SeriesId
       lvSeriesDetails.Items.Add(CreateItem("SeriesId", _before != null ? _before.SeriesId.ToString() : "",
                                            _after != null ? _after.SeriesId.ToString() : "",
@@ -511,6 +625,7 @@ namespace TestPrograms
       lvSeriesDetails.Items.Add(CreateItem("SeasonNumber", _before != null ? _before.SeasonNumber.ToString() : "",
                                            _after != null ? _after.SeasonNumber.ToString() : "",
                                            _current != null ? _current.SeasonNumber.ToString() : ""));
+
 
     }
 

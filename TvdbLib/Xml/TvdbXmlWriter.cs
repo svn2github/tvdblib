@@ -285,7 +285,7 @@ namespace TvdbLib.Xml
           TvdbSeriesBanner sb = (TvdbSeriesBanner)b;
           banner.Add(new XElement("BannerType", "series"));
           banner.Add(new XElement("BannerType2", sb.BannerType));
-          banner.Add(new XElement("Language", sb.Language.Abbriviation));
+          banner.Add(new XElement("Language", (sb.Language != null ? sb.Language.Abbriviation : "")));
         }
         else if (b.GetType() == typeof(TvdbFanartBanner))
         {
@@ -313,7 +313,7 @@ namespace TvdbLib.Xml
           }
           banner.Add(new XElement("VignettePath", fb.VignettePath));
           banner.Add(new XElement("ThumbnailPath", fb.ThumbPath));
-          banner.Add(new XElement("Language", fb.Language.Abbriviation));
+          banner.Add(new XElement("Language", (fb.Language != null ? fb.Language.Abbriviation : "")));
           banner.Add(new XElement("SeriesName", fb.ContainsSeriesName.ToString()));
         }
         else if (b.GetType() == typeof(TvdbSeasonBanner))
@@ -321,7 +321,7 @@ namespace TvdbLib.Xml
           TvdbSeasonBanner sb = (TvdbSeasonBanner)b;
           banner.Add(new XElement("BannerType", "season"));
           banner.Add(new XElement("BannerType2", sb.BannerType));
-          banner.Add(new XElement("Language", sb.Language.Abbriviation));
+          banner.Add(new XElement("Language", (sb.Language != null ? sb.Language.Abbriviation : "")));
           banner.Add(new XElement("Season", sb.Season));
         }
         else if (b.GetType() == typeof(TvdbPosterBanner))
@@ -329,7 +329,7 @@ namespace TvdbLib.Xml
           TvdbPosterBanner pb = (TvdbPosterBanner)b;
           banner.Add(new XElement("BannerType", "poster"));
           banner.Add(new XElement("BannerType2", pb.Resolution.X + "x" + pb.Resolution.Y));
-          banner.Add(new XElement("Language", pb.Language.Abbriviation));
+          banner.Add(new XElement("Language", (pb.Language != null ? pb.Language.Abbriviation : "")));
         }
         else
         {

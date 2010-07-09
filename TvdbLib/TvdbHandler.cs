@@ -1370,7 +1370,24 @@ namespace TvdbLib
                   {
                     newEpisode.LastUpdated = _episode.LastUpdated;
 
+
+                    #region fix for http://forums.thetvdb.com/viewtopic.php?f=8&t=3993
+                    //xml of single episodes doesn't contain  CombinedSeason and CombinedEpisodeNumber, so if
+                    //we have values for those, don't override them
+                    //-> http://forums.thetvdb.com/viewtopic.php?f=8&t=3993
+                    //todo: remove this once tvdb fixed that issue
+                    if (e.CombinedSeason != -99 && newEpisode.CombinedSeason == 0)
+                    {
+                      newEpisode.CombinedSeason = e.CombinedSeason;
+                    }
+                    if (e.CombinedEpisodeNumber != -99 && newEpisode.CombinedEpisodeNumber == 0)
+                    {
+                      newEpisode.CombinedEpisodeNumber = e.CombinedEpisodeNumber;
+                    }
+                    #endregion
+
                     e.UpdateEpisodeInfo(newEpisode);
+
                     e.Banner.CacheProvider = m_cacheProvider;
                     e.Banner.SeriesId = _series.Id;
 
