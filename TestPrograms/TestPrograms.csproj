@@ -146,6 +146,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Updates\CacheRevision.cs" />
+    <Compile Include="Updates\ListViewTag.cs" />
     <Compile Include="Updates\RevisionForm.cs">
       <SubType>Form</SubType>
     </Compile>

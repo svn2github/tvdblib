@@ -57,6 +57,8 @@
       this.rbUpdateAutomatic = new System.Windows.Forms.RadioButton();
       this.cmdBack = new System.Windows.Forms.Button();
       this.lvCachedSeries = new System.Windows.Forms.ListView();
+      this.chSeriesiD = new System.Windows.Forms.ColumnHeader();
+      this.chSeriesName = new System.Windows.Forms.ColumnHeader();
       this.txtCurrent = new System.Windows.Forms.RichTextBox();
       this.txtAfter = new System.Windows.Forms.RichTextBox();
       this.txtBefore = new System.Windows.Forms.RichTextBox();
@@ -74,13 +76,16 @@
       this.deleteRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.revertToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compareBetweenTheseVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.chSeriesiD = new System.Windows.Forms.ColumnHeader();
-      this.chSeriesName = new System.Windows.Forms.ColumnHeader();
+      this.cmChachedSeries = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.checkAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.groupBox1.SuspendLayout();
       this.groupBox3.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox4.SuspendLayout();
       this.cmCacheRevisions.SuspendLayout();
+      this.cmChachedSeries.SuspendLayout();
       this.SuspendLayout();
       // 
       // lvSeriesDetails
@@ -342,6 +347,7 @@
       this.lvCachedSeries.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chSeriesiD,
             this.chSeriesName});
+      this.lvCachedSeries.ContextMenuStrip = this.cmChachedSeries;
       this.lvCachedSeries.FullRowSelect = true;
       this.lvCachedSeries.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
       this.lvCachedSeries.Location = new System.Drawing.Point(15, 65);
@@ -351,6 +357,17 @@
       this.lvCachedSeries.UseCompatibleStateImageBehavior = false;
       this.lvCachedSeries.View = System.Windows.Forms.View.Details;
       this.lvCachedSeries.SelectedIndexChanged += new System.EventHandler(this.lvCachedSeries_SelectedIndexChanged);
+      this.lvCachedSeries.DoubleClick += new System.EventHandler(this.lvCachedSeries_DoubleClick);
+      // 
+      // chSeriesiD
+      // 
+      this.chSeriesiD.Text = "ID";
+      this.chSeriesiD.Width = 49;
+      // 
+      // chSeriesName
+      // 
+      this.chSeriesName.Text = "Name";
+      this.chSeriesName.Width = 116;
       // 
       // txtCurrent
       // 
@@ -514,15 +531,35 @@
       this.compareBetweenTheseVersionsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
       this.compareBetweenTheseVersionsToolStripMenuItem.Text = "Compare these versions";
       // 
-      // chSeriesiD
+      // cmChachedSeries
       // 
-      this.chSeriesiD.Text = "ID";
-      this.chSeriesiD.Width = 49;
+      this.cmChachedSeries.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkToolStripMenuItem,
+            this.checkSelectedToolStripMenuItem,
+            this.checkAllToolStripMenuItem});
+      this.cmChachedSeries.Name = "cmChachedSeries";
+      this.cmChachedSeries.Size = new System.Drawing.Size(155, 70);
       // 
-      // chSeriesName
+      // checkAllToolStripMenuItem
       // 
-      this.chSeriesName.Text = "Name";
-      this.chSeriesName.Width = 116;
+      this.checkAllToolStripMenuItem.Enabled = false;
+      this.checkAllToolStripMenuItem.Name = "checkAllToolStripMenuItem";
+      this.checkAllToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.checkAllToolStripMenuItem.Text = "Check All";
+      // 
+      // checkToolStripMenuItem
+      // 
+      this.checkToolStripMenuItem.Name = "checkToolStripMenuItem";
+      this.checkToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.checkToolStripMenuItem.Text = "Check";
+      this.checkToolStripMenuItem.Click += new System.EventHandler(this.checkToolStripMenuItem_Click);
+      // 
+      // checkSelectedToolStripMenuItem
+      // 
+      this.checkSelectedToolStripMenuItem.Name = "checkSelectedToolStripMenuItem";
+      this.checkSelectedToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+      this.checkSelectedToolStripMenuItem.Text = "Check Selected";
+      this.checkSelectedToolStripMenuItem.Click += new System.EventHandler(this.checkSelectedToolStripMenuItem_Click);
       // 
       // UpdatingTestForm
       // 
@@ -559,6 +596,7 @@
       this.groupBox2.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.cmCacheRevisions.ResumeLayout(false);
+      this.cmChachedSeries.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -613,5 +651,9 @@
     private System.Windows.Forms.ToolStripMenuItem compareBetweenTheseVersionsToolStripMenuItem;
     private System.Windows.Forms.ColumnHeader chSeriesiD;
     private System.Windows.Forms.ColumnHeader chSeriesName;
+    private System.Windows.Forms.ContextMenuStrip cmChachedSeries;
+    private System.Windows.Forms.ToolStripMenuItem checkToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem checkSelectedToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem checkAllToolStripMenuItem;
   }
 }

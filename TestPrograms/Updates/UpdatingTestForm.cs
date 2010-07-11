@@ -13,9 +13,35 @@ using TvdbTester;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using TestPrograms.Updates;
+using TvdbLib.Data.Banner;
 
 namespace TestPrograms
 {
+  public enum ItemState
+  {
+    Unchanged = 0,
+    Updated = 1,
+    UnchangedAndInconsistent = 2,
+    UpdatedAndInconsistent = 3,
+    AvailableButNotDownloaded = 4,
+    Added = 5,
+    AddedAndInconsistent = 6,
+    UpdatedAndValueChanged = 7,
+    None = 8
+  }
+
+  public enum ItemType
+  {
+    SeriesAttribute = 0,
+    Episode = 1,
+    EpisodeAttribute = 2,
+    Series = 3,
+    Heading = 4,
+    Banner = 5,
+    Actor = 6
+  }
+
+
   public partial class UpdatingTestForm : Form
   {
     TvdbHandler m_tvdbHandler;
@@ -32,8 +58,6 @@ namespace TestPrograms
       InitializeComponent();
 
     }
-
-
 
     private void cmdInitTvdbHandler_Click(object sender, EventArgs e)
     {
@@ -84,36 +108,68 @@ namespace TestPrograms
 
     private void lvCachedSeries_SelectedIndexChanged(object sender, EventArgs e)
     {
+
+    }
+
+    private void lvCachedSeries_DoubleClick(object sender, EventArgs e)
+    {
       if (lvCachedSeries.SelectedItems.Count == 1)
       {
-        TvdbSeries before = GetBefore((int)lvCachedSeries.SelectedItems[0].Tag);
-        TvdbSeries after = GetAfter((int)lvCachedSeries.SelectedItems[0].Tag);
-
-        if (before == null)
-        {
-          before = m_tvdbHandler.GetSeries((int)lvCachedSeries.SelectedItems[0].Tag, TvdbLanguage.DefaultLanguage, true, true, true);
-          if (!m_beforeUpdateList.Contains(before)) m_beforeUpdateList.Add(before);
-        }
-
-        lvCachedSeries.SelectedItems[0].SubItems[1].Text = before.SeriesName;
-
-        TvdbSeries current = null;
-        if (cbDownloadCurrentVersion.Checked)
-        {
-          current = GetCurrent(before.Id);
-
-          if (current == null)
-          {
-            current = m_tvdbDownloader.DownloadSeries(before.Id, before.Language, true, true, true);
-            m_currentVersionList.Add(current);
-          }
-        }
-
-        FillSeriesDetails(before, after, current);
+        CheckSeries(lvCachedSeries.SelectedItems[0]);
       }
     }
 
-    private void FillSeriesDetails(TvdbSeries _before, TvdbSeries _after, TvdbSeries _current)
+    private void checkToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvCachedSeries.SelectedItems.Count == 1)
+      {
+        CheckSeries(lvCachedSeries.SelectedItems[0]);
+      }
+    }
+
+    private void checkSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvCachedSeries.SelectedItems.Count >= 1)
+      {
+        foreach (ListViewItem i in lvCachedSeries.SelectedItems)
+        {
+          CheckSeries(i);
+        }
+      }
+    }
+
+    private void CheckSeries(ListViewItem _itemToCheck)
+    {
+      int seriesId = (int)_itemToCheck.Tag;
+
+      TvdbSeries before = GetBefore(seriesId);
+      TvdbSeries after = GetAfter(seriesId);
+
+      if (before == null)
+      {
+        before = m_tvdbHandler.GetSeries(seriesId, TvdbLanguage.DefaultLanguage, true, true, true);
+        if (!m_beforeUpdateList.Contains(before)) m_beforeUpdateList.Add(before);
+      }
+
+      _itemToCheck.SubItems[1].Text = before.SeriesName;
+
+      TvdbSeries current = null;
+      if (cbDownloadCurrentVersion.Checked)
+      {
+        current = GetCurrent(before.Id);
+
+        if (current == null)
+        {
+          current = m_tvdbDownloader.DownloadSeries(before.Id, before.Language, true, true, true);
+          m_currentVersionList.Add(current);
+        }
+      }
+
+      ItemState status = FillSeriesDetails(before, after, current);
+      SetColorForListViewItem(_itemToCheck, status, ItemType.Series);
+    }
+
+    private ItemState FillSeriesDetails(TvdbSeries _before, TvdbSeries _after, TvdbSeries _current)
     {
       lvSeriesDetails.Items.Clear();
       lvSeriesDetails.Tag = _before.Id;
@@ -224,6 +280,9 @@ namespace TestPrograms
                                            _after != null ? _after.Zap2itId.ToString() : "",
                                            _current != null ? _current.Zap2itId.ToString() : ""));
 
+      lvSeriesDetails.Items.Add(CreateHeadingItem("", "", "", ""));
+      lvSeriesDetails.Items.Add(CreateHeadingItem("---------------------", "Episodes:", "-----------------", "-----------------"));
+
       List<int> handledEpisodes = new List<int>();
       if (_before != null)
       {
@@ -243,6 +302,7 @@ namespace TestPrograms
           if (!handledEpisodes.Contains(e.Id))
           {
             lvSeriesDetails.Items.Add(CreateEpisodeItem(e.Id, _before, _after, _current));
+            handledEpisodes.Add(e.Id);
           }
         }
       }
@@ -254,9 +314,385 @@ namespace TestPrograms
           if (!handledEpisodes.Contains(e.Id))
           {
             lvSeriesDetails.Items.Add(CreateEpisodeItem(e.Id, _before, _after, _current));
+            handledEpisodes.Add(e.Id);
           }
         }
       }
+
+      lvSeriesDetails.Items.Add(CreateHeadingItem("", "", "", ""));
+      lvSeriesDetails.Items.Add(CreateHeadingItem("---------------------", "Banners:", "-----------------", "-----------------"));
+
+      List<String> handledBanners = new List<String>();
+      if (_before != null)
+      {
+        foreach (TvdbBanner b in _before.Banners)
+        {
+          if (!handledBanners.Contains(b.BannerPath))
+          {
+            lvSeriesDetails.Items.Add(CreateBannerItem(b.BannerPath, _before, _after, _current));
+            handledBanners.Add(b.BannerPath);
+          }
+        }
+      }
+
+      if (_after != null)
+      {
+        foreach (TvdbBanner b in _after.Banners)
+        {
+          if (!handledBanners.Contains(b.BannerPath))
+          {
+            lvSeriesDetails.Items.Add(CreateBannerItem(b.BannerPath, _before, _after, _current));
+            handledBanners.Add(b.BannerPath);
+          }
+        }
+      }
+
+      if (_current != null)
+      {
+        foreach (TvdbBanner b in _current.Banners)
+        {
+          if (!handledBanners.Contains(b.BannerPath))
+          {
+            lvSeriesDetails.Items.Add(CreateBannerItem(b.BannerPath, _before, _after, _current));
+            handledBanners.Add(b.BannerPath);
+          }
+        }
+      }
+
+      lvSeriesDetails.Items.Add(CreateHeadingItem("", "", "", ""));
+      lvSeriesDetails.Items.Add(CreateHeadingItem("---------------------", "Actors:", "-----------------", "-----------------"));
+
+      List<int> handledActors = new List<int>();
+      if (_before != null)
+      {
+        foreach (TvdbActor a in _before.TvdbActors)
+        {
+          if (!handledActors.Contains(a.Id))
+          {
+            lvSeriesDetails.Items.Add(CreateActorItem(a.Id, _before, _after, _current));
+            handledActors.Add(a.Id);
+          }
+        }
+      }
+
+
+      //check tag of all items to get overall state of series
+      //
+
+      ItemState overallState = ItemState.Unchanged;
+      foreach (ListViewItem i in lvSeriesDetails.Items)
+      {
+        ListViewTag tag = i.Tag as ListViewTag;
+
+        if (overallState == ItemState.Unchanged &&
+           tag.State == ItemState.Updated)
+        {//updated but no value changed
+          overallState = ItemState.Updated;
+        }
+
+        if (tag.State == ItemState.UpdatedAndValueChanged || tag.State == ItemState.Added)
+        {//updated and everything went fine
+          overallState = ItemState.UpdatedAndValueChanged;
+        }
+        if (tag.State == ItemState.AddedAndInconsistent ||
+          tag.State == ItemState.UpdatedAndInconsistent ||
+          tag.State == ItemState.UnchangedAndInconsistent ||
+          tag.State == ItemState.AvailableButNotDownloaded)
+        {//something doesn't add up
+          overallState = ItemState.UpdatedAndInconsistent;
+        }
+      }
+
+      return overallState;
+    }
+
+    private ListViewItem CreateActorItem(int _id, TvdbSeries _before, TvdbSeries _after, TvdbSeries _current)
+    {
+      ListViewItem item = new ListViewItem(_id.ToString());
+
+      TvdbActor before = GetActor(_before, _id);
+      item.SubItems.Add(before != null ? before.Name + ": " + before.Role : "");
+
+      TvdbActor after = GetActor(_after, _id);
+      item.SubItems.Add(after != null ? after.Name + ": " + after.Role : "");
+
+      TvdbActor current = GetActor(_current, _id);
+      item.SubItems.Add(current != null ? current.Name + ": " + current.Role : "");
+
+
+      ListViewTag tag = new ListViewTag();
+      tag.Type = ItemType.Actor;//episode
+      ItemState epChanged = CheckActorChanged(before, after, current);
+      tag.State = epChanged;
+      item.Tag = tag;
+      SetColorForListViewItem(item, epChanged, ItemType.Actor);
+
+      return item;
+    }
+
+    private ItemState CheckActorChanged(TvdbActor _before, TvdbActor _after, TvdbActor _current)
+    {
+      if (_current != null)
+      {
+        if (_after != null)
+        {//episode has been updated (_before != null) or added (_before == null)
+          if (ActorChanged(_after, _current))
+          {
+            if (_before == null)
+            {
+              return ItemState.AddedAndInconsistent;
+            }
+            else
+            {
+              return ItemState.UpdatedAndInconsistent;
+            }
+          }
+          else
+          {
+            if (_before == null)
+            {//the item has been added correctly
+              return ItemState.Added;
+            }
+            else
+            {//the item has been updated correctly (after == current)
+              if (ActorChanged(_before, _after))
+              {
+                return ItemState.UpdatedAndValueChanged;
+              }
+              else
+              {
+                return ItemState.Updated;
+              }
+            }
+          }
+        }
+
+        //episode is available but hasn't been added to our cache yet
+        if (_before == null && _after == null) return ItemState.AvailableButNotDownloaded;
+
+        //we have no update for this item
+        if (_after == null)
+        {
+          if (ActorChanged(_before, _current))
+          {
+            return ItemState.UnchangedAndInconsistent;
+          }
+          else
+          {
+            return ItemState.Unchanged;
+          }
+        }
+      }
+
+      if (_current == null)
+      {//current version hasn't been loaded, we can't compare if the update was done correctly
+        if (_before != null && _after != null)
+        {//episode has been updated
+          return ItemState.Updated;
+        }
+        else if (_before == null && _after != null)
+        {//episode has been added
+          return ItemState.Added;
+        }
+        else
+        {
+          return ItemState.Unchanged;
+        }
+      }
+      return ItemState.Unchanged;
+    }
+
+    private bool ActorChanged(TvdbActor _actor1, TvdbActor _actor2)
+    {
+      if (_actor1 == null && _actor2 == null) return false;
+      if (_actor1 == null || _actor2 == null) return true;
+
+      bool actorChanged = false;
+      //if (!_actor1.ActorImage.BannerPath.Equals(_actor2.BannerPath)) actorChanged = true;//shouldn't happen
+      //if (_banner1.LastUpdated != _banner2.LastUpdated) bannerChanged = true;
+      if (_actor1.Id != _actor2.Id) actorChanged = true;
+      if (_actor1.Name != _actor2.Name) actorChanged = true;
+      if (_actor1.Role != _actor2.Role) actorChanged = true;
+      if (_actor1.SortOrder != _actor2.SortOrder) actorChanged = true;
+
+
+      return actorChanged;
+    }
+
+    private TvdbActor GetActor(TvdbSeries _series, int _id)
+    {
+      if (_series == null || _series.TvdbActors == null) return null;
+      foreach (TvdbActor a in _series.TvdbActors)
+      {
+        if (a.Id == _id) return a;
+      }
+      return null;
+    }
+
+    private ListViewItem CreateBannerItem(String _bannerPath, TvdbSeries _before, TvdbSeries _after, TvdbSeries _current)
+    {
+      ListViewItem item = new ListViewItem(_bannerPath);
+
+      TvdbBanner before = GetBanner(_before, _bannerPath);
+      item.SubItems.Add(before != null ? before.Id + ": " + before.BannerPath : "");
+
+      TvdbBanner after = GetBanner(_after, _bannerPath);
+      item.SubItems.Add(after != null ? after.Id + ": " + after.BannerPath : "");
+
+      TvdbBanner current = GetBanner(_current, _bannerPath);
+      item.SubItems.Add(current != null ? current.Id + ": " + current.BannerPath : "");
+
+
+      ListViewTag tag = new ListViewTag();
+      tag.Type = ItemType.Banner;//episode
+      ItemState epChanged = CheckBannerChanged(before, after, current);
+      tag.State = epChanged;
+      item.Tag = tag;
+      SetColorForListViewItem(item, epChanged, ItemType.Banner);
+
+      return item;
+    }
+
+    private ItemState CheckBannerChanged(TvdbBanner _before, TvdbBanner _after, TvdbBanner _current)
+    {
+      if (_current != null)
+      {
+        if (_after != null)
+        {//episode has been updated (_before != null) or added (_before == null)
+          if (BannerChanged(_after, _current))
+          {
+            if (_before == null)
+            {
+              return ItemState.AddedAndInconsistent;
+            }
+            else
+            {
+              return ItemState.UpdatedAndInconsistent;
+            }
+          }
+          else
+          {
+            if (_before == null)
+            {//the item has been added correctly
+              return ItemState.Added;
+            }
+            else
+            {//the item has been updated correctly (after == current)
+              if (BannerChanged(_before, _after))
+              {
+                return ItemState.UpdatedAndValueChanged;
+              }
+              else
+              {
+                return ItemState.Updated;
+              }
+            }
+          }
+        }
+
+        //episode is available but hasn't been added to our cache yet
+        if (_before == null && _after == null) return ItemState.AvailableButNotDownloaded;
+
+        //we have no update for this item
+        if (_after == null)
+        {
+          if (BannerChanged(_before, _current))
+          {
+            return ItemState.UnchangedAndInconsistent;
+          }
+          else
+          {
+            return ItemState.Unchanged;
+          }
+        }
+      }
+
+      if (_current == null)
+      {//current version hasn't been loaded, we can't compare if the update was done correctly
+        if (_before != null && _after != null)
+        {//episode has been updated
+          return ItemState.Updated;
+        }
+        else if (_before == null && _after != null)
+        {//episode has been added
+          return ItemState.Added;
+        }
+        else
+        {
+          return ItemState.Unchanged;
+        }
+      }
+      return ItemState.Unchanged;
+    }
+
+    private bool BannerChanged(TvdbBanner _banner1, TvdbBanner _banner2)
+    {
+      if (_banner1 == null && _banner2 == null) return false;
+      if (_banner1 == null || _banner2 == null) return true;
+      if (_banner1.GetType() != _banner2.GetType()) return true;
+
+      bool bannerChanged = false;
+      if (!_banner1.BannerPath.Equals(_banner2.BannerPath)) bannerChanged = true;//shouldn't happen
+      //if (_banner1.LastUpdated != _banner2.LastUpdated) bannerChanged = true;
+      if (_banner1.Id != _banner2.Id) bannerChanged = true;
+
+      if (_banner1.GetType() == typeof(TvdbSeriesBanner))
+      {
+        TvdbSeriesBanner banner1 = _banner1 as TvdbSeriesBanner;
+        TvdbSeriesBanner banner2 = _banner2 as TvdbSeriesBanner;
+
+      }
+
+      if (_banner1.GetType() == typeof(TvdbSeasonBanner))
+      {
+        TvdbSeasonBanner banner1 = _banner1 as TvdbSeasonBanner;
+        TvdbSeasonBanner banner2 = _banner2 as TvdbSeasonBanner;
+        if (banner1.Season != banner2.Season) bannerChanged = true;
+      }
+
+      if (_banner1.GetType() == typeof(TvdbFanartBanner))
+      {
+        TvdbFanartBanner banner1 = _banner1 as TvdbFanartBanner;
+        TvdbFanartBanner banner2 = _banner2 as TvdbFanartBanner;
+        if (banner1.Color1 != banner2.Color1) bannerChanged = true;
+        if (banner1.Color2 != banner2.Color2) bannerChanged = true;
+        if (banner1.Color3 != banner2.Color3) bannerChanged = true;
+        if (banner1.ContainsSeriesName != banner2.ContainsSeriesName) bannerChanged = true;
+        if (banner1.Resolution != banner2.Resolution) bannerChanged = true;
+        if (banner1.VignettePath != banner2.VignettePath) bannerChanged = true;
+      }
+
+      if (_banner1.GetType() == typeof(TvdbPosterBanner))
+      {
+        TvdbPosterBanner banner1 = _banner1 as TvdbPosterBanner;
+        TvdbPosterBanner banner2 = _banner2 as TvdbPosterBanner;
+        if (banner1.Resolution != banner2.Resolution) bannerChanged = true;
+      }
+      return bannerChanged;
+    }
+
+    private TvdbBanner GetBanner(TvdbSeries _series, string _bannerPath)
+    {
+      if (_series == null || _series.Banners == null) return null;
+      foreach (TvdbBanner b in _series.Banners)
+      {
+        if (b.BannerPath.Equals(_bannerPath)) return b;
+      }
+      return null;
+    }
+
+    private ListViewItem CreateHeadingItem(String _heading1, String _heading2, String _heading3, String _heading4)
+    {
+      ListViewItem item = new ListViewItem();
+      ListViewTag headingTag = new ListViewTag();
+      headingTag.Type = ItemType.Heading;
+      item.Tag = headingTag;
+      item.Text = _heading1;
+      item.SubItems.Add(_heading2);
+      item.SubItems.Add(_heading3);
+      item.SubItems.Add(_heading4);
+
+      return item;
     }
 
     private ListViewItem CreateEpisodeItem(int _id, TvdbSeries _before, TvdbSeries _after, TvdbSeries _current)
@@ -269,61 +705,124 @@ namespace TestPrograms
       item.SubItems.Add(after != null ? after.SeasonNumber + "x" + after.EpisodeNumber + " " + after.EpisodeName : "");
       TvdbEpisode current = GetEpisode(_current, _id);
       item.SubItems.Add(current != null ? current.SeasonNumber + "x" + current.EpisodeNumber + " " + current.EpisodeName : "");
-      item.Tag = 1;//episode
-      int epChanged = CheckEpisodeChanged(before, after, current);
-      if (epChanged == 1)
-      {//has been updated
-        item.BackColor = Color.Orange;
-      }
-      else if (epChanged == 2)
-      {//episode is different from the current version
-        item.BackColor = Color.Red;
-      }
+
+      ListViewTag tag = new ListViewTag();
+      tag.Type = ItemType.Episode;//episode
+      ItemState epChanged = CheckEpisodeChanged(before, after, current);
+      tag.State = epChanged;
+      item.Tag = tag;
+      SetColorForListViewItem(item, epChanged, ItemType.Episode);
 
       return item;
     }
 
-    private int CheckEpisodeChanged(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
+    private void SetColorForListViewItem(ListViewItem _item, ItemState _state, ItemType _type)
     {
-      if (_before != null && _after != null && _current != null)
+
+      switch (_state)
       {
-        if (EpsiodeChanged(_after, _current))
-        {
-          return 2;
+        case ItemState.Added:
+          _item.BackColor = Color.DarkGreen;
+          break;
+        case ItemState.UpdatedAndValueChanged:
+          _item.BackColor = Color.Green;
+          break;
+        case ItemState.Updated:
+          _item.BackColor = Color.LightGray;
+          break;
+        case ItemState.Unchanged:
+          _item.BackColor = Color.Transparent;
+          break;
+        case ItemState.AddedAndInconsistent:
+          _item.BackColor = Color.DarkRed;
+          break;
+        case ItemState.UpdatedAndInconsistent:
+          _item.BackColor = Color.Red;
+          break;
+        case ItemState.AvailableButNotDownloaded:
+          _item.BackColor = Color.Purple;
+          break;
+        case ItemState.UnchangedAndInconsistent:
+          _item.BackColor = Color.Gray;
+          break;
+      }
+    }
+
+    private ItemState CheckEpisodeChanged(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
+    {
+      if (_current != null)
+      {
+        if (_after != null)
+        {//episode has been updated (_before != null) or added (_before == null)
+          if (EpsiodeChanged(_after, _current))
+          {
+            if (_before == null)
+            {
+              return ItemState.AddedAndInconsistent;
+            }
+            else
+            {
+              return ItemState.UpdatedAndInconsistent;
+            }
+          }
+          else
+          {
+            if (_before == null)
+            {//the item has been added correctly
+              return ItemState.Added;
+            }
+            else
+            {//the item has been updated correctly (after == current)
+              if (EpsiodeChanged(_before, _after))
+              {
+                return ItemState.UpdatedAndValueChanged;
+              }
+              else
+              {
+                return ItemState.Updated;
+              }
+            }
+          }
         }
-        else
+
+        //episode is available but hasn't been added to our cache yet
+        if (_before == null && _after == null) return ItemState.AvailableButNotDownloaded;
+
+
+        //we have no update for this item
+        if (_after == null)
         {
-          return 0;
+          if (EpsiodeChanged(_before, _current))
+          {
+            return ItemState.UnchangedAndInconsistent;
+          }
+          else
+          {
+            return ItemState.Unchanged;
+          }
         }
       }
 
-      if (_before == null && _after == null) return 2;//episode is available but hasn't been added to our cache yet
 
       if (_current == null)
-      {//current version hasn't been loaded
+      {//current version hasn't been loaded, we can't compare if the update was done correctly
         if (_before != null && _after != null)
         {//episode has been updated
-          return 1;
+          return ItemState.Updated;
+        }
+        else if (_before == null && _after != null)
+        {//episode has been added
+          return ItemState.Added;
         }
         else
         {
-          return 0;
+          return ItemState.Unchanged;
         }
       }
 
-      if (_after == null)
-      {
-        if (EpsiodeChanged(_before, _current))
-        {
-          return 2;
-        }
-        else
-        {
-          return 0;
-        }
-      }
 
-      return 0;
+
+      return ItemState.Unchanged;
     }
 
     /// <summary>
@@ -340,8 +839,10 @@ namespace TestPrograms
       if (!_ep1.AirsBeforeEpisode.Equals(_ep2.AirsBeforeEpisode)) episodeChanged = true;
       if (!_ep1.AirsBeforeSeason.Equals(_ep2.AirsBeforeSeason)) episodeChanged = true;
       if (!_ep1.BannerPath.Equals(_ep2.BannerPath)) episodeChanged = true;
-      if (!_ep1.CombinedEpisodeNumber.Equals(_ep2.CombinedEpisodeNumber)) episodeChanged = true;
-      if (!_ep1.CombinedSeason.Equals(_ep2.CombinedSeason)) episodeChanged = true;
+      //those two will always be wrong because they're not included in the tvdb xml files of single episodes
+      //-> see: http://forums.thetvdb.com/viewtopic.php?f=8&t=3993
+      //if (!_ep1.CombinedEpisodeNumber.Equals(_ep2.CombinedEpisodeNumber)) episodeChanged = true; 
+      //if (!_ep1.CombinedSeason.Equals(_ep2.CombinedSeason)) episodeChanged = true;
       if (!_ep1.DirectorsString.Equals(_ep2.DirectorsString)) episodeChanged = true;
       if (!_ep1.DvdChapter.Equals(_ep2.DvdChapter)) episodeChanged = true;
       if (!_ep1.DvdDiscId.Equals(_ep2.DvdDiscId)) episodeChanged = true;
@@ -393,7 +894,11 @@ namespace TestPrograms
         item.BackColor = Color.Red;
       }
 
-      item.Tag = 0; //series
+      ListViewTag tag = new ListViewTag();
+      tag.State = ItemState.Unchanged;
+      tag.Type = ItemType.SeriesAttribute;
+      item.Tag = tag;
+
       return item;
     }
 
@@ -446,7 +951,7 @@ namespace TestPrograms
       {
         if (GetBefore(s) == null)
         {
-          m_beforeUpdateList.Add(m_tvdbHandler.GetSeries(s, TvdbLanguage.DefaultLanguage, true, true, true));
+          m_beforeUpdateList.Add(m_tvdbHandler.GetSeries(s, TvdbLanguage.DefaultLanguage, true, true, true, true));
         }
       }
 
@@ -489,15 +994,159 @@ namespace TestPrograms
 
     private void lvSeriesDetails_DoubleClick(object sender, EventArgs e)
     {
-      if (lvSeriesDetails.SelectedItems.Count == 1 && (int)lvSeriesDetails.SelectedItems[0].Tag == 1)
+      if (lvSeriesDetails.SelectedItems.Count == 1)
       {//episode selected
-        int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+        ListViewTag tag = (ListViewTag)lvSeriesDetails.SelectedItems[0].Tag;
         TvdbSeries before = GetBefore((int)lvSeriesDetails.Tag);
         TvdbSeries after = GetAfter((int)lvSeriesDetails.Tag);
         TvdbSeries current = GetCurrent((int)lvSeriesDetails.Tag);
 
-        FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
+        if (tag.Type == ItemType.Episode)
+        {
+          int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+          FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
+        }
+        else if (tag.Type == ItemType.Banner)
+        {
+          String bannerPath = lvSeriesDetails.SelectedItems[0].Text;
+          FillBannerDetails(GetBanner(before, bannerPath), GetBanner(after, bannerPath), GetBanner(current, bannerPath));
+        }
+        else if (tag.Type == ItemType.SeriesAttribute || tag.Type == ItemType.EpisodeAttribute)
+        {
+          txtBefore.Text = lvSeriesDetails.SelectedItems[0].SubItems[1].Text;
+          txtAfter.Text = lvSeriesDetails.SelectedItems[0].SubItems[2].Text;
+          txtCurrent.Text = lvSeriesDetails.SelectedItems[0].SubItems[3].Text;
+        }
+        else if (tag.Type == ItemType.Actor)
+        {
+          int actorId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+          FillActorDetails(GetActor(before, actorId), GetActor(after, actorId), GetActor(current, actorId));
+        }
+
       }
+    }
+
+
+
+    private void FillBannerDetails(TvdbBanner _before, TvdbBanner _after, TvdbBanner _current)
+    {
+      lvSeriesDetails.Items.Clear();
+
+      //id
+      lvSeriesDetails.Items.Add(CreateItem("Id", _before != null ? _before.Id.ToString() : "",
+                                                 _after != null ? _after.Id.ToString() : "",
+                                                 _current != null ? _current.Id.ToString() : ""));
+
+      //BannerPath
+      lvSeriesDetails.Items.Add(CreateItem("BannerPath", _before != null ? _before.BannerPath.ToString() : "",
+                                           _after != null ? _after.BannerPath.ToString() : "",
+                                           _current != null ? _current.BannerPath.ToString() : ""));
+
+      //Type
+      lvSeriesDetails.Items.Add(CreateItem("Type", _before != null ? _before.GetType().ToString() : "",
+                                           _after != null ? _after.GetType().ToString() : "",
+                                           _current != null ? _current.GetType().ToString() : ""));
+
+      if ((_before != null && _after != null && _before.GetType() == _after.GetType()) ||
+         (_before != null && _current != null && _before.GetType() == _current.GetType()) ||
+         (_after != null && _current != null && _after.GetType() == _current.GetType()) ||
+         (_before != null && _current != null && _before.GetType() == _current.GetType()) ||
+         (_before != null && _after != null && _current != null && _before.GetType() == _current.GetType() && _before.GetType() == _after.GetType()))
+      {//all banners have the same type
+        if ((_before != null && _before.GetType() == typeof(TvdbSeriesBanner))
+            || (_after != null && _after.GetType() == typeof(TvdbSeriesBanner))
+            || (_current != null && _current.GetType() == typeof(TvdbSeriesBanner)))
+        {//TvdbSeriesBanner
+
+        }
+
+        if ((_before != null && _before.GetType() == typeof(TvdbSeasonBanner))
+            || (_after != null && _after.GetType() == typeof(TvdbSeasonBanner))
+            || (_current != null && _current.GetType() == typeof(TvdbSeasonBanner)))
+        {//TvdbSeasonBanner
+          //Season
+          lvSeriesDetails.Items.Add(CreateItem("Season", _before != null ? ((TvdbSeasonBanner)_before).Season.ToString() : "",
+                                               _after != null ? ((TvdbSeasonBanner)_after).Season.ToString() : "",
+                                               _current != null ? ((TvdbSeasonBanner)_current).Season.ToString() : ""));
+        }
+
+        if ((_before != null && _before.GetType() == typeof(TvdbFanartBanner))
+            || (_after != null && _after.GetType() == typeof(TvdbFanartBanner))
+            || (_current != null && _current.GetType() == typeof(TvdbFanartBanner)))
+        {//TvdbFanartBanner
+          //Color1
+          lvSeriesDetails.Items.Add(CreateItem("Color1", _before != null ? ((TvdbFanartBanner)_before).Color1.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).Color1.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).Color1.ToString() : ""));
+          //Color2
+          lvSeriesDetails.Items.Add(CreateItem("Color2", _before != null ? ((TvdbFanartBanner)_before).Color2.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).Color2.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).Color2.ToString() : ""));
+
+          //Color3
+          lvSeriesDetails.Items.Add(CreateItem("Color3", _before != null ? ((TvdbFanartBanner)_before).Color3.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).Color3.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).Color3.ToString() : ""));
+
+          //Resolution
+          lvSeriesDetails.Items.Add(CreateItem("Resolution", _before != null ? ((TvdbFanartBanner)_before).Resolution.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).Resolution.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).Resolution.ToString() : ""));
+
+          //ContainsSeriesName
+          lvSeriesDetails.Items.Add(CreateItem("Resolution", _before != null ? ((TvdbFanartBanner)_before).ContainsSeriesName.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).ContainsSeriesName.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).ContainsSeriesName.ToString() : ""));
+
+          //VignettePath
+          lvSeriesDetails.Items.Add(CreateItem("VignettePath", _before != null ? ((TvdbFanartBanner)_before).VignettePath.ToString() : "",
+                                               _after != null ? ((TvdbFanartBanner)_after).VignettePath.ToString() : "",
+                                               _current != null ? ((TvdbFanartBanner)_current).VignettePath.ToString() : ""));
+
+
+
+        }
+
+        if ((_before != null && _before.GetType() == typeof(TvdbPosterBanner))
+            || (_after != null && _after.GetType() == typeof(TvdbPosterBanner))
+            || (_current != null && _current.GetType() == typeof(TvdbPosterBanner)))
+        {//TvdbPosterBanner
+          //Resolution
+          lvSeriesDetails.Items.Add(CreateItem("Resolution", _before != null ? ((TvdbPosterBanner)_before).Resolution.ToString() : "",
+                                               _after != null ? ((TvdbPosterBanner)_after).Resolution.ToString() : "",
+                                               _current != null ? ((TvdbPosterBanner)_current).Resolution.ToString() : ""));
+        }
+      }
+    }
+
+    private void FillActorDetails(TvdbActor _before, TvdbActor _after, TvdbActor _current)
+    {
+      lvSeriesDetails.Items.Clear();
+
+      //id
+      lvSeriesDetails.Items.Add(CreateItem("Id", _before != null ? _before.Id.ToString() : "",
+                                                 _after != null ? _after.Id.ToString() : "",
+                                                 _current != null ? _current.Id.ToString() : ""));
+
+      //Name
+      lvSeriesDetails.Items.Add(CreateItem("Name", _before != null ? _before.Name.ToString() : "",
+                                                 _after != null ? _after.Name.ToString() : "",
+                                                 _current != null ? _current.Name.ToString() : ""));
+
+      //Role
+      lvSeriesDetails.Items.Add(CreateItem("Role", _before != null ? _before.Role.ToString() : "",
+                                                 _after != null ? _after.Role.ToString() : "",
+                                                 _current != null ? _current.Role.ToString() : ""));
+
+      //SortOrder
+      lvSeriesDetails.Items.Add(CreateItem("SortOrder", _before != null ? _before.SortOrder.ToString() : "",
+                                                 _after != null ? _after.SortOrder.ToString() : "",
+                                                 _current != null ? _current.SortOrder.ToString() : ""));
+
+      //SortOrder
+      lvSeriesDetails.Items.Add(CreateItem("Image", (_before != null && _before.ActorImage != null) ? _before.ActorImage.BannerPath.ToString() : "",
+                                                 (_after != null && _after.ActorImage != null) ? _after.ActorImage.BannerPath.ToString() : "",
+                                                 (_current != null && _current.ActorImage != null) ? _current.ActorImage.BannerPath.ToString() : ""));   
     }
 
     private void FillEpisodeDetails(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
@@ -755,6 +1404,12 @@ namespace TestPrograms
         compareBetweenTheseVersionsToolStripMenuItem.Enabled = false;
       }
     }
+
+
+
+
+
+
 
 
   }
