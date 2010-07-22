@@ -34,6 +34,12 @@
       this.chBeforeUpdate = new System.Windows.Forms.ColumnHeader();
       this.chAfterUpdate = new System.Windows.Forms.ColumnHeader();
       this.chCurrentValue = new System.Windows.Forms.ColumnHeader();
+      this.cmDetailsView = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.findEpisodeIDInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.updatesmonthxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.updatesweekxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.updatesdayxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.cmdCompareValuesDetailed = new System.Windows.Forms.Button();
       this.cmdComareValues = new System.Windows.Forms.Button();
@@ -59,6 +65,12 @@
       this.lvCachedSeries = new System.Windows.Forms.ListView();
       this.chSeriesiD = new System.Windows.Forms.ColumnHeader();
       this.chSeriesName = new System.Windows.Forms.ColumnHeader();
+      this.cmChachedSeries = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.checkAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.saveListOfSeriesToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.lookUpNamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.txtCurrent = new System.Windows.Forms.RichTextBox();
       this.txtAfter = new System.Windows.Forms.RichTextBox();
       this.txtBefore = new System.Windows.Forms.RichTextBox();
@@ -76,16 +88,17 @@
       this.deleteRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.revertToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.compareBetweenTheseVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.cmChachedSeries = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.checkAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.checkSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.downloadUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.monthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.weekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.dayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cmDetailsView.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox3.SuspendLayout();
+      this.cmChachedSeries.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.groupBox4.SuspendLayout();
       this.cmCacheRevisions.SuspendLayout();
-      this.cmChachedSeries.SuspendLayout();
       this.SuspendLayout();
       // 
       // lvSeriesDetails
@@ -95,9 +108,9 @@
             this.chBeforeUpdate,
             this.chAfterUpdate,
             this.chCurrentValue});
+      this.lvSeriesDetails.ContextMenuStrip = this.cmDetailsView;
       this.lvSeriesDetails.FullRowSelect = true;
       this.lvSeriesDetails.Location = new System.Drawing.Point(190, 39);
-      this.lvSeriesDetails.MultiSelect = false;
       this.lvSeriesDetails.Name = "lvSeriesDetails";
       this.lvSeriesDetails.Size = new System.Drawing.Size(778, 355);
       this.lvSeriesDetails.TabIndex = 0;
@@ -124,6 +137,56 @@
       // 
       this.chCurrentValue.Text = "Current value on thetvdb";
       this.chCurrentValue.Width = 239;
+      // 
+      // cmDetailsView
+      // 
+      this.cmDetailsView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.findEpisodeIDInToolStripMenuItem,
+            this.saveToFileToolStripMenuItem,
+            this.downloadUpdatesToolStripMenuItem});
+      this.cmDetailsView.Name = "cmDetailsView";
+      this.cmDetailsView.Size = new System.Drawing.Size(197, 92);
+      // 
+      // findEpisodeIDInToolStripMenuItem
+      // 
+      this.findEpisodeIDInToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.updatesmonthxmlToolStripMenuItem,
+            this.updatesweekxmlToolStripMenuItem,
+            this.updatesdayxmlToolStripMenuItem});
+      this.findEpisodeIDInToolStripMenuItem.Name = "findEpisodeIDInToolStripMenuItem";
+      this.findEpisodeIDInToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+      this.findEpisodeIDInToolStripMenuItem.Text = "Find Episode ID in ..";
+      // 
+      // updatesmonthxmlToolStripMenuItem
+      // 
+      this.updatesmonthxmlToolStripMenuItem.Enabled = false;
+      this.updatesmonthxmlToolStripMenuItem.Name = "updatesmonthxmlToolStripMenuItem";
+      this.updatesmonthxmlToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+      this.updatesmonthxmlToolStripMenuItem.Text = "updates_month.xml";
+      this.updatesmonthxmlToolStripMenuItem.Click += new System.EventHandler(this.updatesmonthxmlToolStripMenuItem_Click);
+      // 
+      // updatesweekxmlToolStripMenuItem
+      // 
+      this.updatesweekxmlToolStripMenuItem.Enabled = false;
+      this.updatesweekxmlToolStripMenuItem.Name = "updatesweekxmlToolStripMenuItem";
+      this.updatesweekxmlToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+      this.updatesweekxmlToolStripMenuItem.Text = "updates_week.xml";
+      this.updatesweekxmlToolStripMenuItem.Click += new System.EventHandler(this.updatesweekxmlToolStripMenuItem_Click);
+      // 
+      // updatesdayxmlToolStripMenuItem
+      // 
+      this.updatesdayxmlToolStripMenuItem.Enabled = false;
+      this.updatesdayxmlToolStripMenuItem.Name = "updatesdayxmlToolStripMenuItem";
+      this.updatesdayxmlToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+      this.updatesdayxmlToolStripMenuItem.Text = "updates_day.xml";
+      this.updatesdayxmlToolStripMenuItem.Click += new System.EventHandler(this.updatesdayxmlToolStripMenuItem_Click);
+      // 
+      // saveToFileToolStripMenuItem
+      // 
+      this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
+      this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+      this.saveToFileToolStripMenuItem.Text = "Save to File";
+      this.saveToFileToolStripMenuItem.Click += new System.EventHandler(this.saveToFileToolStripMenuItem_Click);
       // 
       // groupBox1
       // 
@@ -274,7 +337,7 @@
       this.cmdUpdate.Name = "cmdUpdate";
       this.cmdUpdate.Size = new System.Drawing.Size(158, 27);
       this.cmdUpdate.TabIndex = 12;
-      this.cmdUpdate.Text = "Update";
+      this.cmdUpdate.Text = "1";
       this.cmdUpdate.UseVisualStyleBackColor = true;
       this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
       // 
@@ -368,6 +431,52 @@
       // 
       this.chSeriesName.Text = "Name";
       this.chSeriesName.Width = 116;
+      // 
+      // cmChachedSeries
+      // 
+      this.cmChachedSeries.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkToolStripMenuItem,
+            this.checkSelectedToolStripMenuItem,
+            this.checkAllToolStripMenuItem,
+            this.saveListOfSeriesToFileToolStripMenuItem,
+            this.lookUpNamesToolStripMenuItem});
+      this.cmChachedSeries.Name = "cmChachedSeries";
+      this.cmChachedSeries.Size = new System.Drawing.Size(196, 114);
+      // 
+      // checkToolStripMenuItem
+      // 
+      this.checkToolStripMenuItem.Name = "checkToolStripMenuItem";
+      this.checkToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+      this.checkToolStripMenuItem.Text = "Check";
+      this.checkToolStripMenuItem.Click += new System.EventHandler(this.checkToolStripMenuItem_Click);
+      // 
+      // checkSelectedToolStripMenuItem
+      // 
+      this.checkSelectedToolStripMenuItem.Name = "checkSelectedToolStripMenuItem";
+      this.checkSelectedToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+      this.checkSelectedToolStripMenuItem.Text = "Check Selected";
+      this.checkSelectedToolStripMenuItem.Click += new System.EventHandler(this.checkSelectedToolStripMenuItem_Click);
+      // 
+      // checkAllToolStripMenuItem
+      // 
+      this.checkAllToolStripMenuItem.Enabled = false;
+      this.checkAllToolStripMenuItem.Name = "checkAllToolStripMenuItem";
+      this.checkAllToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+      this.checkAllToolStripMenuItem.Text = "Check All";
+      // 
+      // saveListOfSeriesToFileToolStripMenuItem
+      // 
+      this.saveListOfSeriesToFileToolStripMenuItem.Name = "saveListOfSeriesToFileToolStripMenuItem";
+      this.saveListOfSeriesToFileToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+      this.saveListOfSeriesToFileToolStripMenuItem.Text = "Save list of series to file";
+      this.saveListOfSeriesToFileToolStripMenuItem.Click += new System.EventHandler(this.saveListOfSeriesToFileToolStripMenuItem_Click);
+      // 
+      // lookUpNamesToolStripMenuItem
+      // 
+      this.lookUpNamesToolStripMenuItem.Name = "lookUpNamesToolStripMenuItem";
+      this.lookUpNamesToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+      this.lookUpNamesToolStripMenuItem.Text = "Look up names";
+      this.lookUpNamesToolStripMenuItem.Click += new System.EventHandler(this.lookUpNamesToolStripMenuItem_Click);
       // 
       // txtCurrent
       // 
@@ -531,35 +640,36 @@
       this.compareBetweenTheseVersionsToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
       this.compareBetweenTheseVersionsToolStripMenuItem.Text = "Compare these versions";
       // 
-      // cmChachedSeries
+      // downloadUpdatesToolStripMenuItem
       // 
-      this.cmChachedSeries.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkToolStripMenuItem,
-            this.checkSelectedToolStripMenuItem,
-            this.checkAllToolStripMenuItem});
-      this.cmChachedSeries.Name = "cmChachedSeries";
-      this.cmChachedSeries.Size = new System.Drawing.Size(155, 70);
+      this.downloadUpdatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.monthToolStripMenuItem,
+            this.weekToolStripMenuItem,
+            this.dayToolStripMenuItem});
+      this.downloadUpdatesToolStripMenuItem.Name = "downloadUpdatesToolStripMenuItem";
+      this.downloadUpdatesToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
+      this.downloadUpdatesToolStripMenuItem.Text = "Download Updates xml";
       // 
-      // checkAllToolStripMenuItem
+      // monthToolStripMenuItem
       // 
-      this.checkAllToolStripMenuItem.Enabled = false;
-      this.checkAllToolStripMenuItem.Name = "checkAllToolStripMenuItem";
-      this.checkAllToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.checkAllToolStripMenuItem.Text = "Check All";
+      this.monthToolStripMenuItem.Name = "monthToolStripMenuItem";
+      this.monthToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.monthToolStripMenuItem.Text = "Month";
+      this.monthToolStripMenuItem.Click += new System.EventHandler(this.monthToolStripMenuItem_Click);
       // 
-      // checkToolStripMenuItem
+      // weekToolStripMenuItem
       // 
-      this.checkToolStripMenuItem.Name = "checkToolStripMenuItem";
-      this.checkToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.checkToolStripMenuItem.Text = "Check";
-      this.checkToolStripMenuItem.Click += new System.EventHandler(this.checkToolStripMenuItem_Click);
+      this.weekToolStripMenuItem.Name = "weekToolStripMenuItem";
+      this.weekToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.weekToolStripMenuItem.Text = "Week";
+      this.weekToolStripMenuItem.Click += new System.EventHandler(this.weekToolStripMenuItem_Click);
       // 
-      // checkSelectedToolStripMenuItem
+      // dayToolStripMenuItem
       // 
-      this.checkSelectedToolStripMenuItem.Name = "checkSelectedToolStripMenuItem";
-      this.checkSelectedToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-      this.checkSelectedToolStripMenuItem.Text = "Check Selected";
-      this.checkSelectedToolStripMenuItem.Click += new System.EventHandler(this.checkSelectedToolStripMenuItem_Click);
+      this.dayToolStripMenuItem.Name = "dayToolStripMenuItem";
+      this.dayToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.dayToolStripMenuItem.Text = "Day";
+      this.dayToolStripMenuItem.Click += new System.EventHandler(this.dayToolStripMenuItem_Click);
       // 
       // UpdatingTestForm
       // 
@@ -589,14 +699,15 @@
       this.Controls.Add(this.groupBox1);
       this.Name = "UpdatingTestForm";
       this.Text = "UpdatingTestForm";
+      this.cmDetailsView.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox3.ResumeLayout(false);
       this.groupBox3.PerformLayout();
+      this.cmChachedSeries.ResumeLayout(false);
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
       this.groupBox4.ResumeLayout(false);
       this.cmCacheRevisions.ResumeLayout(false);
-      this.cmChachedSeries.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -655,5 +766,17 @@
     private System.Windows.Forms.ToolStripMenuItem checkToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem checkSelectedToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem checkAllToolStripMenuItem;
+    private System.Windows.Forms.ContextMenuStrip cmDetailsView;
+    private System.Windows.Forms.ToolStripMenuItem findEpisodeIDInToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem updatesmonthxmlToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem updatesweekxmlToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem updatesdayxmlToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem saveToFileToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem saveListOfSeriesToFileToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem lookUpNamesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem downloadUpdatesToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem monthToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem weekToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem dayToolStripMenuItem;
   }
 }

@@ -160,8 +160,15 @@ namespace TestPrograms
 
         if (current == null)
         {
-          current = m_tvdbDownloader.DownloadSeries(before.Id, before.Language, true, true, true);
-          m_currentVersionList.Add(current);
+          try
+          {
+            current = m_tvdbDownloader.DownloadSeries(before.Id, before.Language, true, true, true);
+            m_currentVersionList.Add(current);
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show(ex.ToString());
+          }
         }
       }
 
@@ -400,6 +407,7 @@ namespace TestPrograms
           tag.State == ItemState.AvailableButNotDownloaded)
         {//something doesn't add up
           overallState = ItemState.UpdatedAndInconsistent;
+          break;//worst case, so break
         }
       }
 
@@ -884,22 +892,89 @@ namespace TestPrograms
       item.SubItems.Add(_before);
       item.SubItems.Add(_after);
       item.SubItems.Add(_current);
-      if (!_before.Equals("") && !_after.Equals("") && !_before.Equals(_after))
-      {
-        item.BackColor = Color.Orange;
-      }
 
-      if ((!_after.Equals("") && !_after.Equals(_current)) || (_after.Equals("") && !_before.Equals(_current)))
-      {
-        item.BackColor = Color.Red;
-      }
+      ItemState state = CheckStringChanged(_before, _after, _current);
 
       ListViewTag tag = new ListViewTag();
-      tag.State = ItemState.Unchanged;
+      tag.State = state;
       tag.Type = ItemType.SeriesAttribute;
       item.Tag = tag;
 
+      SetColorForListViewItem(item, state, ItemType.SeriesAttribute);
+
       return item;
+    }
+
+    private ItemState CheckStringChanged(String _before, String _after, String _current)
+    {
+      if (_current != "")
+      {
+        if (_after != "")
+        {//episode has been updated (_before != null) or added (_before == null)
+          if (_after != _current)
+          {
+            if (_before == "")
+            {
+              return ItemState.AddedAndInconsistent;
+            }
+            else
+            {
+              return ItemState.UpdatedAndInconsistent;
+            }
+          }
+          else
+          {
+            if (_before == "")
+            {//the item has been added correctly
+              return ItemState.Added;
+            }
+            else
+            {//the item has been updated correctly (after == current)
+              if (_before != _after)
+              {
+                return ItemState.UpdatedAndValueChanged;
+              }
+              else
+              {
+                return ItemState.Updated;
+              }
+            }
+          }
+        }
+
+        //episode is available but hasn't been added to our cache yet
+        if (_before == "" && _after == "") return ItemState.AvailableButNotDownloaded;
+
+        //we have no update for this item
+        if (_after == "")
+        {
+          if (_before != _current)
+          {
+            return ItemState.UnchangedAndInconsistent;
+          }
+          else
+          {
+            return ItemState.Unchanged;
+          }
+        }
+      }
+
+      if (_current == "")
+      {//current version hasn't been loaded, we can't compare if the update was done correctly
+        if (_before != "" && _after != "")
+        {//episode has been updated
+          return ItemState.Updated;
+        }
+        else if (_before == "" && _after != "")
+        {//episode has been added
+          return ItemState.Added;
+        }
+        else
+        {
+          return ItemState.Unchanged;
+        }
+      }
+      return ItemState.Unchanged;
     }
 
     private void cmdAddAllFavorites_Click(object sender, EventArgs e)
@@ -1146,7 +1221,7 @@ namespace TestPrograms
       //SortOrder
       lvSeriesDetails.Items.Add(CreateItem("Image", (_before != null && _before.ActorImage != null) ? _before.ActorImage.BannerPath.ToString() : "",
                                                  (_after != null && _after.ActorImage != null) ? _after.ActorImage.BannerPath.ToString() : "",
-                                                 (_current != null && _current.ActorImage != null) ? _current.ActorImage.BannerPath.ToString() : ""));   
+                                                 (_current != null && _current.ActorImage != null) ? _current.ActorImage.BannerPath.ToString() : ""));
     }
 
     private void FillEpisodeDetails(TvdbEpisode _before, TvdbEpisode _after, TvdbEpisode _current)
@@ -1276,6 +1351,20 @@ namespace TestPrograms
                                            _current != null ? _current.SeasonNumber.ToString() : ""));
 
 
+      //AirsAfterSeason
+      lvSeriesDetails.Items.Add(CreateItem("AirsAfterSeason", _before != null ? _before.AirsAfterSeason.ToString() : "",
+                                           _after != null ? _after.AirsAfterSeason.ToString() : "",
+                                           _current != null ? _current.AirsAfterSeason.ToString() : ""));
+
+      //AirsBeforeSeason
+      lvSeriesDetails.Items.Add(CreateItem("AirsBeforeSeason", _before != null ? _before.AirsBeforeSeason.ToString() : "",
+                                           _after != null ? _after.AirsBeforeSeason.ToString() : "",
+                                           _current != null ? _current.AirsBeforeSeason.ToString() : ""));
+
+      //AirsBeforeEpisode
+      lvSeriesDetails.Items.Add(CreateItem("AirsBeforeEpisode", _before != null ? _before.AirsBeforeEpisode.ToString() : "",
+                                           _after != null ? _after.AirsBeforeEpisode.ToString() : "",
+                                           _current != null ? _current.AirsBeforeEpisode.ToString() : ""));
     }
 
     private TvdbSeries GetBefore(int _seriesId)
@@ -1406,11 +1495,214 @@ namespace TestPrograms
     }
 
 
+    #region Find Updates
+    private void updatesmonthxmlToolStripMenuItem_Click(object sender, EventArgs args)
+    {
+      if (lvSeriesDetails.SelectedItems != null && lvSeriesDetails.SelectedItems.Count == 1)
+      {
+        ListViewTag tag = lvSeriesDetails.SelectedItems[0].Tag as ListViewTag;
+
+        if (tag.Type == ItemType.Episode)
+        {
+          int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+          //FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
 
 
+          FindEpisodeInUpdates(episodeId, Interval.month);
+        }
+      }
+    }
+
+    private void updatesweekxmlToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvSeriesDetails.SelectedItems != null && lvSeriesDetails.SelectedItems.Count == 1)
+      {
+        ListViewTag tag = lvSeriesDetails.SelectedItems[0].Tag as ListViewTag;
+
+        if (tag.Type == ItemType.Episode)
+        {
+          int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+          //FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
 
 
+          FindEpisodeInUpdates(episodeId, Interval.week);
+        }
+      }
+    }
 
+    private void updatesdayxmlToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvSeriesDetails.SelectedItems != null && lvSeriesDetails.SelectedItems.Count == 1)
+      {
+        ListViewTag tag = lvSeriesDetails.SelectedItems[0].Tag as ListViewTag;
+
+        if (tag.Type == ItemType.Episode)
+        {
+          int episodeId = Int32.Parse(lvSeriesDetails.SelectedItems[0].Text);
+          //FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
+
+
+          FindEpisodeInUpdates(episodeId, Interval.day);
+        }
+      }
+    }
+
+    private void FindEpisodeInUpdates(int _episodeId, Interval _interval)
+    {
+
+
+      bool episodeFound = false;
+      TvdbEpisode episode = null;
+      List<TvdbEpisode> episodes = null;
+      switch (_interval)
+      {
+        case Interval.month:
+          episodes = m_updateEpisodesMonth;
+          break;
+        case Interval.week:
+          episodes = m_updateEpisodesWeek;
+          break;
+        case Interval.day:
+          episodes = m_updateEpisodesDay;
+          break;
+      }
+
+      foreach (TvdbEpisode e in episodes)
+      {
+        if (_episodeId == e.Id)
+        {
+          episodeFound = true;
+          episode = e;
+        }
+      }
+
+      if (episodeFound)
+      {
+        MessageBox.Show("Found episode " + _episodeId + " in updates (Series=" + episode.SeriesId + ", ID=" + episode.Id + ", LastUpdated=" + episode.LastUpdated.ToShortDateString());
+      }
+      else
+      {
+        MessageBox.Show("updates.xml doesn't contain episode id " + _episodeId);
+
+      }
+    }
+    #endregion
+
+    private void saveToFileToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (lvSeriesDetails.SelectedItems != null && lvSeriesDetails.SelectedItems.Count >= 1)
+      {
+
+
+        int seriesId = (int)lvCachedSeries.SelectedItems[0].Tag;
+        TvdbSeries series = GetCurrent(seriesId);
+
+        foreach (ListViewItem i in lvSeriesDetails.SelectedItems)
+        {
+          ListViewTag tag = i.Tag as ListViewTag;
+          if (tag.Type == ItemType.Episode)
+          {
+            int episodeId = Int32.Parse(i.Text);
+            SaveMissingEpToFile(series, episodeId);
+          }
+        }
+      }
+    }
+
+    private void SaveMissingEpToFile(TvdbSeries series, int episodeId)
+    {
+      //FillEpisodeDetails(GetEpisode(before, episodeId), GetEpisode(after, episodeId), GetEpisode(current, episodeId));
+      TvdbEpisode episode = GetEpisode(series, episodeId);
+      TvdbEpisode currentEp = m_tvdbDownloader.DownloadEpisode(episodeId, episode.Language);
+      File.AppendAllText("missing_eps.txt", "Episode " + episodeId + ": " + series.SeriesName + " (" + series.Id + ") " + episode.SeasonNumber +
+                         "x" + episode.EpisodeNumber + " LastUpdated: " + currentEp.LastUpdated + "\r\n");
+    }
+
+    private void saveListOfSeriesToFileToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      if (File.Exists("series_list.txt")) File.Delete("series_list.txt");
+      foreach (ListViewItem i in lvCachedSeries.Items)
+      {
+        int seriesId = (int)i.Tag;
+        String seriesName = LookupName(i);
+        File.AppendAllText("series_list.txt" ,seriesName + " (" + seriesId + ")\r\n");
+      }
+    }
+
+    private String LookupName(ListViewItem _item)
+    {
+      int seriesId = (int)_item.Tag;
+      if (_item.SubItems[1].Text.Equals(""))
+      {
+        TvdbSeries series = m_tvdbHandler.GetSeries(seriesId, TvdbLanguage.DefaultLanguage, false, false, false);
+        _item.SubItems[1].Text = series.SeriesName;
+      }
+      return _item.SubItems[1].Text;
+    }
+
+    private void lookUpNamesToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      foreach (ListViewItem i in lvCachedSeries.Items)
+      {
+        LookupName(i);
+      }
+    }
+
+    //update all flagged series
+    List<TvdbSeries> m_updateSeriesMonth;
+    List<TvdbEpisode> m_updateEpisodesMonth;
+    List<TvdbBanner> m_updateBannersMonth;
+
+    List<TvdbSeries> m_updateSeriesWeek;
+    List<TvdbEpisode> m_updateEpisodesWeek;
+    List<TvdbBanner> m_updateBannersWeek;
+
+    List<TvdbSeries> m_updateSeriesDay;
+    List<TvdbEpisode> m_updateEpisodesDay;
+    List<TvdbBanner> m_updateBannersDay;
+
+    private void monthToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        DateTime updateTime = m_tvdbDownloader.DownloadUpdate(out m_updateSeriesMonth, out m_updateEpisodesMonth, 
+                                                              out m_updateBannersMonth, Interval.month, true);
+        updatesmonthxmlToolStripMenuItem.Enabled = true;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("Couldn't download updates");
+      }
+
+    }
+
+    private void weekToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        DateTime updateTime = m_tvdbDownloader.DownloadUpdate(out m_updateSeriesWeek, out m_updateEpisodesWeek,
+                                                              out m_updateBannersWeek, Interval.week, true);
+        updatesweekxmlToolStripMenuItem.Enabled = true;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("Couldn't download updates");
+      }
+    }
+
+    private void dayToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        DateTime updateTime = m_tvdbDownloader.DownloadUpdate(out m_updateSeriesDay, out m_updateEpisodesDay,
+                                                              out m_updateBannersDay, Interval.day, true);
+        updatesdayxmlToolStripMenuItem.Enabled = true;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show("Couldn't download updates");
+      }
+    }
 
   }
 }

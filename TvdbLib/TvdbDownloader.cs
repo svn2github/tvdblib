@@ -795,7 +795,7 @@ namespace TvdbLib
     ///                                           or http://forums.thetvdb.com/</para></exception>  
     /// <exception cref="TvdbInvalidApiKeyException">The stored api key is invalid</exception>
     /// <exception cref="TvdbNotAvailableException">Exception is thrown when thetvdb isn't available.</exception>
-    internal DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
+    public DateTime DownloadUpdate(out List<TvdbSeries> _updateSeries, out List<TvdbEpisode> _updateEpisodes,
                                      out List<TvdbBanner> _updateBanners, Interval _interval, bool _zipped)
     {
 
