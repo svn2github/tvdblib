@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{00c90583-949a-48cb-80b6-b9022bd017ac}</ProjectGuid>
-    <SHFBSchemaVersion>1.8.0.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>1.9.0.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
          Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
@@ -19,25 +19,27 @@
     <SandcastlePath>..\..\..\..\..\..\Program Files\Coding\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\TvdbLib\bin\Debug\TvdbLib.dll" xmlns="" />
-<DocumentationSource sourceFile="..\TvdbLib\bin\Debug\TvdbLib.xml" xmlns="" /></DocumentationSources>
-    <HeaderText>TvdbLib 0.7</HeaderText>
+      <DocumentationSource sourceFile="..\TvdbLib\bin\Debug\TvdbLib.xml" xmlns="" />
+    </DocumentationSources>
+    <HeaderText>TvdbLib 0.8</HeaderText>
     <FeedbackEMailAddress>bgmeiner%40gmail.com</FeedbackEMailAddress>
     <ProjectSummary>tvdblib is a library written in c# .net which allows pulling information through the api provided at http://thetvdb.com . </ProjectSummary>
     <CopyrightText>Copyright %28C%29 2008  Benjamin Gmeiner</CopyrightText>
     <CopyrightHref>http://code.google.com/p/tvdblib/wiki/Copyright</CopyrightHref>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="TvdbLib" isDocumented="True" xmlns="">Root Namespace of the Library</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.Cache" isDocumented="True" xmlns="">Contains all elements neccessary for caching the downloaded files locally</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.Data" isDocumented="True" xmlns="">All data objects such as TvdbSeries, TvdbEpisode,...</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.Data.Banner" isDocumented="True" xmlns="">All banner classes</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.Exceptions" isDocumented="True" xmlns="">Exceptions that can be thrown by the library</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.ICSharpCode.SharpZipLib.Zip" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib.Checksums" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib.Encryption" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
-<NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression.Streams" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="TvdbLib.Cache" isDocumented="True" xmlns="">Contains all elements neccessary for caching the downloaded files locally</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.Data" isDocumented="True" xmlns="">All data objects such as TvdbSeries, TvdbEpisode,...</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.Data.Banner" isDocumented="True" xmlns="">All banner classes</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.Exceptions" isDocumented="True" xmlns="">Exceptions that can be thrown by the library</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.ICSharpCode.SharpZipLib.Zip" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib.Checksums" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib.Encryption" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="TvdbLib.SharpZipLib.Zip.Compression.Streams" isDocumented="True" xmlns="">SharpZipLib used for using the zipped files of thetvdb -&gt; http://www.icsharpcode.net/OpenSource/SharpZipLib/</NamespaceSummaryItem>
+    </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these two groups but they need to appear in
        order for Visual Studio to perform the build. -->
