@@ -16,7 +16,7 @@
     <!-- SHFB properties -->
     <OutputPath>.\Help\</OutputPath>
     <HtmlHelpName>TvdbLib Documentation</HtmlHelpName>
-    <SandcastlePath>..\..\..\..\..\..\Program Files\Coding\Sandcastle\</SandcastlePath>
+    <SandcastlePath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\TvdbLib\bin\Debug\TvdbLib.dll" xmlns="" />
       <DocumentationSource sourceFile="..\TvdbLib\bin\Debug\TvdbLib.xml" xmlns="" />
